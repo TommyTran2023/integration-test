@@ -9,5 +9,10 @@ Feature: Approval View
     * configure headers = {Authorization: '#(approvalAccessToken)'}
     * def challengeApprover = call read('GenerateAnswer.feature@FIDO-Approver')
     * def dataBody = read('classpath:data/data_test.json')
+
+    @RAKCON-10983
   Scenario: View list pending request to approve
-    Given
+      Given path '/core/quorums'
+      * request {"offset":0, "limit": 99999, "status": [PENDING]}
+      When method POST
+      Then status 201

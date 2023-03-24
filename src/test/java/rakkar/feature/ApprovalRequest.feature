@@ -1,4 +1,4 @@
-@RAKCON-10945 @ignore
+@RAKCON-10945
 Feature: Approval Request
 
   Background:
@@ -13,11 +13,18 @@ Feature: Approval Request
   @RAKCON-10975
   Scenario: Approval - New vault policy request
     # Get request ID of creating vault request
-    * callonce read('ApprovalRequest.feature@GetCreateVaultRequestID')
-    * print requestCreateVaultID
+    * callonce read('ApprovalView.feature@RAKCON-10983')
+    * def recordsResponse = response.data.records
+    * print recordsResponse
+    * def requestID = recordsResponse.length > 0 ? karate.jsonPath(recordsResponse, "$.[?(@.type.value=='CREATE_VAULT')].id")[0] : 0
+    * print requestID
 
-    # Approve new vault policy request
-    Given path '/core/quorums/approval/'+requestCreateVaultID
+    # If there is Create new vault request available -> Approve new vault policy request
+    * eval if (requestID != 0) karate.call('ApprovalRequest.feature@ApproveRequest')
+
+    @ApproveRequest @ignore
+    Scenario: Approve pending request - Common
+    Given path '/core/quorums/approval/'+requestID
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * header passcode = dataBody.common.approverPasscode
 
@@ -25,13 +32,3 @@ Feature: Approval Request
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
-
-  @ignore @GetCreateVaultRequestID
-  Scenario: Get request ID by requester
-      # Get request ID of creating vault request
-    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
-    * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
-    * def accessToken = 'Bearer ' + requesterAuthToken
-    * headers Authorization = accessToken
-    * call read('Vault.feature@GetRequestID')
-    * print requestCreateVaultID

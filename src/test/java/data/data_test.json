@@ -1,0 +1,15 @@
+{
+  "common": {
+    "approverPasscode": "271198",
+    "requesterPasscode": "123111",
+    "challengeAnswerAuth": "{\"response\":{\"signature\":\"MtMpMXv0P2ZBHBV1TfWcvtFbhhziefLi+2A9kZLRO/V3JhXfZj5svmyCsJrffyBn3EcH5H9TllBG+mXgyBnpALtaIYGzWeBDWj/VmbaRCkXetOLwdYbvR5iDVbwU8IXFp1R4aqgSLe7BevLN2XXc9jG9DewUuw+UYPmzR1QX7ncglXSx6VpdwU3d+5OoSNlqKwnQCUBMjbacc6vCaeckNvpJvzTeJWRIpvXQhFInjLavVUE9+XWhxg4AZ51W3hD6ip/53SBoRp5BNeD1FXCAAm0ItG3nvXaDgTvTH6begNE1Snb38u+xXlwEZIa+CXItM24uYaW9uH8YYRWlScohfQ==\",\"authenticatorData\":\"\",\"clientDataJSON\":\"eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiIiwib3JpZ2luIjoiaHR0cHM6XC9cL3Jha2thci5jb20ifQ\"}}"
+  },
+  "vault": {
+    "vault_type": "HOT_WALLET",
+    "approve_number": 3
+  },
+  "whitelist": {
+
+  }
+
+}

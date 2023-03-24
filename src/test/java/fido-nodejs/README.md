@@ -1,0 +1,14 @@
+## Prerequisite
+- Install [NodeJS](https://nodejs.org/en/download/)
+
+## Config
+
+### OS Process Sampler
+- Command: `node`
+- Working directory: path to `fido-nodejs` directory, e.g: `/home/mrradish/Projects/Savvycom/RAK/performance-test/fido-nodejs`
+- Command parameters:
+  - `generate-answer.js`
+  - `-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAx6z+tBBQivsVfhtElvGfxC5fvHXhevJTxX9qwe+DenKN04No\nhOFenGH162ndCrR8PiPKaSxV2QMUuUhdEYxPB5vvgi9J5Dd2w/P0KrAWoh7ccmwn\n2bxwdZGsQSiEv1mxhBs7jYyuzH0xhSncKg7Pyr50mZ/miIKTAREs6ChobamXcSPp\nJ8wfX3g8dZI4EEBxdu4FiX/SyMc1douecA9P/mdr2jZEfW46woYH9IGYpxw9W0AM\n28ne2iviwqhcjHmSp6cbbGNAxGrPElj31tIihOi0MepPj3q1ONWJdbdQ1QLR9A/6\nhwiFQGqD+00GuZLzu0fHJG3rJ4s8ZzhIBjSeNQIDAQABAoIBADC9mEDg+KAsUR9C\nzbfgzESJo2HwDnXCAFPl2ev0KM5zdw5J9fH1x2/585se8M+Dpg5PE0IgCeaau2zM\n7rbxXns3g7vuCiX0qf+EJbZj3Gp/iQU/RG0AdB0mzXrsRpck8FGUijFvxV1yM+vS\n/4Ser/dIDVNQtmfdI8AvbpxO/MrDnANH9r/ozXy2rMmimwbC0SVxR5QdwfEGVW6u\nAZuFT6OtvE2m5R7+TlmhN7v9PzDNR4bDKRLiEeV6tvN1tbcmRuTLxvSo6rkj+7XD\nxmpYfRhokuHMmf6dgdwAn69DoXacZsFDhuRhtmoEyy7RQkfPc5aDNrD9T5EksHHf\nDvHyrbECgYEA1jAiuV/oAWy8+QJmNWQfn0L2r+KGW+/DmY00rpuuMvYTuhjOBx/1\nm4PBF5qSsfwDOaGsvvVrnBp4CO2TlEw4q/9B7o3QdhbkGhzUMnuXaID3MWOa9qND\nzruoyQF2KATl1VkpzQozReAZRWjd7oHmf8ZZAlCcXV9OsiZdrdUrmzkCgYEA7qee\n/J9zsW1M0G9ZWdcSy+C69v26BXtCUMWCz6Pgh9+WKTlVskoHgLzJs6iT6nvyYyOe\n+QWcXKoCZnm8gGsDJ5hDD9mTHRb8xIiU9F6p2VNw7RzPe5CNVpgltSqIsekWWQyD\nKu/LFMxCR2M6PqmRVp3j6Gv2WcZYFkIcLO0mjt0CgYEAmAAvFFkAf8pYTWqreCZm\n3pIaGPXsHeCIcjcodOWceSPzGfUyeRHwLf4RkRusEU1kSIj428e1J2INX2Cig/KX\noVATzSStFLDoDbP5zx2wdIRZaJ5kQbXZkCPTA1rbLElVhdOx+4XKn0MLDBwAq5ta\nJcFwN1lXrlfNtFXP02ZdfNkCgYAijQHncO4+8aP9SSGWcBy4h4CJ4ZHc2Utwhie6\nB++pvCTxMuvFNBKCANLyv6UqfWdKEw4g3z8T60kNrPItZVC/mruav9UckQdnLJ7k\nAhB09i+TJGilavgLYVuULuQ7XZNusPEMdkrgZ/Hwg90a1VHFSHaGX5r6xExcbJXH\nq025wQKBgDcOBIRGIDy6HEld1LMIFGbjMLVU9xGtLgaYFY4iEp7j2g4s4lNMX9Q8\nfJa2UHLaiuPdoXvcu8Mb86zlQ0OdXdv+HWyNvbJRPt4gj694TzI7X4tSGDzGgWHJ\nhxmx26A2/enTO+DnqIVxDSQld72C//ZoWM812w0HtbveWwj43eUH\n-----END RSA PRIVATE KEY-----\n`
+
+## Output: Jmeter Variable
+- FIDO_ANSWER: e.g `{"response":{"signature":"kxmRiTH3yKhn7mXdMiMr76pj2Ug975MLI+y+SoJ/rZyMOqjkvTNDH+uKKtkttO6eVAFxrSx7wXJsdbmlVcD17AKRBfq7lmwMbDZbtpiOfoBCl3Fw5pSCs/q6j3tcOQOjrLEdZNyLmvpHTPLpk4KpLP5HSH1oTkhA4YRFN9wxWAN3yg4G6JZ7lmAnjiA7OhwyJrxIPa4WFw/0QFZeLIktPM0l55x5PEQ/mgM3ISluJrmjFw4/uuIkgOy1Uli8Bkp3g3VeguUm8rSFh0AJZtfhb6FVgy1G8ESypoVJZSpFsbHzoTeZ99AxFVfiKHIjnHM1dLKeYncCCHKbDtkJhvVy8A==","authenticatorData":"","clientDataJSON":""}}`

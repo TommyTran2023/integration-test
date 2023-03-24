@@ -10,4 +10,3 @@ Feature: Approval View
     * def challengeApprover = call read('GenerateAnswer.feature@FIDO-Approver')
     * def dataBody = read('classpath:data/data_test.json')
   Scenario: View list pending request to approve
-    Given

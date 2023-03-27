@@ -11,6 +11,7 @@ Feature: Vault
     * def getRequesterIDResponse = call read('GetRequesterID.feature')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
+    * def Collections = Java.type('java.util.Collections')
 
   @ignore @CheckBasicInfo
   Scenario: Precondition - Check vault name, get list users, by pass biometric & requesterPasscode
@@ -192,3 +193,22 @@ Feature: Vault
     * for(var i = 0; i < listSearchedVault.length; i++) listSearchedVaultName.push(listSearchedVault[i].name)
     * print listSearchedVaultName
     * match each $listSearchedVaultName == "#regex (?i).*" + dataBody.vault.searchVaultKeyword + ".*"
+
+  @RAKCON-10955
+  Scenario: Sort vaults by name A - Z
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'ASC'
+    * param sortBy = 'NAME'
+    When method GET
+    Then status 200
+    * def listVault = response.data.vaults
+    * def listVaultNameActual = $listVault[*].name
+    * print listVaultNameActual
+    * def listVaultNameExpected = []
+    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
+    * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
+    * match listVaultNameActual == listVaultNameExpected
+

@@ -212,3 +212,20 @@ Feature: Vault
     * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
     * match listVaultNameActual == listVaultNameExpected
 
+    @RAKCON-11118
+    Scenario: Sort vaults by name Z - A
+      Given path '/core/vault/accounts'
+      * param isHideSmallBalance = false
+      * param limit = 9999999
+      * param offset = 0
+      * param sort = 'DESC'
+      * param sortBy = 'NAME'
+      When method GET
+      Then status 200
+      * def listVault = response.data.vaults
+      * def listVaultNameActual = $listVault[*].name
+      * print listVaultNameActual
+      * def listVaultNameExpected = []
+      * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
+      * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
+      * match listVaultNameActual == listVaultNameExpected

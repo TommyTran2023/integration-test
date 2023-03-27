@@ -108,7 +108,6 @@ Feature: Vault
     * def resp = response.data.vaults
     * print resp
     * def names = []
-    * def vaultIds = []
     * for(var i = 0; i < resp.length; i++) names.push(resp[i].name)
     * print 'List of vault names: ', names
     * match names contains addedName
@@ -146,7 +145,7 @@ Feature: Vault
     * for(var i = 0; i < vaultUsersResponseWA.length; i++) memberIdsWA.push(vaultUsersResponseWA[i].userId)
     # ---- Check vault name, vault status, vault type, approver number should be same as created
     * match response.data.name == vaultNameResponseWA
-    * match response.data.isPendingRequest == false
+    * match response.data.isPendingRequest == true
     * match response.data.approverNumber == dataBody.vault.approve_number
     * match response.data.type == vaultTypeResponseWA
     * match response.data.totalTransactionPending == 0
@@ -176,5 +175,20 @@ Feature: Vault
     # ---- Check vault members should be same as created
     * match memberIdsWOA == vaultMemberList
 
-
-
+  @RAKCON-10954
+  Scenario: Search vaults
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param keyword = dataBody.vault.searchVaultKeyword
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+    * def listSearchedVault = response.data.vaults
+    * def listSearchedVaultName = []
+    * for(var i = 0; i < listSearchedVault.length; i++) listSearchedVaultName.push(listSearchedVault[i].name)
+    * print listSearchedVaultName
+    * match each $listSearchedVaultName == "#regex (?i).*" + dataBody.vault.searchVaultKeyword + ".*"

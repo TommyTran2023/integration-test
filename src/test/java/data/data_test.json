@@ -6,7 +6,8 @@
   },
   "vault": {
     "vault_type": "HOT_WALLET",
-    "approve_number": 3
+    "approve_number": 3,
+    "searchVaultKeyword": "RAK-1679"
   },
   "whitelist": {
 

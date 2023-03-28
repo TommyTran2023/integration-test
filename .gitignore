@@ -105,3 +105,6 @@ dist
 
 # Report file
 .target
+.idea
+/target
+/idea

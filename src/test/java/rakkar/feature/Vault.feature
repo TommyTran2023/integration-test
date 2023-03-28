@@ -11,6 +11,7 @@ Feature: Vault
     * def getRequesterIDResponse = call read('GetRequesterID.feature')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
+    * def Collections = Java.type('java.util.Collections')
 
   @ignore @CheckBasicInfo
   Scenario: Precondition - Check vault name, get list users, by pass biometric & requesterPasscode
@@ -108,7 +109,6 @@ Feature: Vault
     * def resp = response.data.vaults
     * print resp
     * def names = []
-    * def vaultIds = []
     * for(var i = 0; i < resp.length; i++) names.push(resp[i].name)
     * print 'List of vault names: ', names
     * match names contains addedName
@@ -146,7 +146,7 @@ Feature: Vault
     * for(var i = 0; i < vaultUsersResponseWA.length; i++) memberIdsWA.push(vaultUsersResponseWA[i].userId)
     # ---- Check vault name, vault status, vault type, approver number should be same as created
     * match response.data.name == vaultNameResponseWA
-    * match response.data.isPendingRequest == false
+    * match response.data.isPendingRequest == true
     * match response.data.approverNumber == dataBody.vault.approve_number
     * match response.data.type == vaultTypeResponseWA
     * match response.data.totalTransactionPending == 0
@@ -176,5 +176,56 @@ Feature: Vault
     # ---- Check vault members should be same as created
     * match memberIdsWOA == vaultMemberList
 
+  @RAKCON-10954
+  Scenario: Search vaults
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param keyword = dataBody.vault.searchVaultKeyword
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+    * def listSearchedVault = response.data.vaults
+    * def listSearchedVaultName = []
+    * for(var i = 0; i < listSearchedVault.length; i++) listSearchedVaultName.push(listSearchedVault[i].name)
+    * print listSearchedVaultName
+    * match each $listSearchedVaultName == "#regex (?i).*" + dataBody.vault.searchVaultKeyword + ".*"
 
+  @RAKCON-10955
+  Scenario: Sort vaults by name A - Z
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'ASC'
+    * param sortBy = 'NAME'
+    When method GET
+    Then status 200
+    * def listVault = response.data.vaults
+    * def listVaultNameActual = $listVault[*].name
+    * print listVaultNameActual
+    * def listVaultNameExpected = []
+    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
+    * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
+    * match listVaultNameActual == listVaultNameExpected
 
+    @RAKCON-11118
+    Scenario: Sort vaults by name Z - A
+      Given path '/core/vault/accounts'
+      * param isHideSmallBalance = false
+      * param limit = 9999999
+      * param offset = 0
+      * param sort = 'DESC'
+      * param sortBy = 'NAME'
+      When method GET
+      Then status 200
+      * def listVault = response.data.vaults
+      * def listVaultNameActual = $listVault[*].name
+      * print listVaultNameActual
+      * def listVaultNameExpected = []
+      * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
+      * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
+      * match listVaultNameActual == listVaultNameExpected

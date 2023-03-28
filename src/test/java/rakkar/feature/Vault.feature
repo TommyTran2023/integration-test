@@ -229,3 +229,39 @@ Feature: Vault
       * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
       * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
       * match listVaultNameActual == listVaultNameExpected
+
+      @RAKCON-11119
+      Scenario: Sort vaults by highest value
+        Given path '/core/vault/accounts'
+        * param isHideSmallBalance = false
+        * param limit = 9999999
+        * param offset = 0
+        * param sort = 'DESC'
+        * param sortBy = 'TOTAL_USD'
+        When method GET
+        Then status 200
+        * def listVault = response.data.vaults
+        * def listVaultTotalUSDActual = $listVault[*].totalUSD
+        * print listVaultTotalUSDActual
+        * def listVaultTotalUSDExpected = []
+        * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
+        * print 'listVaultTotalUSDExpected', listVaultTotalUSDExpected
+        * karate.sort(listVaultTotalUSDExpected)
+        * match listVaultTotalUSDActual == listVaultTotalUSDExpected
+        * def listVaultTotalUSDASC = listVaultTotalUSDExpected.reverse()
+
+      @RAKCON-11120
+      Scenario: Sort vaults by lowest value
+        Given path '/core/vault/accounts'
+        * param isHideSmallBalance = false
+        * param limit = 9999999
+        * param offset = 0
+        * param sort = 'ASC'
+        * param sortBy = 'TOTAL_USD'
+        When method GET
+        Then status 200
+        * def listVault = response.data.vaults
+        * def listVaultTotalUSDASCActual = $listVault[*].totalUSD
+        * print listVaultTotalUSDASCActual
+        * callonce read('Vault.feature@RAKCON-11119')
+        * match listVaultTotalUSDASCActual == listVaultTotalUSDASC

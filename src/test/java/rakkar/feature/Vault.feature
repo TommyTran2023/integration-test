@@ -289,3 +289,30 @@ Feature: Vault
     When method PUT
     Then status 200
     * match response.data.name == vaultName
+
+  @RAKCON-10957
+  Scenario: Edit vault policy
+    #Get a random vault that has not edit vault pending request
+    * def vaultListing = callonce read('Vault.feature@RAKCON-10218')
+    * def listVault = vaultListing.response.data.vaults
+    * print listVault
+    * def VaultWOPendingReq = karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")[0]
+    * print 'List vaults can be edited: ', karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")
+    * print 'Editing vault ID: ', VaultWOPendingReq
+    #Get variable challengeAnswerRequest
+    * callonce read('GenerateAnswer.feature@FIDO-Requester')
+    #Get list user in organization
+    * callonce read('Vault.feature@CHECK-LIST-USER')
+    #Edit vault policy
+    Given path '/core/vault/account/'+VaultWOPendingReq+'/rules'
+    * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = dataBody.common.requesterPasscode
+    When method PUT
+    Then status 200
+    * match response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
+    * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
+    * match response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
+    * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
+    * match $response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
+    * match response.data.record.additionalData.data.note == dataBody.vault.editVaultNote

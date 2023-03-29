@@ -13,8 +13,8 @@ Feature: Vault
     * def dataBody = read('classpath:data/data_test.json')
     * def Collections = Java.type('java.util.Collections')
 
-  @ignore @CheckBasicInfo
-  Scenario: Precondition - Check vault name, get list users, by pass biometric & requesterPasscode
+  @ignore @CHECK-VAULT-NAME
+  Scenario: Check vault name is existed or not
     #Check vault name is existed or not
     Given path '/core/vault/check-vault-name'
     * def now = function(){ return java.lang.System.currentTimeMillis() }
@@ -25,6 +25,8 @@ Feature: Vault
     * def checkExist = response.data.exist
     * eval if (checkExist==true) karate.fail('Vault name is already exist')
 
+  @ignore @CHECK-LIST-USER
+  Scenario: Get user list of organization
     #Get user list of organization
     Given path '/auth/account/list-users'
     * request {"isGetAll":true}
@@ -36,6 +38,8 @@ Feature: Vault
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
     * print vaultMemberList
 
+  @ignore @BY-PASS-BIOMETRIC
+  Scenario: By pass biometric method
     #By pass biometric method
     Given path '/core/biometric/request-challenge'
     * request {}
@@ -44,6 +48,8 @@ Feature: Vault
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
+  @ignore @VERIFY-PASSCODE
+  Scenario: Verify passcode of Requester
     #Verify requesterPasscode
     Given path '/auth/account/verify-passcode'
     * request {"passcode":'#(dataBody.common.requesterPasscode)'}
@@ -54,7 +60,10 @@ Feature: Vault
 
   @RAKCON-10217
   Scenario: Create a new vault with admin quorum setup
-    * call read('Vault.feature@CheckBasicInfo')
+    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('Vault.feature@BY-PASS-BIOMETRIC')
+    * call read('Vault.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * callonce read('GenerateAnswer.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -74,7 +83,10 @@ Feature: Vault
 
   @RAKCON-10220
   Scenario: Create a new vault without admin quorum setup
-    * call read('Vault.feature@CheckBasicInfo')
+    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('Vault.feature@BY-PASS-BIOMETRIC')
+    * call read('Vault.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * call read('GenerateAnswer.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
@@ -108,8 +120,7 @@ Feature: Vault
     * print addedName
     * def resp = response.data.vaults
     * print resp
-    * def names = []
-    * for(var i = 0; i < resp.length; i++) names.push(resp[i].name)
+    * def names = $resp[*].name
     * print 'List of vault names: ', names
     * match names contains addedName
 
@@ -122,7 +133,7 @@ Feature: Vault
     * def requestCreateVaultID = response.data.requestId
 
   @RAKCON-10827
-  Scenario: View vault detail
+  Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     * callonce read('Vault.feature@GetRequestID')
     * def approvalAuthResponse = call read('ApprovalAuthenticator.feature')
@@ -138,12 +149,12 @@ Feature: Vault
     Then status 201
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA
+    * configure headers = {Authorization: '#(accessToken)'}
     When method GET
     Then status 200
     * def vaultUsersResponseWA = response.data.users
     * print vaultUsersResponseWA
-    * def memberIdsWA = []
-    * for(var i = 0; i < vaultUsersResponseWA.length; i++) memberIdsWA.push(vaultUsersResponseWA[i].userId)
+    * def memberIdsWA = $vaultUsersResponseWA[*].userId
     # ---- Check vault name, vault status, vault type, approver number should be same as created
     * match response.data.name == vaultNameResponseWA
     * match response.data.isPendingRequest == true
@@ -156,6 +167,8 @@ Feature: Vault
     * callonce read('Vault.feature@ignore')
     * match memberIdsWA == vaultMemberList
 
+  @RAKCON-11146
+  Scenario: View vault detail that has not admin quorum
     #View detail of vault that has not admin quorum after creating
     * callonce read('Vault.feature@RAKCON-10220')
     Given path '/core/vault/accounts/'+vaultIDWOA
@@ -163,8 +176,7 @@ Feature: Vault
     Then status 200
     * def vaultUsersResponseWOA = response.data.users
     * print vaultUsersResponseWOA
-    * def memberIdsWOA = []
-    * for(var j = 0; j < vaultUsersResponseWOA.length; j++) memberIdsWOA.push(vaultUsersResponseWOA[j].userId)
+    * def memberIdsWOA = $vaultUsersResponseWOA[*].userId
     # ---- Check vault name, vault status, vault type, approver number should be same as created
     * match response.data.name == vaultNameResponseWOA
     * match response.data.isPendingRequest == false
@@ -189,8 +201,7 @@ Feature: Vault
     Then status 200
     * match response.status == 'success'
     * def listSearchedVault = response.data.vaults
-    * def listSearchedVaultName = []
-    * for(var i = 0; i < listSearchedVault.length; i++) listSearchedVaultName.push(listSearchedVault[i].name)
+    * def listSearchedVaultName = $listSearchedVault[*].name
     * print listSearchedVaultName
     * match each $listSearchedVaultName == "#regex (?i).*" + dataBody.vault.searchVaultKeyword + ".*"
 
@@ -212,56 +223,69 @@ Feature: Vault
     * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
     * match listVaultNameActual == listVaultNameExpected
 
-    @RAKCON-11118
-    Scenario: Sort vaults by name Z - A
-      Given path '/core/vault/accounts'
-      * param isHideSmallBalance = false
-      * param limit = 9999999
-      * param offset = 0
-      * param sort = 'DESC'
-      * param sortBy = 'NAME'
-      When method GET
-      Then status 200
-      * def listVault = response.data.vaults
-      * def listVaultNameActual = $listVault[*].name
-      * print listVaultNameActual
-      * def listVaultNameExpected = []
-      * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
-      * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
-      * match listVaultNameActual == listVaultNameExpected
+  @RAKCON-11118
+  Scenario: Sort vaults by name Z - A
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'NAME'
+    When method GET
+    Then status 200
+    * def listVault = response.data.vaults
+    * def listVaultNameActual = $listVault[*].name
+    * print listVaultNameActual
+    * def listVaultNameExpected = []
+    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
+    * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
+    * match listVaultNameActual == listVaultNameExpected
 
-      @RAKCON-11119
-      Scenario: Sort vaults by highest value
-        Given path '/core/vault/accounts'
-        * param isHideSmallBalance = false
-        * param limit = 9999999
-        * param offset = 0
-        * param sort = 'DESC'
-        * param sortBy = 'TOTAL_USD'
-        When method GET
-        Then status 200
-        * def listVault = response.data.vaults
-        * def listVaultTotalUSDActual = $listVault[*].totalUSD
-        * print listVaultTotalUSDActual
-        * def listVaultTotalUSDExpected = []
-        * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
-        * print 'listVaultTotalUSDExpected', listVaultTotalUSDExpected
-        * karate.sort(listVaultTotalUSDExpected)
-        * match listVaultTotalUSDActual == listVaultTotalUSDExpected
-        * def listVaultTotalUSDASC = listVaultTotalUSDExpected.reverse()
+  @RAKCON-11119
+  Scenario: Sort vaults by highest value
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * def listVault = response.data.vaults
+    * def listVaultTotalUSDActual = $listVault[*].totalUSD
+    * print listVaultTotalUSDActual
+    * def listVaultTotalUSDExpected = []
+    * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
+    * print 'listVaultTotalUSDExpected', listVaultTotalUSDExpected
+    * karate.sort(listVaultTotalUSDExpected)
+    * match listVaultTotalUSDActual == listVaultTotalUSDExpected
+    * def listVaultTotalUSDASC = listVaultTotalUSDExpected.reverse()
 
-      @RAKCON-11120
-      Scenario: Sort vaults by lowest value
-        Given path '/core/vault/accounts'
-        * param isHideSmallBalance = false
-        * param limit = 9999999
-        * param offset = 0
-        * param sort = 'ASC'
-        * param sortBy = 'TOTAL_USD'
-        When method GET
-        Then status 200
-        * def listVault = response.data.vaults
-        * def listVaultTotalUSDASCActual = $listVault[*].totalUSD
-        * print listVaultTotalUSDASCActual
-        * callonce read('Vault.feature@RAKCON-11119')
-        * match listVaultTotalUSDASCActual == listVaultTotalUSDASC
+  @RAKCON-11120
+  Scenario: Sort vaults by lowest value
+    Given path '/core/vault/accounts'
+    * param isHideSmallBalance = false
+    * param limit = 9999999
+    * param offset = 0
+    * param sort = 'ASC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * def listVault = response.data.vaults
+    * def listVaultTotalUSDASCActual = $listVault[*].totalUSD
+    * print listVaultTotalUSDASCActual
+    * callonce read('Vault.feature@RAKCON-11119')
+    * match listVaultTotalUSDASCActual == listVaultTotalUSDASC
+
+  @RAKCON-10956
+  Scenario: Edit vault name
+    #Check vault name is existed or not
+    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * def vaultListing = callonce read('Vault.feature@RAKCON-10218')
+    * def listVaultID = $vaultListing.response.data.vaults[*].id
+    * print listVaultID
+    Given path '/core/vault/account/'+listVaultID[0]
+    * request {"name":#(vaultName)}
+    When method PUT
+    Then status 200
+    * match response.data.name == vaultName

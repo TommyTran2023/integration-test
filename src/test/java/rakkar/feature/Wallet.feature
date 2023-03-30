@@ -32,3 +32,17 @@ Feature: Wallet
     And match symbolAdd == symbolView
     And match networkAdd == networkView
 
+  @RAKCON-10952
+  Scenario: Sort wallets
+  # Add new asset
+    * call read('Wallet.feature@RAKCON-10944')
+  # View asset listing
+    Given path 'core/vault/account/' + vaultId + '/wallets'
+    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
+    When method GET
+    Then status 200
+  #Sorting the response in ascending order by price
+    * def listAssetActual = response.data.wallets
+    * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return a.symbol.localeCompare(b.symbol) })
+    * match listAssetActual == listAssetActual
+

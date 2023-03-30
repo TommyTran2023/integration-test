@@ -63,3 +63,18 @@ Feature: Wallet
     * def checkListAsset = karate.filter(listAssetActual, function(item){ return karate.match(item.name, pattern).pass || karate.match(item.symbol, pattern).pass }).length == size
     * match checkListAsset == true
 
+  @RAKCON-10958
+  Scenario: View wallet address listing
+  # Add new asset
+    * call read('Wallet.feature@RAKCON-10944')
+  # View asset listing
+    Given path 'core/vault/account/' + vaultId + '/wallets'
+    And params {limit: '10', offset: '0', sort: 'DESC', sortBy: 'TOTAL_USD', isHiddenList: false}
+    When method GET
+    Then status 200
+  #Sorting the response in ascending order by price
+    * def listAssetActual = response.data.wallets
+    * def valueUSD = 0
+    * def sortByValueUSD = function(arr, valueUSD) {var result = arr.filter(function(item) {return item.totalUSD >= valueUSD;});result.sort(function(a, b) {return b.totalUSD - a.totalUSD;});return result;}
+    * def listAssetExpected = sortByValueUSD(listAssetActual, valueUSD)
+    * match listAssetExpected == listAssetActual

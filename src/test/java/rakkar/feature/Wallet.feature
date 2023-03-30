@@ -1,10 +1,10 @@
 Feature: Wallet
   Background:
     * url baseURL
-    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthResponse = karate.callSingle('RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
     * def accessToken = 'Bearer ' + requesterAuthToken
-    * def vault = call read('Vault.feature@RAKCON-10217')
+    * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
     * configure headers = {Authorization: '#(accessToken)'}
     * def dataBody = read('classpath:data/data_test.json')
@@ -78,3 +78,43 @@ Feature: Wallet
     * def sortByValueUSD = function(arr, valueUSD) {var result = arr.filter(function(item) {return item.totalUSD >= valueUSD;});result.sort(function(a, b) {return b.totalUSD - a.totalUSD;});return result;}
     * def listAssetExpected = sortByValueUSD(listAssetActual, valueUSD)
     * match listAssetExpected == listAssetActual
+
+  @RAKCON-10961
+  Scenario: View token detail
+  # Add new asset
+    * def addAsset = call read('Wallet.feature@RAKCON-10944')
+    * def walletId = addAsset.response.data.success[0].id
+    Given path 'core/wallet/token-details/'
+    And params {vaultId: '#(vaultId)', walletId: '#(walletId)'}
+    When method GET
+    Then status 200
+    #Check the variable expected
+    * def networkExpected = addAsset.response.data.success[0].network
+    * def symbolExpected = addAsset.response.data.success[0].symbol
+    * def priceYesterdayExpected = addAsset.response.data.success[0].priceYesterday
+    * def priceExpected = addAsset.response.data.success[0].price
+    * def imageExpected = addAsset.response.data.success[0].icon
+    * def nameExpected = addAsset.response.data.success[0].name
+    * def vaultTypeExpected = vault.response.data.type
+    #Check the variable actual
+    * def walletIdActual = response.data.walletId
+    * def networkActual = response.data.network
+    * def symbolActual = response.data.symbol
+    * def priceYesterdayActual = response.data.priceYesterday
+    * def priceActual = response.data.price
+    * def imageActual = response.data.image
+    * def nameActual = response.data.name
+    * def vaultTypeActual = response.data.vaultType
+    #Verify the variable actual with the variable expected
+    * match walletIdActual == walletId
+    * match networkActual == networkExpected
+    * match symbolActual == symbolExpected
+    * match priceYesterdayActual == priceYesterdayExpected
+    * match priceActual == priceExpected
+    * match imageActual == imageExpected
+    * match nameActual == nameExpected
+    * match vaultTypeActual == vaultTypeExpected
+
+
+
+

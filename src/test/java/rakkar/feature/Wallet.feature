@@ -46,3 +46,20 @@ Feature: Wallet
     * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return a.symbol.localeCompare(b.symbol) })
     * match listAssetActual == listAssetActual
 
+  @RAKCON-10953
+  Scenario: Search wallets
+  # Add new asset
+    * call read('Wallet.feature@RAKCON-10944')
+  #View asset listing with keyword
+    * def keyword = "a"
+    * def pattern = '#regex ^.*['+ keyword.toUpperCase() + keyword.toLowerCase() +'].*$'
+    Given path 'core/vault/account/' + vaultId + '/wallets'
+    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'TOTAL_USD', isHiddenList: false, keyword: '#(keyword)'}
+    When method GET
+    Then status 200
+  #Validate the response with keyword
+    * def listAssetActual = response.data.wallets
+    * def size = listAssetActual.length
+    * def checkListAsset = karate.filter(listAssetActual, function(item){ return karate.match(item.name, pattern).pass || karate.match(item.symbol, pattern).pass }).length == size
+    * match checkListAsset == true
+

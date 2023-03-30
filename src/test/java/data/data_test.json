@@ -7,7 +7,9 @@
   "vault": {
     "vault_type": "HOT_WALLET",
     "approve_number": 3,
-    "searchVaultKeyword": "RAK-1679"
+    "searchVaultKeyword": "RAK-1679",
+    "newApproverNumber": 2,
+    "editVaultNote": "AT note for editing vault policy"
   },
   "whitelist": {
 

@@ -2,7 +2,6 @@
 Feature: WhiteList Folder
 
   Background:
-    #@PRECOND_RAKCON-10228
     * url baseURL
     * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
@@ -10,15 +9,46 @@ Feature: WhiteList Folder
     * configure headers = { Authorization: '#(accessToken)'}
     * def dataBody = read('classpath:data/data_test.json')
 
-  @ignore @Get_list_folder
-  Scenario: Precondition: Get list folder to create / delete / add address
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME'}
+  #Create new folder
+  @RAKCON-10226 @Create_folder
+  Scenario: Check create a new folder
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def folderName = 'Folder-' + now()
+    * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_internal)' }
+    Given path 'core/folders'
+    And request body
+    When method POST
+    Then status 201
+    And print response
+    And match response.data.name == "#(folderName)"
+    And match response.data.type == "#(dataBody.whitelist.type_internal)"
+
+  #Folder Listing
+  @RAKCON-10587 @List_folder
+  Scenario: Check view folder listing
+     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME'}
+     Given path 'core/folders'
+     And params query
+     When method GET
+     Then status 200
+
+  #Search folder
+  @RAKCON-11163
+  Scenario: Check search folder
+    * def newFolder = call read('WhiteListFolder.feature@Create_folder')
+    * def folderName = newFolder.response.data.name
+    * def type = newFolder.response.data.type
+    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(folderName)'}
     Given path 'core/folders'
     And params query
     When method GET
     Then status 200
+    And match response.data.folders[0].name == "#(folderName)"
+    And match response.data.folders[0].type == "#(type)"
+    And match response.data.totalCount == 1
 
-   #1.Get list vault
+
+    #1.Get list vault
   @ignore @Get_listVault
   Scenario: Precondition 1: Get list vault
     * def query = { limit:'10', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', isHideSmallBalance : 'false'}
@@ -60,47 +90,12 @@ Feature: WhiteList Folder
     And params query
     When method GET
     Then status 200
-
-  @RAKCON-10226
-  Scenario: Check create a new folder
-#    * call read('WhiteListFolder.feature@Get_list_folder')
-    #Create new folder
-    * def now = function(){ return java.lang.System.currentTimeMillis() }
-    * def folderName = 'Folder-' + now()
-    * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_internal)' }
-    Given path 'core/folders'
-    And request body
-    When method POST
-    Then status 201
-    And print response
-    And match response.data.name == "#(folderName)"
-    And match response.data.type == "#(dataBody.whitelist.type_internal)"
-    #Verify the list folder contains new folder created
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(folderName)'}
-    Given path 'core/folders'
-    And params query
-    When method GET
-    Then status 200
-    And match response.data.folders[0].name == "#(folderName)"
-    * def folderId = response.data.folders[0].id
-
-  @RAKCON-10969
-  Scenario:Create new whitelisted address
-    * def newFolder = call read('WhiteListFolder.feature@RAKCON-10226')
-    * def folderId = newFolder.response.data.folders[0].id
-    * def tokenDetail = call read('WhiteListFolder.feature@Get_detailToken')
-    * def tokenId = tokenDetail.response.data.id
+    #5.Validate to add new address
+  @ignore @Validate_add_address
+  Scenario:Precondition 5:Validate to add new address
     * def getAddress = call read('WhiteListFolder.feature@Get_address')
     * def address = getAddress.response.data.address[0].address
     * def nativeAsset = getAddress.response.data.address[0].nativeAsset
-
-  #View detail a folder
-    Given path 'core/folders/list-address'
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
-    And params query
-    When method Get
-    Then status 200
-  #Validate to add new address
     * def body_validate = {"address" : '#(address)',"nativeAsset": '#(nativeAsset)' }
     Given path 'core/folders/addresses/validate'
     And request body_validate
@@ -109,6 +104,17 @@ Feature: WhiteList Folder
     And match response.data.isValid  == true
     And match response.data.isValidMemo == true
     And match response.data.isValidAddress == true
+  # Create whitelist address
+  @RAKCON-10969 @Create_address
+  Scenario:Create new whitelisted address
+    * def newFolder = call read('WhiteListFolder.feature@Create_folder')
+    * def folderId = newFolder.response.data.id
+    * def tokenDetail = call read('WhiteListFolder.feature@Get_detailToken')
+    * def tokenId = tokenDetail.response.data.id
+    * def getAddress = call read('WhiteListFolder.feature@Get_address')
+    * def address = getAddress.response.data.address[0].address
+    * def nativeAsset = getAddress.response.data.address[0].nativeAsset
+    * call read('WhiteListFolder.feature@Validate_add_address')
     #Submit add new address
     * callonce read('GenerateAnswer.feature@FIDO-Requester')
     * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(tokenId)', "note": 'Note test', "address": '#(address)'}
@@ -119,12 +125,25 @@ Feature: WhiteList Folder
     Then status 201
     And match response.data.address == "#(address)"
     And match response.data.folderId == "#(folderId)"
-
-
+    #View detail a folder
+  @RAKCON-11164
+  Scenario: Check view detail a folder
+    * def create_address = call read('WhiteListFolder.feature@Create_address')
+    * def tokenId = create_address.response.data.id
+    * def folderId = create_address.response.data.folderId
+    * def address = create_address.response.data.address
+    Given path 'core/folders/list-address'
+    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
+    And params query
+    When method GET
+    Then status 200
+    And match response.data.listAddress[0].address == "#(address)"
+    And match response.data.listAddress[0].id == "#(tokenId)"
+    # Delete folder
   @RAKCON-10227
   Scenario: Check delete a folder
     #Get list folder
-    * def listFolder = call read('WhiteListFolder.feature@Get_list_folder')
+    * def listFolder = call read('WhiteListFolder.feature@List_folder')
     * def folderId = listFolder.response.data.folders[0].id
     * def folderName = listFolder.response.data.folders[0].name
     #Select a folder then delete
@@ -139,13 +158,6 @@ Feature: WhiteList Folder
     Then status 200
     And match response.data.totalCount == 0
 
-#  @RAKCON-10587
-#  Scenario: Example TC
-#    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: 'Folder_test_02'}
-#    Given path 'core/folders'
-#    And params query
-#    When method GET
-#    Then status 200
 
 
 

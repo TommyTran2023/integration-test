@@ -12,7 +12,7 @@
     "editVaultNote": "AT note for editing vault policy"
   },
   "whitelist": {
-
+    "type_internal": "internal"
   }
 
 }

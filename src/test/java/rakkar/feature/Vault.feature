@@ -20,7 +20,7 @@ Feature: Vault
     When method GET
     Then status 200
     * def checkExist = response.data.exist
-    * eval if (checkExist==true) karate.fail('Vault name shouldn't exist')
+    * eval if (checkExist==true) karate.fail('Vault name should not exist')
 
   @ignore @CHECK-LIST-USER
   Scenario: Get user list of organization
@@ -114,9 +114,6 @@ Feature: Vault
     #* print addedName
     * def resp = response.data.vaults
     * print resp
-    #* def names = $resp[*].name
-    #* print 'List of vault names: ', names
-    #* match names contains addedName
     * def totalCount = response.data.totalCount
     * print 'Total number of vaults: ', totalCount
     * match response.status == 'success'

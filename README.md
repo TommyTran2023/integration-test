@@ -23,3 +23,8 @@ mvn clean compile test
 mvn test
 ```
 To run specific test case or test execution, click on Run icon in specific scenario/feature
+
+### Setup user and data 
+For each environment, it should have at least 1 user for send request, 1 user do approve.
+1. Create new user. Setup passcode be the same passcode in data_test.json > common > passcode._
+2. Add new data user in env_data.json

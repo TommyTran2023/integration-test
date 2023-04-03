@@ -9,6 +9,7 @@ The project is developed in Java with Maven, so it will install the following so
 * Apache Maven
 * Node JS
 * Your favorite IDE, including : Eclipse IDE, Intellij IDEA
+* Onboarding account manually in REP site with corresponding environment (for example: https://uat-rep.rakkardigital.com/login) and add Username in /data/env_data.json
 
 ### Installation
 _Below is the instruction to install and setting the project._
@@ -22,9 +23,14 @@ mvn clean install
 mvn clean compile test
 mvn test
 ```
+To run the test script in the specific environment, enter following commands:
+```agsl
+mvn test -Dkarate.env=uat
+mvn test -Dkarate.env=qa
+```
 To run specific test case or test execution, click on Run icon in specific scenario/feature
 
 ### Setup user and data 
 For each environment, it should have at least 1 user for send request, 1 user do approve.
-1. Create new user. Setup passcode be the same passcode in data_test.json > common > passcode._
+1. Create new user. Input the passcode of user in data_test.json > common > passcode._
 2. Add new data user in env_data.json

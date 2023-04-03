@@ -28,7 +28,7 @@ Feature: Account admin policy
 
      #Verify requesterPasscode
     Given path '/auth/account/verify-passcode'
-    * request {"passcode":'#(dataBody.common.requesterPasscode)'}
+    * request {"passcode":'#(requesterPasscode)'}
     When method POST
     Then status 201
     * def verifyStatus = response.data.verify
@@ -37,7 +37,7 @@ Feature: Account admin policy
     Given path '/core/customers/' + customerId
     * def challenge = call read('GenerateAnswer.feature')
     * header challenge-answer = challenge.challengeAnswerRequest
-    * header passcode = dataBody.common.requesterPasscode
+    * header passcode = requesterPasscode
     * request {"note" : "Note",  "memberRequired" : [  ],  "quorumSize" : 2}
     When method PUT
     Then status 200
@@ -46,7 +46,7 @@ Feature: Account admin policy
     Given path '/core/customers/' + customerId
     * def challenge = call read('GenerateAnswer.feature')
     * header challenge-answer = challenge.challengeAnswerRequest
-    * header passcode = dataBody.common.requesterPasscode
+    * header passcode = requesterPasscode
     * request {"note" : "Note",  "memberRequired" : [  ],  "quorumSize" : 2}
     When method PUT
     Then status 400
@@ -102,7 +102,7 @@ Feature: Account admin policy
     Given path 'core/quorums/approval/' + requestId
     * def challenge = call read('GenerateAnswer.feature')
     * header challenge-answer = challenge.challengeAnswerRequest
-    * header passcode = dataBody.common.approverPasscode
+    * header passcode = approverPasscode
     When method POST
     Then status 201
 

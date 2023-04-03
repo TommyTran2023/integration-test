@@ -1,14 +1,18 @@
 {
   "qa": {
-    "baseUrl": "https://qa-api.rakkardigital.com",
+    "baseURL": "https://qa-api.rakkardigital.com",
     "requesterUsername": "ID_CARDPT24121993",
+    "requesterPasscode": "123123",
     "approvalUsername": "PASSPORT786567772",
+    "approverPasscode": "123123",
     "adminUsername": "PASSPORT65746"
   },
   "uat": {
-    "baseUrl": "https://uat-api.rakkardigital.com",
+    "baseURL": "https://uat-api.rakkardigital.com",
     "requesterUsername": "ID_CARDAT00006",
+    "requesterPasscode": "123111",
     "approvalUsername": "PASSPORT01011998",
+    "approverPasscode": "271198",
     "adminUsername": "PASSPORT123456"
   }
 }

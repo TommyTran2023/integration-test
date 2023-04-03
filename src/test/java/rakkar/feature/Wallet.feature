@@ -4,7 +4,6 @@ Feature: Wallet
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
-    * def dataBody = read('classpath:data/data_test.json')
 
   @ignore @VIEW-LIST-ASSET
   Scenario: View list asset
@@ -189,9 +188,10 @@ Feature: Wallet
     * def totalCount = response.data.totalCount
     * def address = response.data.address
     * def sizeAddress = address.length
-    * def newAddressActual = response.data.address[1].address
-    * def nameActual = response.data.address[1].description
-    * def assetIdActual = response.data.address[1].assetId
+    *  def sizeNumber = sizeAddress - 1
+    * def newAddressActual = response.data.address[sizeNumber].address
+    * def nameActual = response.data.address[sizeNumber].description
+    * def assetIdActual = response.data.address[sizeNumber].assetId
     #Check the expected value of variable
     * def newAddressExpected = createDepositAddress.response.data.address
     * def nameExpected = createDepositAddress.response.data.description
@@ -203,6 +203,8 @@ Feature: Wallet
     * match assetIdActual == assetIdExpected
     * match canCreateAddress == true
     * match totalCount == sizeAddress
+
+
 
 
 

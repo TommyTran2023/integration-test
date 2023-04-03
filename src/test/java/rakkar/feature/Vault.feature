@@ -20,7 +20,7 @@ Feature: Vault
     When method GET
     Then status 200
     * def checkExist = response.data.exist
-    * eval if (checkExist==true) karate.fail('Vault name is already exist')
+    * eval if (checkExist==true) karate.fail('Vault name shouldn't exist')
 
   @ignore @CHECK-LIST-USER
   Scenario: Get user list of organization

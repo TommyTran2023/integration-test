@@ -13,7 +13,7 @@ Feature: Approval Request
   @RAKCON-10975 @ApproveNewVaultRequest
   Scenario: Approval - New vault policy request
     # Get request ID of creating vault request
-    * def requestID = recordsResponse.length > 0 ? karate.jsonPath(recordsResponse, "$.[?(@.type.value=='CREATE_VAULT')].id")[0] : 0
+    Given def requestID = recordsResponse.length > 0 ? karate.jsonPath(recordsResponse, "$.[?(@.type.value=='CREATE_VAULT')].id")[0] : 0
     * print requestID
 
     # If there is Create new vault request available -> Approve new vault policy request

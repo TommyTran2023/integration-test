@@ -1,14 +1,10 @@
 Feature: Wallet
   Background:
     * url baseURL
-    * def requesterAuthResponse = karate.callSingle('RequesterAuthenticator.feature')
-    * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
-    * def accessToken = 'Bearer ' + requesterAuthToken
+    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
-    * configure headers = {Authorization: '#(accessToken)'}
     * def dataBody = read('classpath:data/data_test.json')
-
 
   @ignore @VIEW-LIST-ASSET
   Scenario: View list asset

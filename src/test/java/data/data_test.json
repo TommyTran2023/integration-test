@@ -11,6 +11,14 @@
     "editVaultNote": "AT note for editing vault policy"
   },
   "whitelist": {
-    "type_internal": "internal"
+    "type_internal": "internal",
+    "schema_list" : {
+      "createdBy": "#string",
+      "id": "#string",
+      "createdAt": "#string",
+      "tokens": "#[]",
+      "name": "#string",
+      "type": "#string"
+    }
   }
 }

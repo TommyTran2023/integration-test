@@ -25,5 +25,3 @@ Feature: Get access token for Requester
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
     * def accessToken = 'Bearer ' + requesterAuthToken
     * configure headers = {Authorization: '#(accessToken)'}
-
-

@@ -131,7 +131,7 @@ Feature: Vault
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
     * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * def requestID = requestCreateVaultID
+    * def requestId = requestCreateVaultID
     * call read('ApprovalRequest.feature@ApproveRequest')
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA

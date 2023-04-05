@@ -1,5 +1,6 @@
 @RAKCON-10938 @ignore
 Feature: Account admin policy
+
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
@@ -33,7 +34,17 @@ Feature: Account admin policy
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * match requestId != null
 
-
+  @RAKCON-11348 @EditAccountPolicyHasPending
+  Scenario: Edit account policy when has pending request
+    * callonce read('AccountPolicy.feature@EditAccountPolicy')
+    Given path '/core/customers/' + customerId
+    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterPasscode
+    * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
+    When method PUT
+    Then status 400
+    * match response.errorCode == 'EXISTS_PENDING_REQUEST'
 
 
 

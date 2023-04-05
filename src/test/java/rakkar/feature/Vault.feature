@@ -196,7 +196,7 @@ Feature: Vault
   Scenario: Sort vaults by name A - Z
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'ASC'
     * param sortBy = 'NAME'
@@ -214,7 +214,7 @@ Feature: Vault
   Scenario: Sort vaults by name Z - A
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'NAME'
@@ -232,7 +232,7 @@ Feature: Vault
   Scenario: Sort vaults by highest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
@@ -252,7 +252,7 @@ Feature: Vault
   Scenario: Sort vaults by lowest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'ASC'
     * param sortBy = 'TOTAL_USD'
@@ -279,20 +279,15 @@ Feature: Vault
 
   @RAKCON-10957 @EditVaultPolicy
   Scenario: Edit vault policy
-    #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
     #Get list user in organization
     * callonce read('Vault.feature@CHECK-LIST-USER')
-    #Get a random vault that has not edit vault pending request
-    * def vaultListing = callonce read('Vault.feature@ViewVaultListing')
-    * def listVault = vaultListing.response.data.vaults
-    * print listVault
-    * def VaultWOPendingReq = karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")[0]
-    * print 'List vaults can be edited: ', karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")
-    * print 'Editing vault ID: ', VaultWOPendingReq
+    #Get a vault that has not edit vault pending request
+    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
     #Edit vault policy
-    Given path '/core/vault/account/'+VaultWOPendingReq+'/rules'
+    Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    #Get variable challengeAnswerRequest
+    * call read('GenerateAnswer.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     When method PUT
@@ -303,3 +298,14 @@ Feature: Vault
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
     * match $response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
     * match response.data.record.additionalData.data.note == dataBody.vault.editVaultNote
+
+  @RAKCON-11350 @EditVaultPolicyHasPending
+  Scenario: Edit vault policy when has pending request
+    * callonce read('Vault.feature@EditVaultPolicy')
+    Given path '/core/vault/account/'+vaultIDWA+'/rules'
+    * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
+    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterPasscode
+    When method PUT
+    Then match response.data.message == 'Exists pending requests'

@@ -188,21 +188,26 @@ Feature: Wallet
     * def totalCount = response.data.totalCount
     * def address = response.data.address
     * def sizeAddress = address.length
-    *  def sizeNumber = sizeAddress - 1
+    * def sizeNumber = sizeAddress - 1
     * def newAddressActual = response.data.address[sizeNumber].address
     * def nameActual = response.data.address[sizeNumber].description
     * def assetIdActual = response.data.address[sizeNumber].assetId
+    * def idActual = response.data.address[sizeNumber].id
     #Check the expected value of variable
     * def newAddressExpected = createDepositAddress.response.data.address
     * def nameExpected = createDepositAddress.response.data.description
     * def idExpected = createDepositAddress.response.data.id
     * def assetIdExpected = createDepositAddress.response.data.assetId
+    * def idExpected = createDepositAddress.response.data.id
     #Verify the actual variable and the expected variable
     * match newAddressActual == newAddressExpected
     * match nameActual == nameExpected
     * match assetIdActual == assetIdExpected
+    * match idActual == idExpected
     * match canCreateAddress == true
     * match totalCount == sizeAddress
+
+
 
 
 

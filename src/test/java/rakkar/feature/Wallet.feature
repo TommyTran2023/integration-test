@@ -15,7 +15,7 @@ Feature: Wallet
     * def symbolView = response.data.tokens[0].symbol
     * def networkView = response.data.tokens[0].network
 
-  @RAKCON-10944 @ADD-WALLET
+  @RAKCON-10944 @ADD_WALLET
   Scenario: Add asset to the vault
     * call read('Wallet.feature@VIEW-LIST-ASSET')
     Given path 'core/wallet/' + vaultId
@@ -27,10 +27,10 @@ Feature: Wallet
     And match symbolAdd == symbolView
     And match networkAdd == networkView
 
-  @RAKCON-10952 @SORT-WALLETS
+  @RAKCON-10952 @SORT_WALLETS
   Scenario: Sort wallets from A >Z
   # Add new asset
-    * call read('Wallet.feature@ADD-WALLET')
+    * call read('Wallet.feature@ADD_WALLET')
   # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
@@ -206,6 +206,17 @@ Feature: Wallet
     * match idActual == idExpected
     * match canCreateAddress == true
     * match totalCount == sizeAddress
+
+  @RAKCON-10964 @HIDE_AN_ASSET
+  Scenario: Hide an asset
+    * def addAsset = call read('Wallet.feature@ADD_WALLET')
+    * def assetId = addAsset.response.data.success[0].id
+    * print assetId
+    Given path 'core/wallet/' + assetId + '/hide'
+    And method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
 
 
 

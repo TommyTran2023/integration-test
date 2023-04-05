@@ -12,5 +12,8 @@
   },
   "whitelist": {
     "type_internal": "internal"
+  },
+  "account_policy": {
+    "approve_number": 2
   }
 }

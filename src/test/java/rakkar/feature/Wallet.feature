@@ -86,7 +86,7 @@ Feature: Wallet
     * call read('Wallet.feature@ADD_WALLET')
   # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'DESC', sortBy: 'TOTAL_USD', isHiddenList: false}
+    And params {limit: '10', offset: '0', sort: 'DESC', sortBy: 'TOTAL_USD', isHideList: false}
     When method GET
     Then status 200
   #Sorting the response in descending order by price
@@ -216,28 +216,31 @@ Feature: Wallet
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+    * def symbol = addAsset.response.data.success[0].symbol
+    * def network = addAsset.response.data.success[0].network
+    * def name = addAsset.response.data.success[0].name
+    * def icon = addAsset.response.data.success[0].icon
+    * def price = addAsset.response.data.success[0].price
 
   @RAKCON-10966 @VIEW_HIDDEN_AN_ASSET
   Scenario: View hidden an asset
-    * def addAsset = karate.callSingle('Wallet.feature@ADD_WALLET')
-    * def assetId = addAsset.response.data.success[0].id
     * def hideAsset = call read('Wallet.feature@HIDE_AN_ASSET')
     # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: true}
+    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHideList: true}
     When method GET
     Then status 200
     * def wallet = response.data.wallets
     * def sizeAddress = wallet.length
     * def sizeNumber = sizeAddress - 1
+    #Check the expected value of varieble
+    * def assetIdExpected = hideAsset.assetId
+    * def symbolExpected = hideAsset.symbol
+    * def networkExpected = hideAsset.network
+    * def nameExpected = hideAsset.name
+    * def iconExpected = hideAsset.icon
+    * def priceExpected = hideAsset.price
     #Check the actual value of variable
-    * def assetIdExpected = assetId
-    * def symbolExpected = addAsset.response.data.success[0].symbol
-    * def networkExpected = addAsset.response.data.success[0].network
-    * def nameExpected = addAsset.response.data.success[0].name
-    * def iconExpected = addAsset.response.data.success[0].icon
-    * def priceExpected = addAsset.response.data.success[0].price
-    #Check the expected value of variable
     * def assetIdActual = wallet[sizeNumber].id
     * def symbolActual = wallet[sizeNumber].symbol
     * def networkActual = wallet[sizeNumber].network
@@ -251,6 +254,16 @@ Feature: Wallet
     * match nameActual == nameExpected
     * match iconActual == iconExpected
     * match priceActual == priceExpected
+
+  @RAKCON-10965 @UNHIDE_AN_ASSET
+  Scenario: Unhide an asset
+    * call read('Wallet.feature@VIEW_HIDDEN_AN_ASSET')
+    Given path 'core/wallet/' + assetIdActual + '/unhide'
+    And method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+
 
 
 

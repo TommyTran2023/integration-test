@@ -211,12 +211,50 @@ Feature: Wallet
   Scenario: Hide an asset
     * def addAsset = call read('Wallet.feature@ADD_WALLET')
     * def assetId = addAsset.response.data.success[0].id
-    * print assetId
     Given path 'core/wallet/' + assetId + '/hide'
     And method POST
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  @RAKCON-10966 @VIEW_HIDDEN_AN_ASSET
+  Scenario: View hidden an asset
+    * def addAsset = karate.callSingle('Wallet.feature@ADD_WALLET')
+    * def assetId = addAsset.response.data.success[0].id
+    * def hideAsset = call read('Wallet.feature@HIDE_AN_ASSET')
+    # View asset listing
+    Given path 'core/vault/account/' + vaultId + '/wallets'
+    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: true}
+    When method GET
+    Then status 200
+    * def wallet = response.data.wallets
+    * def sizeAddress = wallet.length
+    * def sizeNumber = sizeAddress - 1
+    #Check the actual value of variable
+    * def assetIdExpected = assetId
+    * def symbolExpected = addAsset.response.data.success[0].symbol
+    * def networkExpected = addAsset.response.data.success[0].network
+    * def nameExpected = addAsset.response.data.success[0].name
+    * def iconExpected = addAsset.response.data.success[0].icon
+    * def priceExpected = addAsset.response.data.success[0].price
+    #Check the expected value of variable
+    * def assetIdActual = wallet[sizeNumber].id
+    * def symbolActual = wallet[sizeNumber].symbol
+    * def networkActual = wallet[sizeNumber].network
+    * def nameActual = wallet[sizeNumber].name
+    * def iconActual = wallet[sizeNumber].icon
+    * def priceActual = wallet[sizeNumber].price
+    #Verify the actual variable and the expected variable
+    * match assetIdActual == assetIdExpected
+    * match symbolActual == symbolExpected
+    * match networkActual == networkExpected
+    * match nameActual == nameExpected
+    * match iconActual == iconExpected
+    * match priceActual == priceExpected
+
+
+
+
 
 
 

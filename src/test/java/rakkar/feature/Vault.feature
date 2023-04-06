@@ -114,14 +114,13 @@ Feature: Vault
     Given path '/core/vault/accounts/'+vaultIDWA
     When method GET
     Then status 200
-    * def requestCreateVaultID = response.data.requestId
+    * def requestId = response.data.requestId
 
   @RAKCON-10827 @ViewVaultDetailHasAdminSetup
   Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
     * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * def requestId = requestCreateVaultID
     * call read('ApprovalRequest.feature@ApproveRequest')
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA
@@ -301,3 +300,11 @@ Feature: Vault
     * header passcode = requesterPasscode
     When method PUT
     Then match response.data.message == 'Exists pending requests'
+
+  @RAKCON-11286 @HideVault
+  Scenario: Hide a vault
+    * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
+    When method POST
+    Then status 201
+    * match response.status == 'success'

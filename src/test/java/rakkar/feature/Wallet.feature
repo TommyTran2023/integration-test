@@ -1,5 +1,8 @@
+@RAKCON-10941
 Feature: Wallet
+
   Background:
+    #@PRECOND_RAKCON-11355
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
@@ -27,7 +30,7 @@ Feature: Wallet
     And match symbolAdd == symbolView
     And match networkAdd == networkView
 
-  @RAKCON-10952 @SORT_WALLETS
+  @RAKCON-10952 @SORT_WALLETS_FROM_A_Z
   Scenario: Sort wallets from A >Z
   # Add new asset
     * call read('Wallet.feature@ADD_WALLET')
@@ -41,6 +44,7 @@ Feature: Wallet
     * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return a.symbol.localeCompare(b.symbol) })
     * match listAssetActual == listAssetActual
 
+  @RAKCON-11371 @SORT_WALLETS_FROM_Z_A
   Scenario: Sort wallets from Z > A
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
@@ -51,6 +55,7 @@ Feature: Wallet
     * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return b.symbol.localeCompare(a.symbol) })
     * match listAssetActual == listAssetActual
 
+  @RAKCON-11373 @SORT_WALLETS_FROM_LOWEST_VALUE
   Scenario: Sort wallets from lowest value
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'TOTAL_USD', isHiddenList: false}
@@ -174,7 +179,7 @@ Feature: Wallet
     * match assetIdActual != null
     * match nameActual == addressName
 
-  @VIEW_DEPOSIT_ADDRESS
+  @RAKCON-11374 @VIEW_DEPOSIT_ADDRESS
   Scenario: View deposit address
     * def addWallet = karate.callSingle('Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     * def walletId = addWallet.response.data.success[0].id

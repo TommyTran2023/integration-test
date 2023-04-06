@@ -2,6 +2,7 @@
 Feature: WhiteList Folder
 
   Background:
+    #@PRECOND_RAKCON-10582
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def user = call read('UserManagement.feature@GetAccountMe')

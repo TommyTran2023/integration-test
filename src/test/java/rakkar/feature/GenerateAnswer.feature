@@ -1,3 +1,4 @@
+@ignore
 Feature: Generate Challenge Answer for Biometric
 
   Background:

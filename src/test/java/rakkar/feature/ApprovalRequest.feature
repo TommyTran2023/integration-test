@@ -2,6 +2,7 @@
 Feature: Approval Request
 
   Background:
+    #@PRECOND_RAKCON-11369
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def challengeApprover = call read('GenerateAnswer.feature@FIDO-Approver')
@@ -22,11 +23,11 @@ Feature: Approval Request
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * karate.call('ApprovalRequest.feature@ApproveRequest')
 
-   @RAKCON-11047 @ApprovalNewAddressWhitelist
+   @RAKCON-11367 @ApprovalNewAddressWhitelist
    Scenario: Approval - Add whitelist address folder
     # Get request ID of creating whitelist address
      * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
-     * def requestID = value.response.data.records[0].id
+     * def requestId = value.response.data.records[0].id
      * karate.call('ApprovalRequest.feature@ApproveRequest')
 
      # Common Approve

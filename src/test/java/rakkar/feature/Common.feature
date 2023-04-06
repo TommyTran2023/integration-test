@@ -32,3 +32,13 @@ Feature: Generate Challenge Answer for Biometric
     * string command = dataBody.common.commandToGenChallengeAnswer + challenge
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
+
+  @VERIFY-PASSCODE
+  Scenario: Verify passcode of Requester
+    #Verify requesterPasscode
+    Given path '/auth/account/verify-passcode'
+    * request {"passcode":'#(requesterPasscode)'}
+    When method POST
+    Then status 201
+    * def verifyStatus = response.data.verify
+    * match verifyStatus == true

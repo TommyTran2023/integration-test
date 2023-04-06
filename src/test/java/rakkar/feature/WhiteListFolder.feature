@@ -122,7 +122,7 @@ Feature: WhiteList Folder
     * def nativeAsset = getAddress.response.data.address[0].nativeAsset
     * call read('WhiteListFolder.feature@Validate_add_address')
     #Submit add new address
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(tokenId)', "note": 'Note test', "address": '#(address)'}
     Given path 'core/folders/'+ folderId +'/tokens'
     * header challenge-answer = challengeAnswerRequest
@@ -187,7 +187,7 @@ Feature: WhiteList Folder
     * def create_address = callonce read('WhiteListFolder.feature@Create_address')
     * def addressId = create_address.response.data.id
     * def folderId = create_address.response.data.folderId
-    * callonce read('GenerateAnswer.feature@FIDO-Requester')
+    * callonce read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     #delete address
     Given path 'core/folders/'+ folderId + '/address'
@@ -205,7 +205,7 @@ Feature: WhiteList Folder
     * def folderId = newFolder.response.data.id
     * def folderName = newFolder.response.data.name
     #delete folder
-    * callonce read('GenerateAnswer.feature@FIDO-Requester')
+    * callonce read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/folders/'+ folderId
     When method DELETE

@@ -45,24 +45,14 @@ Feature: Vault
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
-  @ignore @VERIFY-PASSCODE
-  Scenario: Verify passcode of Requester
-    #Verify requesterPasscode
-    Given path '/auth/account/verify-passcode'
-    * request {"passcode":'#(requesterPasscode)'}
-    When method POST
-    Then status 201
-    * def verifyStatus = response.data.verify
-    * match verifyStatus == true
-
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Vault.feature@BY-PASS-BIOMETRIC')
-    #* call read('Vault.feature@VERIFY-PASSCODE')
+    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
@@ -83,9 +73,9 @@ Feature: Vault
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Vault.feature@BY-PASS-BIOMETRIC')
-    #* call read('Vault.feature@VERIFY-PASSCODE')
+    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
@@ -289,7 +279,7 @@ Feature: Vault
     Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
     #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     When method PUT
@@ -306,7 +296,7 @@ Feature: Vault
     * callonce read('Vault.feature@EditVaultPolicy')
     Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     When method PUT

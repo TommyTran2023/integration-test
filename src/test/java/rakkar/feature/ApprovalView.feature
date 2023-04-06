@@ -4,7 +4,7 @@ Feature: Approval View
   Background:
     * url baseURL
     * call read('ApprovalAuthenticator.feature')
-    * def challengeApprover = call read('GenerateAnswer.feature@FIDO-Approver')
+    * def challengeApprover = call read('Common.feature@FIDO-Approver')
     * def dataBody = read('classpath:data/data_test.json')
 
     @RAKCON-10983 @ViewListPendingRequest

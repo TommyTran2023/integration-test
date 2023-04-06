@@ -25,7 +25,7 @@ Feature: Account admin policy
     * callonce read('AccountPolicy.feature@ViewAccountPolicy')
     * if (requestId != null) karate.call('RejectRequest.feature@RejectEditPolicy')
     Given path '/core/customers/' + customerId
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
@@ -39,7 +39,7 @@ Feature: Account admin policy
   Scenario: Edit account policy when has pending request
     * callonce read('AccountPolicy.feature@EditAccountPolicy')
     Given path '/core/customers/' + customerId
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}

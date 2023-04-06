@@ -308,3 +308,21 @@ Feature: Vault
     When method POST
     Then status 201
     * match response.status == 'success'
+
+  @RAKCON-11287 @ViewHiddenVaultList
+  Scenario: View hidden listing vault
+    Given path '/core/vault/accounts'
+    * param isHideList = true
+    * param limit = 10
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * def vaultsSchema = {"missing":#boolean, "id":'#string', "editVaultPending":#boolean, "wallets":[], "totalUSD":#number, "createdAt":'#string', "type":'#string', "approverNumber":#number, "name":'#string', "totalUSDYesterday":'##string'}
+    * match response.data.vaults == '#[]vaultsSchema'
+    * match response.data.hasSmallBalance == '#boolean'
+    * match response.data.totalUSD == '#number'
+    * match response.data.totalUSDYesterday == '#number'
+    * match response.data.totalCount == '#number'
+    * match response.data.totalBTC == '#number'

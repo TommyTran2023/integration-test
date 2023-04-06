@@ -9,7 +9,7 @@
       * def viewAccountPolicy = call read('Accountpolicy.feature@RAKCON-10939')
       * def requestId = viewAccountPolicy.response.data.pendingRequestId
       Given path 'core/quorums/cancel/' + requestId
-      * def challenge = call read('GenerateAnswer.feature')
+      * def challenge = call read('Common.feature')
       * header challenge-answer = challenge.challengeAnswerRequest
       When method PUT
       Then status 200

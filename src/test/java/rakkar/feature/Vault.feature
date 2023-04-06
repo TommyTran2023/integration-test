@@ -283,7 +283,7 @@ Feature: Vault
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     When method PUT
-    Then status 200commo
+    Then status 200
     * match response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
     * match response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove

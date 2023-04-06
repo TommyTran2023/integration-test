@@ -12,3 +12,5 @@
       When method PUT
       Then status 200
       * match response.status == 'success'
+      * call read('AccountPolicy.feature@ViewAccountPolicy')
+      * match requestId == null

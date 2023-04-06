@@ -1,5 +1,8 @@
+@RAKCON-10941
 Feature: Wallet
+
   Background:
+    #@PRECOND_RAKCON-11355
     * url baseURL
     * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken

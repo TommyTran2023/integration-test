@@ -246,7 +246,6 @@ Feature: Vault
     * print 'List expected vault  after sorting by highest value: ', listVaultTotalUSDExpected
     * karate.sort(listVaultTotalUSDExpected)
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
-    * def listVaultTotalUSDASC = listVaultTotalUSDExpected.reverse()
 
   @RAKCON-11120 @SortVaultLowestValue
   Scenario: Sort vaults by lowest value
@@ -259,10 +258,13 @@ Feature: Vault
     When method GET
     Then status 200
     * def listVault = response.data.vaults
-    * def listVaultTotalUSDASCActual = $listVault[*].totalUSD
-    * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDASCActual
-    * callonce read('Vault.feature@SortVaultHighestValue')
-    * match listVaultTotalUSDASCActual == listVaultTotalUSDASC
+    * def listVaultTotalUSDActual = $listVault[*].totalUSD
+    * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDActual
+    * def listVaultTotalUSDExpected = []
+    * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
+    * print 'List expected vault  after sorting by lowest value: ', listVaultTotalUSDExpected
+    * karate.sort(listVaultTotalUSDExpected)
+    * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
   @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name

@@ -1,6 +1,7 @@
-@RAKCON-10947 @ignore
+  @RAKCON-10947
   Feature: Reject Request
     Background:
+      #@PRECOND_RAKCON-11353
       * url baseURL
       * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
       * def challengeApprover = call read('GenerateAnswer.feature@FIDO-Approver')

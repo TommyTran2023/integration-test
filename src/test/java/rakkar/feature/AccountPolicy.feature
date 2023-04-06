@@ -1,7 +1,8 @@
-@RAKCON-10938 @ignore
+@RAKCON-10938
 Feature: Account admin policy
 
   Background:
+    #@PRECOND_RAKCON-11352
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('GetRequesterID.feature')

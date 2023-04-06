@@ -22,8 +22,8 @@ Feature: Approval Request
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * karate.call('ApprovalRequest.feature@ApproveRequest')
 
-   @RAKCON-11367 @ApprovalNewAddressWhitelist
-   Scenario: Approval - Add whitelist address folder
+   @RAKCON-11047 @ApprovalNewAddressWhitelist
+   Scenario: Approval - Add whitelist address
     # Get request ID of creating whitelist address
      * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
      * def requestId = value.response.data.records[0].id

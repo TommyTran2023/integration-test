@@ -186,7 +186,7 @@ Feature: WhiteList Folder
   Scenario: Check delete whitelist address
     #create address
     * callonce read('WhiteListFolder.feature@Create_address')
-    * callonce read('Common.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     #delete address
     Given path 'core/folders/'+ folderId + '/address'
@@ -202,7 +202,7 @@ Feature: WhiteList Folder
     #Create new folder
      * call read('WhiteListFolder.feature@Create_folder')
     #delete folder
-    * callonce read('Common.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/folders/'+ folderId
     When method DELETE

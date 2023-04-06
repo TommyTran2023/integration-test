@@ -82,7 +82,7 @@ Feature: Transfer
   Scenario: Internal withdraw - Check submit with low value
     * call read('Transfer.feature@Total_estimate_fee')
     * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(destinationId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * callonce read('Common.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
     And request body
@@ -96,4 +96,7 @@ Feature: Transfer
     And response.data.symbol == "#(symbol)"
 
   #Tcs: Submit transfer medium value
+  @RAKCON-11334 @Transfer_medium_value
+  Scenario: Internal withdraw - Check submit with medium value
+
   # TCs: View transaction after submit

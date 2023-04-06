@@ -12,7 +12,6 @@ Feature: Approval Request
   Scenario: Approval - New vault policy request
     # Create new vault and get request ID of creating vault request
     * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * def requestId = requestCreateVaultID
     * karate.call('ApprovalRequest.feature@ApproveRequest')
 
 

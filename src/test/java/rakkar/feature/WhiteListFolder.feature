@@ -22,6 +22,8 @@ Feature: WhiteList Folder
     And match response.status == "success"
     And match response.data.name == "#(folderName)"
     And match response.data.type == "#(dataBody.whitelist.type_internal)"
+    * def folderId = response.data.id
+    * def folderName = response.data.name
 
   #TCs: FOLDER LISTING
   @RAKCON-10587 @List_folder
@@ -83,6 +85,8 @@ Feature: WhiteList Folder
     And params query
     When method GET
     Then status 200
+    * def tokenId = response.data.id
+
     #Pre-4.View deposit and get the address
   @ignore @Get_address
   Scenario: Precondition 4: View deposit and get address
@@ -95,6 +99,9 @@ Feature: WhiteList Folder
     And params query
     When method GET
     Then status 200
+    * def address = response.data.address[0].address
+    * def nativeAsset = response.data.address[0].nativeAsset
+
     #Pre-5.Validate to add new address
   @ignore @Validate_add_address
   Scenario:Precondition 5:Validate to add new address
@@ -113,13 +120,9 @@ Feature: WhiteList Folder
   #Tcs: CREATE WHITELIST ADDRESS
   @RAKCON-10969 @Create_address
   Scenario:Create new whitelisted address
-    * def newFolder = call read('WhiteListFolder.feature@Create_folder')
-    * def folderId = newFolder.response.data.id
-    * def tokenDetail = call read('WhiteListFolder.feature@Get_detailToken')
-    * def tokenId = tokenDetail.response.data.id
-    * def getAddress = call read('WhiteListFolder.feature@Get_address')
-    * def address = getAddress.response.data.address[0].address
-    * def nativeAsset = getAddress.response.data.address[0].nativeAsset
+    * call read('WhiteListFolder.feature@Create_folder')
+    * call read('WhiteListFolder.feature@Get_detailToken')
+    * call read('WhiteListFolder.feature@Get_address')
     * call read('WhiteListFolder.feature@Validate_add_address')
     #Submit add new address
     * call read('Common.feature@FIDO-Requester')
@@ -133,14 +136,17 @@ Feature: WhiteList Folder
     And match response.data.address == "#(address)"
     And match response.data.folderId == "#(folderId)"
     # Approve add new address - refer to ApprovalRequest.feature
+    * def addressId = response.data.id
+    * def folderId = response.data.folderId
+    * def address = response.data.address
+    * def name = response.data.name
+    * def symbol = response.data.symbol
+    * def tokenId = response.data.id
 
     #TCs: VIEW DETAIL FOLDER
   @RAKCON-11164 @View_Detail_Folder
   Scenario: Check view detail a folder
-    * def create_address = callonce read('WhiteListFolder.feature@Create_address')
-    * def tokenId = create_address.response.data.id
-    * def folderId = create_address.response.data.folderId
-    * def address = create_address.response.data.address
+    * callonce read('WhiteListFolder.feature@Create_address')
     Given path 'core/folders/list-address'
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
     And params query
@@ -153,12 +159,7 @@ Feature: WhiteList Folder
    #TCs: VIEW ADDRESS DETAIL
   @RAKCON-10970 @View_Address_Detail
    Scenario: View Whitelist address details
-    * def create_address = callonce read('WhiteListFolder.feature@Create_address')
-    * def addressId = create_address.response.data.id
-    * def address = create_address.response.data.address
-    * def name = create_address.response.data.name
-    * def symbol = create_address.response.data.symbol
-
+    * callonce read('WhiteListFolder.feature@Create_address')
     Given path 'core/folders/addresses/' + addressId
     When method GET
     Then status 200
@@ -184,9 +185,7 @@ Feature: WhiteList Folder
   @RAKCON-10971 @Delete_Whitelist_Address
   Scenario: Check delete whitelist address
     #create address
-    * def create_address = callonce read('WhiteListFolder.feature@Create_address')
-    * def addressId = create_address.response.data.id
-    * def folderId = create_address.response.data.folderId
+    * callonce read('WhiteListFolder.feature@Create_address')
     * callonce read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     #delete address
@@ -198,12 +197,10 @@ Feature: WhiteList Folder
     And match response.status == "success"
 
     #TCs: DELETE FOLDER
-  @RAKCON-10227
+  @RAKCON-10227 @Delete_folder
   Scenario: Check delete a folder
     #Create new folder
-    * def newFolder = call read('WhiteListFolder.feature@Create_folder')
-    * def folderId = newFolder.response.data.id
-    * def folderName = newFolder.response.data.name
+     * call read('WhiteListFolder.feature@Create_folder')
     #delete folder
     * callonce read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest

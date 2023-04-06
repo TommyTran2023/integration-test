@@ -1,7 +1,6 @@
 function fn () {
     var envFile = read('classpath:data/env_data.json');
     var env = karate.env;
-    var env = 'uat';
     karate.log('Karate Environment: ', env);
     if(!env){
         env = 'uat'; //default env

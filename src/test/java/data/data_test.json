@@ -11,6 +11,28 @@
     "editVaultNote": "AT note for editing vault policy"
   },
   "whitelist": {
-    "type_internal": "internal"
+    "type_internal": "internal",
+    "schema_list" : {
+      "createdBy": "#string",
+      "id": "#string",
+      "createdAt": "#string",
+      "tokens": "#[]",
+      "name": "#string",
+      "type": "#string"
+    }
+  },
+  "account_policy": {
+    "approve_number": 2
+  },
+  "transfer": {
+    "from_screen_source": "SOURCE_TRANSFER",
+    "from_screen_destination": "DESTINATION_TRANSFER",
+    "amount_low": 50,
+    "amount_medium": 200,
+    "amount_high": 500,
+    "source_type": "VAULT_ACCOUNT",
+    "destinationType": "VAULT_ACCOUNT",
+    "feeLevel": "MEDIUM",
+    "operation": "TRANSFER"
   }
 }

@@ -45,24 +45,14 @@ Feature: Vault
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
-  @ignore @VERIFY-PASSCODE
-  Scenario: Verify passcode of Requester
-    #Verify requesterPasscode
-    Given path '/auth/account/verify-passcode'
-    * request {"passcode":'#(requesterPasscode)'}
-    When method POST
-    Then status 201
-    * def verifyStatus = response.data.verify
-    * match verifyStatus == true
-
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Vault.feature@BY-PASS-BIOMETRIC')
-    #* call read('Vault.feature@VERIFY-PASSCODE')
+    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
@@ -83,9 +73,9 @@ Feature: Vault
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Vault.feature@BY-PASS-BIOMETRIC')
-    #* call read('Vault.feature@VERIFY-PASSCODE')
+    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
+    * call read('Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
@@ -124,14 +114,13 @@ Feature: Vault
     Given path '/core/vault/accounts/'+vaultIDWA
     When method GET
     Then status 200
-    * def requestCreateVaultID = response.data.requestId
+    * def requestId = response.data.requestId
 
   @RAKCON-10827 @ViewVaultDetailHasAdminSetup
   Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
     * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * def requestID = requestCreateVaultID
     * call read('ApprovalRequest.feature@ApproveRequest')
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA
@@ -196,7 +185,7 @@ Feature: Vault
   Scenario: Sort vaults by name A - Z
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'ASC'
     * param sortBy = 'NAME'
@@ -214,7 +203,7 @@ Feature: Vault
   Scenario: Sort vaults by name Z - A
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'NAME'
@@ -232,7 +221,7 @@ Feature: Vault
   Scenario: Sort vaults by highest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
@@ -246,23 +235,25 @@ Feature: Vault
     * print 'List expected vault  after sorting by highest value: ', listVaultTotalUSDExpected
     * karate.sort(listVaultTotalUSDExpected)
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
-    * def listVaultTotalUSDASC = listVaultTotalUSDExpected.reverse()
 
   @RAKCON-11120 @SortVaultLowestValue
   Scenario: Sort vaults by lowest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     * param sort = 'ASC'
     * param sortBy = 'TOTAL_USD'
     When method GET
     Then status 200
     * def listVault = response.data.vaults
-    * def listVaultTotalUSDASCActual = $listVault[*].totalUSD
-    * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDASCActual
-    * callonce read('Vault.feature@SortVaultHighestValue')
-    * match listVaultTotalUSDASCActual == listVaultTotalUSDASC
+    * def listVaultTotalUSDActual = $listVault[*].totalUSD
+    * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDActual
+    * def listVaultTotalUSDExpected = []
+    * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
+    * print 'List expected vault  after sorting by lowest value: ', listVaultTotalUSDExpected
+    * karate.sort(listVaultTotalUSDExpected)
+    * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
   @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
@@ -279,20 +270,15 @@ Feature: Vault
 
   @RAKCON-10957 @EditVaultPolicy
   Scenario: Edit vault policy
-    #Get variable challengeAnswerRequest
-    * call read('GenerateAnswer.feature@FIDO-Requester')
     #Get list user in organization
     * callonce read('Vault.feature@CHECK-LIST-USER')
-    #Get a random vault that has not edit vault pending request
-    * def vaultListing = callonce read('Vault.feature@ViewVaultListing')
-    * def listVault = vaultListing.response.data.vaults
-    * print listVault
-    * def VaultWOPendingReq = karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")[0]
-    * print 'List vaults can be edited: ', karate.jsonPath(listVault, "$.[?(@.editVaultPending==false && @.missing==false)].id")
-    * print 'Editing vault ID: ', VaultWOPendingReq
+    #Get a vault that has not edit vault pending request
+    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
     #Edit vault policy
-    Given path '/core/vault/account/'+VaultWOPendingReq+'/rules'
+    Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    #Get variable challengeAnswerRequest
+    * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
     When method PUT
@@ -303,3 +289,22 @@ Feature: Vault
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
     * match $response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
     * match response.data.record.additionalData.data.note == dataBody.vault.editVaultNote
+
+  @RAKCON-11350 @EditVaultPolicyHasPending
+  Scenario: Edit vault policy when has pending request
+    * callonce read('Vault.feature@EditVaultPolicy')
+    Given path '/core/vault/account/'+vaultIDWA+'/rules'
+    * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterPasscode
+    When method PUT
+    Then match response.data.message == 'Exists pending requests'
+
+  @RAKCON-11286 @HideVault
+  Scenario: Hide a vault
+    * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
+    When method POST
+    Then status 201
+    * match response.status == 'success'

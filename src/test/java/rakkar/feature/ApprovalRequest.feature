@@ -22,16 +22,23 @@ Feature: Approval Request
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * karate.call('ApprovalRequest.feature@ApproveRequest')
 
-   @RAKCON-11047 @ApprovalNewAddressWhitelist
-   Scenario: Approval - Add whitelist address
+  @RAKCON-11047 @ApprovalNewAddressWhitelist
+  Scenario: Approval - Add whitelist address
     # Get request ID of creating whitelist address
-     * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
-     * def requestId = value.response.data.records[0].id
-     * karate.call('ApprovalRequest.feature@ApproveRequest')
+    * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * def requestId = value.response.data.records[0].id
+    * karate.call('ApprovalRequest.feature@ApproveRequest')
+
+  @RAKCON-10976 @ApprovalEditVault
+  Scenario: Approval - Edit Vault policy request
+    * call read('Vault.feature@EditVaultPolicy')
+    * def requestId = response.data.record.id
+    * karate.call('ApprovalRequest.feature@ApproveRequest')
+
 
      # Common Approve
   @ApproveRequest @ignore
-    Scenario: Approve pending request - Common
+  Scenario: Approve pending request - Common
     Given path '/core/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * header passcode = approverPasscode

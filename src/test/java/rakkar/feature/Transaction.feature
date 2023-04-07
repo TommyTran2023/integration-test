@@ -12,7 +12,7 @@ Feature: Transaction
   Scenario: View transaction listing
     # View transaction listing
     Given path '/core/transaction'
-    * param limit = 9999999
+    * param limit = 10
     * param offset = 0
     When method GET
     Then status 200

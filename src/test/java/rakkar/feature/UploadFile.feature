@@ -10,7 +10,6 @@ Feature: Upload file
     When method POST
     Then status 201
     * def token = response.upload.token
-    * print token
 
   @UPLOAD_VIDEO_ON_CRM
   Scenario: Upload video
@@ -21,4 +20,3 @@ Feature: Upload file
     When method POST
     Then status 201
     * def token = response.upload.token
-    * print token

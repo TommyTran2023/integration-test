@@ -178,7 +178,6 @@ Feature: Vault
     * match response.status == 'success'
     * def listSearchedVault = response.data.vaults
     * def listSearchedVaultName = $listSearchedVault[*].name
-    * print listSearchedVaultName
     * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
 
   @RAKCON-10955 @SortVaultA2Z
@@ -326,3 +325,20 @@ Feature: Vault
     * match response.data.totalUSDYesterday == '#number'
     * match response.data.totalCount == '#number'
     * match response.data.totalBTC == '#number'
+
+  @RAKCON-11370 @SearchHiddenVault
+  Scenario: Search hidden vault
+    * callonce read('Vault.feature@HideVault')
+    Given path '/core/vault/accounts'
+    * param isHideList = true
+    * param keyword = vaultNameResponseWA
+    * param limit = 10
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+    * def listSearchedVault = response.data.vaults
+    * def listSearchedVaultName = $listSearchedVault[*].name
+    * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"

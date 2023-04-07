@@ -24,6 +24,7 @@ Feature: WhiteList Folder
     And match response.data.type == "#(dataBody.whitelist.type_internal)"
     * def folderId = response.data.id
     * def folderName = response.data.name
+    * def type = response.data.type
 
   #TCs: FOLDER LISTING
   @RAKCON-10587 @List_folder
@@ -39,11 +40,9 @@ Feature: WhiteList Folder
 
 
   #TCs: SEARCH FOLDER
-  @RAKCON-11163 @Search_folder
-  Scenario: Check search folder
-    * def newFolder = callonce read('WhiteListFolder.feature@Create_folder')
-    * def folderName = newFolder.response.data.name
-    * def type = newFolder.response.data.type
+  @RAKCON-11163 @Search_folder_by_keyword
+  Scenario: Check search folder by keyword
+    * callonce read('WhiteListFolder.feature@Create_folder')
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(folderName)'}
     Given path 'core/folders'
     And params query
@@ -54,6 +53,18 @@ Feature: WhiteList Folder
     And match response.data.folders[0].type == "#(type)"
     And match response.data.totalCount == 1
 
+  @Search_folder_by_type
+  Scenario: Check search folder by type
+    * callonce read('WhiteListFolder.feature@Create_folder')
+    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(dataBody.whitelist.typeWhitelist)'}
+    Given path 'core/folders'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.folders[0].type == "#(dataBody.whitelist.typeWhitelist)"
+    * def externalId = response.data.folders[0].id
+    * def externalName = response.data.folders[0].name
 
     #Pre-1.Get list vault
   @ignore @Get_listVault

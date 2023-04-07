@@ -1,10 +1,9 @@
-@RAKCON-10942 @ignore
+@RAKCON-10942
 Feature: Transfer
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def user = call read('UserManagement.feature@GetAccountMe')
-    * def userId = user.response.data.id
+    * call read('UserManagement.feature@GetAccountMe')
     * def dataBody = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER
@@ -30,10 +29,17 @@ Feature: Transfer
     When method GET
     Then status 200
     And match response.status == "success"
-    * def sourceId = response.data.vaults[0].id
-    * def totalToUSD = response.data.vaults[0].totalUSD
-    * def total = response.data.vaults[0].wallets[0].total
-    * def sourceName = response.data.vaults[0].name
+    * def sourceId_hot = ""
+    * def sourceId_cold = ""
+    * def sourceName_hot = ""
+    * def sourceName_cold = ""
+    And for(var i = 0; i < response.data.vaults.length; i++) if (response.data.vaults[i].type == "HOT_WALLET") { sourceId_hot = response.data.vaults[i].id ; sourceName_hot = response.data.vaults[i].name } else if (response.data.vaults[i].type == "COLD_WALLET") { sourceId_cold = response.data.vaults[i].id ; sourceName_cold = response.data.vaults[i].name}
+    * print 'sourceId hot', sourceId_hot
+    * print 'sourceId cold', sourceId_cold
+    * def sourceId_hot = sourceId_hot
+    * def sourceId_cold = sourceId_cold
+    * def sourceName_hot = sourceName_hot
+    * def sourceName_cold = sourceName_cold
 
     #TCs: VIEW DESTINATION FOR TRANSFER
   @ignore @RAKCON-11339 @Get_destination_transfer
@@ -45,16 +51,23 @@ Feature: Transfer
     When method GET
     Then status 200
     And match response.status == "success"
-    * def destinationId = response.data.vaults[0].id
-    * def destinationName = response.data.vaults[0].name
+    * def destinationId_hot = ""
+    * def destinationId_cold = ""
+    * def destinationName_hot = ""
+    * def destinationName_cold = ""
+    And for(var i = 0; i < response.data.vaults.length; i++) if (response.data.vaults[i].type == "HOT_WALLET") { destinationId_hot = response.data.vaults[i].id ; destinationName_hot = response.data.vaults[i].name } else if (response.data.vaults[i].type == "COLD_WALLET") { destinationId_cold = response.data.vaults[i].id ; destinationName_cold = response.data.vaults[i].name}
+    * def destinationId_hot = destinationId_hot
+    * def destinationId_cold = destinationId_cold
+    * def destinationName_hot = destinationName_hot
+    * def destinationName_cold = destinationName_cold
 
-
-  @ignore @RAKCON-11344 @Get_estimate_fee
-    Scenario: Transfer - Get estimated fee
+  #Get estimated fee : Hot to Hot
+  @ignore @RAKCON-11334 @Get_estimate_fee_hot_to_hot
+    Scenario: Transfer Hot to hot - Get estimated fee
     * call read('Transfer.feature@Get_asset_transfer')
     * call read('Transfer.feature@Get_source_transfer')
     * call read('Transfer.feature@Get_destination_transfer')
-    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId)'}
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)'}
       Given path 'core/transactions/estimated-fee'
       And request body
       When method POST
@@ -65,11 +78,59 @@ Feature: Transfer
     * def fee = response.data.medium
     * def feeType = response.data.feeType
 
-    #TCs: Total estimate fee
-  @ignore @RAKCON-11349 @Total_estimate_fee
-  Scenario: Transfer - Total estimated fee
-    * call read('Transfer.feature@Get_estimate_fee')
-    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+  #Get estimated fee : Hot to Cold
+  @ignore @RAKCON-11392 @Get_estimate_fee_hot_to_cold
+  Scenario: Transfer Hot to cold - Total estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('Transfer.feature@Get_destination_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+  #Get estimated fee : Cold to Hot
+  @ignore @RAKCON-11394 @Get_estimate_fee_cold_to_hot
+  Scenario: Transfer Cold to hot - Get estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('Transfer.feature@Get_destination_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+     #Get estimated fee : Cold to Cold
+  @ignore @RAKCON-11397 @Get_estimate_fee_cold_to_cold
+  Scenario: Transfer Cold to cold - Get estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('Transfer.feature@Get_destination_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+    #TCs: Total estimate fee: Hot to hot
+  @ignore @RAKCON-11349 @Total_estimate_fee_hot_hot
+  Scenario: Transfer Hot to hot - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_hot_to_hot')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
     Given path 'core/transactions/total-estimate-fee'
     And request body
     When method POST
@@ -77,11 +138,48 @@ Feature: Transfer
     And match response.status == "success"
     * def totalEstimatedFee = response.data.totalEstimatedFee
 
-    #TCs: Submit tranfer low value
-  @RAKCON-10959 @Transfer_low_value
-  Scenario: Internal withdraw - Check submit with low value
-    * call read('Transfer.feature@Total_estimate_fee')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(destinationId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+   #TCs: Total estimate fee: Hot to Cold
+  @ignore @RAKCON-11392 @Total_estimate_fee_hot_cold
+  Scenario: Transfer Hot to cold - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_hot_to_cold')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+     #TCs: Total estimate fee: Cold to Hot
+  @ignore @RAKCON-11395 @Total_estimate_fee_cold_hot
+  Scenario: Transfer Cold to hot - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_cold_to_hot')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+     #TCs: Total estimate fee: Cold to Cold
+  @ignore @RAKCON-11398 @Total_estimate_fee_cold_cold
+  Scenario: Transfer Cold to cold - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_cold_to_cold')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+
+    #Tcs: TRANSFER VAULT HOT TO HOT
+  @RAKCON-11390 @Transfer_value_hot_to_hot
+  Scenario: Transfer Hot to hot - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_hot_hot')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -91,12 +189,222 @@ Feature: Transfer
     And response.status == "success"
     And response.data.status == "PENDING"
     And response.data.amount == "#(dataBody.transfer.amount_low)"
-    And response.data.sourceName == "#(sourceName)"
-    And response.data.destinationName == "#(destinationName)"
+    And response.data.sourceName == "#(sourceName_hot)"
+    And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
 
-  #Tcs: Submit transfer medium value
-  @RAKCON-11334 @Transfer_medium_value
-  Scenario: Internal withdraw - Check submit with medium value
+    #Tcs: TRANSFER VAULT HOT TO COLD
+  @RAKCON-11393 @Transfer_value_hot_to_cold
+  Scenario: Transfer Hot to cold - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_hot_cold')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_low)"
+    And response.data.sourceName == "#(sourceName_hot)"
+    And response.data.destinationName == "#(destinationName_cold)"
+    And response.data.symbol == "#(symbol)"
 
+    #Tcs: TRANSFER VAULT COLD TO HOT
+  @RAKCON-11396 @Transfer_value_cold_to_hot
+  Scenario: Transfer Cold to hot - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_cold_hot')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_low)"
+    And response.data.sourceName == "#(sourceName_cold)"
+    And response.data.destinationName == "#(destinationName_hot)"
+    And response.data.symbol == "#(symbol)"
+
+  #Tcs: TRANSFER VAULT COLD TO COLD
+  @RAKCON-11399 @Transfer_value_cold_to_cold
+  Scenario: Transfer Cold to cold - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_cold_cold')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_low)"
+    And response.data.sourceName == "#(sourceName_cold)"
+    And response.data.destinationName == "#(destinationName_cold)"
+    And response.data.symbol == "#(symbol)"
+
+  #Tcs: TRANSFER MEDIUM VALUE
+  @ignore @RAKCON-11401 @Get_estimate_fee_medium_value
+  Scenario: Transfer medium - Get estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('Transfer.feature@Get_destination_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_medium)',"destinationId":'#(destinationId_hot)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+    #Total estimate fee for high value
+  @ignore @RAKCON-11401 @Total_estimate_fee_medium_value
+  Scenario: Transfer medium - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_medium_value')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_medium)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+  @RAKCON-11402 @Transfer_medium_value
+  Scenario: Transfer medium - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_medium_value')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_medium)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterPasscode
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_low)"
+    And response.data.sourceName == "#(sourceName_hot)"
+    And response.data.destinationName == "#(destinationName_hot)"
+    And response.data.symbol == "#(symbol)"
+
+  #Tcs: TRANSFER HIGH VALUE
+  @ignore @RAKCON-11403 @Get_estimate_fee_high_value
+  Scenario: Transfer high - Get estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('Transfer.feature@Get_destination_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_high)',"destinationId":'#(destinationId_hot)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+  @ignore @RAKCON-11404 @Total_estimate_fee_high_value
+  Scenario: Transfer high - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_high_value')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+  #Pre-1: Get video speech prompt
+  @ignore @Video_speech_prompt
+    Scenario: Transfer high - Video text sentence
+    Given path 'core/quorums/video-speech-prompt'
+    When method GET
+    Then status 200
+    And response.status == "success"
+    * def text1 = response.data[0]
+    * def text2 = response.data[1]
+    * def text3 = response.data[2]
+
+  #Pre-2: Upload link
+  @ignore @Upload_link
+  Scenario: Transfer high - Upload link
+    Given path 'auth/account/users/upload-link'
+    * def query = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    And params query
+    When method GET
+    Then status 200
+    And response.status == "success"
+      * def uploadUrl = response.data.uploadUrl
+      * def uploadToken = response.data.uploadToken
+
+  @RAKCON-11405 @Transfer_high_value
+   Scenario: Transfer high - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_high_value')
+    * call read('Transfer.feature@Video_speech_prompt')
+    * call read('UploadFile.feature@Put_video_transfer_high_value')
+    * def vdoSentence = "#(text1),#(text2), #(text3)"
+    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterPasscode
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_high)"
+    And response.data.sourceName == "#(sourceName_hot)"
+    And response.data.destinationName == "#(destinationName_hot)"
+    And response.data.symbol == "#(symbol)"
+
+  #EXTERNAL WITHDRAW
+  @ignore @RAKCON-11406 @Get_estimate_fee_external_transfer
+  Scenario: External - Get estimated fee
+    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('Transfer.feature@Get_source_transfer')
+    * call read('WhiteListFolder.feature@Search_folder_by_type')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(externalId)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.feeType == "#(tokenSymbol)"
+    * def fee = response.data.medium
+    * def feeType = response.data.feeType
+
+  @ignore @RAKCON-11407 @Total_estimate_fee_external_transfer
+  Scenario: External - Total estimated fee
+    * call read('Transfer.feature@Get_estimate_fee_external_transfer')
+    * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(externalId)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    Given path 'core/transactions/total-estimate-fee'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    * def totalEstimatedFee = response.data.totalEstimatedFee
+
+  @RAKCON-11408 @External_Transfer
+  Scenario:  External - Submit transfer
+    * call read('Transfer.feature@Total_estimate_fee_external_transfer')
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(dataBody.transfer.amount_low)"
+    And response.data.sourceName == "#(sourceName_hot)"
+    And response.data.destinationName == "#(externalName)"
+    And response.data.symbol == "#(symbol)"
   # TCs: View transaction after submit

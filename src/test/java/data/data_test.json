@@ -12,6 +12,7 @@
   },
   "whitelist": {
     "type_internal": "internal",
+    "typeWhitelist": "external",
     "schema_list" : {
       "createdBy": "#string",
       "id": "#string",
@@ -28,12 +29,14 @@
     "from_screen_source": "SOURCE_TRANSFER",
     "from_screen_destination": "DESTINATION_TRANSFER",
     "amount_low": 50,
-    "amount_medium": 200,
-    "amount_high": 500,
+    "amount_medium": 500,
+    "amount_high": 1000,
     "source_type": "VAULT_ACCOUNT",
-    "destinationType": "VAULT_ACCOUNT",
+    "destinationType": "EXTERNAL_WALLET",
     "feeLevel": "MEDIUM",
-    "operation": "TRANSFER"
+    "operation": "TRANSFER",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "type": "TRANSACTION_REQUEST"
   },
   "helpCenter": {
     "schema_list": {
@@ -53,5 +56,5 @@
       ],
       "requesterId": "#number"
     }
-  }
+    }
 }

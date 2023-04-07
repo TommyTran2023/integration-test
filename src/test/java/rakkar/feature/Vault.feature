@@ -38,7 +38,7 @@ Feature: Vault
   @ignore @BY-PASS-BIOMETRIC
   Scenario: By pass biometric method
     #By pass biometric method
-    Given path '/core/biometric/request-challenge'
+    Given path '/correqueste/biometric/request-challenge'
     * request {}
     When method POST
     Then status 201
@@ -251,7 +251,7 @@ Feature: Vault
     * def listVaultTotalUSDExpected = []
     * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
     * print 'List expected vault  after sorting by lowest value: ', listVaultTotalUSDExpected
-    * karate.sort(listVaultTotalUSDExpected)
+    * karate.sort(listVaultTotalUSDExpected)vaults
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
   @RAKCON-10956 @EditVaultName

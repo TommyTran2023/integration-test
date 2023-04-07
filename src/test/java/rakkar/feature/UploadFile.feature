@@ -20,3 +20,13 @@ Feature: Upload file
     When method POST
     Then status 201
     * def token = response.upload.token
+
+  @Put_video_transfer_high_value
+  Scenario: Transfer high - Put video
+    * call read('Transfer.feature@Upload_link')
+    Given url uploadUrl
+    * request {}
+    And header Content-type = "video/mp4"
+    When method PUT
+    Then status 200
+    And response.status == "success"

@@ -11,3 +11,4 @@
       Given path 'auth/account/me'
       When method GET
       Then status 200
+      * def userId = response.data.id

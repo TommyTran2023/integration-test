@@ -11,8 +11,8 @@ Feature: Approval Request
   @RAKCON-10975 @ApproveNewVaultRequest
   Scenario: Approval - New vault policy request
     # Create new vault and get request ID of creating vault request
-    * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * karate.call('ApprovalRequest.feature@ApproveRequest')
+    * callonce read('Vault.feature@GetCreateVaultRequestID')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
 
   @RAKCON-11001 @ApproveEditAccountPolicy
@@ -20,24 +20,24 @@ Feature: Approval Request
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * if (requestId == null) karate.call('AccountPolicy.feature@EditAccountPolicy')
     * call read('AccountPolicy.feature@ViewAccountPolicy')
-    * karate.call('ApprovalRequest.feature@ApproveRequest')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-11047 @ApprovalNewAddressWhitelist
   Scenario: Approval - Add whitelist address
     # Get request ID of creating whitelist address
     * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
     * def requestId = value.response.data.records[0].id
-    * karate.call('ApprovalRequest.feature@ApproveRequest')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-10976 @ApprovalEditVault
   Scenario: Approval - Edit Vault policy request
     * call read('Vault.feature@EditVaultPolicy')
     * def requestId = response.data.record.id
-    * karate.call('ApprovalRequest.feature@ApproveRequest')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
 
      # Common Approve
-  @ApproveRequest @ignore
+  @ApproveRequestCommon @ignore
   Scenario: Approve pending request - Common
     Given path '/core/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest

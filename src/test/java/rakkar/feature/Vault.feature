@@ -108,7 +108,7 @@ Feature: Vault
     * print 'Total number of vaults: ', totalCount
     * match response.status == 'success'
 
-  @ignore @GetCrateVaultRequestID
+  @ignore @GetCreateVaultRequestID
   Scenario: Get request ID of creating vault request
     * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWA
@@ -120,8 +120,8 @@ Feature: Vault
   Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
-    * callonce read('Vault.feature@GetCrateVaultRequestID')
-    * call read('ApprovalRequest.feature@ApproveRequest')
+    * callonce read('Vault.feature@GetCreateVaultRequestID')
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA
     * configure headers = {Authorization: '#(accessToken)'}

@@ -15,5 +15,6 @@ Feature: Get user ID of requester
     When method GET
     Then status 200
     * def requesterID = response.data.id
+    * def email = response.data.email
     * print 'requesterID: ', requesterID
 

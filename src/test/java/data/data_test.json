@@ -34,5 +34,24 @@
     "destinationType": "VAULT_ACCOUNT",
     "feeLevel": "MEDIUM",
     "operation": "TRANSFER"
+  },
+  "helpCenter": {
+    "schema_list": {
+      "category": "#string",
+      "platforms": "#[]",
+      "requestType": "#null",
+      "productType": "#null",
+      "id": "#number",
+      "status": "in_progress",
+      "subStatus": "new",
+      "subject": "#string",
+      "description": "#string",
+      "createdAt": "#string",
+      "updatedAt": "#string",
+      "ccUserIds": [
+        "#number"
+      ],
+      "requesterId": "#number"
+    }
   }
 }

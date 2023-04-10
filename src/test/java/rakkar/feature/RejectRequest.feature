@@ -20,6 +20,12 @@ Feature: Reject Request
     * call read('Vault.feature@GetCreateVaultRequestID')
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @RAKCON-11002 @RejectEditVaultRequest
+  Scenario: Reject request - Edit Vault policy request
+    * call read('Vault.feature@EditVaultPolicy')
+    * def requestId = response.data.record.id
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common
     Given path '/core/quorums/reject'

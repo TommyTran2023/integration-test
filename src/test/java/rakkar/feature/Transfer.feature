@@ -327,7 +327,7 @@ Feature: Transfer
     When method GET
     Then status 200
     And response.status == "success"
-    * def text1 = response.data[0]git
+    * def text1 = response.data[0]
     * def text2 = response.data[1]
     * def text3 = response.data[2]
 

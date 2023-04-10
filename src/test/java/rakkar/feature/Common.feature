@@ -42,3 +42,13 @@ Feature: Generate Challenge Answer for Biometric
     Then status 201
     * def verifyStatus = response.data.verify
     * match verifyStatus == true
+
+  @ignore @BY-PASS-BIOMETRIC
+  Scenario: By pass biometric method
+    #By pass biometric method
+    Given path '/core/biometric/request-challenge'
+    * request {}
+    When method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'

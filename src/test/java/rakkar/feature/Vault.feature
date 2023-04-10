@@ -35,21 +35,11 @@ Feature: Vault
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
     * print vaultMemberList
 
-  @ignore @BY-PASS-BIOMETRIC
-  Scenario: By pass biometric method
-    #By pass biometric method
-    Given path '/correqueste/biometric/request-challenge'
-    * request {}
-    When method POST
-    Then status 201
-    * def statusMsg = response.status
-    * match statusMsg == 'success'
-
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * call read('Vault.feature@BY-PASS-BIOMETRIC')
+    * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
@@ -72,7 +62,7 @@ Feature: Vault
   Scenario: Create a new vault without admin quorum setup
     * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * call read('Vault.feature@BY-PASS-BIOMETRIC')
+    * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')

@@ -13,7 +13,11 @@ Feature: Reject Request
     * call read('AccountPolicy.feature@ViewAccountPolicy')
     * if (requestId == null) karate.call('AccountPolicy.feature@EditAccountPolicy')
     * call read('AccountPolicy.feature@ViewAccountPolicy')
-    * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @RAKCON-11000 @RejectNewVaultRequest
+  Scenario: Reject request - New vault policy request
+    * call read('Vault.feature@GetCreateVaultRequestID')
     * call read('RejectRequest.feature@RejectRequestCommon')
 
   @ignore @RejectRequestCommon

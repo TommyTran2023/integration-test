@@ -20,7 +20,7 @@ Feature: Reject Request
   Scenario: Reject pending request - Common
     Given path '/core/quorums/reject'
     * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * request {"recordId" : "#(requestId)", "reason" : "AT Reject Edit Account Policy Note"}
+    * request {"recordId" : "#(requestId)", "reason" : "AT Reject Request Note"}
     When method PUT
     Then status 200
     * match response.status == 'success'

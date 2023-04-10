@@ -24,6 +24,12 @@ Feature: Cancel Request
     * def requestId = response.data.record.id
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-11055 @CancelWhiteListAddress
+  Scenario: Cancel request - Add whitelist address
+    * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * def requestId = value.response.data.records[0].id
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
   @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
     Given path '/core/quorums/cancel/'+requestId

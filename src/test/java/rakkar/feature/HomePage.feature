@@ -24,3 +24,22 @@ Feature: Home Page
     * def tokenSchema = {"symbol":"#string", "networkImage":"##string", "id":"#string", "totalUSD":#number, "image":"##string", "type":"#string", "name":"#string"}
     * def responseSchema = {"total":#number, "tokens":"#[]tokenSchema"}
     * match response.data == responseSchema
+
+  @RAKCON-10978 @PortfolioView
+  Scenario: Portfolio view
+    Given path '/core/vault/accounts/portfolio-chart'
+    * def getDate =
+      """
+      function(numberOfDays){
+        var date = new Date();
+        date.setDate(date.getDate() + (numberOfDays));
+        return date.toISOString()
+      }
+      """
+    #Default date from and date to is previous 7 days
+    * param dateFrom = getDate(-7)
+    * param dateTo = getDate(-1)
+    When method GET
+    Then status 200
+    * def chartDataSchema = {"date":#? getDate(_)", "value":#number}
+    * def responseSchema = {"chartData":"#[]chartDataSchema", "percentageDifference":#number}

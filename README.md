@@ -28,6 +28,11 @@ To run the test script in the specific environment, enter following commands:
 mvn test -Dkarate.env=uat
 mvn test -Dkarate.env=qa
 ```
+
+To run the test script in parallel, number of thread can be passed from command line:
+```
+mvn test -Dkarate.env=qa -Dthread=4
+```
 To run specific test case or test execution, click on Run icon in specific scenario/feature
 
 ### Setup user and data 

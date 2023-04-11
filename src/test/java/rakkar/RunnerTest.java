@@ -21,8 +21,16 @@ public class RunnerTest {
     }
     @Test
     public void testParallel() {
-        Results results = Runner.path("classpath:rakkar/feature").outputCucumberJson(true).parallel(1);
+        int threadCount = 1;
+        if (System.getProperty("thread") != null) {
+            threadCount = Integer.parseInt(System.getProperty("thread"));
+        }
+
+        System.out.println("Running in " + threadCount + " threads");
+        Results results = Runner.path("classpath:rakkar/feature").outputCucumberJson(true).parallel(threadCount);
+
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
+
         System.out.println("dir--" + results.getReportDir());
         generateReport(results.getReportDir());
     }

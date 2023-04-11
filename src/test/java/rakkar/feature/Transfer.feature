@@ -85,6 +85,8 @@ Feature: Transfer
     * call read('Transfer.feature@Get_source_transfer')
     * call read('Transfer.feature@Get_destination_transfer')
     * def body = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)'}
+#   * call read('Transfer.feature@Get_destination_transfer')
+
     Given path 'core/transactions/estimated-fee'
     And request body
     When method POST

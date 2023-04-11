@@ -26,6 +26,20 @@ Feature: Reject Request
     * def requestId = response.data.record.id
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @RAKCON-11063 @RejectAddWhitelistAddress
+  Scenario: Reject request - Add whitelist address
+    # Get request ID of creating whitelist address
+    * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * def requestId = value.response.data.records[0].id
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @RAKCON-11064 @RejectTransfer
+    Scenario: Reject request - Reject transfer
+    * def value = call read('Transfer.feature@Transfer_value_hot_to_hot')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common
     Given path '/core/quorums/reject'

@@ -30,6 +30,12 @@ Feature: Cancel Request
     * def requestId = value.response.data.records[0].id
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-11056 @CancelTransfer
+  Scenario: Cancel request - Cancel transfer
+    * def value = call read('Transfer.feature@Transfer_value_hot_to_hot')
+    * def requestId = value.response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
   @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
     Given path '/core/quorums/cancel/'+requestId

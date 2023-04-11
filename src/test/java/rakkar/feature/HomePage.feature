@@ -24,3 +24,18 @@ Feature: Home Page
     * def tokenSchema = {"symbol":"#string", "networkImage":"##string", "id":"#string", "totalUSD":#number, "image":"##string", "type":"#string", "name":"#string"}
     * def responseSchema = {"total":#number, "tokens":"#[]tokenSchema"}
     * match response.data == responseSchema
+
+  @RAKCON-11655 @SearchAssetsInAssetAllocation
+  Scenario: Search assets in Asset Allocation
+    #Get random asset for keyword to search
+    * call read('HomePage.feature@AssetAllocationDetail')
+    * def randomAsset = response.data.tokens[0].symbol
+    Given path '/core/assets/allocation-detail'
+    * param keyword = randomAsset
+    * param offset = 0
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+    * def listSearchedAssets = response.data.tokens
+    * def listSearchedAssetsSymbol = $listSearchedAssets[*].symbol
+    * match each listSearchedAssetsSymbol == "#regex (?i).*" + randomAsset + ".*"

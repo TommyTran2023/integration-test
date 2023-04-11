@@ -131,28 +131,28 @@ Feature: Transfer
   @ignore @RAKCON-11392 @Total_estimate_fee_hot_cold
   Scenario: Transfer Hot to cold - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_hot_to_cold')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
      #TCs: Total estimate fee: Cold to Hot
   @ignore @RAKCON-11395 @Total_estimate_fee_cold_hot
   Scenario: Transfer Cold to hot - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_cold_to_hot')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
      #TCs: Total estimate fee: Cold to Cold
   @ignore @RAKCON-11398 @Total_estimate_fee_cold_cold
   Scenario: Transfer Cold to cold - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_cold_to_cold')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_cold)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
     #Tcs: TRANSFER VAULT HOT TO HOT
   @RAKCON-11390 @Transfer_value_hot_to_hot
   Scenario: Transfer Hot to hot - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_hot_hot')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -170,7 +170,7 @@ Feature: Transfer
   @RAKCON-11393 @Transfer_value_hot_to_cold
   Scenario: Transfer Hot to cold - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_hot_cold')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -188,7 +188,7 @@ Feature: Transfer
   @RAKCON-11396 @Transfer_value_cold_to_hot
   Scenario: Transfer Cold to hot - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_cold_hot')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#((fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -206,7 +206,7 @@ Feature: Transfer
   @RAKCON-11399 @Transfer_value_cold_to_cold
   Scenario: Transfer Cold to cold - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_cold_cold')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -233,13 +233,13 @@ Feature: Transfer
   @ignore @RAKCON-11401 @Total_estimate_fee_medium_value
   Scenario: Transfer medium - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_medium_value')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_medium)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_medium)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
   @RAKCON-11402 @Transfer_medium_value
   Scenario: Transfer medium - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_medium_value')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_medium)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#((fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_medium)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
@@ -266,7 +266,7 @@ Feature: Transfer
   @ignore @RAKCON-11404 @Total_estimate_fee_high_value
   Scenario: Transfer high - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_high_value')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
   #Pre-1: Get video speech prompt
@@ -298,7 +298,7 @@ Feature: Transfer
     * call read('Transfer.feature@Video_speech_prompt')
     * call read('UploadFile.feature@Put_video_transfer_high_value')
     * def vdoSentence = "#(text1),#(text2), #(text3)"
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
@@ -325,13 +325,13 @@ Feature: Transfer
   @ignore @RAKCON-11407 @Total_estimate_fee_external_transfer
   Scenario: External - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_external_transfer')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(externalId)', "fee":'#(parseInt(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_low)',"destinationId":'#(externalId)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_external_transfer')
-    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(parseInt(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_low)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'

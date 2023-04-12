@@ -53,7 +53,7 @@ Feature: Generate Challenge Answer for Biometric
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
-  @ignore @TIGER_SIGNER
+  @ignore @TIERS_SIGNER
   Scenario: Transfer - View asset list for transfer
     Given path 'core/transactions/tiers-signer'
     When method GET

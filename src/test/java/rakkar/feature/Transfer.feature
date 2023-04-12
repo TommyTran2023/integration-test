@@ -4,7 +4,7 @@ Feature: Transfer
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('UserManagement.feature@GetAccountMe')
-    * call read('common.feature@TIGER_SIGNER')
+    * call read('common.feature@TIERS_SIGNER')
     * def dataBody = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER
@@ -259,8 +259,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+#    * def requestId = response.data.requestId
+#    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER HIGH VALUE
   @ignore @RAKCON-11403 @Get_estimate_fee_high_value

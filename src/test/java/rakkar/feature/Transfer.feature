@@ -165,6 +165,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
@@ -183,6 +185,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
@@ -201,6 +205,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_cold)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
@@ -219,6 +225,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_cold)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER MEDIUM VALUE
   @ignore @RAKCON-11401 @Get_estimate_fee_medium_value
@@ -253,6 +261,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER HIGH VALUE
   @ignore @RAKCON-11403 @Get_estimate_fee_high_value
@@ -312,6 +322,8 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #EXTERNAL WITHDRAW
   @ignore @RAKCON-11406 @Get_estimate_fee_external_transfer
@@ -344,4 +356,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(externalName)"
     And response.data.symbol == "#(symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
   # TCs: View transaction after submit

@@ -52,3 +52,11 @@ Feature: Generate Challenge Answer for Biometric
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  @ignore @TIGER_SIGNER
+  Scenario: Transfer - View asset list for transfer
+    Given path 'core/transactions/tiers-signer'
+    When method GET
+    Then status 200
+    * def amount_low = response.data[0].to
+    * def amount_medium = response.data[1].to

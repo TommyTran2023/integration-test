@@ -21,9 +21,9 @@ Feature: Upload file
     Then status 201
     * def token = response.upload.token
 
-  @Put_video_transfer_high_value
-  Scenario: Transfer high - Put video
-    * call read('Transfer.feature@Upload_link')
+  @PUT_VIDEO
+  Scenario: Put video
+    * call read('Common.feature@UPLOAD_LINK')
     Given url uploadUrl
     * request {}
     And header Content-type = "video/mp4"

@@ -1,0 +1,51 @@
+{
+  "whitelist": {
+    "schema_list" : {
+      "createdBy": "#string",
+      "id": "#string",
+      "createdAt": "#string",
+      "tokens": "#[]",
+      "name": "#string",
+      "type": "#string"
+    }
+  },
+  "helpCenter": {
+    "schema_list": {
+      "category": "#string",
+      "platforms": "#[]",
+      "requestType": "#null",
+      "productType": "#null",
+      "id": "#number",
+      "status": "in_progress",
+      "subStatus": "new",
+      "subject": "#string",
+      "description": "#string",
+      "createdAt": "#string",
+      "updatedAt": "#string",
+      "ccUserIds": [
+        "#number"
+      ],
+      "requesterId": "#number"
+    }
+  },
+  "userManagement": {
+    "schema_list": {
+      "userId" : "#string",
+      "displayName" : "#string",
+      "userName" : "#string",
+      "status" : "#string",
+      "role" : "#string",
+      "isLostDevice" : "#boolean",
+      "picture" : "#string",
+      "email" : "#string",
+      "device" : {
+        "registeredDate" : "#string",
+        "deviceId" : "#string",
+        "deviceOS" : "#string",
+        "isJailbreak" : "#boolean",
+        "deviceName" : "#string"
+      },
+      "name" : "#string"
+    }
+  }
+}

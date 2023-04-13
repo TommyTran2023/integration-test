@@ -12,15 +12,7 @@
   },
   "whitelist": {
     "type_internal": "internal",
-    "type_external": "external",
-    "schema_list" : {
-      "createdBy": "#string",
-      "id": "#string",
-      "createdAt": "#string",
-      "tokens": "#[]",
-      "name": "#string",
-      "type": "#string"
-    }
+    "type_external": "external"
   },
   "account_policy": {
     "approve_number": 2
@@ -56,5 +48,6 @@
       ],
       "requesterId": "#number"
     }
-    }
+    },
+  "userManagement": {}
 }

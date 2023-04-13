@@ -8,6 +8,7 @@ Feature: WhiteList Folder
     * def user = call read('UserManagement.feature@GetAccountMe')
     * def userId = user.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
+    * def schemaJson = read('classpath:data/schema.json')
 
   #TCs: CREATE NEW FOLDER - INTERNAL
   @RAKCON-10226 @Create_folder
@@ -52,7 +53,7 @@ Feature: WhiteList Folder
      When method GET
      Then status 200
      And match response.status == "success"
-    * def schema = dataBody.whitelist.schema_list
+    * def schema = schemaJson.whitelist.schema_list
      And match response.data.folders contains schema
 
 

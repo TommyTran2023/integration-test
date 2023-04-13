@@ -60,3 +60,4 @@ Feature: Generate Challenge Answer for Biometric
     Then status 200
     * def amount_low = response.data[0].to
     * def amount_medium = response.data[1].to
+

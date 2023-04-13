@@ -241,7 +241,7 @@ Feature: Vault
     * def listVaultTotalUSDExpected = []
     * eval for(var i = 0; i < listVaultTotalUSDActual.length; i++) listVaultTotalUSDExpected.push(listVaultTotalUSDActual[i])
     * print 'List expected vault  after sorting by lowest value: ', listVaultTotalUSDExpected
-    * karate.sort(listVaultTotalUSDExpected)vaults
+    * karate.sort(listVaultTotalUSDExpected)
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
   @RAKCON-10956 @EditVaultName

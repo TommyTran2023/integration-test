@@ -58,3 +58,4 @@ Feature: Home Page
     Then status 200
     * def chartDataSchema = {"date":#? getDate(_)", "value":#number}
     * def responseSchema = {"chartData":"#[]chartDataSchema", "percentageDifference":#number}
+

@@ -9,7 +9,7 @@ Feature: Get user ID of requester
     * def accessToken = 'Bearer ' + requesterAuthToken
     * configure headers = {Authorization: '#(accessToken)'}
 
-  @RAKCON-10221
+  @RAKCON-10221 @GetRequesterID
   Scenario: Requester - Get ID of requester
     Given path '/auth/account/me'
     When method GET

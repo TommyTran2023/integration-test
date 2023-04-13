@@ -267,19 +267,6 @@ Feature: Transfer
     * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_high)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
-  #Pre-1: Get video speech prompt
-  @ignore @Video_speech_prompt
-    Scenario: Transfer high - Video text sentence
-    Given path 'core/quorums/video-speech-prompt'
-    When method GET
-    Then status 200
-    And response.status == "success"
-    * def text1 = response.data[0]
-    * def text2 = response.data[1]
-    * def text3 = response.data[2]
-    * def vdoSentence = response.data[0] + "," + response.data[1] + "," + response.data[2]
-    * def vdoSentence1 = text1 + "," + text2 + "," + text3
-
   @RAKCON-11405 @Transfer_high_value
    Scenario: Transfer high - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_high_value')

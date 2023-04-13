@@ -12,3 +12,28 @@
       When method GET
       Then status 200
       * def userId = response.data.id
+
+    @RAKCON-11799 @User_listing
+      Scenario: View user listing
+      * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME'}
+      Given path 'auth/account/users'
+      When method GET
+      Then status 200
+      And match response.status == "success"
+      * def name = response.data.users[0].name
+      * def userId = response.data.users[0].userId
+      * def schema = dataBody.userManagement.schema_list
+      And match response.data.users contains schema
+
+    @RAKCON-11017 @Search_user_list
+    Scenario: Check search for user list
+      * call read('UserManagement.feature@User_listing')
+      * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(name)'}
+      Given path 'auth/account/users'
+      When method GET
+      Then status 200
+      And match response.status == "success"
+      And match response.data.users[0].userId == '#(userId)'
+      And match response.data.users[0].name == '#(name)'
+
+

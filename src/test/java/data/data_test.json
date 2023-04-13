@@ -56,5 +56,25 @@
       ],
       "requesterId": "#number"
     }
+    },
+  "userManagement": {
+    "schema_list": {
+      "userId" : "#string",
+      "displayName" : "#string",
+      "userName" : "#string",
+      "status" : "#string",
+      "role" : "#string",
+      "isLostDevice" : "#boolean",
+      "picture" : "#string",
+      "email" : "#string",
+      "device" : {
+        "registeredDate" : "#string",
+        "deviceId" : "#string",
+        "deviceOS" : "#string",
+        "isJailbreak" : "#boolean",
+        "deviceName" : "#string"
+      },
+      "name" : "#string"
     }
+  }
 }

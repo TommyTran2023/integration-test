@@ -9,9 +9,9 @@ Feature: WhiteList Folder
     * def userId = user.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
 
-  #TCs: CREATE NEW FOLDER
+  #TCs: CREATE NEW FOLDER - INTERNAL
   @RAKCON-10226 @Create_folder
-  Scenario: Check create a new folder
+  Scenario: Check create a new folder - internal
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def folderName = 'Folder-' + now()
     * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_internal)' }
@@ -25,6 +25,23 @@ Feature: WhiteList Folder
     * def folderId = response.data.id
     * def folderName = response.data.name
     * def type = response.data.type
+
+      #TCs: CREATE NEW FOLDER - EXTERNAL
+  @RAKCON-11756 @Create_folder_external
+    Scenario: Check create new folder - external
+      * def now = function(){ return java.lang.System.currentTimeMillis() }
+      * def folderName = 'External_Folder-' + now()
+      * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_external)' }
+      Given path 'core/folders'
+      And request body
+      When method POST
+      Then status 201
+      And match response.status == "success"
+      And match response.data.name == "#(folderName)"
+      And match response.data.type == "#(dataBody.whitelist.type_external)"
+      * def folderId = response.data.id
+      * def folderName = response.data.name
+      * def type = response.data.type
 
   #TCs: FOLDER LISTING
   @RAKCON-10587 @List_folder
@@ -53,16 +70,16 @@ Feature: WhiteList Folder
     And match response.data.folders[0].type == "#(type)"
     And match response.data.totalCount == 1
 
-  @Search_folder_by_type
+  @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type
-    * callonce read('WhiteListFolder.feature@Create_folder')
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(dataBody.whitelist.typeWhitelist)'}
+    * call read('WhiteListFolder.feature@Create_address_external')
+    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(dataBody.whitelist.type_external)'}
     Given path 'core/folders'
     And params query
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.folders[0].type == "#(dataBody.whitelist.typeWhitelist)"
+    And match response.data.folders[0].type == "#(dataBody.whitelist.type_external)"
     * def externalId = response.data.folders[0].id
     * def externalName = response.data.folders[0].name
 
@@ -129,9 +146,8 @@ Feature: WhiteList Folder
     And match response.data.isValidAddress == true
 
   #Tcs: CREATE WHITELIST ADDRESS
-  @RAKCON-10969 @Create_address
-  Scenario:Create new whitelisted address
-    * call read('WhiteListFolder.feature@Create_folder')
+  @ignore @Create_address_common
+  Scenario:Create whitelisted address common
     * call read('WhiteListFolder.feature@Get_detailToken')
     * call read('WhiteListFolder.feature@Get_address')
     * call read('WhiteListFolder.feature@Validate_add_address')
@@ -154,10 +170,23 @@ Feature: WhiteList Folder
     * def symbol = response.data.symbol
     * def tokenId = response.data.id
 
+
+  @RAKCON-10969 @Create_address_internal
+  Scenario:Create internal whitelisted address
+    * call read('WhiteListFolder.feature@Create_folder')
+    * call read('WhiteListFolder.feature@Create_address_common')
+    * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+
+  @RAKCON-11768 @Create_address_external
+  Scenario:Create external whitelisted address
+    * call read('WhiteListFolder.feature@Create_folder_external')
+    * call read('WhiteListFolder.feature@Create_address_common')
+    * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+
     #TCs: VIEW DETAIL FOLDER
   @RAKCON-11164 @View_Detail_Folder
   Scenario: Check view detail a folder
-    * callonce read('WhiteListFolder.feature@Create_address')
+    * callonce read('WhiteListFolder.feature@Create_address_internal')
     Given path 'core/folders/list-address'
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
     And params query
@@ -170,7 +199,7 @@ Feature: WhiteList Folder
    #TCs: VIEW ADDRESS DETAIL
   @RAKCON-10970 @View_Address_Detail
    Scenario: View Whitelist address details
-    * callonce read('WhiteListFolder.feature@Create_address')
+    * callonce read('WhiteListFolder.feature@Create_address_internal')
     Given path 'core/folders/addresses/' + addressId
     When method GET
     Then status 200
@@ -179,11 +208,9 @@ Feature: WhiteList Folder
     And match response.data.name == "#(name)"
     And match response.data.symbol == "#(symbol)"
 
-
    #TCs: VIEW REQUEST ADD NEW ADDRESS
-  @RAKCON-11302 @View_My_Request_Whitelist
+  @ignore @View_My_Request_Whitelist
   Scenario: View my request for type whitelist
-    * callonce read('WhiteListFolder.feature@Create_address')
     Given path 'core/quorums'
     * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["WHITELIST"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
     And request body
@@ -191,12 +218,14 @@ Feature: WhiteList Folder
     Then status 201
     And match response.data.records[0].type.value == 'ADD_WHITELIST_ADDRESS'
     And match response.data.records[0].type.nameDisplay == 'Add Whitelisted Address'
+    * def requestId = response.data.records[0].id
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
     #TCs: DELETE WHITELIST ADDRESS
   @RAKCON-10971 @Delete_Whitelist_Address
   Scenario: Check delete whitelist address
     #create address
-    * callonce read('WhiteListFolder.feature@Create_address')
+    * callonce read('WhiteListFolder.feature@Create_address_internal')
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     #delete address

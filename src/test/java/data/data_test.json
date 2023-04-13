@@ -12,7 +12,7 @@
   },
   "whitelist": {
     "type_internal": "internal",
-    "typeWhitelist": "external",
+    "type_external": "external",
     "schema_list" : {
       "createdBy": "#string",
       "id": "#string",

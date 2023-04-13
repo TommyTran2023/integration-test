@@ -3,7 +3,7 @@
     Background:
       * url baseURL
       * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-      * def dataBody = read('classpath:data/data_test.json')
+      * def dataBody = read('classpath:data/schema.json')
 
     @ignore @GetAccountMe
     Scenario: User Infor - Get basic user infor afer login

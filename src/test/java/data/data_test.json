@@ -12,15 +12,7 @@
   },
   "whitelist": {
     "type_internal": "internal",
-    "type_external": "external",
-    "schema_list" : {
-      "createdBy": "#string",
-      "id": "#string",
-      "createdAt": "#string",
-      "tokens": "#[]",
-      "name": "#string",
-      "type": "#string"
-    }
+    "type_external": "external"
   },
   "account_policy": {
     "approve_number": 2
@@ -57,24 +49,5 @@
       "requesterId": "#number"
     }
     },
-  "userManagement": {
-    "schema_list": {
-      "userId" : "#string",
-      "displayName" : "#string",
-      "userName" : "#string",
-      "status" : "#string",
-      "role" : "#string",
-      "isLostDevice" : "#boolean",
-      "picture" : "#string",
-      "email" : "#string",
-      "device" : {
-        "registeredDate" : "#string",
-        "deviceId" : "#string",
-        "deviceOS" : "#string",
-        "isJailbreak" : "#boolean",
-        "deviceName" : "#string"
-      },
-      "name" : "#string"
-    }
-  }
+  "userManagement": {}
 }

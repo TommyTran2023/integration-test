@@ -52,3 +52,33 @@ Feature: Generate Challenge Answer for Biometric
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  @ignore @TIERS_SIGNER
+  Scenario: Transfer - View asset list for transfer
+    Given path 'core/transactions/tiers-signer'
+    When method GET
+    Then status 200
+    * def amount_low = response.data[0].to
+    * def amount_medium = response.data[1].to
+
+  @ignore @VIDEO_SPEECH_PROMPT
+  Scenario: Video text sentence
+    Given path 'core/quorums/video-speech-prompt'
+    When method GET
+    Then status 200
+    And response.status == "success"
+    * def vdoSentence = response.data[0] + "," + response.data[1] + "," + response.data[2]
+
+  @ignore @UPLOAD_LINK
+  Scenario: Upload link
+    Given path 'auth/account/users/upload-link'
+    * def query = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    And params query
+    When method GET
+    Then status 200
+    And response.status == "success"
+    * def uploadUrl = response.data.uploadUrl
+    * def uploadToken = response.data.uploadToken
+
+
+

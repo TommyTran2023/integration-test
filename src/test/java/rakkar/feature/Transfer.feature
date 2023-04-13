@@ -163,8 +163,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
 
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
@@ -183,8 +181,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
 
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
@@ -203,8 +199,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_cold)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
@@ -223,8 +217,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_cold)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER MEDIUM VALUE
   @ignore @RAKCON-11401 @Get_estimate_fee_medium_value
@@ -259,8 +251,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
-#    * def requestId = response.data.requestId
-#    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #Tcs: TRANSFER HIGH VALUE
   @ignore @RAKCON-11403 @Get_estimate_fee_high_value
@@ -277,35 +267,11 @@ Feature: Transfer
     * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(dataBody.transfer.amount_high)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
-  #Pre-1: Get video speech prompt
-  @ignore @Video_speech_prompt
-    Scenario: Transfer high - Video text sentence
-    Given path 'core/quorums/video-speech-prompt'
-    When method GET
-    Then status 200
-    And response.status == "success"
-    * def text1 = response.data[0]
-    * def text2 = response.data[1]
-    * def text3 = response.data[2]
-
-  #Pre-2: Upload link
-  @ignore @Upload_link
-  Scenario: Transfer high - Upload link
-    Given path 'auth/account/users/upload-link'
-    * def query = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
-    And params query
-    When method GET
-    Then status 200
-    And response.status == "success"
-      * def uploadUrl = response.data.uploadUrl
-      * def uploadToken = response.data.uploadToken
-
   @RAKCON-11405 @Transfer_high_value
    Scenario: Transfer high - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_high_value')
-    * call read('Transfer.feature@Video_speech_prompt')
-    * call read('UploadFile.feature@Put_video_transfer_high_value')
-    * def vdoSentence = "#(text1),#(text2), #(text3)"
+    * call read('Common.feature@VIDEO_SPEECH_PROMPT')
+    * call read('UploadFile.feature@PUT_VIDEO')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
@@ -320,8 +286,6 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
 
   #EXTERNAL WITHDRAW
   @ignore @RAKCON-11406 @Get_estimate_fee_external_transfer

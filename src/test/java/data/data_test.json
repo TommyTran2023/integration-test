@@ -30,22 +30,5 @@
     "timezone": "Asia/Ho_Chi_Minh",
     "type": "TRANSACTION_REQUEST"
   },
-  "helpCenter": {
-    "schema_list": {
-      "category": "#string",
-      "platforms": "##[]",
-      "requestType": "##string",
-      "productType": "##string",
-      "id": "#number",
-      "status": "in_progress",
-      "subStatus": "new",
-      "subject": "#string",
-      "description": "#string",
-      "createdAt": "#string",
-      "updatedAt": "#string",
-      "ccUserIds": ["#number"],
-      "requesterId": "#number"
-    }
-    },
   "userManagement": {}
 }

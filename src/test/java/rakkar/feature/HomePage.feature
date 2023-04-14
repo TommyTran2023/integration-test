@@ -117,3 +117,15 @@ Feature: HomePage
     When method DELETE
     Then status 200
     * match response.data == {}
+
+  @RAKCON-10982 @ViewMarketPriceListing
+  Scenario: View Market Prices listing
+    Given path '/core/assets/price'
+    * param favoriteOrder = true
+    * param limit = 10
+    * param offset = 0
+    When method GET
+    Then status 200
+    * def tokenSchema = schemaBody.homePage.marketPrice
+    * match response.data.tokens == '#[]tokenSchema'
+

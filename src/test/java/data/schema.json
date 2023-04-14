@@ -75,6 +75,18 @@
       "image":"##string",
       "type":"#string",
       "name":"#string"
+    },
+    "marketPrice": {
+      "symbol": "#string",
+      "interested": "#boolean",
+      "networkImage": "##string",
+      "price": "#number",
+      "image": "##string",
+      "updatedAt": "#string",
+      "type": "#string",
+      "tokenId": "#string",
+      "name": "#string",
+      "priceVolatility": "#number"
     }
   },
   "vault": {

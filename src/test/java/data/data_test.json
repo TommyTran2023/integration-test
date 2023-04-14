@@ -33,9 +33,9 @@
   "helpCenter": {
     "schema_list": {
       "category": "#string",
-      "platforms": "#[]",
-      "requestType": "#null",
-      "productType": "#null",
+      "platforms": "##[]",
+      "requestType": "##string",
+      "productType": "##string",
       "id": "#number",
       "status": "in_progress",
       "subStatus": "new",
@@ -43,9 +43,7 @@
       "description": "#string",
       "createdAt": "#string",
       "updatedAt": "#string",
-      "ccUserIds": [
-        "#number"
-      ],
+      "ccUserIds": ["#number"],
       "requesterId": "#number"
     }
     },

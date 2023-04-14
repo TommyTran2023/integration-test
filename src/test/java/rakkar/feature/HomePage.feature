@@ -126,4 +126,6 @@ Feature: HomePage
     * param offset = 0
     When method GET
     Then status 200
+    * def tokenSchema = schemaBody.homePage.marketPrice
+    * match response.data.tokens == '#[]tokenSchema'
 

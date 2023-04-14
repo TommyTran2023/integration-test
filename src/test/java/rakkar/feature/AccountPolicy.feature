@@ -8,6 +8,7 @@ Feature: Account admin policy
     * def getRequesterIDResponse = call read('GetRequesterID.feature')
     * def customerId = getRequesterIDResponse.response.data.customerId
     * def dataBody = read('classpath:data/data_test.json')
+    * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-10939 @ViewAccountPolicy
   Scenario: View account policy
@@ -16,8 +17,10 @@ Feature: Account admin policy
     Then status 200
     * match response.status == 'success'
     * match response.data.organizationName == '#string'
-    * def quorumParticipant = {"userId":'#string', "role":'#string', "requiredApprover":#boolean, "picture":'##string', "email":'#string', "name":'#string', "roleDisplayName":'#string'}
-    * match response.data.quorumParticipants == '#[]quorumParticipant'
+    #* def quorumParticipant = {"userId":'#string', "role":'#string', "requiredApprover":#boolean, "picture":'##string', "email":'#string', "name":'#string', "roleDisplayName":'#string'}
+    #* match response.data.quorumParticipants == '#[]quorumParticipant'
+    * def quorumParticipantSchema = schemaBody.accountPolicy.schema_list
+    * match response.data.quorumParticipants contains quorumParticipantSchema
     * def requestId = response.data.pendingRequestId
 
   @RAKCON-10940 @EditAccountPolicy

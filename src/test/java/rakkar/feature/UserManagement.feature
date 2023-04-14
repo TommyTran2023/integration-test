@@ -94,3 +94,21 @@
       * def expectedUserList = listUserName
       * eval Collections.sort(expectedUserList, Collections.reverseOrder())
       * match listUserName == expectedUserList
+
+    @RAKCON-11019 @View_user_detail
+    Scenario: View user detail
+      * def user = call read('UserManagement.feature@User_listing')
+      * def userId = user.response.data.users[0].userId
+      * def userName = user.response.data.users[0].userName
+      * def role = user.response.data.users[0].role
+      * def name = user.response.data.users[0].name
+      * def email = user.response.data.users[0].email
+      Given path 'auth/account/users/' + userId
+      When method GET
+      Then status 200
+      And match response.status == "success"
+      And match response.data.userName == "#(userName)"
+      And match response.data.roleName == "#(role)"
+      And match response.data.name == "#(name)"
+      And match response.data.email == "#(email)"
+

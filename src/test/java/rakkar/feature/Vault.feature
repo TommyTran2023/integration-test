@@ -8,6 +8,7 @@ Feature: Vault
     * def getRequesterIDResponse = call read('GetRequesterID.feature')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
+    * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
 
   @ignore @CHECK-VAULT-NAME
@@ -308,7 +309,7 @@ Feature: Vault
     * param sortBy = 'TOTAL_USD'
     When method GET
     Then status 200
-    * def vaultsSchema = {"missing":#boolean, "id":'#string', "editVaultPending":#boolean, "wallets":[], "totalUSD":#number, "createdAt":'#string', "type":'#string', "approverNumber":#number, "name":'#string', "totalUSDYesterday":'##string'}
+    * def vaultsSchema = schemaBody.vault.schema_list
     * match response.data.vaults == '#[]vaultsSchema'
     * match response.data.hasSmallBalance == '#boolean'
     * match response.data.totalUSD == '#number'

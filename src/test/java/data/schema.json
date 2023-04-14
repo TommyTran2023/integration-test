@@ -45,5 +45,48 @@
       },
       "name" : "#string"
     }
+  },
+  "accountPolicy": {
+    "schema_list": {
+      "userId":"#string",
+      "role":"#string",
+      "requiredApprover":"#boolean",
+      "picture":"##string",
+      "email":"#string",
+      "name":"#string",
+      "roleDisplayName":"#string"
+    }
+  },
+  "homePage": {
+    "assetAllocation": {
+      "id":"#string",
+      "symbol":"#string",
+      "totalUSD":"#number",
+      "image":"##string",
+      "network":"#string"
+    },
+    "assetAllocationDetail": {
+      "symbol":"#string",
+      "networkImage":"##string",
+      "id":"#string",
+      "totalUSD":"#number",
+      "image":"##string",
+      "type":"#string",
+      "name":"#string"
+    }
+  },
+  "vault": {
+    "schema_list": {
+      "missing":"#boolean",
+      "id":"#string",
+      "editVaultPending":"#boolean",
+      "wallets":"#[]",
+      "totalUSD":"#number",
+      "createdAt":"#string",
+      "type":"#string",
+      "approverNumber":"#number",
+      "name":"#string",
+      "totalUSDYesterday":"##string"
+    }
   }
 }

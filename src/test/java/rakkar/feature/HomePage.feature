@@ -60,20 +60,19 @@ Feature: HomePage
     * def responseSchema = {"chartData":"#[]chartDataSchema", "percentageDifference":#number}
 
 
-
   @RAKCON-10979 @AddShortcut
   Scenario: Add shortcuts at homepage successfully
-    * call read('HomePage.feature@ViewShortcut')
-    * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
-    * call read('HomePage.feature@AddShortcut-Common')
-    Then status 201
     * def userId = call read('GetRequesterID.feature@GetRequesterID')
-    * match response.data.userId == userId.requesterID
-    * match response.data.externalAssetId == tokenSymbol
-    * match response.data.destinationType == "VAULT_ACCOUNT"
-    * match response.data.destinationId == destinationId_cold
-    * match response.data.sourceId == sourceId_hot
-    * match response.data.name == shortCutName
+    * def viewShortcut = call read('HomePage.feature@ViewShortcut')
+    * if (viewShortcut.shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
+    * def addShortcut = call read('HomePage.feature@AddShortcut-Common')
+    * print addShortcut.response
+    * match addShortcut.response.data.userId == userId.requesterID
+    * match addShortcut.response.data.externalAssetId == addShortcut.tokenSymbol
+    * match addShortcut.response.data.destinationType == "VAULT_ACCOUNT"
+    * match addShortcut.response.data.destinationId == addShortcut.destinationId_cold
+    * match addShortcut.response.data.sourceId == addShortcut.sourceId_hot
+    * match addShortcut.response.data.name == addShortcut.shortCutName
 
   @RAKCON-11771 @AddDuplicateShortcut
   Scenario: Add shortcut with duplicate information
@@ -83,7 +82,6 @@ Feature: HomePage
     # Add shortcut with duplicate information
     * def func = function(x){return karate.call('HomePage.feature@AddShortcut-Common')}
     * def duplicateResult = karate.repeat(2, func)
-    * print duplicateResult
     * match duplicateResult[1].responseStatus == 400
     * match duplicateResult[1].response.errorCode == 'SHORTCUT_EXISTED'
 
@@ -117,3 +115,13 @@ Feature: HomePage
     When method DELETE
     Then status 200
     * match response.data == {}
+
+  @RAKCON-10982 @ViewMarketPriceListing
+  Scenario: View Market Prices listing
+    Given path '/core/assets/price'
+    * param favoriteOrder = true
+    * param limit = 10
+    * param offset = 0
+    When method GET
+    Then status 200
+

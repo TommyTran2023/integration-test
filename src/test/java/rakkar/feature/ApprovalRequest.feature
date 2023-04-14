@@ -1,4 +1,4 @@
-@ignore @RAKCON-10945
+@RAKCON-10945
 Feature: Approval Request
 
   Background:

@@ -4,6 +4,7 @@ Feature: HomePage
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-11657 @AssetAllocationChart
   Scenario: View chart of Asset Allocation
@@ -11,8 +12,9 @@ Feature: HomePage
     * param type = 'ALL'
     When method GET
     Then status 200
-    * def assetsSchema = {"id":"#string", "symbol":"#string", "totalUSD":#number, "image":"##string", "network":"#string"}
+    * def assetsSchema = schemaBody.homePage.assetAllocation
     * def responseSchema = {"assets":"#[]assetsSchema", "totalUSD":#number}
+    * match response.data.assets == '#[]assetsSchema'
     * match response.data == responseSchema
 
   @RAKCON-10977 @AssetAllocationDetail
@@ -21,7 +23,7 @@ Feature: HomePage
     * param offset = 0
     When method GET
     Then status 200
-    * def tokenSchema = {"symbol":"#string", "networkImage":"##string", "id":"#string", "totalUSD":#number, "image":"##string", "type":"#string", "name":"#string"}
+    * def tokenSchema = schemaBody.homePage.assetAllocationDetail
     * def responseSchema = {"total":#number, "tokens":"#[]tokenSchema"}
     * match response.data == responseSchema
 
@@ -59,15 +61,13 @@ Feature: HomePage
     * def chartDataSchema = {"date":#? getDate(_)", "value":#number}
     * def responseSchema = {"chartData":"#[]chartDataSchema", "percentageDifference":#number}
 
-
-
   @RAKCON-10979 @AddShortcut
   Scenario: Add shortcuts at homepage successfully
+    * def userId = call read('GetRequesterID.feature@GetRequesterID')
     * call read('HomePage.feature@ViewShortcut')
     * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
     * call read('HomePage.feature@AddShortcut-Common')
     Then status 201
-    * def userId = call read('GetRequesterID.feature@GetRequesterID')
     * match response.data.userId == userId.requesterID
     * match response.data.externalAssetId == tokenSymbol
     * match response.data.destinationType == "VAULT_ACCOUNT"

@@ -22,7 +22,7 @@ Feature:Help Center
     * match response.data.subject == descriptionTicket
     * match response.data.description == descriptionTicket
     And match response.status == "success"
-    * def schema = schemaJson.helpCenter.schema_list
+    * def schema = schemaJson.helpCenter.tickets
     And match response.data contains schema
 
   @RAKCON-11378 @CREATE_TICKET_QUESTION
@@ -37,7 +37,7 @@ Feature:Help Center
     * match response.data.subject == descriptionTicket
     * match response.data.description == descriptionTicket
     And match response.status == "success"
-    * def schema = schemaJson.helpCenter.schema_list
+    * def schema = schemaJson.helpCenter.tickets
     And match response.data contains schema
 
   @RAKCON-11379 @CREATE_TICKET_REQUEST
@@ -52,8 +52,22 @@ Feature:Help Center
     * match response.data.subject == descriptionTicket
     * match response.data.description == descriptionTicket
     And match response.status == "success"
-    * def schema = schemaJson.helpCenter.schema_list
+    * def schema = schemaJson.helpCenter.tickets
     And match response.data contains schema
+
+  @RAKCON-11380 @VIEW_LISTING_TICKET_IN_PROGRESS
+  Scenario: View listing ticket on tab In progress
+    Given path '/crm/tickets'
+    * params {limit: '20', page: '1', status: 'in_progress'}
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    * def schema = schemaJson.helpCenter.tickets
+    * def listTickets = ["##(schema)"]
+    And match response.data.tickets contains listTickets
+
+
+
 
 
 

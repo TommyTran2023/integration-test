@@ -112,3 +112,15 @@
       And match response.data.name == "#(name)"
       And match response.data.email == "#(email)"
 
+    @RAKCON-11020 @Edit_own_profile
+      Scenario: Check edit own profile - edit avatar
+      * call read('UserManagement.feature@GetAccountMe')
+      * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
+      * call read('Common.feature@UPLOAD_LINK')
+      * call read('UploadFile.feature@PUT_VIDEO')
+      * def body = { "uploadToken":'#(uploadToken)'}
+      Given path 'auth/account/users/'+ userId + '/avatar'
+      And request body
+      When method PUT
+      Then status 200
+      And match response.status == "success"

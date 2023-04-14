@@ -271,6 +271,8 @@ Feature: Transfer
    Scenario: Transfer high - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_high_value')
     * call read('Common.feature@VIDEO_SPEECH_PROMPT')
+    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')

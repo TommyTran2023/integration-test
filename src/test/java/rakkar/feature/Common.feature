@@ -72,8 +72,7 @@ Feature: Generate Challenge Answer for Biometric
   @ignore @UPLOAD_LINK
   Scenario: Upload link
     Given path 'auth/account/users/upload-link'
-    * def query = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
-    And params query
+    And params query_upload_link
     When method GET
     Then status 200
     And response.status == "success"

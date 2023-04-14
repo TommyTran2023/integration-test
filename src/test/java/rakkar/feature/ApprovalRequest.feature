@@ -67,6 +67,8 @@ Feature: Approval Request
     * def value = call read('Transfer.feature@Transfer_high_value')
     * def requestId = value.response.data.requestId
     * call read('Common.feature@VIDEO_SPEECH_PROMPT')
+    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)'}
     * print 'body', body

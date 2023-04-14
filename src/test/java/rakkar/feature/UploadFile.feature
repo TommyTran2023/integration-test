@@ -23,7 +23,6 @@ Feature: Upload file
 
   @PUT_VIDEO
   Scenario: Put video
-    * call read('Common.feature@UPLOAD_LINK')
     Given url uploadUrl
     * request {}
     And header Content-type = "video/mp4"

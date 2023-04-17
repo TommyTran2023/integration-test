@@ -128,7 +128,31 @@ Feature: HomePage
     Then status 200
     * def tokenSchema = schemaBody.homePage.marketPrice
     * match response.data.tokens == '#[]tokenSchema'
+    * def firstToken = $response.data.token[0]
+    * print firstToken
 
+  @RAKCON-10995 @AddAssetToFavourite
+  Scenario: Add asset to favourite
+    * def marketPrice = call read('HomePage.feature@ViewMarketPriceListing')
+    * def tokenId = marketPrice.firstToken.tokenId
+    * if (marketPrice.firstToken.interested == true) karate.call('HomePage.feature@RemoveAssetToFvourite')
+    Given path '/core/assets/interested'
+    * request { "unFavourite" : false, "externalAssetIds" : [ "(#tokenId)" ] }
+    When method PUT
+    Then status 200
+    * match response.status == 'success'
+
+  @RAKCON-11850 @RemoveAssetToFavourite
+  Scenario: Remove asset to favourite
+    * def marketPrice = call read('HomePage.feature@ViewMarketPriceListing')
+    * def tokenId = marketPrice.firstToken.tokenId
+    * if (marketPrice.firstToken.interested == false) karate.call('HomePage.feature@AddAssetToFvourite')
+    Given path '/core/assets/interested'
+    * request { "unFavourite" : true, "externalAssetIds" : [ "(#tokenId)" ] }
+    When method PUT
+    Then status 200
+    * match response.status == 'success'
+    
   @RAKCON-10993 @RecentTransactions
   Scenario: Recent transactions
     Given path '/core/transactions'
@@ -139,4 +163,3 @@ Feature: HomePage
     Then status 200
     * def transactionsCount = response.data.transactions
     * assert transactionsCount.length == 5
-

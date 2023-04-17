@@ -10,7 +10,7 @@
     }
   },
   "helpCenter": {
-    "schema_list": {
+    "tickets": {
       "category": "#string",
       "platforms": "##[]",
       "requestType": "##string",

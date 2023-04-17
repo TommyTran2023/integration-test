@@ -152,3 +152,14 @@ Feature: HomePage
     When method PUT
     Then status 200
     * match response.status == 'success'
+    
+  @RAKCON-10993 @RecentTransactions
+  Scenario: Recent transactions
+    Given path '/core/transactions'
+    * param limit = 5
+    * param offset = 0
+    * param status = 'COMPLETED'
+    When method GET
+    Then status 200
+    * def transactionsCount = response.data.transactions
+    * assert transactionsCount.length == 5

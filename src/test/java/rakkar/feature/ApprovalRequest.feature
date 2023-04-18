@@ -25,6 +25,7 @@ Feature: Approval Request
   @RAKCON-11047 @ApprovalNewAddressWhitelist
   Scenario: Approval - Add whitelist address
     * def value = call read('WhiteListFolder.feature@Create_address_internal')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-10976 @ApprovalEditVault
   Scenario: Approval - Edit Vault policy request
@@ -59,6 +60,12 @@ Feature: Approval Request
   @RAKCON-11049 @ApprovalTransferMediumValue
     Scenario: Approval - Transfer with medium value
     * def value = call read('Transfer.feature@Transfer_medium_value')
+    * def requestId = value.response.data.requestId
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+
+  @RAKCON-11925 @ApprovalTransferExternal
+  Scenario: Approval - Transfer external
+    * def value = call read('Transfer.feature@External_Transfer')
     * def requestId = value.response.data.requestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 

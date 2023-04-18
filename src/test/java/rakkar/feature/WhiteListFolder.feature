@@ -60,7 +60,7 @@ Feature: WhiteList Folder
   #TCs: SEARCH FOLDER
   @RAKCON-11163 @Search_folder_by_keyword
   Scenario: Check search folder by keyword
-    * callonce read('WhiteListFolder.feature@Create_folder')
+    * call read('WhiteListFolder.feature@Create_folder')
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(folderName)'}
     Given path 'core/folders'
     And params query
@@ -169,7 +169,7 @@ Feature: WhiteList Folder
     * def address = response.data.address
     * def name = response.data.name
     * def symbol = response.data.symbol
-    * def tokenId = response.data.id
+    * def tokenID = response.data.id
 
 
   @RAKCON-10969 @Create_address_internal
@@ -183,6 +183,7 @@ Feature: WhiteList Folder
     * call read('WhiteListFolder.feature@Create_folder_external')
     * call read('WhiteListFolder.feature@Create_address_common')
     * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
     #TCs: VIEW DETAIL FOLDER
   @RAKCON-11164 @View_Detail_Folder
@@ -195,7 +196,7 @@ Feature: WhiteList Folder
     Then status 200
     And match response.status == "success"
     And match response.data.listAddress[0].address == "#(address)"
-    And match response.data.listAddress[0].id == "#(tokenId)"
+    And match response.data.listAddress[0].id == "#(tokenID)"
 
    #TCs: VIEW ADDRESS DETAIL
   @RAKCON-10970 @View_Address_Detail
@@ -220,7 +221,6 @@ Feature: WhiteList Folder
     And match response.data.records[0].type.value == 'ADD_WHITELIST_ADDRESS'
     And match response.data.records[0].type.nameDisplay == 'Add Whitelisted Address'
     * def requestId = response.data.records[0].id
-    * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
     #TCs: DELETE WHITELIST ADDRESS
   @RAKCON-10971 @Delete_Whitelist_Address
@@ -249,7 +249,6 @@ Feature: WhiteList Folder
     When method DELETE
     Then status 200
     And match response.status == "success"
-
 
 
 

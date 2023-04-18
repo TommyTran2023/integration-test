@@ -5,7 +5,7 @@ Feature: Vault
     #@PRECOND_RAKCON-10225
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetRequesterID.feature')
+    * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def dataBody = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')

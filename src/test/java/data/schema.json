@@ -100,5 +100,29 @@
       "name":"#string",
       "totalUSDYesterday":"##string"
     }
+  },
+  "approvalView": {
+    "viewListRequest": {
+      "id": "#string",
+      "updatedAt": "#string",
+      "moduleType": "#string",
+      "additionalData": {},
+      "type": {
+        "value": "#string",
+        "nameDisplay": "#string"
+      },
+      "requestId": "#string",
+      "moduleId": "#string",
+      "businessRegistrationId": "#string",
+      "createdBy": {
+        "name": "#string",
+        "avatar": "#string"
+      },
+      "organizationName": "#string",
+      "canApproveOrReject": "#boolean",
+      "createdAt": "#string",
+      "displayName": "#string",
+      "status": "#string"
+    }
   }
 }

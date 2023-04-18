@@ -69,6 +69,11 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @RAKCON-11926 @RejectTransferExternal
+  Scenario: Reject request - Transfer external
+    * def value = call read('Transfer.feature@External_Transfer')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
 
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common

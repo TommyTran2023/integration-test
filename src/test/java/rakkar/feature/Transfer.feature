@@ -4,7 +4,7 @@ Feature: Transfer
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('UserManagement.feature@GetAccountMe')
-    * call read('common.feature@TIERS_SIGNER')
+    * call read('Common.feature@TIERS_SIGNER')
     * def dataBody = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER
@@ -164,6 +164,10 @@ Feature: Transfer
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
 
+  @RAKCON-11918 @Cancel_transaction_hot_to_hot
+  Scenario: Transfer Hot to hot - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
+
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
   Scenario: Transfer Hot to cold - Submit transfer
@@ -181,6 +185,10 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
+
+  @RAKCON-11919 @Cancel_transaction_hot_to_cold
+  Scenario: Transfer Hot to cold - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
 
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
@@ -200,6 +208,10 @@ Feature: Transfer
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
 
+  @RAKCON-11920 @Cancel_transaction_cold_to_hot
+  Scenario: Transfer Cold to hot - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
+
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
   Scenario: Transfer Cold to cold - Submit transfer
@@ -217,6 +229,10 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_cold)"
     And response.data.destinationName == "#(destinationName_cold)"
     And response.data.symbol == "#(symbol)"
+
+  @RAKCON-11921 @Cancel_transaction_cold_to_cold
+  Scenario: Transfer Cold to cold - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
 
   #Tcs: TRANSFER MEDIUM VALUE
   @ignore @RAKCON-11401 @Get_estimate_fee_medium_value
@@ -251,6 +267,10 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
+
+  @RAKCON-11922 @Cancel_transaction_medium
+  Scenario: Transfer Medium - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
 
   #Tcs: TRANSFER HIGH VALUE
   @ignore @RAKCON-11403 @Get_estimate_fee_high_value
@@ -289,6 +309,10 @@ Feature: Transfer
     And response.data.destinationName == "#(destinationName_hot)"
     And response.data.symbol == "#(symbol)"
 
+  @RAKCON-11923 @Cancel_transaction_high
+  Scenario: Transfer High - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
+
   #EXTERNAL WITHDRAW
   @ignore @RAKCON-11406 @Get_estimate_fee_external_transfer
   Scenario: External - Get estimated fee
@@ -320,6 +344,20 @@ Feature: Transfer
     And response.data.sourceName == "#(sourceName_hot)"
     And response.data.destinationName == "#(externalName)"
     And response.data.symbol == "#(symbol)"
-    * def requestId = response.data.requestId
+
+  @RAKCON-11924 @Cancel_transaction_external
+  Scenario: Transfer External - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
+
+  @ignore @View_My_Request_Transfer
+  Scenario: View my request for type transfer
+    Given path 'core/quorums'
+    * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+    And request body
+    When method POST
+    Then status 201
+    And match response.data.records[0].type.value == 'WITHDRAW_APPROVAL'
+    And match response.data.records[0].type.nameDisplay == 'Withdraw Approval'
+    * def requestId = response.data.records[0].id
     * call read('CancelRequest.feature@CancelRequestCommon')
-  # TCs: View transaction after submit
+

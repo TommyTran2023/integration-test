@@ -116,7 +116,7 @@
       "businessRegistrationId": "#string",
       "createdBy": {
         "name": "#string",
-        "avatar": "#string"
+        "avatar": "##string"
       },
       "organizationName": "#string",
       "canApproveOrReject": "#boolean",

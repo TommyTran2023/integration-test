@@ -5,7 +5,7 @@ Feature: Account admin policy
     #@PRECOND_RAKCON-11352
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetRequesterID.feature')
+    * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
     * def customerId = getRequesterIDResponse.response.data.customerId
     * def dataBody = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -17,8 +17,6 @@ Feature: Account admin policy
     Then status 200
     * match response.status == 'success'
     * match response.data.organizationName == '#string'
-    #* def quorumParticipant = {"userId":'#string', "role":'#string', "requiredApprover":#boolean, "picture":'##string', "email":'#string', "name":'#string', "roleDisplayName":'#string'}
-    #* match response.data.quorumParticipants == '#[]quorumParticipant'
     * def quorumParticipantSchema = schemaBody.accountPolicy.schema_list
     * match response.data.quorumParticipants contains quorumParticipantSchema
     * def requestId = response.data.pendingRequestId

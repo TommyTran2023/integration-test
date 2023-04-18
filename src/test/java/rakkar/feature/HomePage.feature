@@ -63,7 +63,7 @@ Feature: HomePage
 
   @RAKCON-10979 @AddShortcut
   Scenario: Add shortcuts at homepage successfully
-    * def userId = call read('GetRequesterID.feature@GetRequesterID')
+    * def userId = call read('GetRequesterInfo.feature@GetRequesterInfo')
     * call read('HomePage.feature@ViewShortcut')
     * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
     * call read('HomePage.feature@AddShortcut-Common')

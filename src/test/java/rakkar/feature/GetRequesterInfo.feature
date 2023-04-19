@@ -1,4 +1,4 @@
-@RAKCON-10576 @AT @ignore
+@ignore
 Feature: Get user ID of requester
 
   Background:

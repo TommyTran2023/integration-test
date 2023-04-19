@@ -15,18 +15,13 @@ Feature: View List My Request
     # Check list request by Requester ID in My Request list
     * def requestBody = { "limit" : 10, "offset" : 0, "keyword" : "", "isHistory" : true, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "createdBy" : #(requesterInfo.requesterID)}
     * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
-    * def recordsSchema = schemaBody.approvalView.viewListRequest
-    * match response.data.records contains recordsSchema
+
 
   @RAKCON-11857 @ViewMyRequestByStatus
   Scenario: View my request by status
-    # Check list request by Requester ID in My Request list
-    Given path '/core/quorums'
+    # Check list request by Requester ID in My Request list by status
     * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(dataBody.viewListMyRequest.statusFiltering) ], "createdBy" : #(requesterInfo.requesterID) }
-    When method POST
-    Then status 201
-    * def recordsSchema = schemaBody.approvalView.viewListRequest
-    * match response.data.records contains recordsSchema
+    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
     * def requestStatus = $response.data.records[*].status
     * match each requestStatus == dataBody.viewListMyRequest.statusFiltering
 
@@ -36,3 +31,6 @@ Feature: View List My Request
     * request requestBody
     When method POST
     Then status 201
+    * match each $response.data.records[*].canApproveOrReject == false
+    * match each $response.data.records[*].businessRegistrationId == '#string'
+    * match each $response.data.records[*].organizationName == '#string'

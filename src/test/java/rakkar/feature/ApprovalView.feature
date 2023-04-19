@@ -14,8 +14,10 @@ Feature: Approval View
     # Appprover views list pending request to approve
     * def requestBody = {"offset":0, "limit": 10, "status": [PENDING]}
     * call read('ApprovalView.feature@ApprovalView-Common')
-    * def recordsSchema = schemaBody.approvalView.viewListRequest
-    * match response.data.records contains recordsSchema
+    * match each $response.data.records[*].canApproveOrReject == true
+    * match each $response.data.records[*].status == "PENDING"
+    * match each $response.data.records[*].businessRegistrationId == '#string'
+    * match each $response.data.records[*].organizationName == '#string'
 
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common

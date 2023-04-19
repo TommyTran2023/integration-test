@@ -1,4 +1,4 @@
-@RAKCON-10949 @ignore
+@RAKCON-10583
   Feature: User Management
     Background:
       * url baseURL
@@ -7,7 +7,7 @@
       * def Collections = Java.type('java.util.Collections')
 
     @ignore @GetAccountMe
-    Scenario: User Infor - Get basic user infor afer login
+    Scenario: Get basic information
       * call read('RequesterAuthenticator.feature@RequesterAccessToken')
       Given path 'auth/account/me'
       When method GET
@@ -112,7 +112,7 @@
       And match response.data.name == "#(name)"
       And match response.data.email == "#(email)"
 
-    @RAKCON-11020 @Edit_own_profile
+     @RAKCON-11020 @Edit_own_profile
       Scenario: Check edit own profile - edit avatar
       * call read('UserManagement.feature@GetAccountMe')
       * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
@@ -124,3 +124,47 @@
       When method PUT
       Then status 200
       And match response.status == "success"
+
+       @ignore @Review_edit_user
+       Scenario: Change Role - Review role change
+         * call read('UserManagement.feature@User_listing')
+         * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
+         Given path 'auth/account/check-quorum/' + userId
+         And request body
+         When method PUT
+         Then status 200
+         And match response.status == "success"
+#         And match response.data.accountLVCheck.isValidNumUserInQuorum == true
+
+       @RAKCON-11021 @Change_role
+       Scenario: Change Role - Check submit change
+         * call read('UserManagement.feature@Review_edit_user')
+         * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
+         * call read('Common.feature@FIDO-Requester')
+         * header challenge-answer = challengeAnswerRequest
+         Given path 'auth/account/users/' + userId
+         And request body
+         When method PUT
+         Then status 200
+         And match response.status == "success"
+         * call read('UserManagement.feature@View_user_detail')
+         * def requestId = response.data.pendingRequestId
+
+     @RAKCON-11929 @Cancel_Change_role
+     Scenario: Edit user - Cancel change role
+       * def value = call read('UserManagement.feature@View_My_Request_Edit_User')
+       * def requestId = value.response.data.records[0].id
+       * call read('CancelRequest.feature@CancelRequestCommon')
+
+    @ignore @View_My_Request_Edit_User
+    Scenario: View my request for type transfer
+      * call read('UserManagement.feature@GetAccountMe')
+      Given path 'core/quorums'
+      * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+      And request body
+      When method POST
+      Then status 201
+      And match response.data.records[0].type.value == 'UPDATE_USER'
+      And match response.data.records[0].type.nameDisplay == 'Edit User'
+#      * def requestId = response.data.records[0].id
+#      * print 'requestId',

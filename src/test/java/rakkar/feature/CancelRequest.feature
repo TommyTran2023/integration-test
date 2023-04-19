@@ -1,4 +1,4 @@
-@RAKCON-10946
+@RAKCON-10583
 Feature: Cancel Request
 
   Background:
@@ -30,7 +30,7 @@ Feature: Cancel Request
     * def requestId = value.response.data.records[0].id
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @ignore @transaction
+  @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
     Given path '/core/quorums/cancel/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest

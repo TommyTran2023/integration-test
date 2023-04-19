@@ -1,4 +1,4 @@
-@RAKCON-10947
+@RAKCON-10583
 Feature: Reject Request
 
   Background:
@@ -73,6 +73,10 @@ Feature: Reject Request
   Scenario: Reject request - Transfer external
     * def value = call read('Transfer.feature@External_Transfer')
     * def requestId = value.response.data.requestId
+
+  @RAKCON-11062 @RejectChangeRole
+  Scenario: Reject request - Change role
+    * call read('UserManagement.feature@Change_role')
     * call read('RejectRequest.feature@RejectRequestCommon')
 
   @ignore @RejectRequestCommon

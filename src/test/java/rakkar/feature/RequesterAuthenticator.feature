@@ -1,4 +1,4 @@
-@RAKCON-10584 @AT
+@RAKCON-10583
 Feature: Get access token for Requester
 
   Background:

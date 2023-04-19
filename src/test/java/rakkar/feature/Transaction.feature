@@ -1,4 +1,4 @@
-@RAKCON-10937 @ignore
+@RAKCON-10583 @ignore
 Feature: Transaction
   Background:
     * url baseURL

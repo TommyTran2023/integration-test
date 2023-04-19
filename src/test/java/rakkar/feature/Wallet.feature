@@ -1,4 +1,4 @@
-@RAKCON-10941
+@RAKCON-10583
 Feature: Wallet
 
   Background:

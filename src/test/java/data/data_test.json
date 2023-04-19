@@ -32,6 +32,12 @@
   },
   "userManagement": {},
   "viewListMyRequest": {
-    "statusFiltering": "PENDING"
+    "statusFiltering": "PENDING",
+    "typeFiltering": "POLICY",
+    "valueOfPolicyType": [
+      "EDIT_ACCOUNT_POLICY",
+      "CREATE_VAULT",
+      "UPDATE_VAULT"
+    ]
   }
 }

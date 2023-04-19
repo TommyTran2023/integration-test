@@ -25,6 +25,14 @@ Feature: View List My Request
     * def requestStatus = $response.data.records[*].status
     * match each requestStatus == dataBody.viewListMyRequest.statusFiltering
 
+  @RAKCON-11858 @ViewMyRequestByType
+  Scenario: View my request by type
+    # Check list request by Request ID in My Request list by type
+    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "createdBy" : #(requesterInfo.requesterID), "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
+    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * def typeValue = $response.data.records[*].type.value
+    * match dataBody.viewListMyRequest.valueOfPolicyType contains any typeValue
+
   @ViewListMyRequest-Common @ignore
   Scenario: Approve View - Common
     Given path '/core/quorums'

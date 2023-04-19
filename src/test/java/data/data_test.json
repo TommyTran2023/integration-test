@@ -30,5 +30,8 @@
     "timezone": "Asia/Ho_Chi_Minh",
     "type": "TRANSACTION_REQUEST"
   },
-  "userManagement": {}
+  "userManagement": {},
+  "viewListMyRequest": {
+    "statusFiltering": "PENDING"
+  }
 }

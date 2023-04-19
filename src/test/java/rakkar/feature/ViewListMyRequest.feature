@@ -54,6 +54,14 @@ Feature: View List My Request
     # List records should have createdAt between dateFrom and dateTo
     * match each $response.data.records[*].createdAt == '#? isValid(_)'
 
+  @RAKCON-11858 @ViewMyRequestByType
+  Scenario: View my request by type
+    # Check list request by Request ID in My Request list by type
+    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "createdBy" : #(requesterInfo.requesterID), "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
+    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * def typeValue = $response.data.records[*].type.value
+    * match dataBody.viewListMyRequest.valueOfPolicyType contains any typeValue
+
   @ViewListMyRequest-Common @ignore
   Scenario: Approve View - Common
     Given path '/core/quorums'
@@ -61,5 +69,5 @@ Feature: View List My Request
     When method POST
     Then status 201
     * match each $response.data.records[*].canApproveOrReject == false
-    #* match each $response.data.records[*].businessRegistrationId == '#string'
-    #* match each $response.data.records[*].organizationName == '#string'
+    * match each $response.data.records[*].businessRegistrationId == '#string'
+    * match each $response.data.records[*].organizationName == '#string'

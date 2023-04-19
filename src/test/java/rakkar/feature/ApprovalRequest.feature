@@ -88,6 +88,11 @@ Feature: Approval Request
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
+    @RAKCON-11046 @ApprovalChangeRole
+    Scenario: Approval - Edit role
+      * call read('UserManagement.feature@Change_role')
+      * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+
      # Common Approve
   @ApproveRequestCommon @ignore
   Scenario: Approve pending request - Common

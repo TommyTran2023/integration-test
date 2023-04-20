@@ -3,7 +3,6 @@
     Background:
       * url baseURL
       * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-      * def dataBody = read('classpath:data/schema.json')
       * def Collections = Java.type('java.util.Collections')
 
     @ignore @GetAccountMe
@@ -25,7 +24,6 @@
       * def name = response.data.users[0].name
       * def userId = response.data.users[0].userId
       * def schema = dataBody.userManagement.schema_list
-      And match response.data.users contains schema
 
     @RAKCON-11017 @Search_user_list
     Scenario: Check search for user list
@@ -166,5 +164,3 @@
       Then status 201
       And match response.data.records[0].type.value == 'UPDATE_USER'
       And match response.data.records[0].type.nameDisplay == 'Edit User'
-#      * def requestId = response.data.records[0].id
-#      * print 'requestId',

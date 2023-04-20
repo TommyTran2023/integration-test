@@ -4,13 +4,12 @@ Feature: Transfer
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('UserManagement.feature@GetAccountMe')
-    * call read('Common.feature@TIERS_SIGNER')
     * def dataBody = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER
   @ignore @RAKCON-11337 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
-    * def query = { limit:'10', offset: '0', sort:'ASC', groupBy: 'ASSET'}
+    * def query = { limit:'10', offset: '0', sort:'ASC', groupBy: 'ASSET', keyword:'xrp'}
     Given path 'core/wallet/transfer-tokens'
     And params query
     When method GET
@@ -24,7 +23,7 @@ Feature: Transfer
   @ignore @RAKCON-11338 @Get_source_transfer
   Scenario: Transfer - View source for transfer
     * call read('Transfer.feature@Get_asset_transfer')
-    * def query = { fromScreen: '#(dataBody.transfer.from_screen_source)', limit:'20', offset: '0', sort:'ASC', groupBy: 'VAULT', tokenSymbol: '#(tokenSymbol)',}
+    * def query = { fromScreen: '#(dataBody.transfer.from_screen_source)', limit:'20', offset: '0', sort:'ASC', groupBy: 'VAULT', tokenSymbol: '#(tokenSymbol)', keyword:'Vault_transfer'}
     Given path 'core/vault/accounts'
     And params query
     When method GET
@@ -44,7 +43,7 @@ Feature: Transfer
   @ignore @RAKCON-11339 @Get_destination_transfer
   Scenario: Transfer - View destination for transfer
     * call read('Transfer.feature@Get_asset_transfer')
-    * def query = { fromScreen: '#(dataBody.transfer.from_screen_destination)', limit:'20', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', tokenSymbol: '#(tokenSymbol)'}
+    * def query = { fromScreen: '#(dataBody.transfer.from_screen_destination)', limit:'20', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', tokenSymbol: '#(tokenSymbol)', keyword:'Vault_transfer'}
     Given path 'core/vault/accounts'
     And params query
     When method GET
@@ -294,7 +293,7 @@ Feature: Transfer
     * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(dataBody.transfer.amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode

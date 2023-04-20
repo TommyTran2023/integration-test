@@ -5,7 +5,10 @@
     "requesterPasscode": "123123",
     "approvalUsername": "PASSPORT786567772",
     "approverPasscode": "123123",
-    "adminUsername": "PASSPORT65746"
+    "adminUsername": "PASSPORT65746",
+    "amount_low": 10,
+    "amount_medium": 15,
+    "amount_high": 50
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
@@ -13,6 +16,9 @@
     "requesterPasscode": "123111",
     "approvalUsername": "PASSPORT01011998",
     "approverPasscode": "271198",
-    "adminUsername": "PASSPORT123456"
+    "adminUsername": "PASSPORT123456",
+    "amount_low": 50,
+    "amount_medium": 500,
+    "amount_high": 1000
   }
 }

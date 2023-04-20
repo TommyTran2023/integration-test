@@ -3,7 +3,7 @@ Feature: Transaction
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('Common.feature@TIERS_SIGNER')
+#    * call read('Common.feature@TIERS_SIGNER')
 
   @ignore @Filter_transaction_common
   Scenario: Filter transaction

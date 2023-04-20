@@ -17,8 +17,11 @@ Feature: Approval View
     * call read('ApprovalView.feature@ApprovalView-Common')
     * match each $response.data.records[*].canApproveOrReject == true
     * match each $response.data.records[*].status == "PENDING"
-    * match each $response.data.records[*].businessRegistrationId == '#string'
-    * match each $response.data.records[*].organizationName == '#string'
+
+  @RAKCON-10996 @ViewListRequestHistory
+  Scenario: View request history - All types
+    * def requestBody = { "keyword" : "", "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "offset" : 10, "isHistory" : true, "limit" : 10 }
+    * call read('ApprovalView.feature@ApprovalView-Common')
 
   @RAKCON-11860 @ViewRequestHistoryByInitiator
   Scenario: View request history by initiator
@@ -32,3 +35,5 @@ Feature: Approval View
     * request requestBody
     When method POST
     Then status 201
+    * match each $response.data.records[*].businessRegistrationId == '#string'
+    * match each $response.data.records[*].organizationName == '#string'

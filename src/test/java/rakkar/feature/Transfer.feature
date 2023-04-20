@@ -1,4 +1,4 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Transfer
   Background:
     * url baseURL
@@ -327,7 +327,7 @@ Feature: Transfer
     * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(externalId)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
-  @ignore @RAKCON-11408 @External_Transfer
+  @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_external_transfer')
     * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}

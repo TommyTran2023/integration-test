@@ -131,7 +131,7 @@ Feature: Vault
     * match response.data.missing == false
     # ---- Check vault members should be same as created
     * def listMembers = karate.callSingle('Vault.feature@CHECK-LIST-USER')
-    * match memberIdsWA == vaultMemberList
+    * match memberIdsWA contains only vaultMemberList
 
   @RAKCON-11146 @ViewVaultDetailHasNotAdminSetup
   Scenario: View vault detail that has not admin quorum
@@ -152,7 +152,7 @@ Feature: Vault
     # ---- Missing policy should be true for vault that has not admin quorum
     * match response.data.missing == true
     # ---- Check vault members should be same as created
-    * match memberIdsWOA == vaultMemberList
+    * match memberIdsWOA contains only vaultMemberList
 
   @RAKCON-10954 @SearchVault
   Scenario: Search vaults

@@ -23,7 +23,7 @@ Feature: Transfer
   @ignore @RAKCON-11338 @Get_source_transfer
   Scenario: Transfer - View source for transfer
     * call read('Transfer.feature@Get_asset_transfer')
-    * def query = { fromScreen: '#(dataBody.transfer.from_screen_source)', limit:'20', offset: '0', sort:'ASC', groupBy: 'VAULT', tokenSymbol: '#(tokenSymbol)',}
+    * def query = { fromScreen: '#(dataBody.transfer.from_screen_source)', limit:'20', offset: '0', sort:'ASC', groupBy: 'VAULT', tokenSymbol: '#(tokenSymbol)', keyword:'Vault_transfer'}
     Given path 'core/vault/accounts'
     And params query
     When method GET
@@ -43,7 +43,7 @@ Feature: Transfer
   @ignore @RAKCON-11339 @Get_destination_transfer
   Scenario: Transfer - View destination for transfer
     * call read('Transfer.feature@Get_asset_transfer')
-    * def query = { fromScreen: '#(dataBody.transfer.from_screen_destination)', limit:'20', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', tokenSymbol: '#(tokenSymbol)'}
+    * def query = { fromScreen: '#(dataBody.transfer.from_screen_destination)', limit:'20', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', tokenSymbol: '#(tokenSymbol)', keyword:'Vault_transfer'}
     Given path 'core/vault/accounts'
     And params query
     When method GET
@@ -355,8 +355,8 @@ Feature: Transfer
     And request body
     When method POST
     Then status 201
-#    And match response.data.records[0].type.value == 'WITHDRAW_APPROVAL'
-#    And match response.data.records[0].type.nameDisplay == 'Withdraw Approval'
+    And match response.data.records[0].type.value == 'WITHDRAW_APPROVAL'
+    And match response.data.records[0].type.nameDisplay == 'Withdraw Approval'
     * def requestId = response.data.records[0].id
     * call read('CancelRequest.feature@CancelRequestCommon')
 

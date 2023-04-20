@@ -9,6 +9,7 @@
     "amount_low": 10,
     "amount_medium": 15,
     "amount_high": 50
+
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
@@ -20,5 +21,6 @@
     "amount_low": 50,
     "amount_medium": 500,
     "amount_high": 1000
+
   }
 }

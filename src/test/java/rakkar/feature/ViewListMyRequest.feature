@@ -25,6 +25,35 @@ Feature: View List My Request
     * def requestStatus = $response.data.records[*].status
     * match each requestStatus == dataBody.viewListMyRequest.statusFiltering
 
+  @RAKCON-11859 @ViewMyRequestByDate
+  Scenario: View my request by date
+    * def getDate =
+      """
+      function(numberOfDays){
+        var date = new Date();
+        date.setDate(date.getDate() + (numberOfDays));
+        return date.toISOString()
+      }
+      """
+    # Filter request list by last 7 days
+    * def dateFrom = getDate(-7)
+    * def dateTo = getDate(-1)
+    * def dateToLong =
+      """
+      function(s) {
+        var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
+        var sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        return sdf.parse(s).time;
+      }
+      """
+    * def min = dateToLong(dateFrom)
+    * def max = dateToLong(dateTo)
+    * def isValid = function(x){ var temp = dateToLong(x); return temp >= min && temp <= max }
+    * def requestBody = { "isHistory" : true, "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "limit" : 10, "keyword" : "", "dateTo" : #(dateTo), "createdBy" : #(requesterInfo.requesterID), "dateFrom" : #(dateFrom) }
+    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    # List records should have createdAt between dateFrom and dateTo
+    * match each $response.data.records[*].createdAt == '#? isValid(_)'
+
   @RAKCON-11858 @ViewMyRequestByType
   Scenario: View my request by type
     # Check list request by Request ID in My Request list by type

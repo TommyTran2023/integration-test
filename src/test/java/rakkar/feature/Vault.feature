@@ -157,9 +157,18 @@ Feature: Vault
   @RAKCON-10954 @SearchVault
   Scenario: Search vaults
     * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    * def keyword = vaultNameResponseWA
+    * call read('Vault.feature@SearchVaultCommon')
+    * match response.status == 'success'
+    * def listSearchedVault = response.data.vaults
+    * def listSearchedVaultName = $listSearchedVault[*].name
+    * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
+
+  @SearchVaultCommon @ignore
+  Scenario: Search vaults - Common
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-    * param keyword = vaultNameResponseWA
+    * param keyword = keyword
     * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
@@ -167,9 +176,6 @@ Feature: Vault
     When method GET
     Then status 200
     * match response.status == 'success'
-    * def listSearchedVault = response.data.vaults
-    * def listSearchedVaultName = $listSearchedVault[*].name
-    * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
 
   @RAKCON-10955 @SortVaultA2Z
   Scenario: Sort vaults by name A - Z
@@ -249,10 +255,8 @@ Feature: Vault
   Scenario: Edit vault name
     #Check vault name is existed or not
     * call read('Vault.feature@CHECK-VAULT-NAME')
-    * def vaultListing = callonce read('Vault.feature@ViewVaultListing')
-    * def listVaultID = $vaultListing.response.data.vaults[*].id
-    * print 'Get list vault ID: ', listVaultID
-    Given path '/core/vault/account/'+listVaultID[0]
+    * def creatingVault = callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    Given path '/core/vault/account/'+creatingVault.vaultIDWA
     * request {"name":#(vaultName)}
     When method PUT
     Then status 200
@@ -320,15 +324,8 @@ Feature: Vault
   @RAKCON-11370 @SearchHiddenVault
   Scenario: Search hidden vault
     * callonce read('Vault.feature@HideVault')
-    Given path '/core/vault/accounts'
-    * param isHideList = true
-    * param keyword = vaultNameResponseWA
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'DESC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * def keyword = vaultNameResponseWA
+    * call read('Vault.feature@SearchVaultCommon')
     * match response.status == 'success'
     * def listSearchedVault = response.data.vaults
     * def listSearchedVaultName = $listSearchedVault[*].name

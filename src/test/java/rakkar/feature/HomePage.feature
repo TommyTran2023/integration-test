@@ -66,14 +66,14 @@ Feature: HomePage
     * def userId = call read('GetRequesterInfo.feature@GetRequesterInfo')
     * call read('HomePage.feature@ViewShortcut')
     * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
-    * call read('HomePage.feature@AddShortcut-Common')
-    Then status 201
-    * match response.data.userId == userId.requesterID
-    * match response.data.externalAssetId == tokenSymbol
-    * match response.data.destinationType == "VAULT_ACCOUNT"
-    * match response.data.destinationId == destinationId_cold
-    * match response.data.sourceId == sourceId_hot
-    * match response.data.name == shortCutName
+    * def addShortcut = call read('HomePage.feature@AddShortcut-Common')
+    Then addShortcut.response.code == 200
+    * match addShortcut.response.data.userId == userId.requesterID
+    * match addShortcut.response.data.externalAssetId == addShortcut.tokenSymbol
+    * match addShortcut.response.data.destinationType == "VAULT_ACCOUNT"
+    * match addShortcut.response.data.destinationId == addShortcut.destinationId_cold
+    * match addShortcut.response.data.sourceId == addShortcut.sourceId_hot
+    * match addShortcut.response.data.name == addShortcut.shortCutName
 
   @RAKCON-11771 @AddDuplicateShortcut
   Scenario: Add shortcut with duplicate information

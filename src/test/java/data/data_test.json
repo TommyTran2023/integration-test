@@ -20,15 +20,13 @@
   "transfer": {
     "from_screen_source": "SOURCE_TRANSFER",
     "from_screen_destination": "DESTINATION_TRANSFER",
-    "amount_low": 50,
-    "amount_medium": 500,
-    "amount_high": 1000,
     "source_type": "VAULT_ACCOUNT",
     "destinationType": "EXTERNAL_WALLET",
     "feeLevel": "MEDIUM",
     "operation": "TRANSFER",
     "timezone": "Asia/Ho_Chi_Minh",
-    "type": "TRANSACTION_REQUEST"
+    "type": "TRANSACTION_REQUEST",
+    "keyword_search_vault": "Vault_transfer"
   },
   "userManagement": {},
   "viewListMyRequest": {

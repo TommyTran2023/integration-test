@@ -27,7 +27,10 @@ public class RunnerTest {
         }
 
         System.out.println("Running in " + threadCount + " threads");
-        Results results = Runner.path("classpath:rakkar/feature").outputCucumberJson(true).parallel(threadCount);
+        Results results = Runner.path("classpath:rakkar/feature")
+                            .outputCucumberJson(true)
+                            .outputJunitXml(true)
+                            .parallel(threadCount);
 
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
 

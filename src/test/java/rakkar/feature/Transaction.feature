@@ -69,57 +69,57 @@ Feature: Transaction
 
   @RAKCON-12329 @Filter_transaction_by_type_outgoing
   Scenario: Filter transaction by type - outgoing
-    * def query = { limit:'10', offset: '0',type: 'OUTGOING'}
+    * def query = { limit:'10', offset: '0',type: '#(dataBody.transaction.type_outgoing)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "OUTGOING"
+    * match each $response.data.transactions[*].type == "#(dataBody.transaction.type_outgoing)"
 
    @RAKCON-12421 @Filter_transaction_by_type_incoming
   Scenario: Filter transaction by type - incoming
-    * def query = { limit:'10', offset: '0',type: 'INCOMING'}
+    * def query = { limit:'10', offset: '0',type: '#(dataBody.transaction.type_incoming)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "INCOMING"
+    * match each $response.data.transactions[*].type == "#(dataBody.transaction.type_incoming)"
 
   @RAKCON-12422 @Filter_transaction_by_type_rebalancing
   Scenario: Filter transaction by type - rebalancing
-    * def query = { limit:'10', offset: '0',type: 'REBALANCING'}
+    * def query = { limit:'10', offset: '0',type: '#(dataBody.transaction.type_rebalancing)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "REBALANCING"
+    * match each $response.data.transactions[*].type == "#(dataBody.transaction.type_rebalancing)"
 
   @RAKCON-12330 @Filter_transaction_by_status_pending
   Scenario: Filter transaction by status - pending
-    * def query = { limit:'10', offset: '0',status: 'PENDING'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_pending)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "PENDING"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_pending)"
 
   @RAKCON-12423 @Filter_transaction_by_status_processing
   Scenario: Filter transaction by status - processing
-    * def query = { limit:'10', offset: '0',status: 'PROCESSING'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_processing)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "PROCESSING"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_processing)"
 
   @RAKCON-12424 @Filter_transaction_by_status_confirming
   Scenario: Filter transaction by status - confirming
-    * def query = { limit:'10', offset: '0',status: 'CONFIRMING'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_confirming)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "CONFIRMING"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_confirming)"
 
   @RAKCON-12425 @Filter_transaction_by_status_completed
   Scenario: Filter transaction by status - completed
-    * def query = { limit:'10', offset: '0',status: 'COMPLETED'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_completed)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "COMPLETED"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_completed)"
 
   @RAKCON-12426 @Filter_transaction_by_status_failed
   Scenario: Filter transaction by status - failed
-    * def query = { limit:'10', offset: '0',status: 'FAILED'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_failed)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "FAILED"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_failed)"
 
   @RAKCON-12427 @Filter_transaction_by_status_reject
   Scenario: Filter transaction by status - reject
-    * def query = { limit:'10', offset: '0',status: 'REJECTED'}
+    * def query = { limit:'10', offset: '0',status: '#(dataBody.transaction.status_rejected)'}
     * call read('Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "REJECTED"
+    * match each $response.data.transactions[*].status == "#(dataBody.transaction.status_rejected)"
 
   @RAKCON-12428 @Filter_transaction_create_by
   Scenario: Filter transaction created by

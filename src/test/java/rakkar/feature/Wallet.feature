@@ -165,7 +165,8 @@ Feature: Wallet
     * def addWallet = karate.callSingle('Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     * def walletId = addWallet.response.data.success[0].id
     * karate.set('walletId', walletId)
-    * def addressName = "Address2"
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def addressName = 'Address-' + now()
     Given path 'core/address'
     And request {"vaultId": "#(vaultId)", "walletId": "#(walletId)", "addressName": "#(addressName)"}
     When method POST

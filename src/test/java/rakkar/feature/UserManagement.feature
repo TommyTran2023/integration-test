@@ -110,7 +110,8 @@
       And match response.data.name == "#(name)"
       And match response.data.email == "#(email)"
 
-     @RAKCON-11020 @Edit_own_profile
+    # EDIT OWN PROFILE
+    @RAKCON-11020 @Edit_own_profile
       Scenario: Check edit own profile - edit avatar
       * call read('UserManagement.feature@GetAccountMe')
       * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
@@ -123,39 +124,110 @@
       Then status 200
       And match response.status == "success"
 
-       @ignore @Review_edit_user
+    # CHANGE ROLE
+    @ignore @Review_change_role
        Scenario: Change Role - Review role change
          * call read('UserManagement.feature@User_listing')
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-         Given path 'auth/account/check-quorum/' + userId
-         And request body
-         When method PUT
-         Then status 200
-         And match response.status == "success"
-#         And match response.data.accountLVCheck.isValidNumUserInQuorum == true
+         * call read('UserManagement.feature@Review_update_user_common')
 
-       @RAKCON-11021 @Change_role
+    @RAKCON-11021 @Change_role
        Scenario: Change Role - Check submit change
-         * call read('UserManagement.feature@Review_edit_user')
+         * call read('UserManagement.feature@Review_change_role')
          * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-         * call read('Common.feature@FIDO-Requester')
-         * header challenge-answer = challengeAnswerRequest
-         Given path 'auth/account/users/' + userId
-         And request body
-         When method PUT
-         Then status 200
-         And match response.status == "success"
-         * call read('UserManagement.feature@View_user_detail')
-         * def requestId = response.data.pendingRequestId
+         * call read('UserManagement.feature@Submit_edit_user_common')
 
-     @RAKCON-11929 @Cancel_Change_role
+    @RAKCON-11929 @Cancel_Change_role
      Scenario: Edit user - Cancel change role
-       * def value = call read('UserManagement.feature@View_My_Request_Edit_User')
-       * def requestId = value.response.data.records[0].id
-       * call read('CancelRequest.feature@CancelRequestCommon')
+      * call read('UserManagement.feature@Cancel_edit_user_common')
+
+    # ADD VAULT ACCESS
+    @ignore @List_vault_unassign
+    Scenario: Get list vault unassign
+      * call read('UserManagement.feature@User_listing')
+      * def query = { limit:'10', offset: '0', userId:'#(userId)'}
+      Given path 'core/vault/unassigned'
+      And params query
+      When method GET
+      Then status 200
+      And match response.status == "success"
+      * def vaultId = response.data.vaults[0].id
+
+    @ignore @Review_add_vault_access
+    Scenario: Change vault access - Review add vault access
+      * call read('UserManagement.feature@List_vault_unassign')
+      * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
+      * call read('UserManagement.feature@Review_update_user_common')
+
+    @RAKCON-11035 @Add_vault_access
+    Scenario: Check add vault access - Submit request
+      * call read('UserManagement.feature@Review_add_vault_access')
+      * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
+      * call read('UserManagement.feature@Submit_edit_user_common')
+
+    @RAKCON-11052 @Cancel_add_vault_access
+    Scenario: Cancel request - Add vault access
+      * call read('UserManagement.feature@Cancel_edit_user_common')
+
+    # REMOVE VAULT ACCESS
+    @ignore @Review_remove_vault_access
+    Scenario: Change vault access - Review remove vault access
+      * call read('UserManagement.feature@List_vault_unassign')
+      * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
+      * call read('UserManagement.feature@Review_update_user_common')
+
+    @RAKCON-11039 @Remove_vault_access
+    Scenario: Check remove vault access - Submit request
+      * call read('UserManagement.feature@Review_remove_vault_access')
+      * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
+      * call read('UserManagement.feature@Submit_edit_user_common')
+
+    @RAKCON-11053 @Cancel_remove_access
+    Scenario: Cancel request - Remove vault access
+      * call read('UserManagement.feature@Cancel_edit_user_common')
+
+    # REMOVE ACCOUNT ACCESS
+    @ignore @Review_remove_account_access
+    Scenario: Review remove account access
+      * call read('UserManagement.feature@User_listing')
+      * def body = { "reason":'',"isRemoveAccountAccess":true}
+      * call read('UserManagement.feature@Review_update_user_common')
+
+    @RAKCON-11025 @Remove_account_access
+    Scenario: Check remove account access - Submit
+      * call read('UserManagement.feature@Review_remove_account_access')
+      * def body = { "reason":'Note',"isRemoveAccountAccess":true}
+      * call read('UserManagement.feature@Submit_edit_user_common')
+
+    @RAKCON-11051 @Cancel_Remove_Account_Access
+    Scenario: Cancel request - Remove Account access
+      * def value = call read('UserManagement.feature@View_My_Request_Remove_User')
+      * def requestId = value.response.data.records[0].id
+      * call read('CancelRequest.feature@CancelRequestCommon')
+
+    # COMMON
+    @ignore @Review_update_user_common
+    Scenario: Review change common
+      Given path 'auth/account/check-quorum/' + userId
+      And request body
+      When method PUT
+      Then status 200
+      And match response.status == "success"
+
+    @ignore @Submit_edit_user_common
+    Scenario: Submit edit request common
+      * call read('Common.feature@FIDO-Requester')
+      * header challenge-answer = challengeAnswerRequest
+      Given path 'auth/account/users/' + userId
+      And request body
+      When method PUT
+      Then status 200
+      And match response.status == "success"
+      * call read('UserManagement.feature@View_user_detail')
+      * def requestId = response.data.pendingRequestId
 
     @ignore @View_My_Request_Edit_User
-    Scenario: View my request for type transfer
+    Scenario: View my request for type edit user
       * call read('UserManagement.feature@GetAccountMe')
       Given path 'core/quorums'
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
@@ -164,3 +236,20 @@
       Then status 201
       And match response.data.records[0].type.value == 'UPDATE_USER'
       And match response.data.records[0].type.nameDisplay == 'Edit User'
+
+    @ignore @View_My_Request_Remove_User
+    Scenario: View my request for remove transfer
+      * call read('UserManagement.feature@GetAccountMe')
+      Given path 'core/quorums'
+      * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+      And request body
+      When method POST
+      Then status 201
+      And match response.data.records[0].type.value == 'DEACTIVATE_USER'
+      And match response.data.records[0].type.nameDisplay == 'Remove User'
+
+    @ignore @Cancel_edit_user_common
+    Scenario: Cancel edit user common
+      * def value = call read('UserManagement.feature@View_My_Request_Edit_User')
+      * def requestId = value.response.data.records[0].id
+      * call read('CancelRequest.feature@CancelRequestCommon')

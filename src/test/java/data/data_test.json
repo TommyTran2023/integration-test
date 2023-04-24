@@ -50,6 +50,15 @@
     ]
   },
   "transaction": {
-    "assetId": ""
+    "type_outgoing": "OUTGOING",
+    "type_incoming": "INCOMING",
+    "type_rebalancing": "REBALANCING",
+    "status_pending": "PENDING",
+    "status_processing": "PROCESSING",
+    "status_confirming": "CONFIRMING",
+    "status_completed": "COMPLETED",
+    "status_failed": "FAILED",
+    "status_rejected": "REJECTED"
   }
 }
+

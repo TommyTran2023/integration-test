@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: WhiteList Folder
 
   Background:
@@ -220,7 +220,6 @@ Feature: WhiteList Folder
     Then status 201
     And match response.data.records[0].type.value == 'ADD_WHITELIST_ADDRESS'
     And match response.data.records[0].type.nameDisplay == 'Add Whitelisted Address'
-    * def requestId = response.data.records[0].id
 
     #TCs: DELETE WHITELIST ADDRESS
   @RAKCON-10971 @Delete_Whitelist_Address

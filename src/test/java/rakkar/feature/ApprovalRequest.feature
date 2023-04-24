@@ -25,6 +25,7 @@ Feature: Approval Request
   @RAKCON-11047 @ApprovalNewAddressWhitelist
   Scenario: Approval - Add whitelist address
     * def value = call read('WhiteListFolder.feature@Create_address_internal')
+    * def requestId = value.response.data.records[0].id
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-10976 @ApprovalEditVault
@@ -88,10 +89,15 @@ Feature: Approval Request
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
-    @RAKCON-11046 @ApprovalChangeRole
+  @RAKCON-11046 @ApprovalChangeRole
     Scenario: Approval - Edit role
       * call read('UserManagement.feature@Change_role')
       * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+
+  @RAKCON-11044 @ApprovalAddVaultAccess
+   Scenario: Approval - Add vault access
+    * call read('UserManagement.feature@Add_vault_access')
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
      # Common Approve
   @ApproveRequestCommon @ignore

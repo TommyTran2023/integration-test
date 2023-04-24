@@ -29,6 +29,13 @@ Feature: Approval View
     * call read('ApprovalView.feature@ApprovalView-Common')
     * match each $response.data.records[*].createdBy.name == requesterInfo.requesterName
 
+  @RAKCON-11861 @ViewListRequestHistoryByStatus
+  Scenario: View request history by status
+    * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(dataBody.approvalView.statusFiltering) ] }
+    * call read('ApprovalView.feature@ApprovalView-Common')
+    * def requestStatus = $response.data.records[*].status
+    * match each requestStatus == dataBody.approvalView.statusFiltering
+
   @RAKCON-11862 @ViewRequestHistoryByType
   Scenario: View request history by type
     * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }

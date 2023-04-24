@@ -22,6 +22,13 @@ Feature: Approval View
     * def requestBody = { "keyword" : "", "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "offset" : 10, "isHistory" : true, "limit" : 10 }
     * call read('ApprovalView.feature@ApprovalView-Common')
 
+  @RAKCON-11861 @ViewListRequestHistoryByStatus
+  Scenario: View request history by status
+    * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(dataBody.approvalView.statusFiltering) ] }
+    * call read('ApprovalView.feature@ApprovalView-Common')
+    * def requestStatus = $response.data.records[*].status
+    * match each requestStatus == dataBody.approvalView.statusFiltering
+
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common
     Given path '/core/quorums'

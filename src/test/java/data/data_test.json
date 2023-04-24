@@ -41,7 +41,13 @@
     ]
   },
   "approvalView": {
-    "statusFiltering": "APPROVED"
+    "statusFiltering": "APPROVED",
+    "typeFiltering": "POLICY",
+    "valueOfPolicyType": [
+      "EDIT_ACCOUNT_POLICY",
+      "CREATE_VAULT",
+      "UPDATE_VAULT"
+    ]
   },
   "transaction": {
     "assetId": ""

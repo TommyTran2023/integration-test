@@ -29,7 +29,7 @@ Feature: Reject Request
   @RAKCON-11063 @RejectAddWhitelistAddress
   Scenario: Reject request - Add whitelist address
     # Get request ID of creating whitelist address
-    * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * def value = call read('WhiteListFolder.feature@Create_address_internal')
     * def requestId = value.response.data.records[0].id
     * call read('RejectRequest.feature@RejectRequestCommon')
 
@@ -78,6 +78,22 @@ Feature: Reject Request
   Scenario: Reject request - Change role
     * call read('UserManagement.feature@Change_role')
     * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @RAKCON-11060 @RejectAddVaultAccess
+  Scenario: Reject request - Add vault access
+    * call read('UserManagement.feature@Add_vault_access')
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @RAKCON-11061 @RejectRemoveVaultAccess
+  Scenario: Reject request - Remove vault access
+    * call read('UserManagement.feature@Remove_vault_access')
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @RAKCON-11059 @RejectRemoveVaultAccess
+  Scenario: Reject request - Remove User access
+    * call read('UserManagement.feature@Remove_account_access')
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
 
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common

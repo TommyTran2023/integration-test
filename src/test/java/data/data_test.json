@@ -12,7 +12,9 @@
   },
   "whitelist": {
     "type_internal": "internal",
-    "type_external": "external"
+    "type_external": "external",
+    "request_value": "ADD_WHITELIST_ADDRESS",
+    "request_nameDisplay": "Add Whitelisted Address"
   },
   "account_policy": {
     "approve_number": 2
@@ -40,5 +42,8 @@
   },
   "approvalView": {
     "statusFiltering": "APPROVED"
+  },
+  "transaction": {
+    "assetId": ""
   }
 }

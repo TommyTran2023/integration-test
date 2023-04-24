@@ -277,13 +277,13 @@ Feature: Transfer
     * call read('Transfer.feature@Get_asset_transfer')
     * call read('Transfer.feature@Get_source_transfer')
     * call read('Transfer.feature@Get_destination_transfer')
-    * def body_estimate_fee = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(amount_high)',"destinationId":'#(destinationId_hot)'}
+    * def body_estimate_fee = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_high),"destinationId":'#(destinationId_hot)'}
     * call read('Transfer.feature@Get_estimate_fee_common')
 
   @ignore @RAKCON-11404 @Total_estimate_fee_high_value
   Scenario: Transfer high - Total estimated fee
     * call read('Transfer.feature@Get_estimate_fee_high_value')
-    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":'#(amount_high)',"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.source_type)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_high),"destinationId":'#(destinationId_hot)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
   @RAKCON-11405 @Transfer_high_value
@@ -293,7 +293,7 @@ Feature: Transfer
     * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":'#(amount_high)',"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_high),"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterPasscode
@@ -327,7 +327,7 @@ Feature: Transfer
     * def body_total_estimate = { "assetId":'#(tokenSymbol)', "destinationType": '#(dataBody.transfer.destinationType)', "sourceType":'#(dataBody.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(externalId)', "fee":'#(Number(fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
-  @ignore @RAKCON-11408 @External_Transfer
+  @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
     * call read('Transfer.feature@Total_estimate_fee_external_transfer')
     * def body = { "operation":'#(dataBody.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(feeType)',"fee":'#(Number(fee))', "treatAsGrossAmount": true, "feeLevel": '#(dataBody.transfer.feeLevel)', "destination":{"type":'#(dataBody.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(dataBody.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
@@ -344,7 +344,7 @@ Feature: Transfer
     And response.data.destinationName == "#(externalName)"
     And response.data.symbol == "#(symbol)"
 
-  @ignore @RAKCON-11924 @Cancel_transaction_external
+  @RAKCON-11924 @Cancel_transaction_external
   Scenario: Transfer External - Cancel transfer
     * call read('Transfer.feature@View_My_Request_Transfer')
 

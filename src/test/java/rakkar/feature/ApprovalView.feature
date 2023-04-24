@@ -29,6 +29,13 @@ Feature: Approval View
     * call read('ApprovalView.feature@ApprovalView-Common')
     * match each $response.data.records[*].createdBy.name == requesterInfo.requesterName
 
+  @RAKCON-11862 @ViewRequestHistoryByType
+  Scenario: View request history by type
+    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
+    * call read('ApprovalView.feature@ApprovalView-Common')
+    * def typeValue = $response.data.records[*].type.value
+    * match dataBody.viewListMyRequest.valueOfPolicyType contains any typeValue
+
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common
     Given path '/core/quorums'

@@ -40,6 +40,9 @@
       "UPDATE_VAULT"
     ]
   },
+  "approvalView": {
+    "statusFiltering": "APPROVED"
+  },
   "transaction": {
     "assetId": ""
   }

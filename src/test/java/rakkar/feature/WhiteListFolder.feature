@@ -218,8 +218,8 @@ Feature: WhiteList Folder
     And request body
     When method POST
     Then status 201
-    And match response.data.records[0].type.value == 'ADD_WHITELIST_ADDRESS'
-    And match response.data.records[0].type.nameDisplay == 'Add Whitelisted Address'
+    And match response.data.records[0].type.value == "#(dataBody.whitelist.request_value)"
+    And match response.data.records[0].type.nameDisplay == "#(dataBody.whitelist.request_nameDisplay)"
 
     #TCs: DELETE WHITELIST ADDRESS
   @RAKCON-10971 @Delete_Whitelist_Address

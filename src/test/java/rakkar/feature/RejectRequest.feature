@@ -29,7 +29,7 @@ Feature: Reject Request
   @RAKCON-11063 @RejectAddWhitelistAddress
   Scenario: Reject request - Add whitelist address
     # Get request ID of creating whitelist address
-    * def value = call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * def value = call read('WhiteListFolder.feature@Create_address_internal')
     * def requestId = value.response.data.records[0].id
     * call read('RejectRequest.feature@RejectRequestCommon')
 

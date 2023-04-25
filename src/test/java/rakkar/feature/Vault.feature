@@ -190,10 +190,15 @@ Feature: Vault
     * def listVault = response.data.vaults
     * def listVaultNameActual = $listVault[*].name
     * print 'List actual vault after sorting by name A-Z: ', listVaultNameActual
-    * def listVaultNameExpected = []
-    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
-    * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
-    * match listVaultNameActual == listVaultNameExpected
+    * copy listVaultNameExpected = listVaultNameActual
+    * def toUpper =
+    """
+    function(x){
+    return x.toUpperCase();
+    }
+    """
+    * eval Collections.sort(listVaultNameExpected.map(toUpper), java.lang.String.CASE_INSENSITIVE_ORDER)
+    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
 
   @RAKCON-11118 @SortVaultZ2A
   Scenario: Sort vaults by name Z - A
@@ -208,10 +213,15 @@ Feature: Vault
     * def listVault = response.data.vaults
     * def listVaultNameActual = $listVault[*].name
     * print 'List actual vault after sorting by name Z-A: ', listVaultNameActual
-    * def listVaultNameExpected = []
-    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
-    * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
-    * match listVaultNameActual == listVaultNameExpected
+    * copy listVaultNameExpected = listVaultNameActual
+    * def toUpper =
+    """
+    function(x){
+    return x.toUpperCase();
+    }
+    """
+    * eval Collections.sort(listVaultNameExpected.map(toUpper), Collections.reverseOrder())
+    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
 
   @RAKCON-11119 @SortVaultHighestValue
   Scenario: Sort vaults by highest value

@@ -348,6 +348,15 @@ Feature: Transfer
   Scenario: Transfer External - Cancel transfer
     * call read('Transfer.feature@View_My_Request_Transfer')
 
+  @RAKCON-12493 @Check_vault_missing_policy
+   Scenario: Check vault missing policy
+    * def query = { offset: '0',limit: '10', sort: 'ASC', groupBy: 'ASSET'}
+   Given path 'core/vault/vault-missing-policy'
+   And params query
+   When method GET
+   Then status 200
+    And response.status == "success"
+
   @ignore @View_My_Request_Transfer
   Scenario: View my request for type transfer
     Given path 'core/quorums'

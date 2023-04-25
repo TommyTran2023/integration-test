@@ -73,7 +73,7 @@ Feature: WhiteList Folder
 
   @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type
-    * call read('WhiteListFolder.feature@Create_address_external')
+    * call read('WhiteListFolder.feature@Create_folder_external')
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(dataBody.whitelist.type_external)'}
     Given path 'core/folders'
     And params query
@@ -183,7 +183,6 @@ Feature: WhiteList Folder
     * call read('WhiteListFolder.feature@Create_folder_external')
     * call read('WhiteListFolder.feature@Create_address_common')
     * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
-    * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
     #TCs: VIEW DETAIL FOLDER
   @RAKCON-11164 @View_Detail_Folder

@@ -59,6 +59,12 @@
     "status_completed": "COMPLETED",
     "status_failed": "FAILED",
     "status_rejected": "REJECTED"
+  },
+  "notification": {
+    "vault": {
+      "state": "Warning",
+      "labelInApp": "Vault policy"
+    }
   }
 }
 

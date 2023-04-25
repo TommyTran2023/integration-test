@@ -41,9 +41,24 @@
     ]
   },
   "approvalView": {
-    "statusFiltering": "APPROVED"
+    "statusFiltering": "APPROVED",
+    "typeFiltering": "POLICY",
+    "valueOfPolicyType": [
+      "EDIT_ACCOUNT_POLICY",
+      "CREATE_VAULT",
+      "UPDATE_VAULT"
+    ]
   },
   "transaction": {
-    "assetId": ""
+    "type_outgoing": "OUTGOING",
+    "type_incoming": "INCOMING",
+    "type_rebalancing": "REBALANCING",
+    "status_pending": "PENDING",
+    "status_processing": "PROCESSING",
+    "status_confirming": "CONFIRMING",
+    "status_completed": "COMPLETED",
+    "status_failed": "FAILED",
+    "status_rejected": "REJECTED"
   }
 }
+

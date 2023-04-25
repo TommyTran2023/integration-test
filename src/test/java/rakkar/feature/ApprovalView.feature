@@ -65,6 +65,13 @@ Feature: Approval View
     # List records should have createdAt between dateFrom and dateTo
     * match each $response.data.records[*].createdAt == '#? isValid(_)'
 
+  @RAKCON-11862 @ViewRequestHistoryByType
+  Scenario: View request history by type
+    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
+    * call read('ApprovalView.feature@ApprovalView-Common')
+    * def typeValue = $response.data.records[*].type.value
+    * match dataBody.approvalView.valueOfPolicyType contains any typeValue
+
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common
     Given path '/core/quorums'

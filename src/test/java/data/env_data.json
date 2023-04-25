@@ -1,6 +1,6 @@
 {
   "qa": {
-    "baseURL": "https://qa-api.rakkardigital.com",
+    "baseURL": "https://qa-api.thailaksa.net",
     "requesterUsername": "ID_CARDPT24121993",
     "requesterPasscode": "123123",
     "approvalUsername": "PASSPORT786567772",

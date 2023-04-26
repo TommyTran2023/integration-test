@@ -64,6 +64,10 @@
     "vault": {
       "state": "Warning",
       "labelInApp": "Vault policy"
+    },
+    "transfer": {
+      "state": "Error",
+      "labelInApp": "Transfer rejected"
     }
   }
 }

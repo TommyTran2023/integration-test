@@ -6,8 +6,8 @@ Feature: Notification
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def dataBody = read('classpath:data/data_test.json')
 
-  @RAKCON-11007 @ViewNotificationCenter
-  Scenario: View Notification Center
+  @RAKCON-11007 @ViewNotificationCenterCreateVault
+  Scenario: View Notification Center - Creating Vault
     * def createVaultRequestId = call read('Vault.feature@GetCreateVaultRequestID')
     Given path '/notification/notifications'
     * param status = 'UNREAD'

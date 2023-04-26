@@ -80,5 +80,27 @@
       "name":"#string",
       "totalUSDYesterday":"##string"
     }
+  },
+  "notification": {
+    "transactions": {
+      "deposit": "#boolean",
+      "transferRequests": "#boolean",
+      "transferApprovals": "#boolean",
+      "completedTransfer": "#boolean"
+    },
+    "policy": {
+      "vaultPolicy": "#boolean",
+      "accountPolicy": "#boolean",
+      "whitelistApprovals": "#boolean",
+      "policyApprovals": "#boolean",
+      "whitelistRequests": "#boolean"
+    },
+    "usersAndDevices": {
+      "deviceManagementRequest": "#boolean",
+      "lostDevice": "#boolean",
+      "userManagementRequests": "#boolean",
+      "deviceManagement": "#boolean"
+    },
+    "announcements": "#boolean"
   }
 }

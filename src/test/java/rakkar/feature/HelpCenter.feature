@@ -90,8 +90,6 @@ Feature:Help Center
        When method GET
        Then status 200
        And match response.status == "success"
-#       * def schema = schemaJson.helpCenter.tickets
-#       * def listTickets = ["##(schema)"]
-#       And match response.data.tickets contains listTickets
+
 
 

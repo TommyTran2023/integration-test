@@ -1,10 +1,22 @@
 {
   "qa": {
     "baseURL": "https://qa-api.thailaksa.net",
-    "requesterUsername": "ID_CARDPT24121993",
-    "requesterPasscode": "123123",
-    "approvalUsername": "PASSPORT786567772",
-    "approverPasscode": "123123",
+    "requesterInfo": {
+      "requesterUsername": "ID_CARDPT24121993",
+      "requesterPasscode": "123123",
+      "idNumber": "PT24121993",
+      "country": "SG",
+      "postalCode": "069533",
+      "phoneNumber": "+6598755261"
+    },
+    "approverInfo": {
+      "approvalUsername": "PASSPORT786567772",
+      "approverPasscode": "123123",
+      "idNumber": "786567772",
+      "country": "VN",
+      "postalCode": "100000",
+      "phoneNumber": "+84903465186"
+    },
     "adminUsername": "PASSPORT65746",
     "amount_low": 10,
     "amount_medium": 15,
@@ -13,14 +25,25 @@
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
-    "requesterUsername": "ID_CARDAT00006",
-    "requesterPasscode": "123111",
-    "approvalUsername": "PASSPORT01011998",
-    "approverPasscode": "271198",
+    "requesterInfo": {
+      "requesterUsername": "ID_CARDAT00006",
+      "requesterPasscode": "123111",
+      "idNumber": "AT00006",
+      "country": "SG",
+      "postalCode": "069533",
+      "phoneNumber": "+6598755268"
+    },
+    "approverInfo": {
+      "approvalUsername": "PASSPORT01011998",
+      "approverPasscode": "271198",
+      "idNumber": "01011998",
+      "country": "SG",
+      "postalCode": "069533",
+      "phoneNumber": "+6598533526"
+    },
     "adminUsername": "PASSPORT123456",
     "amount_low": 50,
     "amount_medium": 500,
     "amount_high": 1000
-
   }
 }

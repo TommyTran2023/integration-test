@@ -9,7 +9,7 @@ Feature: Get access token for Requester
   @ignore @GetSessionForLogin
   Scenario: Requester - Get session for login
     Given path '/auth/authorization/initiate-auth'
-    And request { "initiateAuthRequest": { "AuthFlow": "CUSTOM_AUTH", "AuthParameters": { "USERNAME": '#(requesterUsername)' } } }
+    And request { "initiateAuthRequest": { "AuthFlow": "CUSTOM_AUTH", "AuthParameters": { "USERNAME": '#(requesterInfo.requesterUsername)' } } }
     When method POST
     Then status 201
 
@@ -18,7 +18,7 @@ Feature: Get access token for Requester
     Given path '/auth/authorization/respond-to-auth-challenge'
     * def responseTest1 = call read('RequesterAuthenticator.feature@GetSessionForLogin')
     * def Session1 = responseTest1.response.data.Session
-    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(requesterUsername)', "ANSWER": '#(dataBody.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
+    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(requesterInfo.requesterUsername)', "ANSWER": '#(dataBody.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST
     Then def APIStatus = response.status
     * assert (APIStatus == "success")

@@ -3,7 +3,6 @@ Feature: Notification
 
   Background:
     * url baseURL
-    #* call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def dataBody = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 

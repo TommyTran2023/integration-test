@@ -31,7 +31,7 @@ Feature: Vault
     When method POST
     Then status 201
     * def result = response.data.users
-    * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approvalUsername +"')].userId")[0]
+    * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
     * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
     * print vaultMemberList

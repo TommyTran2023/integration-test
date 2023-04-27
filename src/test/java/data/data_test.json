@@ -69,6 +69,13 @@
       "state": "Error",
       "labelInApp": "Transfer rejected"
     }
+  },
+  "help_center": {
+    "type_issue": "issue",
+    "type_question":"question",
+    "type_request": "request",
+    "platform": "mobile_application",
+    "search_solved": "subject for"
   }
 }
 

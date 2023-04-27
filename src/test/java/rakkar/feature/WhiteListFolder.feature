@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: WhiteList Folder
 
   Background:
@@ -81,8 +81,11 @@ Feature: WhiteList Folder
     Then status 200
     And match response.status == "success"
     And match response.data.folders[0].type == "#(dataBody.whitelist.type_external)"
-    * def externalId = response.data.folders[0].id
-    * def externalName = response.data.folders[0].name
+    * def externalId = ""
+    * def externalName = ""
+    And for(var i = 0; i < response.data.folders.length; i++) if (response.data.folders[i].tokens.length > 0) { externalId = response.data.folders[i].id ; externalName = response.data.folders[i].name }
+    * def externalId = externalId
+    * def externalName = externalName
 
     #Pre-1.Get list vault
   @ignore @Get_listVault

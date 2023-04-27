@@ -73,6 +73,13 @@
       "state": "Success",
       "labelInApp": "Transfer approved"
     }
+  },
+  "help_center": {
+    "type_issue": "issue",
+    "type_question":"question",
+    "type_request": "request",
+    "platform": "mobile_application",
+    "search_solved": "subject for"
   }
 }
 

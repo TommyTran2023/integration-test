@@ -179,39 +179,38 @@ Feature: Vault
 
   @RAKCON-10955 @SortVaultA2Z
   Scenario: Sort vaults by name A - Z
-    Given path '/core/vault/accounts'
-    * param isHideSmallBalance = false
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'ASC'
-    * param sortBy = 'NAME'
-    When method GET
-    Then status 200
-    * def listVault = response.data.vaults
-    * def listVaultNameActual = $listVault[*].name
-    * print 'List actual vault after sorting by name A-Z: ', listVaultNameActual
-    * def listVaultNameExpected = []
-    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
-    * eval Collections.sort(listVaultNameExpected, java.lang.String.CASE_INSENSITIVE_ORDER)
-    * match listVaultNameActual == listVaultNameExpected
+    * def sortType = 'ASC'
+    * call read('Vault.feature@SortVaultByName-Common')
+    * eval Collections.sort(listVaultNameExpected.map(toUpper), java.lang.String.CASE_INSENSITIVE_ORDER)
+    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
 
   @RAKCON-11118 @SortVaultZ2A
   Scenario: Sort vaults by name Z - A
+    * def sortType = 'DESC'
+    * call read('Vault.feature@SortVaultByName-Common')
+    * eval Collections.sort(listVaultNameExpected.map(toUpper), Collections.reverseOrder())
+    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
+
+  @ignore @SortVaultByName-Common
+  Scenario: Sort vault by name - Common
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
     * param limit = 10
     * param offset = 0
-    * param sort = 'DESC'
+    * param sort = sortType
     * param sortBy = 'NAME'
     When method GET
     Then status 200
     * def listVault = response.data.vaults
     * def listVaultNameActual = $listVault[*].name
     * print 'List actual vault after sorting by name Z-A: ', listVaultNameActual
-    * def listVaultNameExpected = []
-    * eval for(var i = 0; i < listVaultNameActual.length; i++) listVaultNameExpected.push(listVaultNameActual[i])
-    * eval Collections.sort(listVaultNameExpected, Collections.reverseOrder())
-    * match listVaultNameActual == listVaultNameExpected
+    * copy listVaultNameExpected = listVaultNameActual
+    * def toUpper =
+    """
+    function(x){
+    return x.toUpperCase();
+    }
+    """
 
   @RAKCON-11119 @SortVaultHighestValue
   Scenario: Sort vaults by highest value

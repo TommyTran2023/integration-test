@@ -65,9 +65,13 @@
       "state": "Warning",
       "labelInApp": "Vault policy"
     },
-    "transfer": {
+    "rejectTransfer": {
       "state": "Error",
       "labelInApp": "Transfer rejected"
+    },
+    "approveTransfer": {
+      "state": "Success",
+      "labelInApp": "Transfer approved"
     }
   }
 }

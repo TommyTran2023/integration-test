@@ -69,7 +69,7 @@ pipeline {
 
             script {
                 for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                    def testName = "${ENV} Integration Test results - ${file} (Build: ${BUILD_NUMBER})"
+                    def testName = "${ENV} (#${BUILD_NUMBER}) Integration Test results - ${file}"
                     step([$class: 'XrayImportBuilder',
                         endpointName: '/cucumber/multipart',
                         importFilePath: "${file}",

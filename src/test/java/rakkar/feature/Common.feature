@@ -37,7 +37,7 @@ Feature: Generate Challenge Answer for Biometric
   Scenario: Verify passcode of Requester
     #Verify requesterPasscode
     Given path '/auth/account/verify-passcode'
-    * request {"passcode":'#(requesterPasscode)'}
+    * request {"passcode":'#(requesterInfo.requesterPasscode)'}
     When method POST
     Then status 201
     * def verifyStatus = response.data.verify

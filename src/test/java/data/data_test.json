@@ -80,6 +80,9 @@
     "type_request": "request",
     "platform": "mobile_application",
     "search_solved": "subject for"
+  },
+  "settings": {
+    "newPasscode": "112233"
   }
 }
 

@@ -1,4 +1,4 @@
-@RAKCON-10583 @ignore
+@RAKCON-10583
 Feature: Settings
 
   Background:
@@ -46,3 +46,15 @@ Feature: Settings
     When method PUT
     Then status 200
     * match response.status == 'success'
+
+  @RAKCON-11012 @ChangePIN
+  Scenario: Change PIN
+    Given path '/auth/account/passcode'
+    * header challenge-answer = challengeRequester.challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    * request { "isForgotPasscode" : false, "passcode" : "#(dataBody.settings.changePasscode)", "securityAnswer" : null }
+    When method PUT
+    Then status 200
+    * match response.status == 'success'
+    # Restore to old passcode
+    * call read('Settings.feature@RestoreToOldPasscode')

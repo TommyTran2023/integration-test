@@ -47,7 +47,7 @@ Feature: Vault
     #Add a new vault with admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterPasscode
+    * header passcode = requesterInfo.requesterPasscode
     * request {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":'#(dataBody.vault.approve_number)',"note":"AT Test"}
     When method POST
     Then status 201
@@ -70,7 +70,7 @@ Feature: Vault
     #Add a new vault without admin quorum setup
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterPasscode
+    * header passcode = requesterInfo.requesterPasscode
     * request {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":0,"note":""}
     When method POST
     Then status 201
@@ -273,7 +273,7 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterPasscode
+    * header passcode = requesterInfo.requesterPasscode
     When method PUT
     Then status 200
     * match response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
@@ -290,7 +290,7 @@ Feature: Vault
     * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterPasscode
+    * header passcode = requesterInfo.requesterPasscode
     When method PUT
     Then match response.data.message == 'Exists pending requests'
 

@@ -7,7 +7,8 @@
       "idNumber": "PT24121993",
       "country": "SG",
       "postalCode": "069533",
-      "phoneNumber": "+6598755261"
+      "phoneNumber": "+6598755261",
+      "dateOfBirth": "1993-12-24"
     },
     "approverInfo": {
       "approvalUsername": "PASSPORT786567772",
@@ -15,7 +16,8 @@
       "idNumber": "786567772",
       "country": "VN",
       "postalCode": "100000",
-      "phoneNumber": "+84903465186"
+      "phoneNumber": "+84903465186",
+      "dateOfBirth": "2023-02-01"
     },
     "adminUsername": "PASSPORT65746",
     "amount_low": 10,
@@ -31,7 +33,8 @@
       "idNumber": "AT00006",
       "country": "SG",
       "postalCode": "069533",
-      "phoneNumber": "+6598755268"
+      "phoneNumber": "+6598755268",
+      "dateOfBirth": "1993-12-24"
     },
     "approverInfo": {
       "approvalUsername": "PASSPORT01011998",
@@ -39,7 +42,8 @@
       "idNumber": "01011998",
       "country": "SG",
       "postalCode": "069533",
-      "phoneNumber": "+6598533526"
+      "phoneNumber": "+6598533526",
+      "dateOfBirth": "1999-01-01"
     },
     "adminUsername": "PASSPORT123456",
     "amount_low": 50,

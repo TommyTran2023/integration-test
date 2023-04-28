@@ -88,7 +88,7 @@ Feature: Approval Request
     * print 'body', body
     Given path '/core/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * header passcode = approverPasscode
+    * header passcode = approverInfo.approverPasscode
     And request body
     When method POST
     Then status 201
@@ -110,7 +110,7 @@ Feature: Approval Request
   Scenario: Approve pending request - Common
     Given path '/core/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * header passcode = approverPasscode
+    * header passcode = approverInfo.approverPasscode
     When method POST
     Then status 201
     * def statusMsg = response.status

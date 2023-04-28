@@ -4,17 +4,15 @@ Feature: Settings
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * def challengeRequester = call read('Common.feature@FIDO-Requester')
     * def dataBody = read('classpath:data/data_test.json')
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
     * call read('Settings.feature@VerifySecurityQuestion')
     * call read('Settings.feature@CheckNewPassCode')
-    Given path '/auth/account/passcode'
-    * request { "passcode" : "#(dataBody.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
-    When method PUT
-    Then status 200
-    * match response.status == 'success'
+    * def requestBody = { "passcode" : "#(dataBody.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * call read('Settings.feature@ForgotPIN-Common')
     # Restore to old passcode
     * call read('Settings.feature@RestoreToOldPasscode')
 
@@ -37,8 +35,14 @@ Feature: Settings
 
   @ignore @RestoreToOldPasscode
   Scenario: Restore to old passcode
+    * def requestBody = { "passcode" : "#(requesterInfo.requesterPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * call read('Settings.feature@ForgotPIN-Common')
+
+  @ignore @ForgotPIN-Common
+  Scenario: Forgot PIN - Common
     Given path '/auth/account/passcode'
-    * request { "passcode" : "#(requesterInfo.requesterPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * header challenge-answer = challengeRequester.challengeAnswerRequest
+    * request requestBody
     When method PUT
     Then status 200
     * match response.status == 'success'

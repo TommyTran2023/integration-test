@@ -143,11 +143,13 @@ pipeline {
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedDetails}")
 
                 office365ConnectorSend color: '#a82e2e',
-                    message: "${buildSummary}<br>${failedSummary}<br><br>${failedTestMsg.join('<br><br>')}",
+                    message: "${buildSummary}<br>${failedSummary}",
                     status: 'FAILED',
-                    webhookUrl: "${TEAM_URL}"
+                    webhookUrl: "${TEAM_URL}",
+                    factdefinitions:[
+                        [ name: "Error", template: "${failedTestMsg.join('<br><br>')}"]
+                    ]
             }
-
         }
     }
 }

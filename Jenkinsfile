@@ -150,7 +150,7 @@ pipeline {
                     message: "${buildSummary}<br>${failedSummary}",
                     status: 'FAILED',
                     webhookUrl: "${TEAM_URL}",
-                    factdefinitions:[
+                    factDefinitions:[
                         [ name: "Failed Scenarios", template: "${failedScenarios.join(', ')}"],
                         [ name: "Error", template: "${failedTestMsg.join('<br><br>')}"]
                     ]

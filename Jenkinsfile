@@ -137,14 +137,14 @@ pipeline {
                 def buildSummary = "${ENV} Integration Test #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                def failedScenarios = "*Failed Scenarios*\n" +
+                def failedScenariosMsg = "*Failed Scenarios*\n" +
                 "${failedScenarios.join(', ')}"
                 def failedDetails = "*Failed Test:*\n" +
                 "${failedTestMsg.join('\n\n')}"
 
                 slackSend(channel: "${SLACK_CHANNEL}",
                     color: 'danger',
-                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedDetails}")
+                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
                 office365ConnectorSend color: '#a82e2e',
                     message: "${buildSummary}<br>${failedSummary}",

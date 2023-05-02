@@ -4,6 +4,7 @@ def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e
 def KARATE_ENV = "qa"
 def testSummary
 def failedTestMsg = []
+def failedScenarios = []
 
 pipeline {
     agent any
@@ -49,12 +50,13 @@ pipeline {
                     // remove karate testParallel()
                     for (test in failingTests[0..-2]) {
                         failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
-                        // failedTestMsg.push(test.getName())
+                        failedScenarios.push(test.getName())
                     }
                 } else {
                     // No tests were run in this build, nothing left to do.
                     failingTests = []
                     failedTestMsg = []
+                    failedScenarios = []
                 }
             }
 
@@ -135,6 +137,8 @@ pipeline {
                 def buildSummary = "${ENV} Integration Test #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+                def failedScenarios = "*Failed Scenarios*\n" +
+                "${failedScenarios.join(', ')}"
                 def failedDetails = "*Failed Test:*\n" +
                 "${failedTestMsg.join('\n\n')}"
 
@@ -147,6 +151,7 @@ pipeline {
                     status: 'FAILED',
                     webhookUrl: "${TEAM_URL}",
                     factdefinitions:[
+                        [ name: "Failed Scenarios", template: "${failedScenarios.join(', ')}"],
                         [ name: "Error", template: "${failedTestMsg.join('<br><br>')}"]
                     ]
             }

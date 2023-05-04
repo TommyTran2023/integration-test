@@ -21,3 +21,4 @@ Feature: User Onboarding
     When method GET
     Then status 200
     And match response.status == "success"
+

@@ -82,7 +82,8 @@
     "search_solved": "subject for"
   },
   "settings": {
-    "newPasscode": "112233"
+    "newPasscode": "112233",
+    "changePasscode": "332211"
   }
 }
 

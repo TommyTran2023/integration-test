@@ -11,3 +11,13 @@ Feature: User Onboarding
     When method GET
     Then status 200
     And match response.status == "success"
+
+  @RAKCON-12773 @Get_role
+  Scenario: Get roles information
+    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * def query = { target:'current'}
+    Given path 'auth/authorization/roles'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"

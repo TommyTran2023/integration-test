@@ -4,7 +4,7 @@ Feature: Approval View
   Background:
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
-    * def requesterInfo = call read('GetRequesterInfo.feature@GetRequesterInfo')
+    * def requesterInformation = call read('GetRequesterInfo.feature@GetRequesterInfo')
     * def dataBody = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 
@@ -25,9 +25,9 @@ Feature: Approval View
 
   @RAKCON-11860 @ViewRequestHistoryByInitiator
   Scenario: View request history by initiator
-    * def requestBody = { "keyword" : "", "offset" : 0, "limit" : 10, "isHistory" : true, "createdBy" : #(requesterInfo.requesterID), "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ] }
+    * def requestBody = { "keyword" : "", "offset" : 0, "limit" : 10, "isHistory" : true, "createdBy" : #(requesterInformation.requesterID), "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ] }
     * call read('ApprovalView.feature@ApprovalView-Common')
-    * match each $response.data.records[*].createdBy.name == requesterInfo.requesterName
+    * match each $response.data.records[*].createdBy.name == requesterInformation.requesterName
 
   @RAKCON-11861 @ViewListRequestHistoryByStatus
   Scenario: View request history by status

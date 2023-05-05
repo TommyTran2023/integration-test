@@ -357,6 +357,13 @@ Feature: Transfer
    Then status 200
     And response.status == "success"
 
+  @RAKCON-12803 @Get_restrict_country_list
+  Scenario: Get restrict country list
+    Given path 'core/restricted/check-country'
+    When method GET
+    Then status 200
+    And response.status == "success"
+
   @ignore @View_My_Request_Transfer
   Scenario: View my request for type transfer
     Given path 'core/quorums'

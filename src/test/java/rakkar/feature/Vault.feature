@@ -268,31 +268,37 @@ Feature: Vault
     #Get a vault that has not edit vault pending request
     * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
     #Edit vault policy
-    Given path '/core/vault/account/'+vaultIDWA+'/rules'
-    * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
-    #Get variable challengeAnswerRequest
-    * call read('Common.feature@FIDO-Requester')
-    * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
-    When method PUT
-    Then status 200
-    * match response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
+    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    * def editVaultPolicy = call read('Vault.feature@EditVaultPolicy-Common')
+    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
-    * match response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
+    * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
-    * match $response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
-    * match response.data.record.additionalData.data.note == dataBody.vault.editVaultNote
+    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
+    * match editVaultPolicy.response.data.record.additionalData.data.note == dataBody.vault.editVaultNote
+
+  @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
+  Scenario: Edit vault with not changed information
+    * call read('ApprovalRequest.feature@ApprovalEditVault')
+    * def editVaultPolicyCommon = call read('Vault.feature@EditVaultPolicy-Common')
+    # Should not allow user to edit vault with not changed information
+    Then match editVaultPolicyCommon.response.status != "success"
 
   @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
     * callonce read('Vault.feature@EditVaultPolicy')
+    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
+    * call read('Vault.feature@EditVaultPolicy-Common')
+    Then match response.data.message == 'Exists pending requests'
+
+  @ignore @EditVaultPolicy-Common
+  Scenario: Edit vault policy - Common
     Given path '/core/vault/account/'+vaultIDWA+'/rules'
-    * request { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
+    * request requestBody
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     When method PUT
-    Then match response.data.message == 'Exists pending requests'
 
   @RAKCON-11286 @HideVault
   Scenario: Hide a vault

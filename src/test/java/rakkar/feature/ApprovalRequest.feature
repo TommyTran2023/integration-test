@@ -37,7 +37,7 @@ Feature: Approval Request
   @RAKCON-10976 @ApprovalEditVault
   Scenario: Approval - Edit Vault policy request
     * call read('Vault.feature@EditVaultPolicy')
-    * def requestId = response.data.record.id
+    * def requestId = editVaultPolicy.response.data.record.id
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-11782 @ApprovalTransfer_Hot_to_cold

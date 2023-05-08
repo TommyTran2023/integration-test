@@ -31,7 +31,7 @@ pipeline {
                     }
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     withMaven(maven: 'Maven') {
-                        sh "mvn test -Dkarate.env=${KARATE_ENV}"
+                        sh "mvn clean test -Dkarate.env=${KARATE_ENV}"
                     }
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                 }
             }
 
-            archiveArtifacts artifacts: 'target/karate-reports/**/*'
+            archiveArtifacts artifacts: 'target/karate-reports/**/*, target/cucumber-html-reports/**/*'
             publishHTML(target : [allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,

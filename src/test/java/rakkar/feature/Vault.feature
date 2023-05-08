@@ -11,7 +11,7 @@ Feature: Vault
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
 
-  @ignore @CHECK-VAULT-NAME
+  @RAKCON-12842 @CHECK-VAULT-NAME
   Scenario: Check vault name is existed or not
     #Check vault name is existed or not
     Given path '/core/vault/check-vault-name'
@@ -38,7 +38,6 @@ Feature: Vault
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
-    * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
@@ -61,7 +60,6 @@ Feature: Vault
 
   @RAKCON-10220 @AddNewVaultWithOutAdminSetup
   Scenario: Create a new vault without admin quorum setup
-    * call read('Vault.feature@CHECK-VAULT-NAME')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
@@ -253,7 +251,8 @@ Feature: Vault
   @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
     #Check vault name is existed or not
-    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def vaultName = 'AT-RAK-' + now()
     * def creatingVault = callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/account/'+creatingVault.vaultIDWA
     * request {"name":#(vaultName)}

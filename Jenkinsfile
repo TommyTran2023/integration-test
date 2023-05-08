@@ -31,7 +31,7 @@ pipeline {
                     }
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     withMaven(maven: 'Maven') {
-                        sh "mvn test -Dkarate.env=${KARATE_ENV}"
+                        sh "mvn clean test -Dkarate.env=${KARATE_ENV}"
                     }
                 }
             }
@@ -48,9 +48,11 @@ pipeline {
                 if (testResultAction != null) {
                     failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
                     // remove karate testParallel()
-                    for (test in failingTests[0..-2]) {
-                        failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
-                        failedScenarios.push(test.getName())
+                    if (failingTests.size() > 1) {
+                        for (test in failingTests[0..-2]) {
+                            failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
+                            failedScenarios.push(test.getName())
+                        }
                     }
                 } else {
                     // No tests were run in this build, nothing left to do.
@@ -60,7 +62,7 @@ pipeline {
                 }
             }
 
-            archiveArtifacts artifacts: 'target/karate-reports/**/*'
+            archiveArtifacts artifacts: 'target/karate-reports/**/*, target/cucumber-html-reports/**/*'
             publishHTML(target : [allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,

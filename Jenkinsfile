@@ -40,7 +40,10 @@ pipeline {
 
     post {
         always {
-            testSummary = junit testResults: 'target/karate-reports/**/*.xml'
+            script {
+                testSummary = junit testResults: 'target/karate-reports/**/*.xml'
+            }
+
             archiveArtifacts artifacts: 'target/karate-reports/**/*'
             publishHTML(target : [allowMissing: false,
                 alwaysLinkToLastBuild: true,

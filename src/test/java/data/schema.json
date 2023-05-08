@@ -106,5 +106,6 @@
   "billing": {
     "paymentStatus": "#string",
     "finalFee": "#number"
-  }
+  },
+
 }

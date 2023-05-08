@@ -39,9 +39,27 @@ pipeline {
     }
 
     post {
+
         always {
             script {
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'
+
+                def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
+                if (testResultAction != null) {
+                    failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
+                    // remove karate testParallel()
+                    if (failingTests.size > 1) {
+                        for (test in failingTests[0..-2]) {
+                            failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
+                            failedScenarios.push(test.getName())
+                        }
+                    }
+                } else {
+                    // No tests were run in this build, nothing left to do.
+                    failingTests = []
+                    failedTestMsg = []
+                    failedScenarios = []
+                }
             }
 
             archiveArtifacts artifacts: 'target/karate-reports/**/*'
@@ -118,23 +136,6 @@ pipeline {
 
         failure {
             script {
-                def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
-                if (testResultAction != null) {
-                    failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
-                    // remove karate testParallel()
-                    if (failingTests) {
-                        for (test in failingTests[0..-2]) {
-                            failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
-                            failedScenarios.push(test.getName())
-                        }
-                    }
-                } else {
-                    // No tests were run in this build, nothing left to do.
-                    failingTests = []
-                    failedTestMsg = []
-                    failedScenarios = []
-                }
-
                 def buildSummary = "${ENV} Integration Test #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"

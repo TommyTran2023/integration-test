@@ -48,7 +48,7 @@ pipeline {
                 if (testResultAction != null) {
                     failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
                     // remove karate testParallel()
-                    if (failingTests.size > 1) {
+                    if (failingTests.size() > 1) {
                         for (test in failingTests[0..-2]) {
                             failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
                             failedScenarios.push(test.getName())

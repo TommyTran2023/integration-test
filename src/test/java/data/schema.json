@@ -102,5 +102,9 @@
       "deviceManagement": "#boolean"
     },
     "announcements": "#boolean"
+  },
+  "billing": {
+    "paymentStatus": "#string",
+    "finalFee": "#number"
   }
 }

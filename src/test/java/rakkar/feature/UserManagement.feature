@@ -128,17 +128,17 @@
       And match response.status == "success"
 
     # CHANGE ROLE
-    @ignore @Review_change_role
-       Scenario: Change Role - Review role change
+    @RAKCON-12903 @Review_change_role
+       Scenario: Change Role - Check review change role
          * call read('UserManagement.feature@User_listing')
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
          * call read('UserManagement.feature@Review_update_user_common')
 
     @RAKCON-11021 @Change_role
        Scenario: Change Role - Check submit change
-         * call read('UserManagement.feature@Review_change_role')
-         * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-         * call read('UserManagement.feature@Submit_edit_user_common')
+      * call read('UserManagement.feature@User_listing')
+      * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
+      * call read('UserManagement.feature@Submit_edit_user_common')
 
     @RAKCON-11929 @Cancel_Change_role
      Scenario: Edit user - Cancel change role
@@ -216,6 +216,7 @@
       When method PUT
       Then status 200
       And match response.status == "success"
+      And match response.data contains schemaJson.userManagement.review
 
     @ignore @Submit_edit_user_common
     Scenario: Submit edit request common

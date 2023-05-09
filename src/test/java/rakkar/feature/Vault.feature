@@ -11,12 +11,16 @@ Feature: Vault
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
 
-  @ignore @CHECK-VAULT-NAME
+  @ignore @GenerateVaultName
+  Scenario: Generate vault name
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def vaultName = 'AT-RAK-' + now()
+
+  @RAKCON-12842 @CHECK-VAULT-NAME
   Scenario: Check vault name is existed or not
     #Check vault name is existed or not
     Given path '/core/vault/check-vault-name'
-    * def now = function(){ return java.lang.System.currentTimeMillis() }
-    * def vaultName = 'AT-RAK-' + now()
+    * call read('Vault.feature@GenerateVaultName')
     * param name = vaultName
     When method GET
     Then status 200
@@ -38,7 +42,7 @@ Feature: Vault
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
-    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
@@ -57,7 +61,7 @@ Feature: Vault
 
   @RAKCON-10220 @AddNewVaultWithOutAdminSetup
   Scenario: Create a new vault without admin quorum setup
-    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
     * call read('Common.feature@BY-PASS-BIOMETRIC')
     * call read('Common.feature@VERIFY-PASSCODE')
@@ -183,14 +187,18 @@ Feature: Vault
     * def sortType = 'ASC'
     * call read('Vault.feature@SortVaultByName-Common')
     * eval Collections.sort(listVaultNameExpected.map(toUpper), java.lang.String.CASE_INSENSITIVE_ORDER)
-    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
+    * def expected = listVaultNameExpected.map(toUpper)
+    * def actual = listVaultNameActual.map(toUpper)
+    * match actual.toString() == expected.toString()
 
   @RAKCON-11118 @SortVaultZ2A
   Scenario: Sort vaults by name Z - A
     * def sortType = 'DESC'
     * call read('Vault.feature@SortVaultByName-Common')
     * eval Collections.sort(listVaultNameExpected.map(toUpper), Collections.reverseOrder())
-    * match listVaultNameActual.map(toUpper) == listVaultNameExpected.map(toUpper)
+    * def expected = listVaultNameExpected.map(toUpper)
+    * def actual = listVaultNameActual.map(toUpper)
+    * match actual.toString() == expected.toString()
 
   @ignore @SortVaultByName-Common
   Scenario: Sort vault by name - Common
@@ -254,7 +262,7 @@ Feature: Vault
   @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
     #Check vault name is existed or not
-    * call read('Vault.feature@CHECK-VAULT-NAME')
+    * call read('Vault.feature@GenerateVaultName')
     * def creatingVault = callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/account/'+creatingVault.vaultIDWA
     * request {"name":#(vaultName)}

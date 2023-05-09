@@ -110,7 +110,12 @@
   "userManagement": {
     "name": "#string",
     "role": "#string",
-    "isLostDevice": "#boolean"
+    "isLostDevice": "#boolean",
+    "review": {
+      "accountLVCheck": {},
+      "vaultLVCheck": []
+    }
   }
+
 
 }

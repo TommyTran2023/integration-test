@@ -49,12 +49,8 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
-    Given path '/core/vault'
-    * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
-    * request {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":'#(dataBody.vault.approve_number)',"note":"AT Test"}
-    When method POST
-    Then status 201
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":'#(dataBody.vault.approve_number)',"note":"AT Test"}
+    * call read('Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
     * def vaultNameResponseWA = response.data.name
@@ -72,12 +68,8 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
-    Given path '/core/vault'
-    * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
-    * request {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":0,"note":""}
-    When method POST
-    Then status 201
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":0,"note":""}
+    * call read('Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
     * def vaultNameResponseWOA = response.data.name
@@ -85,6 +77,15 @@ Feature: Vault
     * def vaultTypeResponseWOA = response.data.type
     * match vaultTypeResponseWOA == dataBody.vault.vault_type
     * def vaultIDWOA = response.data.id
+
+  @ignore @CreateVault-Common
+  Scenario: Create new vault - Common
+    Given path '/core/vault'
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    * request requestBody
+    When method POST
+    Then status 201
 
   @RAKCON-10218 @ViewVaultListing
   Scenario: View vault listing
@@ -287,7 +288,9 @@ Feature: Vault
 
   @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
   Scenario: Edit vault with not changed information
-    * call read('ApprovalRequest.feature@ApprovalEditVault')
+    # Create a new vault then approve it
+    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
+    # Use the same requestBody to edit vault
     * def editVaultPolicyCommon = call read('Vault.feature@EditVaultPolicy-Common')
     # Should not allow user to edit vault with not changed information
     Then match editVaultPolicyCommon.response.status != "success"

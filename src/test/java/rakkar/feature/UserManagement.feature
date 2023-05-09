@@ -164,7 +164,7 @@
 
     @RAKCON-11035 @Add_vault_access
     Scenario: Check add vault access - Submit request
-      * call read('UserManagement.feature@Review_add_vault_access')
+      * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Submit_edit_user_common')
 
@@ -181,7 +181,7 @@
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
-      * call read('UserManagement.feature@Review_remove_vault_access')
+      * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Submit_edit_user_common')
 

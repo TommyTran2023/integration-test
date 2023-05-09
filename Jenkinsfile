@@ -48,8 +48,8 @@ pipeline {
                 if (testResultAction != null) {
                     failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
                     // remove karate testParallel()
-                    if (failingTests.size() > 1) {
-                        for (test in failingTests[0..-2]) {
+                    for (test in failingTests) {
+                        if (!test.getName().contains("testParallel")) {
                             failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
                             failedScenarios.push(test.getName())
                         }
@@ -62,7 +62,7 @@ pipeline {
                 }
             }
 
-            archiveArtifacts artifacts: 'target/karate-reports/**/*, target/cucumber-html-reports/**/*'
+            archiveArtifacts artifacts: 'target/karate-reports/**/*,target/cucumber-html-reports/**/*'
             publishHTML(target : [allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,

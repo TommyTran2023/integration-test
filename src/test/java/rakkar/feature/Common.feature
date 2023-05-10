@@ -43,10 +43,14 @@ Feature: Generate Challenge Answer for Biometric
     * def verifyStatus = response.data.verify
     * match verifyStatus == true
 
-  @ignore @BY-PASS-BIOMETRIC
+  @RAKCON-13084 @BY-PASS-BIOMETRIC
   Scenario: By pass biometric method
     #By pass biometric method
     Given path '/core/biometric/request-challenge'
+    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
+    * def requesterAccessToken = 'Bearer ' + requesterAuthToken
+    * header Authorization = requesterAccessToken
     * request {}
     When method POST
     Then status 201

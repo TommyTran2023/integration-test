@@ -21,7 +21,7 @@ Feature: Cancel Request
   @RAKCON-10998 @CancelEditVaultPolicy
   Scenario: Cancel request - Edit Vault policy request
     * call read('Vault.feature@EditVaultPolicy')
-    * def requestId = response.data.record.id
+    * def requestId = editVaultPolicy.response.data.record.id
     * call read('CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-11055 @CancelWhiteListAddress

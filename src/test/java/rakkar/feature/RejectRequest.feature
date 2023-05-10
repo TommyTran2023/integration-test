@@ -23,7 +23,7 @@ Feature: Reject Request
   @RAKCON-11002 @RejectEditVaultRequest
   Scenario: Reject request - Edit Vault policy request
     * call read('Vault.feature@EditVaultPolicy')
-    * def requestId = response.data.record.id
+    * def requestId = editVaultPolicy.response.data.record.id
     * call read('RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11063 @RejectAddWhitelistAddress

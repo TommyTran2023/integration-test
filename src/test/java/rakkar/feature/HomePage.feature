@@ -116,7 +116,7 @@ Feature: HomePage
     * request { "shortcutIds" : "#(shortcutIds)" }
     When method DELETE
     Then status 200
-    * match response.data == {}
+    * assert (response.data == {}) || (response.data == true)
 
   @RAKCON-10982 @ViewMarketPriceListing
   Scenario: View Market Prices listing

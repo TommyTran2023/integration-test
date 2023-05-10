@@ -156,7 +156,7 @@
       And match response.status == "success"
       * def vaultId = response.data.vaults[0].id
 
-    @ignore @Review_add_vault_access
+    @RAKCON-13107 @Review_add_vault_access
     Scenario: Change vault access - Review add vault access
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
@@ -164,7 +164,7 @@
 
     @RAKCON-11035 @Add_vault_access
     Scenario: Check add vault access - Submit request
-      * call read('UserManagement.feature@Review_add_vault_access')
+      * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Submit_edit_user_common')
 
@@ -173,7 +173,7 @@
       * call read('UserManagement.feature@Cancel_edit_user_common')
 
     # REMOVE VAULT ACCESS
-    @ignore @Review_remove_vault_access
+    @RAKCON-13108 @Review_remove_vault_access
     Scenario: Change vault access - Review remove vault access
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
@@ -181,7 +181,7 @@
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
-      * call read('UserManagement.feature@Review_remove_vault_access')
+      * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Submit_edit_user_common')
 

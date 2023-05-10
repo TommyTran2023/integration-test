@@ -133,6 +133,8 @@
          * call read('UserManagement.feature@User_listing')
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
          * call read('UserManagement.feature@Review_update_user_common')
+         And match response.data contains schemaJson.userManagement.review
+
 
     @RAKCON-11021 @Change_role
        Scenario: Change Role - Check submit change
@@ -161,6 +163,8 @@
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Review_update_user_common')
+      And match response.data contains schemaJson.userManagement.review
+
 
     @RAKCON-11035 @Add_vault_access
     Scenario: Check add vault access - Submit request
@@ -178,6 +182,8 @@
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Review_update_user_common')
+      And match response.data contains schemaJson.userManagement.review
+
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
@@ -216,7 +222,6 @@
       When method PUT
       Then status 200
       And match response.status == "success"
-      And match response.data contains schemaJson.userManagement.review
 
     @ignore @Submit_edit_user_common
     Scenario: Submit edit request common

@@ -22,7 +22,13 @@
     "adminUsername": "PASSPORT65746",
     "amount_low": 10,
     "amount_medium": 15,
-    "amount_high": 50
+    "amount_high": 50,
+    "sourceId_hot": "8b4e1eaa-b84a-4517-a959-407c1f42d7f0",
+    "destinationId_hot": "c4240d10-14d7-4254-aee4-8552a94f90c9",
+    "sourceId_cold": "4c014c88-0744-4785-be1d-b91e285d8ecf",
+    "destinationId_cold":"b56b5303-f15e-4d29-bbc4-40ee253a6df6",
+    "externalId": "396dc8b7-2dda-4f5c-b84c-05339129b43d",
+    "tokenId": "8053beee-fedd-4408-9337-987774e105ae"
 
   },
   "uat": {
@@ -48,6 +54,14 @@
     "adminUsername": "PASSPORT123456",
     "amount_low": 50,
     "amount_medium": 500,
-    "amount_high": 1000
+    "amount_high": 1000,
+    "sourceId_hot": "c819feb1-a494-4df7-b34d-b33bd05a6872",
+    "destinationId_hot": "d3fef00c-d8d1-450e-933d-ff36ada50e16",
+    "sourceId_cold": "61f7f91d-c67b-4508-b1cb-27924f706ab2",
+    "destinationId_cold":"ceaf5d13-7eed-47ec-a0cb-59ca205a64c2",
+    "externalId": "845312ae-588f-4756-9e5f-b6c91e3b4600",
+    "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
+
   }
+
 }

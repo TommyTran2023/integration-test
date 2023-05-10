@@ -133,7 +133,7 @@
          * call read('UserManagement.feature@User_listing')
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
          * call read('UserManagement.feature@Review_update_user_common')
-         And match response.data contains schemaJson.userManagement.review
+         And match response.data contains schemaJson.userManagement.review_edit_user
 
 
     @RAKCON-11021 @Change_role
@@ -163,7 +163,7 @@
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Review_update_user_common')
-      And match response.data contains schemaJson.userManagement.review
+      And match response.data contains schemaJson.userManagement.review_edit_user
 
 
     @RAKCON-11035 @Add_vault_access
@@ -182,8 +182,7 @@
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Review_update_user_common')
-      And match response.data contains schemaJson.userManagement.review
-
+      And match response.data contains schemaJson.userManagement.review_edit_user
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
@@ -196,15 +195,16 @@
       * call read('UserManagement.feature@Cancel_edit_user_common')
 
     # REMOVE ACCOUNT ACCESS
-    @ignore @Review_remove_account_access
+    @RAKCON-13135 @Review_remove_account_access
     Scenario: Review remove account access
       * call read('UserManagement.feature@User_listing')
       * def body = { "reason":'',"isRemoveAccountAccess":true}
       * call read('UserManagement.feature@Review_update_user_common')
+      And match response.data contains schemaJson.userManagement.review_remove_account
 
     @RAKCON-11025 @Remove_account_access
     Scenario: Check remove account access - Submit
-      * call read('UserManagement.feature@Review_remove_account_access')
+      * call read('UserManagement.feature@User_listing')
       * def body = { "reason":'Note',"isRemoveAccountAccess":true}
       * call read('UserManagement.feature@Submit_edit_user_common')
 

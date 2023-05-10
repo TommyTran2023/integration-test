@@ -111,11 +111,17 @@
     "name": "#string",
     "role": "#string",
     "isLostDevice": "#boolean",
-    "review": {
+    "review_edit_user": {
       "accountLVCheck": {},
       "vaultLVCheck": []
-    }
+    },
+    "review_remove_account": {
+      "accountLVCheck":
+      { "isRequiredApprover":"#boolean",
+        "isValidNumUserInQuorum":"#boolean"
+      },
+        "vaultLVCheck":[]
+     }
   }
-
 
 }

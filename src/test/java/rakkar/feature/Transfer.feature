@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: Transfer
   Background:
     * url baseURL
@@ -7,7 +7,7 @@ Feature: Transfer
     * def dataBody = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER
-  @Get_asset_transfer
+  @RAKCON-13183 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
     * def query = { limit:'10', offset: '0', sort:'ASC', groupBy: 'ASSET', keyword:'xrp'}
     Given path 'core/wallet/transfer-tokens'

@@ -120,7 +120,7 @@
       { "isRequiredApprover":"#boolean",
         "isValidNumUserInQuorum":"#boolean"
       },
-        "vaultLVCheck":[]
+        "vaultLVCheck":"#[]"
      }
   }
 

@@ -44,7 +44,6 @@ Feature: Vault
   Scenario: Create a new vault with admin quorum setup
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -62,7 +61,6 @@ Feature: Vault
   Scenario: Create a new vault without admin quorum setup
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * call read('Common.feature@VERIFY-PASSCODE')
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup

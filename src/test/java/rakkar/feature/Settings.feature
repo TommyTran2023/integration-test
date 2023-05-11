@@ -9,21 +9,23 @@ Feature: Settings
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
+    * call read('Settings.feature@VerifySecurityQuestion')
+    * call read('Settings.feature@CheckNewPassCode')
     * def requestBody = { "passcode" : "#(dataBody.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
     * call read('Settings.feature@ForgotPIN-Common')
     # Restore to old passcode
     * call read('Settings.feature@RestoreToOldPasscode')
 
-  @RAKCON-13184 @VerifySecurityQuestion
-  Scenario: Verify Security Question when performing forgot PIN
+  @ignore @VerifySecurityQuestion
+  Scenario: Verify Security Question
     Given path '/auth/account/verify-security-question'
     * request { "identityType" : 1, "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "nationalityOrCountry" : "#(requesterInfo.country)", "phoneNumber" : "#(requesterInfo.phoneNumber)", "postalCode" : "#(requesterInfo.postalCode)", "identityNumber" : "#(requesterInfo.idNumber)" }
     When method POST
     Then status 201
     * match response.data.isValid == true
 
-  @RAKCON-13185 @CheckNewPassCode
-  Scenario: Check new passcode when performing forgot PIN
+  @ignore @CheckNewPassCode
+  Scenario: Check new passcode
     Given path '/auth/account/check-new-passcode'
     * request { "passcode" : "dataBody.settings.newPasscode" }
     When method POST

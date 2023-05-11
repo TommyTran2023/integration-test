@@ -33,20 +33,28 @@ Feature: Generate Challenge Answer for Biometric
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
 
-  @VERIFY-PASSCODE
+  @RAKCON-13164 @VERIFY-PASSCODE
   Scenario: Verify passcode of Requester
     #Verify requesterPasscode
     Given path '/auth/account/verify-passcode'
+    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
+    * def requesterAccessToken = 'Bearer ' + requesterAuthToken
+    * header Authorization = requesterAccessToken
     * request {"passcode":'#(requesterInfo.requesterPasscode)'}
     When method POST
     Then status 201
     * def verifyStatus = response.data.verify
     * match verifyStatus == true
 
-  @ignore @BY-PASS-BIOMETRIC
+  @RAKCON-13084 @BY-PASS-BIOMETRIC
   Scenario: By pass biometric method
     #By pass biometric method
     Given path '/core/biometric/request-challenge'
+    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
+    * def requesterAccessToken = 'Bearer ' + requesterAuthToken
+    * header Authorization = requesterAccessToken
     * request {}
     When method POST
     Then status 201

@@ -7,7 +7,7 @@ Feature: WhiteList Folder
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def user = call read('UserManagement.feature@GetAccountMe')
     * def userId = user.response.data.id
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaJson = read('classpath:data/schema.json')
 
   #TCs: CREATE NEW FOLDER - INTERNAL
@@ -15,14 +15,14 @@ Feature: WhiteList Folder
   Scenario: Check create a new folder - internal
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def folderName = 'Folder-' + now()
-    * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_internal)' }
+    * def body = {"name" : '#(folderName)',"type": '#(testData.whitelist.type_internal)' }
     Given path 'core/folders'
     And request body
     When method POST
     Then status 201
     And match response.status == "success"
     And match response.data.name == "#(folderName)"
-    And match response.data.type == "#(dataBody.whitelist.type_internal)"
+    And match response.data.type == "#(testData.whitelist.type_internal)"
     * def folderId = response.data.id
     * def folderName = response.data.name
     * def type = response.data.type
@@ -32,14 +32,14 @@ Feature: WhiteList Folder
     Scenario: Check create new folder - external
       * def now = function(){ return java.lang.System.currentTimeMillis() }
       * def folderName = 'External_Folder-' + now()
-      * def body = {"name" : '#(folderName)',"type": '#(dataBody.whitelist.type_external)' }
+      * def body = {"name" : '#(folderName)',"type": '#(testData.whitelist.type_external)' }
       Given path 'core/folders'
       And request body
       When method POST
       Then status 201
       And match response.status == "success"
       And match response.data.name == "#(folderName)"
-      And match response.data.type == "#(dataBody.whitelist.type_external)"
+      And match response.data.type == "#(testData.whitelist.type_external)"
       * def folderId = response.data.id
       * def folderName = response.data.name
       * def type = response.data.type
@@ -73,13 +73,13 @@ Feature: WhiteList Folder
   @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type
     * call read('WhiteListFolder.feature@Create_folder_external')
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(dataBody.whitelist.type_external)'}
+    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(testData.whitelist.type_external)'}
     Given path 'core/folders'
     And params query
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.folders[0].type == "#(dataBody.whitelist.type_external)"
+    And match response.data.folders[0].type == "#(testData.whitelist.type_external)"
     * def externalId = ""
     * def externalName = ""
     And for(var i = 0; i < response.data.folders.length; i++) if (response.data.folders[i].tokens.length > 0) { externalId = response.data.folders[i].id ; externalName = response.data.folders[i].name }
@@ -136,7 +136,7 @@ Feature: WhiteList Folder
     #Pre-5.Validate to add new address
   @RAKCON-13207 @Validate_add_address
   Scenario:Validate to add new address
-    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(dataBody.transfer.withdraw.tokenSymbol)' }
+    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(testData.transfer.withdraw.tokenSymbol)' }
     Given path 'core/folders/addresses/validate'
     And request body_validate
     When method POST
@@ -212,8 +212,8 @@ Feature: WhiteList Folder
     And request body
     When method POST
     Then status 201
-    And match response.data.records[0].type.value == "#(dataBody.whitelist.request_value)"
-    And match response.data.records[0].type.nameDisplay == "#(dataBody.whitelist.request_nameDisplay)"
+    And match response.data.records[0].type.value == "#(testData.whitelist.request_value)"
+    And match response.data.records[0].type.nameDisplay == "#(testData.whitelist.request_nameDisplay)"
     * def requestId = response.data.records[0].id
 
     #TCs: DELETE WHITELIST ADDRESS

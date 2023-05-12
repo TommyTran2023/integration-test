@@ -3,7 +3,7 @@ Feature: Notification
 
   Background:
     * url baseURL
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-11009 @NotificationSetting
@@ -23,8 +23,8 @@ Feature: Notification
     * def createVaultRequestId = call read('Vault.feature@GetCreateVaultRequestID')
     * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == createVaultRequestId.requestId
-    * match notificationCenter.response.data.notifications[0].title == dataBody.notification.vault.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == dataBody.notification.vault.state
+    * match notificationCenter.response.data.notifications[0].title == testData.notification.vault.labelInApp
+    * match notificationCenter.response.data.notifications[0].type == testData.notification.vault.state
     * def notificationContent = "You have received a request for a new vault policy for <<"+createVaultRequestId.vaultNameResponseWA+">>"
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
@@ -34,8 +34,8 @@ Feature: Notification
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == rejectTransfer.requestId
-    * match notificationCenter.response.data.notifications[0].title == dataBody.notification.rejectTransfer.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == dataBody.notification.rejectTransfer.state
+    * match notificationCenter.response.data.notifications[0].title == testData.notification.rejectTransfer.labelInApp
+    * match notificationCenter.response.data.notifications[0].type == testData.notification.rejectTransfer.state
     * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+rejectTransfer.value.symbol+">> from <<"+rejectTransfer.value.sourceName_hot+">> to <<"+rejectTransfer.value.destinationName_cold+">> has been rejected."
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
@@ -45,8 +45,8 @@ Feature: Notification
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == approveTransfer.requestId
-    * match notificationCenter.response.data.notifications[0].title == dataBody.notification.approveTransfer.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == dataBody.notification.approveTransfer.state
+    * match notificationCenter.response.data.notifications[0].title == testData.notification.approveTransfer.labelInApp
+    * match notificationCenter.response.data.notifications[0].type == testData.notification.approveTransfer.state
     * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+approveTransfer.value.symbol+">>"+" from <<"+approveTransfer.value.sourceName_hot+">> to <<"+approveTransfer.value.destinationName_cold+">> has been approved"
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 

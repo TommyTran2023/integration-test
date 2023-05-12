@@ -5,11 +5,11 @@ Feature: Settings
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def challengeRequester = call read('Common.feature@FIDO-Requester')
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
-    * def requestBody = { "passcode" : "#(dataBody.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * def requestBody = { "passcode" : "#(testData.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
     * call read('Settings.feature@ForgotPIN-Common')
     # Restore to old passcode
     * call read('Settings.feature@RestoreToOldPasscode')
@@ -25,7 +25,7 @@ Feature: Settings
   @RAKCON-13185 @CheckNewPassCode
   Scenario: Check new passcode when performing forgot PIN
     Given path '/auth/account/check-new-passcode'
-    * request { "passcode" : "dataBody.settings.newPasscode" }
+    * request { "passcode" : "testData.settings.newPasscode" }
     When method POST
     Then status 201
     * match response.data.isSameOldPasscode == false
@@ -50,7 +50,7 @@ Feature: Settings
     Given path '/auth/account/passcode'
     * header challenge-answer = challengeRequester.challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    * request { "isForgotPasscode" : false, "passcode" : "#(dataBody.settings.changePasscode)", "securityAnswer" : null }
+    * request { "isForgotPasscode" : false, "passcode" : "#(testData.settings.changePasscode)", "securityAnswer" : null }
     When method PUT
     Then status 200
     * match response.status == 'success'

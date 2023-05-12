@@ -43,7 +43,10 @@ Note: In UAT, add users in "AT Rakkar" customer. In QA (SIT), add users in "Rakk
 
 ### Setup data transfer
 For each environment, it should have specific vaults for transfer.
-1.Create new vault with the name has the same vault's name in data_test.json > tranfer > withdraw, 
-2.Add wallet = "XRP" for each vault. Deposit for all.
-3.Get the vaultId of each vault created, add it to env_data.json
+1. Create new vault with the name has the same vault's name in data_test.json > tranfer > withdraw, 
+2. Add wallet = "XRP" for each vault. Deposit for all.
+3. Add all infor needed to env_data.json: 
+- VaultId
+- TokenId
+- Address
 

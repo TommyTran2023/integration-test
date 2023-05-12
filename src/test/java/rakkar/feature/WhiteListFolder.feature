@@ -134,12 +134,9 @@ Feature: WhiteList Folder
     * def nativeAsset = response.data.address[0].nativeAsset
 
     #Pre-5.Validate to add new address
-  @ignore @Validate_add_address
-  Scenario:Precondition 5:Validate to add new address
-    * def getAddress = call read('WhiteListFolder.feature@Get_address')
-    * def address = getAddress.response.data.address[0].address
-    * def nativeAsset = getAddress.response.data.address[0].nativeAsset
-    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(nativeAsset)' }
+  @RAKCON-13207 @Validate_add_address
+  Scenario:Validate to add new address
+    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(dataBody.transfer.withdraw.tokenSymbol)' }
     Given path 'core/folders/addresses/validate'
     And request body_validate
     When method POST

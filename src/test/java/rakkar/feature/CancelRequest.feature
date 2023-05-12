@@ -26,8 +26,7 @@ Feature: Cancel Request
 
   @RAKCON-11055 @CancelWhiteListAddress
   Scenario: Cancel request - Add whitelist address
-    * def value = call read('WhiteListFolder.feature@Create_address_internal')
-    * def requestId = value.response.data.records[0].id
+    * call read('WhiteListFolder.feature@Create_address_internal')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
   @ignore @CancelRequestCommon

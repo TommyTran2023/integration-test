@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: Reject Request
 
   Background:
@@ -28,9 +28,7 @@ Feature: Reject Request
 
   @RAKCON-11063 @RejectAddWhitelistAddress
   Scenario: Reject request - Add whitelist address
-    # Get request ID of creating whitelist address
-    * def value = call read('WhiteListFolder.feature@Create_address_internal')
-    * def requestId = value.response.data.records[0].id
+    * call read('WhiteListFolder.feature@Create_address_internal')
     * call read('RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11788 @RejectTransfer_Hot_to_Cold

@@ -69,10 +69,10 @@ Feature: HomePage
     * def addShortcut = call read('HomePage.feature@AddShortcut-Common')
     Then addShortcut.response.code == 200
     * match addShortcut.response.data.userId == userId.requesterID
-    * match addShortcut.response.data.externalAssetId == addShortcut.tokenSymbol
+    * match addShortcut.response.data.externalAssetId == dataBody.transfer.withdraw.tokenSymbol
     * match addShortcut.response.data.destinationType == "VAULT_ACCOUNT"
-    * match addShortcut.response.data.destinationId == addShortcut.destinationId_cold
-    * match addShortcut.response.data.sourceId == addShortcut.sourceId_hot
+    * match addShortcut.response.data.destinationId == destinationId_cold
+    * match addShortcut.response.data.sourceId == sourceId_hot
     * match addShortcut.response.data.name == addShortcut.shortCutName
 
   @RAKCON-11771 @AddDuplicateShortcut
@@ -89,17 +89,15 @@ Feature: HomePage
 
   @ignore @AddShortcut-Common
   Scenario: Add shortcut - common
-    * call read('Transfer.feature@Get_source_transfer')
-    * call read('Transfer.feature@Get_destination_transfer')
     * call read('Transfer.feature@Get_asset_transfer')
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def shortCutName = 'AT-SC-' + now()
     Given path '/core/assets/shortcut'
-    * request { "destinationType" : "VAULT_ACCOUNT", "destinationId" : "#(destinationId_cold)", "sourceId" : "#(sourceId_hot)", "name" : "#(shortCutName)", "externalAssetId" : "#(tokenSymbol)" }
+    * request { "destinationType" : "VAULT_ACCOUNT", "destinationId" : "#(destinationId_cold)", "sourceId" : "#(sourceId_hot)", "name" : "#(shortCutName)", "externalAssetId" : "#(dataBody.transfer.withdraw.tokenSymbol)" }
     When method POST
 
   @RAKCON-10980 @ViewShortcut
-  Scenario: View shortcuts from Home Pag
+  Scenario: View shortcuts from Home Page
     Given path '/core/assets/shortcuts'
     * param limit = 10
     * param offset = 0

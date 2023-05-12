@@ -1,4 +1,4 @@
-@RAKCON-10583 @ignore
+@RAKCON-10583
 Feature: Approval View
   # View Approvals feature by Approver account
   Background:

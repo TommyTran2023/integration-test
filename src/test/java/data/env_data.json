@@ -28,7 +28,8 @@
     "sourceId_cold": "4c014c88-0744-4785-be1d-b91e285d8ecf",
     "destinationId_cold":"b56b5303-f15e-4d29-bbc4-40ee253a6df6",
     "externalId": "396dc8b7-2dda-4f5c-b84c-05339129b43d",
-    "tokenId": "8053beee-fedd-4408-9337-987774e105ae"
+    "tokenId": "8053beee-fedd-4408-9337-987774e105ae",
+    "address": "r384habbCeaJg9oAGQWAHfCQjmU9RfLqUL"
 
   },
   "uat": {
@@ -61,6 +62,7 @@
     "destinationId_cold":"ceaf5d13-7eed-47ec-a0cb-59ca205a64c2",
     "externalId": "845312ae-588f-4756-9e5f-b6c91e3b4600",
     "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
+    "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo"
 
   }
 

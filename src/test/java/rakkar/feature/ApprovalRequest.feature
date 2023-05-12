@@ -24,8 +24,7 @@ Feature: Approval Request
 
   @RAKCON-11047 @ApprovalNewAddressWhitelist_internal
   Scenario: Approval - Add whitelist address internal
-    * def value = call read('WhiteListFolder.feature@Create_address_internal')
-    * def requestId = value.response.data.records[0].id
+    * call read('WhiteListFolder.feature@Create_address_internal')
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-12492 @ApprovalNewAddressWhitelist_external

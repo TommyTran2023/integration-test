@@ -56,7 +56,6 @@ Feature: WhiteList Folder
     * def schema = schemaJson.whitelist.schema_list
      And match response.data.folders contains schema
 
-
   #TCs: SEARCH FOLDER
   @RAKCON-11163 @Search_folder_by_keyword
   Scenario: Check search folder by keyword
@@ -135,12 +134,9 @@ Feature: WhiteList Folder
     * def nativeAsset = response.data.address[0].nativeAsset
 
     #Pre-5.Validate to add new address
-  @ignore @Validate_add_address
-  Scenario:Precondition 5:Validate to add new address
-    * def getAddress = call read('WhiteListFolder.feature@Get_address')
-    * def address = getAddress.response.data.address[0].address
-    * def nativeAsset = getAddress.response.data.address[0].nativeAsset
-    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(nativeAsset)' }
+  @RAKCON-13207 @Validate_add_address
+  Scenario:Validate to add new address
+    * def body_validate = {"address" : '#(address)',"nativeAsset": '#(dataBody.transfer.withdraw.tokenSymbol)' }
     Given path 'core/folders/addresses/validate'
     And request body_validate
     When method POST
@@ -152,9 +148,6 @@ Feature: WhiteList Folder
   #Tcs: CREATE WHITELIST ADDRESS
   @ignore @Create_address_common
   Scenario:Create whitelisted address common
-    * call read('WhiteListFolder.feature@Get_detailToken')
-    * call read('WhiteListFolder.feature@Get_address')
-    * call read('WhiteListFolder.feature@Validate_add_address')
     #Submit add new address
     * call read('Common.feature@FIDO-Requester')
     * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(tokenId)', "note": 'Note test', "address": '#(address)'}
@@ -166,7 +159,6 @@ Feature: WhiteList Folder
     And match response.status == "success"
     And match response.data.address == "#(address)"
     And match response.data.folderId == "#(folderId)"
-    # Approve add new address - refer to ApprovalRequest.feature
     * def addressId = response.data.id
     * def folderId = response.data.folderId
     * def address = response.data.address
@@ -222,6 +214,7 @@ Feature: WhiteList Folder
     Then status 201
     And match response.data.records[0].type.value == "#(dataBody.whitelist.request_value)"
     And match response.data.records[0].type.nameDisplay == "#(dataBody.whitelist.request_nameDisplay)"
+    * def requestId = response.data.records[0].id
 
     #TCs: DELETE WHITELIST ADDRESS
   @RAKCON-10971 @Delete_Whitelist_Address

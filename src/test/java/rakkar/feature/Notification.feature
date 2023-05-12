@@ -36,7 +36,7 @@ Feature: Notification
     * match notificationCenter.response.data.notifications[0].requestId == rejectTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == dataBody.notification.rejectTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == dataBody.notification.rejectTransfer.state
-    * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+rejectTransfer.value.symbol+">> from <<"+rejectTransfer.value.sourceName_hot+">> to <<"+rejectTransfer.value.destinationName_cold+">> has been rejected."
+    * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+dataBody.transfer.withdraw.symbol+">> from <<"+dataBody.transfer.withdraw.sourceName_hot+">> to <<"+dataBody.transfer.withdraw.destinationName_cold+">> has been rejected."
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
   @RAKCON-12515 @ViewNotificationCenterTransactionAlert
@@ -47,7 +47,7 @@ Feature: Notification
     * match notificationCenter.response.data.notifications[0].requestId == approveTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == dataBody.notification.approveTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == dataBody.notification.approveTransfer.state
-    * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+approveTransfer.value.symbol+">>"+" from <<"+approveTransfer.value.sourceName_hot+">> to <<"+approveTransfer.value.destinationName_cold+">> has been approved"
+    * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+dataBody.transfer.withdraw.symbol+">>"+" from <<"+dataBody.transfer.withdraw.sourceName_hot+">> to <<"+dataBody.transfer.withdraw.destinationName_cold+">> has been approved"
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
   @ignore @ViewNotificationCenter-Common

@@ -3,7 +3,7 @@ Feature: Notification
 
   Background:
     * url baseURL
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-11009 @NotificationSetting
@@ -23,8 +23,8 @@ Feature: Notification
     * def createVaultRequestId = call read('Vault.feature@GetCreateVaultRequestID')
     * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == createVaultRequestId.requestId
-    * match notificationCenter.response.data.notifications[0].title == dataBody.notification.vault.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == dataBody.notification.vault.state
+    * match notificationCenter.response.data.notifications[0].title == testData.notification.vault.labelInApp
+    * match notificationCenter.response.data.notifications[0].type == testData.notification.vault.state
     * def notificationContent = "You have received a request for a new vault policy for <<"+createVaultRequestId.vaultNameResponseWA+">>"
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 

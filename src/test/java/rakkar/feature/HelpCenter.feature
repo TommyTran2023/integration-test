@@ -9,16 +9,16 @@ Feature:Help Center
     * def requesterUserEmail = getRequesterIDResponse.response.data.email
     * def schemaJson = read('classpath:data/schema.json')
     * def now = function(){ return java.lang.System.currentTimeMillis() }
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-11377 @CREATE_TICKET_ISSUE
   Scenario: Create a ticket detail page - Issue
     * def descriptionTicket = 'description for create issue' + now()
     * def subject = 'subject for create issue' + now()
-    * def body =  {"description":"#(descriptionTicket)","attachmentToken":["#(token)"],"subject":"#(subject)","category":"issue","emailCcs":["#(requesterUserEmail)"],"platforms":["#(dataBody.help_center.platform)"]}
+    * def body =  {"description":"#(descriptionTicket)","attachmentToken":["#(token)"],"subject":"#(subject)","category":"issue","emailCcs":["#(requesterUserEmail)"],"platforms":["#(testData.help_center.platform)"]}
     * call read('HelpCenter.feature@Create_ticket_common')
-    * match response.data.category == "#(dataBody.help_center.type_issue)"
-    * match response.data.platforms[0] == "#(dataBody.help_center.platform)"
+    * match response.data.category == "#(testData.help_center.type_issue)"
+    * match response.data.platforms[0] == "#(testData.help_center.platform)"
 
   @RAKCON-11378 @CREATE_TICKET_QUESTION
   Scenario: Create a ticket detail page - Question
@@ -26,7 +26,7 @@ Feature:Help Center
     * def subject = 'subject for create question' + now()
     * def body = {"description":"#(descriptionTicket)","attachmentToken":["#(token)"],"subject":"#(subject)","category":"question","emailCcs":["#(requesterUserEmail)"]}
     * call read('HelpCenter.feature@Create_ticket_common')
-    * match response.data.category == "#(dataBody.help_center.type_question)"
+    * match response.data.category == "#(testData.help_center.type_question)"
 
   @RAKCON-11379 @CREATE_TICKET_REQUEST
   Scenario: Create a ticket detail page - Request
@@ -34,7 +34,7 @@ Feature:Help Center
     * def subject = 'subject for create request' + now()
     * def body = {"description":"#(descriptionTicket)","attachmentToken":["#(token)"],"subject":"#(subject)","category":"request","emailCcs":["#(requesterUserEmail)"], "requestType" : "mark_lost_device"}
     * call read('HelpCenter.feature@Create_ticket_common')
-    * match response.data.category == "#(dataBody.help_center.type_request)"
+    * match response.data.category == "#(testData.help_center.type_request)"
     * match response.data.requestType == "mark_lost_device"
 
   @RAKCON-11380 @VIEW_LISTING_TICKET_IN_PROGRESS
@@ -67,8 +67,8 @@ Feature:Help Center
 
   @RAKCON-11383 @SEARCH_TICKET_SOLVED
   Scenario: Search ticket on tab Solved
-    * def keyword = dataBody.help_center.search_solved
-    * def query = { limit:'20', page: '1', status: 'solved', keyword:'#(dataBody.help_center.search_solved)'}
+    * def keyword = testData.help_center.search_solved
+    * def query = { limit:'20', page: '1', status: 'solved', keyword:'#(testData.help_center.search_solved)'}
     * call read('HelpCenter.feature@Search_Filter_ticket_common')
     * match each $response.data.tickets[*].subject contains keyword
 

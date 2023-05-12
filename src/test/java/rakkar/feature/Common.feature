@@ -3,7 +3,7 @@ Feature: Generate Challenge Answer for Biometric
 
   Background:
     * url baseURL
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
 
   @FIDO-Requester
   Scenario: Generate challenge answer for Requester
@@ -15,7 +15,7 @@ Feature: Generate Challenge Answer for Biometric
     When method POST
     Then status 201
     * def challenge = response.data.challenge
-    * string command = dataBody.common.commandToGenChallengeAnswer + challenge
+    * string command = testData.common.commandToGenChallengeAnswer + challenge
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
 
@@ -29,7 +29,7 @@ Feature: Generate Challenge Answer for Biometric
     When method POST
     Then status 201
     * def challenge = response.data.challenge
-    * string command = dataBody.common.commandToGenChallengeAnswer + challenge
+    * string command = testData.common.commandToGenChallengeAnswer + challenge
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
 

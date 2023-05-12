@@ -6,7 +6,7 @@ Feature: Approval Request
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def challengeApprover = call read('Common.feature@FIDO-Approver')
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-10975 @ApproveNewVaultRequest
   Scenario: Approval - New vault policy request

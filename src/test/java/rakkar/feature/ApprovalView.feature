@@ -5,7 +5,7 @@ Feature: Approval View
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def requesterInformation = call read('GetRequesterInfo.feature@GetRequesterInfo')
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-10983 @ViewListPendingRequest
@@ -31,10 +31,10 @@ Feature: Approval View
 
   @RAKCON-11861 @ViewListRequestHistoryByStatus
   Scenario: View request history by status
-    * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(dataBody.approvalView.statusFiltering) ] }
+    * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(testData.approvalView.statusFiltering) ] }
     * call read('ApprovalView.feature@ApprovalView-Common')
     * def requestStatus = $response.data.records[*].status
-    * match each requestStatus == dataBody.approvalView.statusFiltering
+    * match each requestStatus == testData.approvalView.statusFiltering
 
   @RAKCON-11863 @ViewListRequestHistoryByDate
   Scenario: View request history by date
@@ -67,10 +67,10 @@ Feature: Approval View
 
   @RAKCON-11862 @ViewRequestHistoryByType
   Scenario: View request history by type
-    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(dataBody.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
+    * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(testData.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
     * call read('ApprovalView.feature@ApprovalView-Common')
     * def typeValue = $response.data.records[*].type.value
-    * match dataBody.approvalView.valueOfPolicyType contains any typeValue
+    * match testData.approvalView.valueOfPolicyType contains any typeValue
 
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common

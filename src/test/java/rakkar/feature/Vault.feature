@@ -7,7 +7,7 @@ Feature: Vault
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
     * def requesterUserID = getRequesterIDResponse.response.data.id
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
 
@@ -47,14 +47,14 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
-    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":'#(dataBody.vault.approve_number)',"note":"AT Test"}
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
     * call read('Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
     * def vaultNameResponseWA = response.data.name
     * match vaultNameResponseWA == vaultName
     * def vaultTypeResponseWA = response.data.type
-    * match vaultTypeResponseWA == dataBody.vault.vault_type
+    * match vaultTypeResponseWA == testData.vault.vault_type
     * def vaultIDWA = response.data.id
 
   @RAKCON-10220 @AddNewVaultWithOutAdminSetup
@@ -64,14 +64,14 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
-    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(dataBody.vault.vault_type)',"approverNumber":0,"note":""}
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
     * call read('Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
     * def vaultNameResponseWOA = response.data.name
     * match vaultNameResponseWOA == vaultName
     * def vaultTypeResponseWOA = response.data.type
-    * match vaultTypeResponseWOA == dataBody.vault.vault_type
+    * match vaultTypeResponseWOA == testData.vault.vault_type
     * def vaultIDWOA = response.data.id
 
   @ignore @CreateVault-Common
@@ -125,7 +125,7 @@ Feature: Vault
     # ---- Check vault name, vault status, vault type, approver number should be same as created
     * match response.data.name == vaultNameResponseWA
     * match response.data.isPendingRequest == false
-    * match response.data.approverNumber == dataBody.vault.approve_number
+    * match response.data.approverNumber == testData.vault.approve_number
     * match response.data.type == vaultTypeResponseWA
     * match response.data.totalTransactionPending == 0
     # ---- After approval, missing policy should be false
@@ -273,14 +273,14 @@ Feature: Vault
     #Get a vault that has not edit vault pending request
     * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
     #Edit vault policy
-    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
     * def editVaultPolicy = call read('Vault.feature@EditVaultPolicy-Common')
-    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == dataBody.vault.newApproverNumber
+    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == testData.vault.newApproverNumber
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
     * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
     * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
-    * match editVaultPolicy.response.data.record.additionalData.data.note == dataBody.vault.editVaultNote
+    * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
   @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
   Scenario: Edit vault with not changed information
@@ -294,7 +294,7 @@ Feature: Vault
   @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
     * callonce read('Vault.feature@EditVaultPolicy')
-    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(dataBody.vault.editVaultNote)", "approveNumber" : #(dataBody.vault.newApproverNumber), "memberRequireIds" : [] }
+    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [] }
     * call read('Vault.feature@EditVaultPolicy-Common')
     Then match response.data.message == 'Exists pending requests'
 

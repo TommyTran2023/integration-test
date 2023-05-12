@@ -7,7 +7,7 @@ Feature: Account admin policy
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
     * def customerId = getRequesterIDResponse.response.data.customerId
-    * def dataBody = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-10939 @ViewAccountPolicy

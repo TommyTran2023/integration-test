@@ -116,6 +116,7 @@ Feature: HomePage
     When method DELETE
     Then status 200
     * match response.status == 'success'
+    * match response.data == true
 
   @RAKCON-10982 @ViewMarketPriceListing
   Scenario: View Market Prices listing

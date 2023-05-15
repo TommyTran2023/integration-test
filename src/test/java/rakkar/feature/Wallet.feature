@@ -162,7 +162,7 @@ Feature: Wallet
     And match symbolAdd == symbolView
     And match networkAdd == networkView
 
-  @RAKCON_10963 @CREATE_DEPOSIT_ADDRESS
+  @RAKCON-10963 @CREATE_DEPOSIT_ADDRESS
   Scenario: Create a deposit address
     * def addWallet = karate.callSingle('Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     * def walletId = addWallet.response.data.success[0].id
@@ -214,6 +214,17 @@ Feature: Wallet
     * match idActual == idExpected
     * match canCreateAddress == true
     * match totalCount == sizeAddress
+
+  @RAKCON-13405 @CREATE_DEPOSIT_ADDRESS_WITH_THE_SAME_NAME
+  Scenario: Cannot create a deposit address with the same name
+    * call read('Wallet.feature@CREATE_DEPOSIT_ADDRESS')
+    Given path 'core/address'
+    And request {"vaultId": "#(vaultId)", "walletId": "#(walletId)", "addressName": "#(nameActual)"}
+    When method POST
+    Then status 400
+    And match response.status == "error"
+    And match response.message == "ADDRESS_NAME_EXISTS"
+    And match response.errorCode == "ADDRESS_NAME_EXISTS"
 
   @RAKCON-10964 @HIDE_AN_ASSET
   Scenario: Hide an asset

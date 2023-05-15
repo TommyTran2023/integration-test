@@ -81,6 +81,19 @@
       "totalUSDYesterday":"##string"
     }
   },
+  "wallet": {
+    "tokenList" : {
+      "symbol" : "#string",
+      "icon" : "#string",
+      "networkImage" : "##string",
+      "id" : "#string",
+      "nativeAsset" : "#string",
+      "minimumAmount" : "#number",
+      "type" : "#string",
+      "name" : "#string",
+      "network" : "#string"
+    }
+  },
   "notification": {
     "transactions": {
       "deposit": "#boolean",

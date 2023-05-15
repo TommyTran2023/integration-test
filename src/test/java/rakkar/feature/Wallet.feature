@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: Wallet
 
   Background:
@@ -7,13 +7,15 @@ Feature: Wallet
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
+    * def schemaJson = read('classpath:data/schema.json')
 
-  @ignore @VIEW-LIST-ASSET
-  Scenario: View list asset
+  @RAKCON-13403 @VIEW-LIST-ASSET
+  Scenario: View list asset to add into vault
     Given path 'core/wallet/tokens/' + vaultId
     When method GET
     And params {limit: '10', offset: '0'}
     Then status 200
+    And match response.data.tokens contains schemaJson.wallet.tokenList
     * def assetId = response.data.tokens[0].id
     * def symbolView = response.data.tokens[0].symbol
     * def networkView = response.data.tokens[0].network

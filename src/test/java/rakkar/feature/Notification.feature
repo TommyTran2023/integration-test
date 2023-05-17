@@ -1,4 +1,4 @@
-@RAKCON-10583 @ignore
+@RAKCON-10583
 Feature: Notification
 
   Background:

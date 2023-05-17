@@ -63,11 +63,13 @@ Feature: View List My Request
     * match testData.viewListMyRequest.valueOfPolicyType contains any typeValue
 
   @ViewListMyRequest-Common @ignore
-  Scenario: Approve View - Common
+  Scenario: View My Request - Common
     Given path '/core/quorums'
     * request requestBody
     When method POST
     Then status 201
-    * match each $response.data.records[*].canApproveOrReject == false
+    * def pendingRequest = karate.jsonPath(response.data,"$.records[?(@.status=='PENDING')].canApproveOrReject")
+    # User can cancel themselves request that has Pending status => param "canApproveOrReject" should be true
+    * match each $pendingRequest == true
     * match each $response.data.records[*].businessRegistrationId == '#string'
     * match each $response.data.records[*].organizationName == '#string'

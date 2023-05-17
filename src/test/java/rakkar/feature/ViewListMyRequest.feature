@@ -63,7 +63,7 @@ Feature: View List My Request
     * match testData.viewListMyRequest.valueOfPolicyType contains any typeValue
 
   @ViewListMyRequest-Common @ignore
-  Scenario: Approve View - Common
+  Scenario: View My Request - Common
     Given path '/core/quorums'
     * request requestBody
     When method POST

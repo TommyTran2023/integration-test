@@ -141,8 +141,8 @@ pipeline {
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +
                 "${failedScenarios.join(', ')}"
-                def failedDetails = "*Failed Test:*\n" +
-                "${failedTestMsg.join('\n\n')}"
+                def failedDetails = ("*Failed Test:*\n" +
+                "${failedTestMsg.join('\n\n')}").take(20000)
 
                 slackSend(channel: "${SLACK_CHANNEL}",
                     color: 'danger',

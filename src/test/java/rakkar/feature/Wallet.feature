@@ -201,12 +201,14 @@ Feature: Wallet
     * def nameActual = response.data.address[sizeNumber].description
     * def assetIdActual = response.data.address[sizeNumber].assetId
     * def idActual = response.data.address[sizeNumber].id
+    * def network = response.data.address[sizeNumber].network
     #Check the expected value of variable
     * def newAddressExpected = createDepositAddress.response.data.address
     * def nameExpected = createDepositAddress.response.data.description
     * def idExpected = createDepositAddress.response.data.id
     * def assetIdExpected = createDepositAddress.response.data.assetId
     * def idExpected = createDepositAddress.response.data.id
+    * def networkExpected = createDepositAddress.response.data.network
     #Verify the actual variable and the expected variable
     * match newAddressActual == newAddressExpected
     * match nameActual == nameExpected
@@ -214,6 +216,7 @@ Feature: Wallet
     * match idActual == idExpected
     * match canCreateAddress == true
     * match totalCount == sizeAddress
+    * match  network == networkExpected
 
   @RAKCON-13405 @CREATE_DEPOSIT_ADDRESS_WITH_THE_SAME_NAME
   Scenario: Cannot create a deposit address with the same name

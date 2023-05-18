@@ -141,20 +141,22 @@ pipeline {
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +
                 "${failedScenarios.join(', ')}"
-                def failedDetails = ("*Failed Test:*\n" +
-                "${failedTestMsg.join('\n\n')}").take(20000)
+                def failedDetails = "*Failed Test:*\n" +
+                "${failedTestMsg.join('\n\n')}"
 
                 slackSend(channel: "${SLACK_CHANNEL}",
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
+
+                def failedDetailsTeams = failedDetails.take(20000 - failedScenariosMsg.length())
 
                 office365ConnectorSend color: '#a82e2e',
                     message: "${buildSummary}<br>${failedSummary}",
                     status: 'FAILED',
                     webhookUrl: "${TEAM_URL}",
                     factDefinitions:[
-                        [ name: "Failed Scenarios", template: "${failedScenarios.join(', ')}"],
-                        [ name: "Error", template: "${failedTestMsg.join('<br><br>')}"]
+                        [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(20000)}"],
+                        [ name: "Error", template: "${failedDetailsTeams}"]
                     ]
             }
         }

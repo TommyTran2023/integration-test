@@ -148,7 +148,10 @@ pipeline {
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                def failedDetailsTeams = failedDetails.take(20000 - failedScenariosMsg.length())
+                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(20000 - failedScenariosMsg.length())
+
+                echo "Failed Scenarios: " + failedScenariosMsg.take(20000)
+                echo "Failed Details: " + failedDetailsTeams
 
                 office365ConnectorSend color: '#a82e2e',
                     message: "${buildSummary}<br>${failedSummary}",

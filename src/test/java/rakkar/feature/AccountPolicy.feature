@@ -5,7 +5,7 @@ Feature: Account admin policy
     #@PRECOND_RAKCON-11352
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
+    * def getRequesterIDResponse = call read('GetUserInfo.feature')
     * def customerId = getRequesterIDResponse.response.data.customerId
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -48,6 +48,14 @@ Feature: Account admin policy
     Then status 400
     * match response.errorCode == 'EXISTS_PENDING_REQUEST'
 
+  @RAKCON-13612 @ViewAccountPolicyRequest
+  Scenario: View account policy request
+    Given path 'core/quorums/request/'+requestId
+    When method GET
+    Then status 200
+    * def approvalLogs = response.data.approvalLogs
+    * def initiator = karate.jsonPath(approvalLogs,"$.[?(@.status=='INITIATED')].userId")
+    * print initiator
 
 
 

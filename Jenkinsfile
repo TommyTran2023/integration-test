@@ -148,9 +148,9 @@ pipeline {
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(20000 - failedScenariosMsg.length())
+                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
 
-                echo "Failed Scenarios: " + failedScenariosMsg.take(20000)
+                echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
                 echo "Failed Details: " + failedDetailsTeams
 
                 office365ConnectorSend color: '#a82e2e',
@@ -158,7 +158,7 @@ pipeline {
                     status: 'FAILED',
                     webhookUrl: "${TEAM_URL}",
                     factDefinitions:[
-                        [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(20000)}"],
+                        [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
                         [ name: "Error", template: "${failedDetailsTeams}"]
                     ]
             }

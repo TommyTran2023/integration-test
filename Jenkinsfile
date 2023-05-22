@@ -8,9 +8,12 @@ def failedScenarios = []
 
 pipeline {
     agent any
+
     parameters {
         choice(name: 'ENV', choices: 'SIT\nUAT', description: 'Test Environment [SIT, UAT, PROD]')
+        booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
     }
+
     stages {
         stage ('Git Checkout') {
             steps {
@@ -47,8 +50,8 @@ pipeline {
                 def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
                 if (testResultAction != null) {
                     failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
-                    // remove karate testParallel()
                     for (test in failingTests) {
+                    // skip testParallel from Karate
                         if (!test.getName().contains("testParallel")) {
                             failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
                             failedScenarios.push(test.getName())
@@ -62,6 +65,7 @@ pipeline {
                 }
             }
 
+            // Jenkins report
             archiveArtifacts artifacts: 'target/karate-reports/**/*,target/cucumber-html-reports/**/*'
             publishHTML(target : [allowMissing: false,
                 alwaysLinkToLastBuild: true,
@@ -71,53 +75,57 @@ pipeline {
                 reportName: 'HTML Report',
                 reportTitles: 'Test Report'])
 
+            // record test result to Xray
             script {
-                for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                    def testName = "${ENV} (#${BUILD_NUMBER}) Integration Test results - ${file}"
-                    step([$class: 'XrayImportBuilder',
-                        endpointName: '/cucumber/multipart',
-                        importFilePath: "${file}",
-                        importInParallel: 'false',
-                        testImportInfo: """{
-                          "fields": {
-                              "project": {
-                                 "key": "RAKCON"
+                if (params.XRAY) {
+                    for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
+                        def testName = "${ENV} (#${BUILD_NUMBER}) Integration Test results - ${file}"
+                        step([$class: 'XrayImportBuilder',
+                            endpointName: '/cucumber/multipart',
+                            importFilePath: "${file}",
+                            importInParallel: 'false',
+                            testImportInfo: """{
+                              "fields": {
+                                  "project": {
+                                     "key": "RAKCON"
+                                  },
+                                  "summary": "${testName}",
+                                  "issuetype": {
+                                    "id": "10035"
+                                  }
                               },
-                              "summary": "${testName}",
-                              "issuetype": {
-                                "id": "10035"
+                              "xrayFields": {
+                                  "testPlanKey": "RAKCON-10583",
+                                  "environments": ["${ENV}"]
                               }
-                          },
-                          "xrayFields": {
-                              "testPlanKey": "RAKCON-10583",
-                              "environments": ["${ENV}"]
-                          }
-                        }""",
-                        inputTestInfoSwitcher: 'fileContent',
-                        importInfo: """{
-                            "fields": {
-                                "project": {
-                                    "key": "RAKCON"
+                            }""",
+                            inputTestInfoSwitcher: 'fileContent',
+                            importInfo: """{
+                                "fields": {
+                                    "project": {
+                                        "key": "RAKCON"
+                                    },
+                                  "summary": "${testName}",
+                                  "issuetype": {
+                                    "id": "10035"
+                                  },
+                                  "labels" : ["${ENV}"]
                                 },
-                              "summary": "${testName}",
-                              "issuetype": {
-                                "id": "10035"
-                              },
-                              "labels" : ["${ENV}"]
-                            },
-                          "xrayFields": {
-                              "testPlanKey": "RAKCON-10583",
-                              "environments": ["${ENV}"]
-                          }
-                        }""",
-                        inputInfoSwitcher: 'fileContent',
-                        serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221'])
+                              "xrayFields": {
+                                  "testPlanKey": "RAKCON-10583",
+                                  "environments": ["${ENV}"]
+                              }
+                            }""",
+                            inputInfoSwitcher: 'fileContent',
+                            serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221'])
+                    }
                 }
             }
         }
 
         changed {
             script {
+                // Back to Passed notification
                 def successMsg = "${ENV} Integration Test #${env.BUILD_NUMBER} back to PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
@@ -136,6 +144,7 @@ pipeline {
 
         failure {
             script {
+                // Failure details
                 def buildSummary = "${ENV} Integration Test #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
@@ -148,6 +157,7 @@ pipeline {
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
+                // MS Teams limitation
                 def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
 
                 echo "Failed Scenarios: " + failedScenariosMsg.take(15000)

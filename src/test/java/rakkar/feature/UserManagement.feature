@@ -6,14 +6,6 @@
       * def Collections = Java.type('java.util.Collections')
       * def schemaJson = read('classpath:data/schema.json')
 
-#    @ignore @GetAccountMe
-#    Scenario: Get basic information
-#      * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-#      Given path 'auth/account/me'
-#      When method GET
-#      Then status 200
-#      * def userId = response.data.id
-
     @RAKCON-11799 @User_listing
       Scenario: View user listing
       * def query = { limit:'10', offset: '0'}

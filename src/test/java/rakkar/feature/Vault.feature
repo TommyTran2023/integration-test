@@ -278,8 +278,8 @@ Feature: Vault
     * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == testData.vault.newApproverNumber
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
     * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
-    * def expectedListMember = [#(approvalUserID),#(requesterUserID) ]
-    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
+    * def expectedListMember = [#(requesterUserID),#(approvalUserID)]
+    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
   @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo

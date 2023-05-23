@@ -4,7 +4,7 @@ Feature: View List My Request
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def requesterInformation = call read('GetRequesterInfo.feature@GetRequesterInfo')
+    * def requesterInformation = call read('GetUserInfo.feature@GetRequesterInfo')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 

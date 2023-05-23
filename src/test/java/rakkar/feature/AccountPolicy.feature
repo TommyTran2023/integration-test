@@ -5,7 +5,7 @@ Feature: Account admin policy
     #@PRECOND_RAKCON-11352
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetUserInfo.feature')
+    * def getRequesterIDResponse = call read('GetUserInfo.feature@GetUserInfo')
     * def customerId = getRequesterIDResponse.response.data.customerId
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -50,12 +50,15 @@ Feature: Account admin policy
 
   @RAKCON-13612 @ViewAccountPolicyRequest
   Scenario: View account policy request
+    * call read('AccountPolicy.feature@EditAccountPolicy')
     Given path 'core/quorums/request/'+requestId
     When method GET
     Then status 200
+    * match response.status == 'success'
+    * match response.data.id == requestId
+    * match response.data.action == testData.account_policy.action
     * def approvalLogs = response.data.approvalLogs
     * def initiator = karate.jsonPath(approvalLogs,"$.[?(@.status=='INITIATED')].userId")
-    * print initiator
 
 
 

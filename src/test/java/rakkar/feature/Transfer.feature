@@ -3,7 +3,7 @@ Feature: Transfer
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('UserManagement.feature@GetAccountMe')
+    * call read('GetUserInfo.feature@GetUserInfo')
     * def testData = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER

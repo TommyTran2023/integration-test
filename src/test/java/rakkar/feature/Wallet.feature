@@ -286,6 +286,19 @@ Feature: Wallet
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
+  @RAKCON-13932 @PRE_REQUISITE_NETWORK
+  Scenario: Check pre-requisite for networks
+    * call read('Wallet.feature@VIEW-LIST-ASSET')
+    * def body = { "tokenIds":["#(assetId)"]}
+    Given path 'core/wallet/assets-pre-requisite/' + vaultId
+    And request body
+    When method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+    * match response.data contains schemaJson.wallet.checkPre_requisite
+
+
 
 
 

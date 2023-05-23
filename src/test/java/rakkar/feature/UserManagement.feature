@@ -6,14 +6,6 @@
       * def Collections = Java.type('java.util.Collections')
       * def schemaJson = read('classpath:data/schema.json')
 
-    @ignore @GetAccountMe
-    Scenario: Get basic information
-      * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-      Given path 'auth/account/me'
-      When method GET
-      Then status 200
-      * def userId = response.data.id
-
     @RAKCON-11799 @User_listing
       Scenario: View user listing
       * def query = { limit:'10', offset: '0'}
@@ -116,7 +108,7 @@
     # EDIT OWN PROFILE
     @RAKCON-11020 @Edit_own_profile
       Scenario: Check edit own profile - edit avatar
-      * call read('UserManagement.feature@GetAccountMe')
+      * call read('GetUserInfo.feature@GetUserInfo')
       * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
       * call read('Common.feature@UPLOAD_LINK')
       * call read('UploadFile.feature@PUT_VIDEO')
@@ -237,7 +229,7 @@
 
     @ignore @View_My_Request_Edit_User
     Scenario: View my request for type edit user
-      * call read('UserManagement.feature@GetAccountMe')
+      * call read('GetUserInfo.feature@GetUserInfo')
       Given path 'core/quorums'
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
       And request body
@@ -248,7 +240,7 @@
 
     @ignore @View_My_Request_Remove_User
     Scenario: View my request for remove transfer
-      * call read('UserManagement.feature@GetAccountMe')
+      * call read('GetUserInfo.feature@GetUserInfo')
       Given path 'core/quorums'
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
       And request body

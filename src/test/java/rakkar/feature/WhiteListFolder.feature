@@ -5,8 +5,8 @@ Feature: WhiteList Folder
     #@PRECOND_RAKCON-10582
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def user = call read('UserManagement.feature@GetAccountMe')
-    * def userId = user.response.data.id
+    * call read('GetUserInfo.feature@GetUserInfo')
+#    * def userId = user.response.data.id
     * def testData = read('classpath:data/data_test.json')
     * def schemaJson = read('classpath:data/schema.json')
 

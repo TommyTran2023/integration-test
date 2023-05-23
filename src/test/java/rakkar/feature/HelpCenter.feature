@@ -5,7 +5,7 @@ Feature:Help Center
     * url baseURL
     * karate.callSingle('UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = karate.callSingle('GetRequesterInfo.feature')
+    * def getRequesterIDResponse = call read('GetUserInfo.feature')
     * def requesterUserEmail = getRequesterIDResponse.response.data.email
     * def schemaJson = read('classpath:data/schema.json')
     * def now = function(){ return java.lang.System.currentTimeMillis() }

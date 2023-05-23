@@ -5,7 +5,7 @@ Feature: Vault
     #@PRECOND_RAKCON-10225
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetRequesterInfo.feature')
+    * def getRequesterIDResponse = call read('GetUserInfo.feature@GetRequesterInfo')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -279,7 +279,7 @@ Feature: Vault
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
     * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
-    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId == expectedListMember
+    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
   @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo

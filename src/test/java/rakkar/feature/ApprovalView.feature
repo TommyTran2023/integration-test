@@ -4,7 +4,7 @@ Feature: Approval View
   Background:
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
-    * def requesterInformation = call read('GetRequesterInfo.feature@GetRequesterInfo')
+    * def requesterInformation = call read('GetUserInfo.feature@GetRequesterInfo')
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
 

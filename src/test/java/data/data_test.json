@@ -17,7 +17,8 @@
     "request_nameDisplay": "Add Whitelisted Address"
   },
   "account_policy": {
-    "approve_number": 2
+    "approve_number": 2,
+    "action": "EDIT_ACCOUNT_POLICY"
   },
   "transfer": {
     "from_screen_source": "SOURCE_TRANSFER",

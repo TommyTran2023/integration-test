@@ -19,8 +19,8 @@ Feature: Notification
 
   @RAKCON-11007 @ViewNotificationCenterRequest
   Scenario: View Notification Center - Request
-    * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def createVaultRequestId = call read('Vault.feature@GetCreateVaultRequestID')
+    * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == createVaultRequestId.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.vault.labelInApp

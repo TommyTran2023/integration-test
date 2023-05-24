@@ -78,7 +78,7 @@
       "type":"#string",
       "approverNumber":"#number",
       "name":"#string",
-      "totalUSDYesterday":"##string"
+      "totalUSDYesterday":"##number"
     }
   },
   "wallet": {

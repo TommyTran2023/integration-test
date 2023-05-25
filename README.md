@@ -33,7 +33,18 @@ To run the test script in parallel, number of thread can be passed from command 
 ```
 mvn test -Dkarate.env=qa -Dthread=4
 ```
-To run specific test case or test execution, click on Run icon in specific scenario/feature
+
+To run only specific feature file:
+```
+mvn test -Dkarate.env=qa -Dkarate.options="classpath:rakkar/feature/Wallet.feature"
+```
+
+To run only specific tag:
+```
+mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
+```
+
+You can also click on Run icon in specific scenario/feature to run specific test case or test execution
 
 ### Setup user and data 
 For each environment, it should have at least 1 user for send request, 1 user do approve.

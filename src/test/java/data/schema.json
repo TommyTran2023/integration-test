@@ -92,6 +92,12 @@
       "type" : "#string",
       "name" : "#string",
       "network" : "#string"
+    },
+    "checkPre_requisite": {
+      "isAssetPreRequisite":"#boolean",
+      "fails":"#[]",
+      "pass":"#[]",
+      "nonNativeIdIsRequisite":"#[]"
     }
   },
   "notification": {

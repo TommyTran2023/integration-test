@@ -66,8 +66,6 @@ Feature: Generate Challenge Answer for Biometric
     Given path 'core/transactions/tiers-signer'
     When method GET
     Then status 200
-    * def amount_low = response.data[0].to
-    * def amount_medium = response.data[1].to
 
   @ignore @VIDEO_SPEECH_PROMPT
   Scenario: Video text sentence
@@ -86,6 +84,20 @@ Feature: Generate Challenge Answer for Biometric
     And response.status == "success"
     * def uploadUrl = response.data.uploadUrl
     * def uploadToken = response.data.uploadToken
+
+  @ignore @CACULATE_LIMIT_TRANSFER
+  Scenario: Caculate the limit transfer
+    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":10,"destinationId":'#(destinationId_hot)'}
+    Given path 'core/transactions/estimated-fee'
+    And request body_estimate_fee
+    When method POST
+    Then status 201
+    * def tokenPrice = response.data.totalToUSD / 10
+    * def tier_signer = call read('Common.feature@TIERS_SIGNER')
+    * def amount_low = Math.round(tier_signer.response.data[0].to / tokenPrice)
+    * def amount_medium = Math.round(tier_signer.response.data[1].to / tokenPrice)
+    * def amount_high = Math.round(tier_signer.response.data[2].from / tokenPrice)
 
 
 

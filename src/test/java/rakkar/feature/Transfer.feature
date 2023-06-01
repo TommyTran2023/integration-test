@@ -4,6 +4,7 @@ Feature: Transfer
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('GetUserInfo.feature@GetUserInfo')
+    * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
 
     #TCs: GET LIST ASSET FOR TRANSFER

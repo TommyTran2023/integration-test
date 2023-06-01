@@ -20,9 +20,6 @@
       "dateOfBirth": "2023-02-01"
     },
     "adminUsername": "PASSPORT65746",
-    "amount_low": 10,
-    "amount_medium": 15,
-    "amount_high": 50,
     "sourceId_hot": "8b4e1eaa-b84a-4517-a959-407c1f42d7f0",
     "destinationId_hot": "c4240d10-14d7-4254-aee4-8552a94f90c9",
     "sourceId_cold": "4c014c88-0744-4785-be1d-b91e285d8ecf",
@@ -53,9 +50,6 @@
       "dateOfBirth": "1999-01-01"
     },
     "adminUsername": "PASSPORT123456",
-    "amount_low": 50,
-    "amount_medium": 500,
-    "amount_high": 1000,
     "sourceId_hot": "c819feb1-a494-4df7-b34d-b33bd05a6872",
     "destinationId_hot": "d3fef00c-d8d1-450e-933d-ff36ada50e16",
     "sourceId_cold": "61f7f91d-c67b-4508-b1cb-27924f706ab2",

@@ -71,7 +71,7 @@ Feature: Transfer
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
     * call read('Transfer.feature@Total_estimate_fee_common')
 
-    #TCs: Total estimate fee: Cold to Hot
+     #TCs: Total estimate fee: Cold to Hot
   @RAKCON-13160 @Total_estimate_fee_cold_hot
   Scenario: Transfer Cold to hot - Total estimated fee
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":#(amount_low),"destinationId":'#(destinationId_hot)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}

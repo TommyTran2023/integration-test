@@ -24,7 +24,7 @@ Feature: Transaction
     Scenario: Filter transaction by value
       * def query = { limit:'10', offset: '0', priceFrom:'0', priceTo: '100'}
       * call read('Transaction.feature@Filter_transaction_common')
-      * match each $response.data.transactions[*].amount == '#? _ <= 100'
+      * match each $response.data.transactions[*].amountUSD == '#? _ <= 100'
 
   @RAKCON-12326 @Filter_transaction_by_date_last30days
   Scenario: Filter transaction by date

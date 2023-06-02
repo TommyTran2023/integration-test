@@ -3,7 +3,7 @@ Feature: Transfer
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('GetUserInfo.feature@GetRequesterInfo')
+    * call read('GetUserInfo.feature@GetUserInfo')
     * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
 
@@ -214,7 +214,7 @@ Feature: Transfer
   @RAKCON-11405 @Transfer_high_value
    Scenario: Transfer high - Submit transfer
     * call read('Common.feature@VIDEO_SPEECH_PROMPT')
-    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(requesterID)', type: 'VIDEO'}
+    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_high),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
@@ -286,7 +286,7 @@ Feature: Transfer
   @ignore @View_My_Request_Transfer
   Scenario: View my request for type transfer
     Given path 'core/quorums'
-    * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(requesterID)',status : ["PENDING"],isHistory : true }
+    * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
     And request body
     When method POST
     Then status 201

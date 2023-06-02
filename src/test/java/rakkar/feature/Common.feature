@@ -96,8 +96,8 @@ Feature: Generate Challenge Answer for Biometric
     * def tokenPrice = response.data.totalToUSD / 10
     * def tier_signer = call read('Common.feature@TIERS_SIGNER')
     * def amount_low = Math.round(tier_signer.response.data[0].to / tokenPrice)
-    * def amount_medium = Math.round(tier_signer.response.data[1].to / tokenPrice)
     * def amount_high = Math.round(tier_signer.response.data[2].from / tokenPrice)
+    * def amount_medium = amount_high - 1
 
 
 

@@ -141,6 +141,15 @@
       },
         "vaultLVCheck":"#[]"
      }
+  },
+  "networkManagament": {
+    "depositRouting": {
+      "id" : "#string",
+      "vaultaccess" : "#boolean",
+      "vaultExternalId" : "#string",
+      "name" : "#string",
+      "type" : "#string"
+    }
   }
 
 }

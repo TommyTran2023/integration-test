@@ -41,6 +41,6 @@ Feature: Network Management
     When method POST
     Then status 200
     And match response.status == "success"
-    And match response.data.networkFullName contains #(profileName)
+    And match response.data.networkFullName contains '#(profileName)'
 
 

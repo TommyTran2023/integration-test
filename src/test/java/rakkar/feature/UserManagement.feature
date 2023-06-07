@@ -8,7 +8,7 @@
 
     @RAKCON-11799 @User_listing
       Scenario: View user listing
-      * def query = { limit:'10', offset: '0'}
+      * def query = { limit:'10', offset: '0', status: 'ACTIVE'}
       Given path 'auth/account/users'
       And params query
       When method GET
@@ -122,7 +122,8 @@
     # CHANGE ROLE
     @RAKCON-12903 @Review_change_role
        Scenario: Change Role - Check review change role
-         * call read('UserManagement.feature@User_listing')
+         * def data = call read('UserManagement.feature@User_listing')
+         * def userId = data.response.data.users[1].userId
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
          * call read('UserManagement.feature@Review_update_user_common')
          And match response.data contains schemaJson.userManagement.review_edit_user
@@ -130,7 +131,8 @@
 
     @RAKCON-11021 @Change_role
        Scenario: Change Role - Check submit change
-      * call read('UserManagement.feature@User_listing')
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[1].userId
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Submit_edit_user_common')
 
@@ -141,7 +143,6 @@
     # ADD VAULT ACCESS
     @ignore @List_vault_unassign
     Scenario: Get list vault unassign
-      * call read('UserManagement.feature@User_listing')
       * def query = { limit:'10', offset: '0', userId:'#(userId)'}
       Given path 'core/vault/unassigned'
       And params query
@@ -152,6 +153,8 @@
 
     @RAKCON-13107 @Review_add_vault_access
     Scenario: Change vault access - Review add vault access
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[2].userId
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Review_update_user_common')
@@ -160,6 +163,8 @@
 
     @RAKCON-11035 @Add_vault_access
     Scenario: Check add vault access - Submit request
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[2].userId
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
       * call read('UserManagement.feature@Submit_edit_user_common')
@@ -171,6 +176,8 @@
     # REMOVE VAULT ACCESS
     @RAKCON-13108 @Review_remove_vault_access
     Scenario: Change vault access - Review remove vault access
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[3].userId
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Review_update_user_common')
@@ -178,6 +185,8 @@
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[3].userId
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
       * call read('UserManagement.feature@Submit_edit_user_common')
@@ -189,14 +198,16 @@
     # REMOVE ACCOUNT ACCESS
     @RAKCON-13135 @Review_remove_account_access
     Scenario: Review remove account access
-      * call read('UserManagement.feature@User_listing')
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[4].userId
       * def body = { "reason":'',"isRemoveAccountAccess":true}
       * call read('UserManagement.feature@Review_update_user_common')
       And match response.data contains schemaJson.userManagement.review_remove_account
 
     @RAKCON-11025 @Remove_account_access
     Scenario: Check remove account access - Submit
-      * call read('UserManagement.feature@User_listing')
+      * def data = call read('UserManagement.feature@User_listing')
+      * def userId = data.response.data.users[4].userId
       * def body = { "reason":'Note',"isRemoveAccountAccess":true}
       * call read('UserManagement.feature@Submit_edit_user_common')
 

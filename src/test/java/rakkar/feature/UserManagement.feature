@@ -14,11 +14,9 @@
       When method GET
       Then status 200
       And match response.status == "success"
-      And match response.data.users[0].name == schemaJson.userManagement.name
-      And match response.data.users[0].role == schemaJson.userManagement.role
-      And match response.data.users[0].isLostDevice == schemaJson.userManagement.isLostDevice
-      * def name = response.data.users[0].name
-      * def userId = response.data.users[0].userId
+      * match each $response.data.users[*].name == schemaJson.userManagement.name
+      * match each $response.data.users[*].role == schemaJson.userManagement.role
+      * match each $response.data.users[*].isLostDevice == schemaJson.userManagement.isLostDevice
 
     @RAKCON-11017 @Search_user_list
     Scenario: Check search for user list

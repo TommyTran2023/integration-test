@@ -149,6 +149,13 @@
       "vaultExternalId" : "#string",
       "name" : "#string",
       "type" : "#string"
+    },
+    "profileListing": {
+      "isDiscoverable" : "#boolean",
+      "id" : "#string",
+      "networkName" : "#string",
+      "numConn" : "#number",
+      "type" : "#string"
     }
   }
 

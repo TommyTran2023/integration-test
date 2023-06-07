@@ -41,6 +41,28 @@ Feature: Network Management
     When method POST
     Then status 200
     And match response.status == "success"
-    And match response.data.networkFullName contains '#(profileName)'
+    And match response.data.networkFullName contains "#(profileName)"
+
+  @RAKCON-14979 @ProfileListing
+  Scenario: Check profile listing
+    * def profile_query = { limit:'10', offset: '0'}
+    * call read('NetworkManagement.feature@ProfileListingCommon')
+
+  @RAKCON-14980 @SearchProfile
+  Scenario: Check search profile
+    * def keyword = "Profile"
+    * def profile_query = { limit:'10', offset: '0', keyword :'#(keyword)'}
+    * call read('NetworkManagement.feature@ProfileListingCommon')
+    * match each $response.data.networks[*].networkName contains "#(keyword)"
+
+  @ignore @ProfileListingCommon
+    Scenario: Check profile listing
+      Given path 'network/networks'
+      And params profile_query
+      When method GET
+      Then status 200
+      And match response.status == "success"
+      And match response.data.networks contains schemaBody.networkManagament.profileListing
+
 
 

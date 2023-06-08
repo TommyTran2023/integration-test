@@ -20,7 +20,9 @@
 
     @RAKCON-11017 @Search_user_list
     Scenario: Check search for user list
-      * call read('UserManagement.feature@User_listing')
+      * def user = call read('UserManagement.feature@User_listing')
+      * def name = user.response.data.users[0].name
+      * def userId = user.response.data.users[0].userId
       * def query = { limit:'10', offset: '0',keyword: '#(name)'}
       Given path 'auth/account/users'
       And params query

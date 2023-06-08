@@ -95,9 +95,12 @@ Feature: Generate Challenge Answer for Biometric
     Then status 201
     * def tokenPrice = response.data.totalToUSD / 10
     * def tier_signer = call read('Common.feature@TIERS_SIGNER')
-    * def amount_low = Math.round(tier_signer.response.data[0].to / tokenPrice)
-    * def amount_high = Math.round(tier_signer.response.data[2].from / tokenPrice)
-    * def amount_medium = amount_high - 1
+    * def limit_low = tier_signer.response.data[0].to - 1
+    * def limit_medium = tier_signer.response.data[1].to - 1
+    * def limit_high = tier_signer.response.data[2].from
+    * def amount_low = Math.round(limit_low / tokenPrice)
+    * def amount_medium = Math.round(limit_medium / tokenPrice)
+    * def amount_high = Math.round(limit_high / tokenPrice)
 
 
 

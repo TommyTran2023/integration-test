@@ -86,7 +86,7 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT HOT TO HOT
   @RAKCON-11390 @Transfer_value_hot_to_hot
   Scenario: Transfer Hot to hot - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -107,7 +107,7 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
   Scenario: Transfer Hot to cold - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -128,7 +128,7 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
   Scenario: Transfer Cold to hot - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -149,7 +149,7 @@ Feature: Transfer
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
   Scenario: Transfer Cold to cold - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'
@@ -181,7 +181,7 @@ Feature: Transfer
 
   @RAKCON-11402 @Transfer_medium_value
   Scenario: Transfer medium - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_medium),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_medium),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -217,7 +217,7 @@ Feature: Transfer
     * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_high),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_high),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -249,7 +249,7 @@ Feature: Transfer
 
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(testData.transfer.withdraw.fee)'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/transactions'

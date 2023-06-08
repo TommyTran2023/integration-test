@@ -47,9 +47,10 @@ mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
 
 ### Setup user and data 
-For each environment, it should have at least 1 user for send request, 1 user do approve.
-1. Create new users. Input the passcode of user in env_data.json > {env} > passcode.
-2. Add new data user in env_data.json
+For each environment, it should have at least 5 users in the company using for test.There are 2 users need to get detailed information: 
+1 user for send request, 1 user do approve. 
+1. Create at least 5 users. Input the passcode of 2 specific users in env_data.json > {env} > passcode.
+2. Add 2 specific data user in env_data.json
 Note: In UAT, add users in "AT Rakkar" customer. In QA (SIT), add users in "RakkaR" customer
 
 ### Setup data transfer

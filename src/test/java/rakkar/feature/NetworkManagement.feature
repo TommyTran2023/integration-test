@@ -94,6 +94,18 @@ Feature: Network Management
     Then status 201
     And match response.status == "success"
     And match response.data.requestId == "#string"
+    
+  @RAKCON-15107 @Editprofilesetting
+  Scenario: Edit profile setting
+    * def value = call read('NetworkManagement.feature@CheckAddProfile')
+    * def profileId = value.response.data.id
+    * def body = {"isDiscoverable" : false }
+    Given path 'network/networks/setting/‘ + profileId
+    And request body
+    When method PUT
+    Then status 200
+    And match response.status == "success"
+    And match response.data.success == true
 
 
 

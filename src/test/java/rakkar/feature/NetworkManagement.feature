@@ -4,6 +4,7 @@ Feature: Network Management
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('GetUserInfo.feature@GetUserInfo')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
@@ -77,6 +78,24 @@ Feature: Network Management
     And match response.data.id == '#(networkId)'
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
+
+  @RAKCON-15077 @Canceleditprofilerouting
+  Scenario: Cancel edit profile routing
+    * def value = "SET_NETWORK_PROFILE_ROUTING"
+    * def nameDisplay = "Set network profile routing"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+
+  @ignore @View_My_Request_Network
+  Scenario: View my request for type transfer
+    Given path 'core/quorums'
+    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+    And request body
+    When method POST
+    Then status 201
+    And match response.data.records[0].type.value == '#(value)'
+    And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
+    * def requestId = response.data.records[0].id
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
 
 

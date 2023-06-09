@@ -64,5 +64,19 @@ Feature: Network Management
       And match response.status == "success"
       And match response.data.networks contains schemaBody.networkManagament.profileListing
 
+  @RAKCON-14981 @ViewProfileDetail
+  Scenario: View profile detail
+    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def networkId = value.response.data.network[0].id
+    * def isDiscoverable = value.response.data.network[0].isDiscoverable
+    * def networkName = value.response.data.network[0].networkName
+    Given path 'network/networks' + networkId
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.id == '#(networkId)'
+    And match response.data.networkName == '#(networkName)'
+    And match response.data.isDiscoverable == '#(isDiscoverable)'
+
 
 

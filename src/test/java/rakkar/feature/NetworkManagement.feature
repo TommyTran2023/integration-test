@@ -83,12 +83,12 @@ Feature: Network Management
     * def value = call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = value.response.data.id
     * def body = {"isDiscoverable" : false }
-    * Given path 'network/networks/setting/‘ + profileId
-    * And request body
-    * When method PUT
-    * Then status 200
-    * And match response.status == "success"
-    * And match response.data.success == true
+    Given path 'network/networks/setting/‘ + profileId
+    And request body
+    When method PUT
+    Then status 200
+    And match response.status == "success"
+    And match response.data.success == true
 
 
 

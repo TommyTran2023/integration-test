@@ -1,4 +1,4 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Network Management
 
   Background:
@@ -31,17 +31,19 @@ Feature: Network Management
 
   @RAKCON-14852 @CheckAddProfile
   Scenario: Check add profile
+    * call read('Common.feature@FIDO-Requester')
     * def vaultData = call read('NetworkManagement.feature@DepositRouting')
     * def vaultId = vaultData.response.data.vaults[0].id
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def profileName = 'Profile-' + now()
-    * def body = {"isDiscoverable" : true,"networkName": '#(profileName)', vaultId: "#(vaultId)" }
+    * def body = {"isDiscoverable" : true,"networkName": '#(profileName)', "vaultId": "#(vaultId)" }
     Given path 'network/networks'
+    * header challenge-answer = challengeAnswerRequest
     And request body
     When method POST
-    Then status 200
+    Then status 201
     And match response.status == "success"
-    And match response.data.networkFullName contains "#(profileName)"
+    And match response.data.networkFullName == "#regex .*"+ profileName +".*"
 
   @RAKCON-14979 @ProfileListing
   Scenario: Check profile listing
@@ -50,10 +52,10 @@ Feature: Network Management
 
   @RAKCON-14980 @SearchProfile
   Scenario: Check search profile
-    * def keyword = "Profile"
+    * def keyword = "Profile-"
     * def profile_query = { limit:'10', offset: '0', keyword :'#(keyword)'}
     * call read('NetworkManagement.feature@ProfileListingCommon')
-    * match each $response.data.networks[*].networkName contains "#(keyword)"
+    * match each $response.data.networks[*].networkName == "#regex .*"+ keyword +".*"
 
   @ignore @ProfileListingCommon
     Scenario: Check profile listing
@@ -67,16 +69,31 @@ Feature: Network Management
   @RAKCON-14981 @ViewProfileDetail
   Scenario: View profile detail
     * def value = call read('NetworkManagement.feature@ProfileListing')
-    * def networkId = value.response.data.network[0].id
-    * def isDiscoverable = value.response.data.network[0].isDiscoverable
-    * def networkName = value.response.data.network[0].networkName
-    Given path 'network/networks' + networkId
+    * def networkId = value.response.data.networks[0].id
+    * def isDiscoverable = value.response.data.networks[0].isDiscoverable
+    * def networkName = value.response.data.networks[0].networkName
+    Given path 'network/networks/' + networkId
     When method GET
     Then status 200
     And match response.status == "success"
     And match response.data.id == '#(networkId)'
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
+
+  @RAKCON-15076 @Editprofilerouting
+  Scenario: Edit profile routing
+    * call read('NetworkManagement.feature@CheckAddProfile')
+    * def profileId = response.data.id
+    * def body = {"internalNote" :'Note',"networkId": '#(profileId)', "vaultId": "#(vaultId)" }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'network/networks/set-profile-routing'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.requestId == "#string"
 
 
 

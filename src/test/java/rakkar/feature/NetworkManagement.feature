@@ -1,9 +1,10 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Network Management
 
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('GetUserInfo.feature@GetUserInfo')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
@@ -57,7 +58,7 @@ Feature: Network Management
     * call read('NetworkManagement.feature@ProfileListingCommon')
     * match each $response.data.networks[*].networkName == "#regex .*"+ keyword +".*"
 
-  @ignore @ProfileListingCommon
+  @ProfileListingCommon
     Scenario: Check profile listing
       Given path 'network/networks'
       And params profile_query
@@ -66,7 +67,7 @@ Feature: Network Management
       And match response.status == "success"
       And match response.data.networks contains schemaBody.networkManagament.profileListing
 
-  @RAKCON-14981 @ViewProfileDetail
+  @ignore @RAKCON-14981 @ViewProfileDetail
   Scenario: View profile detail
     * def value = call read('NetworkManagement.feature@ProfileListing')
     * def networkId = value.response.data.networks[0].id
@@ -106,6 +107,24 @@ Feature: Network Management
     Then status 200
     And match response.status == "success"
     And match response.data.success == true
+
+  @RAKCON-15077 @Canceleditprofilerouting
+  Scenario: Cancel edit profile routing
+    * def value = "SET_NETWORK_PROFILE_ROUTING"
+    * def nameDisplay = "Set network profile routing"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @ignore @View_My_Request_Network
+  Scenario: View my request for type network
+    Given path 'core/quorums'
+    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+    And request body
+    When method POST
+    Then status 201
+    And match response.data.records[0].type.value == '#(value)'
+    And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
+    * def requestId = response.data.records[0].id
 
   @RAKCON-15108 @Getdiscoverablenetwork
   Scenario: Get discoverable network id

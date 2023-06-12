@@ -1,4 +1,4 @@
-@RAKCON-10583
+@ignore @RAKCON-10583
 Feature: Network Management
 
   Background:
@@ -67,7 +67,7 @@ Feature: Network Management
       And match response.status == "success"
       And match response.data.networks contains schemaBody.networkManagament.profileListing
 
-  @ignore @RAKCON-14981 @ViewProfileDetail
+  @RAKCON-14981 @ViewProfileDetail
   Scenario: View profile detail
     * def value = call read('NetworkManagement.feature@ProfileListing')
     * def networkId = value.response.data.networks[0].id

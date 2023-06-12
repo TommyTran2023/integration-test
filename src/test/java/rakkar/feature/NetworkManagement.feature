@@ -58,7 +58,7 @@ Feature: Network Management
     * call read('NetworkManagement.feature@ProfileListingCommon')
     * match each $response.data.networks[*].networkName == "#regex .*"+ keyword +".*"
 
-  @ProfileListingCommon
+  @ignore @ProfileListingCommon
     Scenario: Check profile listing
       Given path 'network/networks'
       And params profile_query

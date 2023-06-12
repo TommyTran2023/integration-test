@@ -92,6 +92,11 @@ Feature: Reject Request
     * call read('UserManagement.feature@Remove_account_access')
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @RAKCON-15105 @RejectEditProfileRouting
+  Scenario: Reject request - Reject edit profile routing
+    * def value = call read('NetworkManagement.feature@Editprofilerouting')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
 
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common

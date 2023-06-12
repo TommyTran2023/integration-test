@@ -84,9 +84,10 @@ Feature: Network Management
     * def value = "SET_NETWORK_PROFILE_ROUTING"
     * def nameDisplay = "Set network profile routing"
     * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   @ignore @View_My_Request_Network
-  Scenario: View my request for type transfer
+  Scenario: View my request for type network
     Given path 'core/quorums'
     * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
     And request body
@@ -95,7 +96,8 @@ Feature: Network Management
     And match response.data.records[0].type.value == '#(value)'
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
-    * call read('CancelRequest.feature@CancelRequestCommon')
+
+
 
 
 

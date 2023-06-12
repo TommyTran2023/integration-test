@@ -81,7 +81,7 @@ Feature: Network Management
 
   @RAKCON-15110 @ViewListNetworkConnection
   Scenario: View list network connection
-    * def value = call read ('NetworkManagement.feature@ProfileListing')
+    * def value = call read('NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
     * def query = { limit:'10', offset: '0' }
     Given path 'network/networks/' + profileId + 'connections'

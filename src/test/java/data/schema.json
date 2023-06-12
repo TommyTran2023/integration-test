@@ -156,7 +156,16 @@
       "networkName" : "#string",
       "numConn" : "#number",
       "type" : "#string"
-    }
-  }
+    },
+    "networkConnection": {
+      "counterpartyName" : "#string",
+      "status" : "#string",
+      "networkName" : "#string",
+      "id" : "#string",
+      "networkFullName" : "#string",
+      "vaultname" : "#string",
+      "type" : "#string"
+}
+}
 
 }

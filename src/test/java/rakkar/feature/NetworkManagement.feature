@@ -134,8 +134,8 @@ Feature: Network Management
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.id == #(networkConnectionId)
-    And match response.data.networkId == #(profileId)
+    And match response.data.id == '#(networkConnectionId)'
+    And match response.data.networkId == '#(profileId)'
 
 
 

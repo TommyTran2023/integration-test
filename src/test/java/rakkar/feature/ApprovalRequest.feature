@@ -105,7 +105,7 @@ Feature: Approval Request
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @ignore @RAKCON-15106 @ApprovalEditProfileRouting
-  Scenario: Approve]al -  Edit profile routing
+  Scenario: Approval -  Edit profile routing
     * def value = call read('NetworkManagement.feature@Editprofilerouting')
     * def requestId = value.response.data.requestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')

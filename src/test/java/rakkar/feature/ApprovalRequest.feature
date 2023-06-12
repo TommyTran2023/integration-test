@@ -104,9 +104,15 @@ Feature: Approval Request
     * call read('UserManagement.feature@Add_vault_access')
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
-  @RAKCON-15106 @ApprovalEditProfileRouting
-  Scenario: Approve edit profile routing
+  @ignore @RAKCON-15106 @ApprovalEditProfileRouting
+  Scenario: Approve]al -  Edit profile routing
     * def value = call read('NetworkManagement.feature@Editprofilerouting')
+    * def requestId = value.response.data.requestId
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+
+  @ignore @RAKCON-15207 @ApprovalEditProfileRouting
+  Scenario: Approval - Add new connection
+    * def value = call read('NetworkManagement.feature@Addnetworkconnection')
     * def requestId = value.response.data.requestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 

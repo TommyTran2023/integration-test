@@ -110,7 +110,7 @@ Feature: Approval Request
     * def requestId = value.response.data.requestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
-  @ignore @RAKCON-15207 @ApprovalEditProfileRouting
+  @ignore @RAKCON-15207 @ApprovalAddnewconnection
   Scenario: Approval - Add new connection
     * def value = call read('NetworkManagement.feature@Addnetworkconnection')
     * def requestId = value.response.data.requestId

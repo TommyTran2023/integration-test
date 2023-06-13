@@ -81,24 +81,6 @@ Feature: Network Management
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
 
-  @RAKCON-15077 @Canceleditprofilerouting
-  Scenario: Cancel edit profile routing
-    * def value = "SET_NETWORK_PROFILE_ROUTING"
-    * def nameDisplay = "Set network profile routing"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
-
-  @ignore @View_My_Request_Network
-  Scenario: View my request for type network
-    Given path 'core/quorums'
-    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-    And request body
-    When method POST
-    Then status 201
-    And match response.data.records[0].type.value == '#(value)'
-    And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
-    * def requestId = response.data.records[0].id
-
   @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
     * call read('NetworkManagement.feature@CheckAddProfile')
@@ -126,10 +108,84 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.success == true
 
+  @RAKCON-15077 @Canceleditprofilerouting
+  Scenario: Cancel edit profile routing
+    * def value = "SET_NETWORK_PROFILE_ROUTING"
+    * def nameDisplay = "Set network profile routing"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @ignore @View_My_Request_Network
+  Scenario: View my request for type network
+    Given path 'core/quorums'
+    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+    And request body
+    When method POST
+    Then status 201
+    And match response.data.records[0].type.value == '#(value)'
+    And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
+    * def requestId = response.data.records[0].id
+
+  @RAKCON-15108 @Getdiscoverablenetwork
+  Scenario: Get discoverable network id
+    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def profileId = value.response.data.networks[0].id
+    * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)' }
+    Given path 'network/networks/discoverable-network-ids'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.counterParties contains schemaBody.networkManagament.discoverableNetworkListing
+    * def counterId = response.data.counterParties[0].id
+    * def counterName = response.data.counterParties[0].name
+
+  @RAKCON-15109 @Addnetworkconnection
+  Scenario: Add new network connection
+    * call read('NetworkManagement.feature@Getdiscoverablenetwork')
+    * def value = call read('NetworkManagement.feature@ViewProfileDetail')
+    * def profileId = value.response.data.id
+    * def vaultId = value.response.data.vault.id
+    * def vaultName = value.response.data.vault.name
+    *  def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "counterpartyName": '#(counterName)' , "internalNote": 'Note', "counterpartyId": '#(counterId)',  "hasDefaultRouting": true }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'network/networks/'+ profileId +'/connections'
+    And request body
+    When method POST
+    Then status 201
+    And match response.status == "success"
+    And match response.data.vaultName == '#(vaultName)'
+    And match response.data.counterpartyName == '#(counterName)'
+
   @RAKCON-15205 @CancelAddNewConnectin
   Scenario: Cancel request add new connection
     * def value = "CREATE_NETWORK_CONNECTION"
     * def nameDisplay = "Create network connection"
     * call read('NetworkManagement.feature@View_My_Request_Network')
     * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @RAKCON-15111 @ViewConnectionDetail
+  Scenario: View connection detail
+    * def value = call read('NetworkManagement.feature@Addnetworkconnection')
+    * def networkConnectionId = value.response.data.id
+    Given path 'network/networks/' + profileId + 'connections' + networkConnectionId
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.id == '#(networkConnectionId)'
+    And match response.data.networkId == '#(profileId)'
+
+  @RAKCON-15110 @ViewListNetworkConnection
+  Scenario: View list network connection
+    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def profileId = value.response.data.networks[0].id
+    * def query = { limit:'10', offset: '0' }
+    Given path 'network/networks/' + profileId + 'connections'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.networkConnections contains schemaBody.networkManagament.networkConnection
 

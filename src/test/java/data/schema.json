@@ -156,6 +156,24 @@
       "networkName" : "#string",
       "numConn" : "#number",
       "type" : "#string"
+    },
+    "networkConnection": {
+      "counterpartyName" : "#string",
+      "status" : "#string",
+      "networkName" : "#string",
+      "id" : "#string",
+      "networkFullName" : "#string",
+      "vaultname" : "#string",
+      "type" : "#string"
+}
+}
+    "discoverableNetworkListing": {
+       "workspaceName" : "#string",
+       "id" : "#string",
+       "workspaceId" : "#string",
+       "workspaceExternalId" : "#string",
+       "name" : "#string",
+        "workspaceType" : "#string"
     }
   }
 

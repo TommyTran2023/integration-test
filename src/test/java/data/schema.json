@@ -167,5 +167,14 @@
       "type" : "#string"
 }
 }
+    "discoverableNetworkListing": {
+       "workspaceName" : "#string",
+       "id" : "#string",
+       "workspaceId" : "#string",
+       "workspaceExternalId" : "#string",
+       "name" : "#string",
+        "workspaceType" : "#string"
+    }
+  }
 
 }

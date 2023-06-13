@@ -159,5 +159,16 @@ Feature: Network Management
     And match response.data.vaultName == '#(vaultName)'
     And match response.data.counterpartyName == '#(counterName)'
 
+  @RAKCON-15111 @ViewConnectionDetail
+  Scenario: View connection detail
+    * def value = call read('NetworkManagement.feature@Addnetworkconnection')
+    * def networkConnectionId = value.response.data.id
+    Given path 'network/networks/' + profileId + 'connections' + networkConnectionId
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.id == '#(networkConnectionId)'
+    And match response.data.networkId == '#(profileId)'
+
 
 

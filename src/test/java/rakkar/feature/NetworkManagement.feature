@@ -171,4 +171,15 @@ Feature: Network Management
     And match response.data.networkId == '#(profileId)'
 
 
+  @RAKCON-15110 @ViewListNetworkConnection
+  Scenario: View list network connection
+    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def profileId = value.response.data.networks[0].id
+    * def query = { limit:'10', offset: '0' }
+    Given path 'network/networks/' + profileId + 'connections'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.networkConnections contains schemaBody.networkManagament.networkConnection
 

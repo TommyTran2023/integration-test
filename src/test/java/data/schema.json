@@ -135,10 +135,7 @@
       "vaultLVCheck": []
     },
     "review_remove_account": {
-      "accountLVCheck":
-      { "isRequiredApprover":"#boolean",
-        "isValidNumUserInQuorum":"#boolean"
-      },
+        "accountLVCheck":"#{}",
         "vaultLVCheck":"#[]"
      }
   },

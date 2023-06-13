@@ -1,4 +1,4 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Network Management
 
   Background:
@@ -8,7 +8,7 @@ Feature: Network Management
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
-  @RAKCON-14850 @Checkprofilename
+  @ignore @RAKCON-14850 @Checkprofilename
   Scenario: Check profile name
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def profileName = 'Profile-' + now()
@@ -20,7 +20,7 @@ Feature: Network Management
     And match response.status == "success"
     * match response.data.exist == true
 
-  @RAKCON-14851 @DepositRouting
+  @ignore @RAKCON-14851 @DepositRouting
   Scenario: List deposit routing
     * def query = { limit:'10', offset: '0'}
     Given path 'core/vault/deposit-routing'
@@ -30,7 +30,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.vaults contains schemaBody.networkManagament.depositRouting
 
-  @RAKCON-14852 @CheckAddProfile
+  @ignore @RAKCON-14852 @CheckAddProfile
   Scenario: Check add profile
     * call read('Common.feature@FIDO-Requester')
     * def vaultData = call read('NetworkManagement.feature@DepositRouting')
@@ -46,12 +46,12 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.networkFullName == "#regex .*"+ profileName +".*"
 
-  @RAKCON-14979 @ProfileListing
+  @ignore @RAKCON-14979 @ProfileListing
   Scenario: Check profile listing
     * def profile_query = { limit:'10', offset: '0'}
     * call read('NetworkManagement.feature@ProfileListingCommon')
 
-  @RAKCON-14980 @SearchProfile
+  @ignore @RAKCON-14980 @SearchProfile
   Scenario: Check search profile
     * def keyword = "Profile-"
     * def profile_query = { limit:'10', offset: '0', keyword :'#(keyword)'}
@@ -67,7 +67,7 @@ Feature: Network Management
       And match response.status == "success"
       And match response.data.networks contains schemaBody.networkManagament.profileListing
 
-  @RAKCON-14981 @ViewProfileDetail
+  @ignore @RAKCON-14981 @ViewProfileDetail
   Scenario: View profile detail
     * def value = call read('NetworkManagement.feature@ProfileListing')
     * def networkId = value.response.data.networks[0].id
@@ -81,7 +81,7 @@ Feature: Network Management
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
 
-  @RAKCON-15077 @Canceleditprofilerouting
+  @ignore @RAKCON-15077 @Canceleditprofilerouting
   Scenario: Cancel edit profile routing
     * def value = "SET_NETWORK_PROFILE_ROUTING"
     * def nameDisplay = "Set network profile routing"
@@ -99,7 +99,7 @@ Feature: Network Management
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
 
-  @RAKCON-15076 @Editprofilerouting
+  @ignore @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
     * call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = response.data.id
@@ -114,7 +114,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.requestId == "#string"
     
-  @RAKCON-15107 @Editprofilesetting
+  @ignore @RAKCON-15107 @Editprofilesetting
   Scenario: Edit profile setting
     * def value = call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = value.response.data.id
@@ -126,7 +126,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.success == true
 
-  @RAKCON-15111 @ViewConnectionDetail
+  @ignore @RAKCON-15111 @ViewConnectionDetail
   Scenario: View connection detail
     * def value = call read('NetworkManagement.feature@Addnetworkconnection')
     * def networkConnectionId = value.response.data.id
@@ -137,5 +137,16 @@ Feature: Network Management
     And match response.data.id == '#(networkConnectionId)'
     And match response.data.networkId == '#(profileId)'
 
+  @RAKCON-15213 @Editconnectiondepositrouting
+  Scenario: Edit connection deposit routing
+    *  def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "hasDefaultRouting": true , "note": 'Note', }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'network/networks/' + profileId + '/connections/' + network_connection_id + '/deposit-routing'
+    * And request body
+    * When method PUT
+    * Then status 201
+    * And match response.status == "success"
 
 

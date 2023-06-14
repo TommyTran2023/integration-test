@@ -133,7 +133,7 @@ Feature: Network Management
     * call read('NetworkManagement.feature@View_My_Request_Network')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @View_My_Request_Network
+  @ignore @View_My_Request_Network
   Scenario: View my request for type network
     Given path 'core/quorums'
     * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }

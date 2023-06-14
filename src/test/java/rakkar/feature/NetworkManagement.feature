@@ -81,24 +81,6 @@ Feature: Network Management
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
 
-  @RAKCON-15077 @Canceleditprofilerouting
-  Scenario: Cancel edit profile routing
-    * def value = "SET_NETWORK_PROFILE_ROUTING"
-    * def nameDisplay = "Set network profile routing"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
-
-  @ignore @View_My_Request_Network
-  Scenario: View my request for type network
-    Given path 'core/quorums'
-    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-    And request body
-    When method POST
-    Then status 201
-    And match response.data.records[0].type.value == '#(value)'
-    And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
-    * def requestId = response.data.records[0].id
-
   @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
     * call read('NetworkManagement.feature@CheckAddProfile')
@@ -113,18 +95,6 @@ Feature: Network Management
     Then status 201
     And match response.status == "success"
     And match response.data.requestId == "#string"
-    
-  @RAKCON-15107 @Editprofilesetting
-  Scenario: Edit profile setting
-    * def value = call read('NetworkManagement.feature@CheckAddProfile')
-    * def profileId = value.response.data.id
-    * def body = {"isDiscoverable" : false }
-    Given path 'network/networks/setting/‘ + profileId
-    And request body
-    When method PUT
-    Then status 200
-    And match response.status == "success"
-    And match response.data.success == true
 
   @RAKCON-15077 @Canceleditprofilerouting
   Scenario: Cancel edit profile routing
@@ -143,6 +113,18 @@ Feature: Network Management
     And match response.data.records[0].type.value == '#(value)'
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
+    
+  @RAKCON-15107 @Editprofilesetting
+  Scenario: Edit profile setting
+    * def value = call read('NetworkManagement.feature@CheckAddProfile')
+    * def profileId = value.response.data.id
+    * def body = {"isDiscoverable" : false }
+    Given path 'network/networks/setting/‘ + profileId
+    And request body
+    When method PUT
+    Then status 200
+    And match response.status == "success"
+    And match response.data.success == true
 
   @RAKCON-15108 @Getdiscoverablenetwork
   Scenario: Get discoverable network id

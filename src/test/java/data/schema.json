@@ -162,8 +162,7 @@
       "networkFullName" : "#string",
       "vaultname" : "#string",
       "type" : "#string"
-}
-}
+},
     "discoverableNetworkListing": {
        "workspaceName" : "#string",
        "id" : "#string",
@@ -173,5 +172,4 @@
         "workspaceType" : "#string"
     }
   }
-
 }

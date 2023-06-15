@@ -88,8 +88,8 @@
       * eval Collections.sort(expectedUserList, Collections.reverseOrder())
       * match listUserName == expectedUserList
 
-    @RAKCON-11019 @View_user_detail
-    Scenario: View user detail
+    @RAKCON-11019 @Check_View_user_detail
+    Scenario: Verification view user detail
       * def user = call read('UserManagement.feature@User_listing')
       * def userId = user.response.data.users[0].userId
       * def userName = user.response.data.users[0].userName
@@ -104,9 +104,17 @@
       And match response.data.roleName == "#(role)"
       And match response.data.name == "#(name)"
       And match response.data.email == "#(email)"
+
+    @RAKCON-11019 @View_user_detail
+    Scenario: View user detail to get id request
+      * def user = call read('UserManagement.feature@User_listing')
+      * def userId = user.response.data.users[0].userId
+      Given path 'auth/account/users/' + userId
+      When method GET
+      Then status 200
       * def userId = response.data.userId
       * def pendingRequest = response.data.pendingRequests
-#      * def requestId = response.data.pendingRequestId
+      * def isPendingRequest = response.data.isPendingRequest
 
     # EDIT OWN PROFILE
     @RAKCON-11020 @Edit_own_profile
@@ -135,7 +143,7 @@
        Scenario: Change Role - Check submit change
       * call read('UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-      * def pendingRequest = pendingRequest.length == 0 ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_change_role')
+      * def pendingRequest = isPendingRequest == false ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_change_role')
 
     @RAKCON-11929 @Cancel_Change_role
      Scenario: Edit user - Cancel change role
@@ -171,7 +179,7 @@
       * call read('UserManagement.feature@View_user_detail')
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
-      * def pendingRequest = pendingRequest.length == 0 ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_add_vault')
+      * def pendingRequest = isPendingRequest == false ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_add_vault')
 
     @RAKCON-11052 @Cancel_add_vault_access
     Scenario: Cancel request - Add vault access
@@ -196,7 +204,7 @@
       * call read('UserManagement.feature@View_user_detail')
       * call read('UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
-      * def pendingRequest = pendingRequest.length == 0 ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_remove_vault')
+      * def pendingRequest = isPendingRequest == false ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_remove_vault')
 
     @RAKCON-11053 @Cancel_remove_access
     Scenario: Cancel request - Remove vault access
@@ -219,7 +227,7 @@
     Scenario: Check remove account access - Submit
       * call read('UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"isRemoveAccountAccess":true}
-      * def pendingRequest = pendingRequest.length == 0 ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_remove_acc')
+      * def pendingRequest = isPendingRequest == false ? karate.call('UserManagement.feature@Submit_edit_user_common') : karate.call('UserManagement.feature@Handle_existing_pending_request_remove_acc')
 
     @RAKCON-11051 @Cancel_Remove_Account_Access
     Scenario: Cancel request - Remove Account access

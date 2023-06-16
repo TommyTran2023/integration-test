@@ -291,4 +291,4 @@
     Scenario: Handle existing pending request for remove account
       * call read('UserManagement.feature@View_My_Request_Edit_User')
       * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@CancelRequestCommon')
-      * call read('UserManagement.feature@Remove_vault_access')
+      * call read('UserManagement.feature@Remove_account_access')

@@ -117,7 +117,7 @@
       * def isPendingRequest = response.data.isPendingRequest
 
     # EDIT OWN PROFILE
-     @RAKCON-11020 @Edit_own_profile
+    @RAKCON-11020 @Edit_own_profile
       Scenario: Check edit own profile - edit avatar
       * call read('GetUserInfo.feature@GetUserInfo')
       * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}

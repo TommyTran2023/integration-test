@@ -97,13 +97,13 @@ Feature: Approval Request
   @RAKCON-11046 @ApprovalChangeRole
     Scenario: Approval - Edit role
     * call read('UserManagement.feature@Change_role')
-    * call read('UserManagement.feature@View_My_Request_Edit_User')
+    * call read('UserManagement.feature@View_user_detail')
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-11044 @ApprovalAddVaultAccess
    Scenario: Approval - Add vault access
     * call read('UserManagement.feature@Add_vault_access')
-    * call read('UserManagement.feature@View_My_Request_Edit_User')
+    * call read('UserManagement.feature@View_user_detail')
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
   @ignore @RAKCON-15106 @ApprovalEditProfileRouting

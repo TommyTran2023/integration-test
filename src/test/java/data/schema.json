@@ -162,7 +162,7 @@
       "networkFullName" : "#string",
       "vaultname" : "#string",
       "type" : "#string"
-},
+     },
     "discoverableNetworkListing": {
        "workspaceName" : "#string",
        "id" : "#string",
@@ -170,6 +170,14 @@
        "workspaceExternalId" : "#string",
        "name" : "#string",
         "workspaceType" : "#string"
+    },
+    "connectionsList": {
+      "status" : "#string",
+      "id" : "#string",
+      "networkName" : "#string",
+      "counterpartyId" : "#string",
+      "connectionExternalId" : "#string",
+      "counterpartyName" : "#string"
     }
   }
 }

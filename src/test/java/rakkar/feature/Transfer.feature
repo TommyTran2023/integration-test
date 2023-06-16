@@ -267,7 +267,44 @@ Feature: Transfer
   Scenario: Transfer External - Cancel transfer
     * call read('Transfer.feature@View_My_Request_Transfer')
 
-  @RAKCON-12493 @Check_vault_missing_policy
+    #Get estimated fee : Transfer to other network
+  @ignore @RAKCON-15412 @Get_estimate_fee_network
+  Scenario: Transfer to other network - Get estimated fee
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)'}
+    * call read('Transfer.feature@Get_estimate_fee_common')
+
+  @ignore @RAKCON-15413 @Total_estimate_fee_network
+  Scenario: Transfer to other network - Total estimated fee
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
+    * call read('Transfer.feature@Total_estimate_fee_common')
+
+  @ignore @RAKCON-15409 @Transfer_to_other_network
+  Scenario: Transfer to other network - Submit transfer
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.network_type)',"id":'#(destinationId_network)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header User-Agent = "rakkar/1.0.0 (com.rakkar.digital.mobile; build:312; iOS 16.5.0) Alamofire/5.6.2"
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(amount_low)"
+    And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
+    And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+
+   @ignore @RAKCON-11924 @Cancel_transaction_external
+    Scenario: Transfer External - Cancel transfer
+    * call read('Transfer.feature@View_My_Request_Transfer')
+
+  @ignore @RAKCON-12493 @Check_vault_missing_policy
    Scenario: Check vault missing policy
     * def query = { offset: '0',limit: '10', sort: 'ASC', groupBy: 'ASSET'}
    Given path 'core/vault/vault-missing-policy'

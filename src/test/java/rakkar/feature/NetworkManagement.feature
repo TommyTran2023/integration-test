@@ -159,6 +159,13 @@ Feature: Network Management
     And match response.data.vaultName == '#(vaultName)'
     And match response.data.counterpartyName == '#(counterName)'
 
+  @RAKCON-15205 @CancelAddNewConnectin
+  Scenario: Cancel request add new connection
+    * def value = "CREATE_NETWORK_CONNECTION"
+    * def nameDisplay = "Create network connection"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
   @RAKCON-15111 @ViewConnectionDetail
   Scenario: View connection detail
     Given path 'network/networks/' + networkID + '/connections/' + connectionID

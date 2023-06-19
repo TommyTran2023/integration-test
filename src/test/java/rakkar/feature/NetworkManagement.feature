@@ -231,3 +231,5 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.connections contains schemaBody.networkManagament.connectionsList
     * def destinationId_network = response.data.connections[0].id
+
+

@@ -61,4 +61,6 @@ For each environment, it should have specific vaults for transfer.
 - VaultId
 - TokenId
 - Address
+### Setup data for network management
+For each enviroment, it should have specific profile and connection already approved manually by fire block.
 

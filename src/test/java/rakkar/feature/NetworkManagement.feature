@@ -95,18 +95,6 @@ Feature: Network Management
     Then status 201
     And match response.status == "success"
     And match response.data.requestId == "#string"
-    
-  @RAKCON-15107 @Editprofilesetting
-  Scenario: Edit profile setting
-    * def value = call read('NetworkManagement.feature@CheckAddProfile')
-    * def profileId = value.response.data.id
-    * def body = {"isDiscoverable" : false }
-    Given path 'network/networks/setting/‘ + profileId
-    And request body
-    When method PUT
-    Then status 200
-    And match response.status == "success"
-    And match response.data.success == true
 
   @RAKCON-15077 @Canceleditprofilerouting
   Scenario: Cancel edit profile routing
@@ -125,6 +113,18 @@ Feature: Network Management
     And match response.data.records[0].type.value == '#(value)'
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
+    
+  @RAKCON-15107 @Editprofilesetting
+  Scenario: Edit profile setting
+    * def value = call read('NetworkManagement.feature@CheckAddProfile')
+    * def profileId = value.response.data.id
+    * def body = {"isDiscoverable" : false }
+    Given path 'network/networks/setting/‘ + profileId
+    And request body
+    When method PUT
+    Then status 200
+    And match response.status == "success"
+    And match response.data.success == true
 
   @RAKCON-15108 @Getdiscoverablenetwork
   Scenario: Get discoverable network id
@@ -168,14 +168,14 @@ Feature: Network Management
 
   @RAKCON-15111 @ViewConnectionDetail
   Scenario: View connection detail
-    * def value = call read('NetworkManagement.feature@Addnetworkconnection')
-    * def networkConnectionId = value.response.data.id
-    Given path 'network/networks/' + profileId + 'connections' + networkConnectionId
+    Given path 'network/networks/' + networkID + '/connections/' + connectionID
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.id == '#(networkConnectionId)'
-    And match response.data.networkId == '#(profileId)'
+    And match response.data.id == '#(connectionID)'
+    And match response.data.networkId == '#(networkID)'
+    * def vaultName = response.data.defaultVault.id
+    * def vaultId = response.data.defaultVault.name
 
   @RAKCON-15110 @ViewListNetworkConnection
   Scenario: View list network connection
@@ -188,4 +188,36 @@ Feature: Network Management
     Then status 200
     And match response.status == "success"
     And match response.data.networkConnections contains schemaBody.networkManagament.networkConnection
+
+  @RAKCON-15213 @Editconnectiondepositrouting
+  Scenario: Edit connection deposit routing
+    * call read('NetworkManagement.feature@ViewConnectionDetail')
+    * def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "hasDefaultRouting": true , "note": 'Note', }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'network/networks/' + networkID + '/connections/' + connectionID + '/deposit-routing'
+    And request body
+    When method PUT
+    Then status 200
+    And match response.status == "success"
+
+  @RAKCON-15308 @Canceleditconnectionrouting
+  Scenario: Cancel request edit connection routing
+    * def value = "EDIT_NETWORK_CONNECTION_DEPOSIT"
+    * def nameDisplay = "Edit network connection"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @ignore @RAKCON-15214 @RemoveConnection
+  Scenario: Remove connection
+    * def body = {"note": 'Note', }
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'network/networks/' + networkID + '/connections/' + connectionID + '/deposit-routing'
+    And request body
+    When method DELETE
+    Then status 200
+    And match response.status == "success"
 

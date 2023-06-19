@@ -26,7 +26,9 @@
     "destinationId_cold":"b56b5303-f15e-4d29-bbc4-40ee253a6df6",
     "externalId": "396dc8b7-2dda-4f5c-b84c-05339129b43d",
     "tokenId": "8053beee-fedd-4408-9337-987774e105ae",
-    "address": "r384habbCeaJg9oAGQWAHfCQjmU9RfLqUL"
+    "address": "r384habbCeaJg9oAGQWAHfCQjmU9RfLqUL",
+    "networkID": "ab876344-2257-4ab8-8ad7-bdf222407278",
+    "connectionID": "b9e8dea8-0b53-4c4e-9ef2-d340301ead22"
 
   },
   "uat": {

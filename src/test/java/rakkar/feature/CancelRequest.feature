@@ -24,6 +24,12 @@ Feature: Cancel Request
     * def requestId = editVaultPolicy.response.data.record.id
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-15492 @CancelEditUser
+  Scenario: Cancel request - Cancel edit user
+    * call read('UserManagement.feature@Change_role')
+    * call read('UserManagement.feature@View_user_detail')
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
   @RAKCON-11055 @CancelWhiteListAddress
   Scenario: Cancel request - Add whitelist address
     * call read('WhiteListFolder.feature@Create_address_internal')

@@ -63,4 +63,7 @@ For each environment, it should have specific vaults for transfer.
 - Address
 ### Setup data for network management
 For each enviroment, it should have specific profile and connection already approved manually by fire block.
-
+### Setup data staking
+Staking feature is focus on ADA token now. So for each enviroment, it should have ADA tokenId, config on env
+1. Add ADA token into a specific vault
+2. Get the tokenId, add into env file with field "stakeToken"

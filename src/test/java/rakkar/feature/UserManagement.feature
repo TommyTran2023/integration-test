@@ -218,8 +218,7 @@
       * def userId = data.response.data.users[4].userId
       * def body = { "reason":'',"isRemoveAccountAccess":true}
       * call read('UserManagement.feature@Review_update_user_common')
-      And match response.data.accountLVCheck contains schemaJson.userManagement.review_remove_account.accountLVCheck
-      And match response.data.vaultLVCheck contains schemaJson.userManagement.review_remove_account.vaultLVCheck
+      And match response.data contains schemaJson.userManagement.review_edit_user
 
     @RAKCON-11025 @Remove_account_access
     Scenario: Check remove account access - Submit

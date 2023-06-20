@@ -135,8 +135,8 @@
       "vaultLVCheck": []
     },
     "review_remove_account": {
-       "accountLVCheck":"#{}",
-       "vaultLVCheck":"#[]"
+      "accountLVCheck":"#{}",
+      "vaultLVCheck":"#[]"
     }
   },
   "networkManagament": {

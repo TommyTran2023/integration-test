@@ -63,4 +63,5 @@ For each environment, it should have specific vaults for transfer.
 - Address
 ### Setup data for network management
 For each enviroment, it should have specific profile and connection already approved manually by fire block.
-
+### Add api-key and client-id for open api 
+For each enviroment, it needs to get the api-key and client-id from web-app and config into env.data

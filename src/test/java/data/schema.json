@@ -135,9 +135,19 @@
       "vaultLVCheck": []
     },
     "review_remove_account": {
-        "accountLVCheck":"#{}",
-        "vaultLVCheck":"#[]"
-     }
+      "accountLVCheck":{
+        "isRequiredApprover": "#boolean",
+        "isValidNumUserInQuorum": "#boolean"
+      },
+      "vaultLVCheck":[
+        {
+          "vaultId": "#string",
+          "isRequiredApprover": "#boolean",
+          "isValidNumUserInQuorum":"#boolean",
+          "vaultName": "#string"
+        }
+      ]
+    }
   },
   "networkManagament": {
     "depositRouting": {

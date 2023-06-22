@@ -24,6 +24,7 @@
     "from_screen_source": "SOURCE_TRANSFER",
     "from_screen_destination": "DESTINATION_TRANSFER",
     "source_type": "VAULT_ACCOUNT",
+    "network_type": "NETWORK_CONNECTION",
     "destinationType": "EXTERNAL_WALLET",
     "feeLevel": "MEDIUM",
     "operation": "TRANSFER",

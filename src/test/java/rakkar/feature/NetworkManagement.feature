@@ -221,3 +221,15 @@ Feature: Network Management
     Then status 200
     And match response.status == "success"
 
+  @RAKCON-15414 @ListNetworkForTransfer
+  Scenario: List network for transfer
+    * def query = { limit:'20', offset: '0' }
+    Given path 'network/networks/connections/counterparties'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data.connections contains schemaBody.networkManagament.connectionsList
+    * def destinationId_network = response.data.connections[0].id
+
+

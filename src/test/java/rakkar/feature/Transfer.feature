@@ -6,6 +6,7 @@ Feature: Transfer
     * call read('GetUserInfo.feature@GetUserInfo')
     * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
+    * configure afterFeature = function(){ karate.call('AfterHook.feature@Handle_Pending_Request_Transfer'); }
 
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer
@@ -100,10 +101,6 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11918 @Cancel_transaction_hot_to_hot
-  Scenario: Transfer Hot to hot - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
-
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
   Scenario: Transfer Hot to cold - Submit transfer
@@ -120,10 +117,6 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
-
-  @RAKCON-11919 @Cancel_transaction_hot_to_cold
-  Scenario: Transfer Hot to cold - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
 
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
@@ -142,9 +135,6 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11920 @Cancel_transaction_cold_to_hot
-  Scenario: Transfer Cold to hot - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
 
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
@@ -163,9 +153,6 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11921 @Cancel_transaction_cold_to_cold
-  Scenario: Transfer Cold to cold - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
 
   #Tcs: TRANSFER MEDIUM VALUE
   @Get_estimate_fee_medium_value
@@ -196,9 +183,6 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11922 @Cancel_transaction_medium
-  Scenario: Transfer Medium - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
 
   #Tcs: TRANSFER HIGH VALUE
   @Get_estimate_fee_high_value
@@ -232,10 +216,6 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11923 @Cancel_transaction_high
-  Scenario: Transfer High - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
-
   #EXTERNAL WITHDRAW
   @Get_estimate_fee_external_transfer
   Scenario: External - Get estimated fee
@@ -263,9 +243,39 @@ Feature: Transfer
 #    And response.data.destinationName == "#(externalName)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
-  @RAKCON-11924 @Cancel_transaction_external
-  Scenario: Transfer External - Cancel transfer
-    * call read('Transfer.feature@View_My_Request_Transfer')
+
+    #Get estimated fee : Transfer to other network
+  @RAKCON-15412 @Get_estimate_fee_network
+  Scenario: Transfer to other network - Get estimated fee
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)'}
+    * call read('Transfer.feature@Get_estimate_fee_common')
+
+  @RAKCON-15413 @Total_estimate_fee_network
+  Scenario: Transfer to other network - Total estimated fee
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
+    * call read('Transfer.feature@Total_estimate_fee_common')
+
+  @ignore @RAKCON-15409 @Transfer_to_other_network
+  Scenario: Transfer to other network - Submit transfer
+    * call read('NetworkManagement.feature@ListNetworkForTransfer')
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.network_type)',"id":'#(destinationId_network)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header User-Agent = "rakkar/1.0.0 (com.rakkar.digital.mobile; build:312; iOS 16.5.0) Alamofire/5.6.2"
+    Given path 'core/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(amount_low)"
+    And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
+    And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def requestId = response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
 
   @RAKCON-12493 @Check_vault_missing_policy
    Scenario: Check vault missing policy
@@ -283,15 +293,5 @@ Feature: Transfer
     Then status 200
     And response.status == "success"
 
-  @ignore @View_My_Request_Transfer
-  Scenario: View my request for type transfer
-    Given path 'core/quorums'
-    * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-    And request body
-    When method POST
-    Then status 201
-    And match response.data.records[0].type.value == 'WITHDRAW_APPROVAL'
-    And match response.data.records[0].type.nameDisplay == 'Withdraw Approval'
-    * def requestId = response.data.records[0].id
-    * call read('CancelRequest.feature@CancelRequestCommon')
+
 

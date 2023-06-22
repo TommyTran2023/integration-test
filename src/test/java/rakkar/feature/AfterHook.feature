@@ -1,3 +1,4 @@
+@ignore
 Feature: Handle request after each scenario or feature
   Background:
     * url baseURL

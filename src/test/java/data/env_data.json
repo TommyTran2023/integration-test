@@ -28,8 +28,8 @@
     "tokenId": "8053beee-fedd-4408-9337-987774e105ae",
     "address": "r384habbCeaJg9oAGQWAHfCQjmU9RfLqUL",
     "networkID": "ab876344-2257-4ab8-8ad7-bdf222407278",
-    "connectionID": "b9e8dea8-0b53-4c4e-9ef2-d340301ead22"
-
+    "connectionID": "b9e8dea8-0b53-4c4e-9ef2-d340301ead22",
+    "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
@@ -58,7 +58,8 @@
     "destinationId_cold":"ceaf5d13-7eed-47ec-a0cb-59ca205a64c2",
     "externalId": "845312ae-588f-4756-9e5f-b6c91e3b4600",
     "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
-    "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo"
+    "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo",
+    "stakeToken": "3ec53849-2838-4b83-8925-97ae3d299eea"
 
   }
 

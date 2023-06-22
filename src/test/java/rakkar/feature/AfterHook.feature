@@ -3,13 +3,13 @@ Feature: Handle request after each scenario or feature
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
 
-    @Handle_Request_Transfer
+    @Handle_Pending_Request_Transfer
     Scenario: Handle Request Transfer
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-      * call read('AfterHook.feature@Quorum_List_Common')
+      * call read('AfterHook.feature@Cancel_Pending_Request')
 
 
-  @Quorum_List_Common
+  @Cancel_Pending_Request
     Scenario: View my request common
       Given path 'core/quorums'
       And request body
@@ -27,3 +27,4 @@ Feature: Handle request after each scenario or feature
       }
       """
      * call cancelRequest
+

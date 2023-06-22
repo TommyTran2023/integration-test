@@ -6,7 +6,7 @@ Feature: Transfer
     * call read('GetUserInfo.feature@GetUserInfo')
     * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
-    * configure afterFeature = function(){ karate.call('AfterHook.feature@Handle_Request_Transfer'); }
+    * configure afterFeature = function(){ karate.call('AfterHook.feature@Handle_Pending_Request_Transfer'); }
 
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer

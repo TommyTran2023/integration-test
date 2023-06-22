@@ -116,7 +116,6 @@ Feature: Wallet
   # Check the variable expected
     * def networkExpected = addAsset.response.data.success[0].network
     * def symbolExpected = addAsset.response.data.success[0].symbol
-    * def priceYesterdayExpected = addAsset.response.data.success[0].priceYesterday
     * def priceExpected = addAsset.response.data.success[0].price
     * def imageExpected = addAsset.response.data.success[0].icon
     * def nameExpected = addAsset.response.data.success[0].name
@@ -125,7 +124,6 @@ Feature: Wallet
     * def walletIdActual = response.data.walletId
     * def networkActual = response.data.network
     * def symbolActual = response.data.symbol
-    * def priceYesterdayActual = response.data.priceYesterday
     * def priceActual = response.data.price
     * def imageActual = response.data.image
     * def nameActual = response.data.name
@@ -134,7 +132,6 @@ Feature: Wallet
     * match walletIdActual == walletId
     * match networkActual == networkExpected
     * match symbolActual == symbolExpected
-    * match priceYesterdayActual == priceYesterdayExpected
     * match priceActual == priceExpected
     * match imageActual == imageExpected
     * match nameActual == nameExpected

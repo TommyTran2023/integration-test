@@ -38,5 +38,7 @@ Feature: Staking
     Then status 201
     And response.status == "success"
     And match response.message == "Success"
-    * def requestId = response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+
+
+
+

@@ -6,7 +6,7 @@ Feature: Staking
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def testData = read('classpath:data/data_test.json')
 
-  @ignore @RAKCON-15418 @Get_List_Pool
+  @RAKCON-15418 @Get_List_Pool
   Scenario: View list pool
     * def query = { limit:'10', page: '1', tokenId: '#(stakeToken)'}
     Given path 'staking/pools'

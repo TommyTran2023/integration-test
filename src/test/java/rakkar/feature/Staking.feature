@@ -1,12 +1,12 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Staking
   Background:
     * url baseURL
+    * def schemaBody = read('classpath:data/schema.json')
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def testData = read('classpath:data/data_test.json')
 
-
-  @RAKCON-15418 @Get_List_Pool
+  @ignore @RAKCON-15418 @Get_List_Pool
   Scenario: View list pool
     * def query = { limit:'10', page: '1', tokenId: '#(stakeToken)'}
     Given path 'staking/pools'
@@ -39,6 +39,24 @@ Feature: Staking
     And response.status == "success"
     And match response.message == "Success"
 
+  @RAKCON-15443 @Staking_from_account_tab
+  Scenario: View staking from account tab
+    * def query = { limit:'10', offset: '0'}
+    Given path 'staking/records'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data == schemaBody.staking.staking_accountTab
+#    * def stakeId = response.data.result[0].id
 
-
+  @RAKCON-15445 @Staking_action_dashboard
+  Scenario: View staking action from dashboard
+    * def query = { limit: '10'}
+    Given path 'staking/actions/dashboard'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+    And match response.data == schemaBody.staking.action_staking
 

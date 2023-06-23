@@ -96,6 +96,12 @@
   "settings": {
     "newPasscode": "112233",
     "changePasscode": "332211"
+  },
+    "staking": {
+    "amount": 10000,
+    "tokenExternalId": "ADA_TEST",
+    "feeLevel": "HIGH",
+     "poolID": "pool132jxjzyw4awr3s75ltcdx5tv5ecv6m042306l630wqjckhfm32r"
   }
 }
 

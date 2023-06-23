@@ -60,3 +60,13 @@ Feature: Staking
     And match response.status == "success"
     And match response.data == schemaBody.staking.action_staking
 
+  @RAKCON-15446 @Staking_asset_dashboard
+  Scenario: View staking asset from dashboard
+    * def query = { page: '1'}
+    Given path 'staking/records/assets'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+
+

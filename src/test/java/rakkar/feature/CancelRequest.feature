@@ -29,6 +29,24 @@ Feature: Cancel Request
     * call read('WhiteListFolder.feature@Create_address_internal')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-15489 @CancelInternalWithdraw
+  Scenario: Cancel request - Cancel internal withdraw
+    * def value = call read('Transfer.feature@Transfer_value_hot_to_hot')
+    * def requestId = value.response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @RAKCON-15490 @CancelExternalWithdraw
+  Scenario: Cancel request - Cancel external withdraw
+    * def value = call read('Transfer.feature@External_Transfer')
+    * def requestId = value.response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @ignore @RAKCON-15491 @CancelOtherNetwork
+  Scenario: Cancel request - Cancel tranfer to other network
+    * def value = call read('Transfer.feature@Transfer_to_other_network')
+    * def requestId = value.response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
   @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
     Given path '/core/quorums/cancel/'+requestId

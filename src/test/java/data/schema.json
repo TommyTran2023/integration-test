@@ -135,9 +135,19 @@
       "vaultLVCheck": []
     },
     "review_remove_account": {
-        "accountLVCheck":"#{}",
-        "vaultLVCheck":"#[]"
-     }
+      "accountLVCheck":{
+        "isRequiredApprover": "#boolean",
+        "isValidNumUserInQuorum": "#boolean"
+      },
+      "vaultLVCheck":[
+        {
+          "vaultId": "#string",
+          "isRequiredApprover": "#boolean",
+          "isValidNumUserInQuorum":"#boolean",
+          "vaultName": "#string"
+        }
+      ]
+    }
   },
   "networkManagament": {
     "depositRouting": {
@@ -162,7 +172,7 @@
       "networkFullName" : "#string",
       "vaultname" : "#string",
       "type" : "#string"
-},
+     },
     "discoverableNetworkListing": {
        "workspaceName" : "#string",
        "id" : "#string",
@@ -170,6 +180,14 @@
        "workspaceExternalId" : "#string",
        "name" : "#string",
         "workspaceType" : "#string"
+    },
+    "connectionsList": {
+      "status" : "#string",
+      "id" : "#string",
+      "networkName" : "#string",
+      "counterpartyId" : "#string",
+      "connectionExternalId" : "#string",
+      "counterpartyName" : "#string"
     }
   }
 }

@@ -1,6 +1,9 @@
 {
   "qa": {
     "baseURL": "https://qa-api.thailaksa.net",
+    "openApiURL": "https://sit-openapi.thailaksa.net",
+    "x-api-key": "d3aae1b50a0a485a8912a2ab33208333",
+    "client-id": "6b84cadd2be44deb9a237b61775ddb9e",
     "requesterInfo": {
       "requesterUsername": "ID_CARDPT24121993",
       "requesterPasscode": "123123",
@@ -28,11 +31,14 @@
     "tokenId": "8053beee-fedd-4408-9337-987774e105ae",
     "address": "r384habbCeaJg9oAGQWAHfCQjmU9RfLqUL",
     "networkID": "ab876344-2257-4ab8-8ad7-bdf222407278",
-    "connectionID": "b9e8dea8-0b53-4c4e-9ef2-d340301ead22"
-
+    "connectionID": "b9e8dea8-0b53-4c4e-9ef2-d340301ead22",
+    "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
+    "openApiURL": "https://uat-openapi.thailaksa.net",
+    "x-api-key": "7e47553522a24b0c9c6c6acd1fe75aeb",
+    "client-id": "20e52538-e3d1-4d3f-b357-23407f75ebe6",
     "requesterInfo": {
       "requesterUsername": "ID_CARDAT00006",
       "requesterPasscode": "123111",
@@ -58,7 +64,8 @@
     "destinationId_cold":"ceaf5d13-7eed-47ec-a0cb-59ca205a64c2",
     "externalId": "845312ae-588f-4756-9e5f-b6c91e3b4600",
     "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
-    "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo"
+    "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo",
+    "stakeToken": "3ec53849-2838-4b83-8925-97ae3d299eea"
 
   }
 

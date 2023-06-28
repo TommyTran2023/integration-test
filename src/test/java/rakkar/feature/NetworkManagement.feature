@@ -30,7 +30,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.vaults contains schemaBody.networkManagament.depositRouting
 
-  @ignore @RAKCON-14852 @CheckAddProfile
+  @RAKCON-14852 @CheckAddProfile
   Scenario: Check add profile
     * call read('Common.feature@FIDO-Requester')
     * def vaultData = call read('NetworkManagement.feature@DepositRouting')

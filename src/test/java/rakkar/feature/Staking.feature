@@ -48,7 +48,16 @@ Feature: Staking
     Then status 200
     And match response.status == "success"
     And match response.data == schemaBody.staking.staking_accountTab
-#    * def stakeId = response.data.result[0].id
+   * def stakeId = response.data.result[0].id
+
+  @RAKCON-15444 @Staking_detail
+  Scenario: View staking detail
+    * call read('Staking.feature@Staking_from_account_tab')
+    Given path 'staking/actions/progress' + stakeId
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
 
   @RAKCON-15445 @Staking_action_dashboard
   Scenario: View staking action from dashboard
@@ -68,6 +77,24 @@ Feature: Staking
     When method GET
     Then status 200
     And match response.status == "success"
+    And match response.data.tokenData.symbol == "ADA"
+    And match response.data.tokenData.externalAssetId == "ADA_Test"
+    * def transactionId = response.data.rewardData.transactionId
+
+  @RAKCON-15447 @Un_staking
+  Scenario: Check unstake
+    * call read('Staking.feature@Get_estimatefee_stake')
+    * call read('Staking.feature@Staking_detail')
+    * def body = { "estimatedFee":'#(totalEstimatedFee)'}
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'staking/records/' + transactionId +'/un-staking'
+    And request body
+    When method PUT
+    Then status 201
+    And response.status == "success"
+    And match response.message == "Success"
 
 
 

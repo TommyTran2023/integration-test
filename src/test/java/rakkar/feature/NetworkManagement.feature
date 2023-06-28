@@ -81,7 +81,7 @@ Feature: Network Management
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
 
-  @ignore @RAKCON-15076 @Editprofilerouting
+  @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
     * call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = response.data.id
@@ -96,7 +96,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.requestId == "#string"
 
-  @ignore @RAKCON-15077 @Canceleditprofilerouting
+  @RAKCON-15077 @Canceleditprofilerouting
   Scenario: Cancel edit profile routing
     * def value = "SET_NETWORK_PROFILE_ROUTING"
     * def nameDisplay = "Set network profile routing"
@@ -114,7 +114,7 @@ Feature: Network Management
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
 
-  @ignore @RAKCON-15107 @Editprofilesetting
+  @RAKCON-15107 @Editprofilesetting
   Scenario: Edit profile setting
     * def value = call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = value.response.data.id

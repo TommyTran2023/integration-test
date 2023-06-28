@@ -33,3 +33,4 @@ Feature: Handle request after each scenario or feature
       }
       """
      * call cancelRequest
+

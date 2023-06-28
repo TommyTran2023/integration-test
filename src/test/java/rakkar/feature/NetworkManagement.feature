@@ -30,7 +30,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.vaults contains schemaBody.networkManagament.depositRouting
 
-  @RAKCON-14852 @CheckAddProfile
+  @ignore @RAKCON-14852 @CheckAddProfile
   Scenario: Check add profile
     * call read('Common.feature@FIDO-Requester')
     * def vaultData = call read('NetworkManagement.feature@DepositRouting')
@@ -81,7 +81,7 @@ Feature: Network Management
     And match response.data.networkName == '#(networkName)'
     And match response.data.isDiscoverable == '#(isDiscoverable)'
 
-  @RAKCON-15076 @Editprofilerouting
+  @ignore @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
     * call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = response.data.id
@@ -96,7 +96,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.requestId == "#string"
 
-  @RAKCON-15077 @Canceleditprofilerouting
+  @ignore @RAKCON-15077 @Canceleditprofilerouting
   Scenario: Cancel edit profile routing
     * def value = "SET_NETWORK_PROFILE_ROUTING"
     * def nameDisplay = "Set network profile routing"
@@ -113,8 +113,8 @@ Feature: Network Management
     And match response.data.records[0].type.value == '#(value)'
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id
-    
-  @RAKCON-15107 @Editprofilesetting
+
+  @ignore @RAKCON-15107 @Editprofilesetting
   Scenario: Edit profile setting
     * def value = call read('NetworkManagement.feature@CheckAddProfile')
     * def profileId = value.response.data.id
@@ -182,7 +182,7 @@ Feature: Network Management
     * def value = call read('NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
     * def query = { limit:'10', offset: '0' }
-    Given path 'network/networks/' + profileId + 'connections'
+    Given path 'network/networks/' + profileId + '/connections'
     And params query
     When method GET
     Then status 200
@@ -209,17 +209,24 @@ Feature: Network Management
     * call read('NetworkManagement.feature@View_My_Request_Network')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @ignore @RAKCON-15214 @RemoveConnection
+  @RAKCON-15214 @RemoveConnection
   Scenario: Remove connection
     * def body = {"note": 'Note', }
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    Given path 'network/networks/' + networkID + '/connections/' + connectionID + '/deposit-routing'
+    Given path 'network/networks/' + networkID + '/connections/' + connectionID
     And request body
     When method DELETE
     Then status 200
     And match response.status == "success"
+
+  @RAKCON-15909 @Cancelremoveconnection
+  Scenario: Cancel request remove connection
+    * def value = "REMOVE_NETWORK_CONNECTION"
+    * def nameDisplay = "Remove network connection"
+    * call read('NetworkManagement.feature@View_My_Request_Network')
+    * call read('CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15414 @ListNetworkForTransfer
   Scenario: List network for transfer

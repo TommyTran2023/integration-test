@@ -189,5 +189,18 @@
       "connectionExternalId" : "#string",
       "counterpartyName" : "#string"
     }
+  },
+  "staking": {
+    "staking_accountTab": {
+      "totalUsdYesterday":"#number",
+      "totalUsd":"#number",
+      "result":"#[]",
+      "totalCount":"#number"
+    },
+    "action_staking": {
+      "totalUsd":"#number",
+      "totalUsdYesterday": "#number",
+      "stakedAssets" : "#[]"
+    }
   }
 }

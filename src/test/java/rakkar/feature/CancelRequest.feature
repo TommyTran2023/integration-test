@@ -27,8 +27,12 @@ Feature: Cancel Request
   @RAKCON-15492 @CancelEditUser
   Scenario: Cancel request - Cancel edit user
     * call read('UserManagement.feature@Change_role')
-    * call read('UserManagement.feature@View_user_detail')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('CancelRequest.feature@CancelRequestEditUserCommon')
+
+  @RAKCON-11051 @Cancel_Remove_Account_Access
+  Scenario: Cancel request - Remove Account access
+    * call read('UserManagement.feature@Remove_account_access')
+    * call read('CancelRequest.feature@CancelRequestEditUserCommon')
 
   @RAKCON-11055 @CancelWhiteListAddress
   Scenario: Cancel request - Add whitelist address
@@ -51,6 +55,12 @@ Feature: Cancel Request
   Scenario: Cancel request - Cancel tranfer to other network
     * def value = call read('Transfer.feature@Transfer_to_other_network')
     * def requestId = value.response.data.requestId
+    * call read('CancelRequest.feature@CancelRequestCommon')
+
+  @ignore @CancelRequestEditUserCommon
+  Scenario: Cancel a request edit user - Common
+    * def value = call read('UserManagement.feature@View_user_detail')
+    * def requestId = value.response.data.pendingRequestId
     * call read('CancelRequest.feature@CancelRequestCommon')
 
   @ignore @CancelRequestCommon

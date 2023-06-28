@@ -75,26 +75,22 @@ Feature: Reject Request
   @RAKCON-11062 @RejectChangeRole
   Scenario: Reject request - Change role
     * call read('UserManagement.feature@Change_role')
-    * call read('UserManagement.feature@View_user_detail')
-    * call read('RejectRequest.feature@RejectRequestCommon')
+    * call read('RejectRequest.feature@RejectRequestEditUserCommon')
 
   @RAKCON-11060 @RejectAddVaultAccess
   Scenario: Reject request - Add vault access
     * call read('UserManagement.feature@Add_vault_access')
-    * call read('UserManagement.feature@View_user_detail')
-    * call read('RejectRequest.feature@RejectRequestCommon')
+    * call read('RejectRequest.feature@RejectRequestEditUserCommon')
 
   @RAKCON-11061 @RejectRemoveVaultAccess
   Scenario: Reject request - Remove vault access
     * call read('UserManagement.feature@Remove_vault_access')
-    * call read('UserManagement.feature@View_user_detail')
-    * call read('RejectRequest.feature@RejectRequestCommon')
+    * call read('RejectRequest.feature@RejectRequestEditUserCommon')
 
-  @RAKCON-11059 @RejectRemoveVaultAccess
+  @RAKCON-11059 @RejectRemoveAccountAccess
   Scenario: Reject request - Remove User access
     * call read('UserManagement.feature@Remove_account_access')
-    * call read('UserManagement.feature@View_user_detail')
-    * call read('RejectRequest.feature@RejectRequestCommon')
+    * call read('RejectRequest.feature@RejectRequestEditUserCommon')
 
   @ignore @RAKCON-15105 @RejectEditProfileRouting
   Scenario: Reject request - Reject edit profile routing
@@ -106,6 +102,12 @@ Feature: Reject Request
   Scenario: Reject request - Reject add network connection
     * def value = call read('NetworkManagement.feature@Addnetworkconnection')
     * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @ignore @RejectRequestEditUserCommon
+  Scenario: Reject request edit user - Common
+    * def value = call read('UserManagement.feature@View_user_detail')
+    * def requestId = value.response.data.pendingRequestId
     * call read('RejectRequest.feature@RejectRequestCommon')
 
   @ignore @RejectRequestCommon

@@ -3,12 +3,17 @@ Feature: Handle request after each scenario or feature
   Background:
     * url baseURL
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('GetUserInfo.feature@GetUserInfo')
 
     @Handle_Pending_Request_Transfer
     Scenario: Handle Request Transfer
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["TRANSFER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
       * call read('AfterHook.feature@Cancel_Pending_Request')
 
+   @Handle_Pending_Request_Edit_User
+    Scenario: Handle Request Edit User
+     * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
+     * call read('AfterHook.feature@Cancel_Pending_Request')
 
   @Cancel_Pending_Request
     Scenario: View my request common

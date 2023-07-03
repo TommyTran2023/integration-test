@@ -65,8 +65,9 @@
     "externalId": "845312ae-588f-4756-9e5f-b6c91e3b4600",
     "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
     "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo",
-    "stakeToken": "3ec53849-2838-4b83-8925-97ae3d299eea"
-
+    "stakeToken": "3ec53849-2838-4b83-8925-97ae3d299eea",
+    "networkID": "b7d26242-6f5b-46ef-a4f5-5db56e335161",
+    "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb"
   }
 
 }

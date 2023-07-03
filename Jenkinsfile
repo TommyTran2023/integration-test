@@ -123,22 +123,20 @@ pipeline {
             }
         }
 
-        changed {
+        success {
             script {
                 // Back to Passed notification
-                def successMsg = "${ENV} Integration Test #${env.BUILD_NUMBER} back to PASSED"
+                def successMsg = "${ENV} Integration Test #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                if (currentBuild.currentResult  == "SUCCESS") {
-                    slackSend(channel: "${SLACK_CHANNEL}",
-                        color: 'good',
-                        message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
+                slackSend(channel: "${SLACK_CHANNEL}",
+                    color: 'good',
+                    message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
 
-                    office365ConnectorSend color: '#4b8869',
-                        message: "${successMsg}<br>${passedSummary}",
-                        status: 'PASSED',
-                        webhookUrl: "${TEAM_URL}"
-                }
+                office365ConnectorSend color: '#4b8869',
+                    message: "${successMsg}<br>${passedSummary}",
+                    status: 'PASSED',
+                    webhookUrl: "${TEAM_URL}"
             }
         }
 

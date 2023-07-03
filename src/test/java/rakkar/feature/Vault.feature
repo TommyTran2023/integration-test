@@ -16,16 +16,24 @@ Feature: Vault
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def vaultName = 'AT-RAK-' + now()
 
-  @RAKCON-12842 @CHECK-VAULT-NAME
-  Scenario: Check vault name is existed or not
-    #Check vault name is existed or not
+  @ignore @CheckVaultNameCommon
+  Scenario: Check vault name common
     Given path '/core/vault/check-vault-name'
-    * call read('Vault.feature@GenerateVaultName')
-    * param name = vaultName
+    And params query
     When method GET
     Then status 200
-    * def checkExist = response.data.exist
-    * eval if (checkExist==true) karate.fail('Vault name should not exist')
+
+  @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
+  Scenario: Check vault name is existed in the company
+    * def query = { name:'VaultTestExist'}
+    * call read('Vault.feature@CheckVaultNameCommon')
+    And match response.data.exist == true
+
+  @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
+  Scenario: Check vault name is Not existed in the company
+    * def query = { name:'VaultTestNotExist'}
+    * call read('Vault.feature@CheckVaultNameCommon')
+    And match response.data.exist == false
 
   @ignore @CHECK-LIST-USER
   Scenario: Get user list of organization

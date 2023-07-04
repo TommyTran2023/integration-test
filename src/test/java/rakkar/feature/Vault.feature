@@ -27,8 +27,8 @@ Feature: Vault
     * def checkExist = response.data.exist
     * eval if (checkExist==true) karate.fail('Vault name should not exist')
 
-  @ignore @CHECK-LIST-USER
-  Scenario: Get user list of organization
+  @RAKCON-16175 @CHECK-LIST-USER
+  Scenario: Get user list of organization to add vault
     #Get user list of organization
     Given path '/auth/account/list-users'
     * request {"isGetAll":true}
@@ -38,7 +38,10 @@ Feature: Vault
     * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
     * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
-    * print vaultMemberList
+    * def totalUserToAddvault = response.data.totalCount
+    * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
+    * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
+    And match totalUserToAddvault == totalUserInPolicy
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup

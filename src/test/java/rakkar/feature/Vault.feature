@@ -25,7 +25,9 @@ Feature: Vault
 
   @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
-    * def query = { name:'VaultTestExist'}
+    * def value = call read('Vault.feature@ViewVaultListing')
+    * def name = value.response.data.vaults[0].name
+    * def query = { name:'#(name)'}
     * call read('Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == true
 
@@ -103,9 +105,7 @@ Feature: Vault
     Then status 200
     #* print addedName
     * def resp = response.data.vaults
-    * print resp
     * def totalCount = response.data.totalCount
-    * print 'Total number of vaults: ', totalCount
     * match response.status == 'success'
 
   @ignore @GetCreateVaultRequestID

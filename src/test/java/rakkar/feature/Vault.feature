@@ -37,8 +37,20 @@ Feature: Vault
     * call read('Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == false
 
+  @RAKCON-16175 @GET-LIST-USER
+  Scenario: Check user list of organization for add vault
+    #Check correct user list from company
+    Given path '/auth/account/list-users'
+    * request {"isGetAll":true}
+    When method POST
+    Then status 201
+    * def totalUserToAddvault = response.data.totalCount
+    * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
+    * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
+    And match totalUserToAddvault == totalUserInPolicy
+
   @ignore @CHECK-LIST-USER
-  Scenario: Get user list of organization
+  Scenario: Get user list to add vault
     #Get user list of organization
     Given path '/auth/account/list-users'
     * request {"isGetAll":true}
@@ -48,7 +60,6 @@ Feature: Vault
     * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
     * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
-    * print vaultMemberList
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup

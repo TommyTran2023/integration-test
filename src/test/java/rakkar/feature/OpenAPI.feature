@@ -30,3 +30,4 @@ Feature: Open API
     And match response.timestamp == schemaBody.openAPI.getBalanceByAsset.timestamp
     And match response.balance_type == schemaBody.openAPI.getBalanceByAsset.balance_type
     And match response.balance contains schemaBody.openAPI.getBalanceByAsset.balance
+

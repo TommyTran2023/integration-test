@@ -39,7 +39,7 @@ Feature: Vault
 
   @RAKCON-16175 @GET-LIST-USER
   Scenario: Check user list of organization for add vault
-    #Get user list of organization
+    #Check correct user list from company
     Given path '/auth/account/list-users'
     * request {"isGetAll":true}
     When method POST

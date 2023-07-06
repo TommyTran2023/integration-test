@@ -36,9 +36,9 @@
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
-    "openApiURL": "https://uat-openapi.thailaksa.net",
-    "x-api-key": "7e47553522a24b0c9c6c6acd1fe75aeb",
-    "client-id": "20e52538-e3d1-4d3f-b357-23407f75ebe6",
+    "openApiURL": "https://uat-openapi.rakkardigital.com",
+    "x-api-key": "6b707d0e505f437183c887fa1fb835fb",
+    "client-id": "5cfa238aa9684cc1a5544379382b96fe",
     "requesterInfo": {
       "requesterUsername": "ID_CARDAT00006",
       "requesterPasscode": "123111",

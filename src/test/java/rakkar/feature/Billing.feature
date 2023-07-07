@@ -13,5 +13,4 @@ Feature: Billing
     When method GET
     Then status 200
     And match response.status == "success"
-    * def dataReturn = response.data.customerBillings[0]
-    * if (response.data.totalCount > 0) karate.match("dataReturn.paymentStatus == schemaJson.billing.paymentStatus","dataReturn.finalFee == schemaJson.billing.finalFee ")
+    * if (response.data.totalCount > 0) karate.match("response.data.customerBillings[0].paymentStatus == schemaJson.billing.paymentStatus","dataReturn.finalFee == schemaJson.billing.finalFee ")

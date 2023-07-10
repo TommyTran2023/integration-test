@@ -61,8 +61,7 @@ Feature: Vault
     * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
     * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
-    * print approvalUserID
-    * print adminUserID
+
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup

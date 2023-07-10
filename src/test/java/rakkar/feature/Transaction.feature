@@ -7,10 +7,10 @@ Feature: Transaction
 
   @ignore @Filter_transaction_common
   Scenario: Filter transaction
-    Given path '/core/transactions'
-    And params query
-    When method GET
-    Then status 200
+    Given path '/transaction/transactions/v1'
+    And request query
+    When method POST
+    Then status 201
     And match response.status == "success"
 
   @RAKCON-10904 @view_transaction_listing
@@ -41,7 +41,7 @@ Feature: Transaction
     * def query = { limit:'10', offset: '0',dateFrom: '#(dateFrom)', dateTo:'#(dateTo)' }
     * call read('Transaction.feature@Filter_transaction_common')
 
-   @RAKCON-10973 @Filter_transaction_by_asset
+  @RAKCON-10973 @Filter_transaction_by_asset
    Scenario: Filter transaction by asset
      * call read('Transfer.feature@Get_asset_transfer')
      * def tokenName = response.data.tokens[0].name
@@ -54,7 +54,7 @@ Feature: Transaction
     * def value = call read('Vault.feature@ViewVaultListing')
     * def sourceId = value.response.data.vaults[0].id
     * def sourceName = value.response.data.vaults[0].name
-    * def query = { limit:'10', offset: '0',source: '#(sourceId)'}
+    * def query = { limit:'10', offset: '0', sourceData: [ { sourceType: 'internal', sourceId: '#(sourceId)'}] }
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].sourceName == "#(sourceName)"
 
@@ -63,61 +63,61 @@ Feature: Transaction
     * def value = call read('Vault.feature@ViewVaultListing')
     * def destinationId = value.response.data.vaults[0].id
     * def destinationName = value.response.data.vaults[0].name
-    * def query = { limit:'10', offset: '0',destination: '#(destinationId)'}
+    * def query = { limit:'10', offset: '0',destinationData: [ { destinationType: 'internal', destinationId: '#(destinationId)'}] }
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].destinationName == "#(destinationName)"
 
   @RAKCON-12329 @Filter_transaction_by_type_outgoing
   Scenario: Filter transaction by type - outgoing
-    * def query = { limit:'10', offset: '0',type: '#(testData.transaction.type_outgoing)'}
+    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_outgoing)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].type == "#(testData.transaction.type_outgoing)"
 
-   @RAKCON-12421 @Filter_transaction_by_type_incoming
+  @RAKCON-12421 @Filter_transaction_by_type_incoming
   Scenario: Filter transaction by type - incoming
-    * def query = { limit:'10', offset: '0',type: '#(testData.transaction.type_incoming)'}
+    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_incoming)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].type == "#(testData.transaction.type_incoming)"
 
   @RAKCON-12422 @Filter_transaction_by_type_rebalancing
   Scenario: Filter transaction by type - rebalancing
-    * def query = { limit:'10', offset: '0',type: '#(testData.transaction.type_rebalancing)'}
+    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_rebalancing)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].type == "#(testData.transaction.type_rebalancing)"
 
   @RAKCON-12330 @Filter_transaction_by_status_pending
   Scenario: Filter transaction by status - pending
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_pending)'}
+    * def query = { limit:'10', offset: '0', status: ['#(testData.transaction.status_pending)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_pending)"
 
   @RAKCON-12423 @Filter_transaction_by_status_processing
   Scenario: Filter transaction by status - processing
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_processing)'}
+    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_processing)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_processing)"
 
   @RAKCON-12424 @Filter_transaction_by_status_confirming
   Scenario: Filter transaction by status - confirming
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_confirming)'}
+    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_confirming)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_confirming)"
 
   @RAKCON-12425 @Filter_transaction_by_status_completed
   Scenario: Filter transaction by status - completed
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_completed)'}
+    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_completed)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_completed)"
 
   @RAKCON-12426 @Filter_transaction_by_status_failed
   Scenario: Filter transaction by status - failed
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_failed)'}
+    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_failed)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_failed)"
 
   @RAKCON-12427 @Filter_transaction_by_status_reject
   Scenario: Filter transaction by status - reject
-    * def query = { limit:'10', offset: '0',status: '#(testData.transaction.status_rejected)'}
+    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_rejected)']}
     * call read('Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].status == "#(testData.transaction.status_rejected)"
 
@@ -134,7 +134,7 @@ Feature: Transaction
     * def transactionId = response.data.transactions[0].id
     * def status = response.data.transactions[0].status
     * def type = response.data.transactions[0].type
-    Given path '/core/transactions/' + transactionId
+    Given path '/transaction/transactions/' + transactionId
     When method GET
     Then status 200
     And match response.status == "success"

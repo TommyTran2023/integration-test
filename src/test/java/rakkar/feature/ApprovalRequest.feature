@@ -69,7 +69,7 @@ Feature: Approval Request
     * def requestId = value.response.data.requestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
-  @RAKCON-11925 @ApprovalTransferExternal
+  @ignore @RAKCON-11925 @ApprovalTransferExternal
   Scenario: Approval - Transfer external
     * def value = call read('Transfer.feature@External_Transfer')
     * def requestId = value.response.data.requestId

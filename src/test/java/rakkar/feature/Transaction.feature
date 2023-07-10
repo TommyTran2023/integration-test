@@ -45,7 +45,7 @@ Feature: Transaction
    Scenario: Filter transaction by asset
      * call read('Transfer.feature@Get_asset_transfer')
      * def tokenName = response.data.tokens[0].name
-     * def query = { limit:'10', offset: '0',assetId: '#(tokenId)'}
+     * def query = { limit:'10', offset: '0',assetId: ['#(tokenId)']}
      * call read('Transaction.feature@Filter_transaction_common')
      * match each $response.data.transactions[*].name == "#(tokenName)"
 

@@ -52,6 +52,7 @@ Feature: Vault
   @ignore @CHECK-LIST-USER
   Scenario: Get user list to add vault
     #Get user list of organization
+    * header User-Agent = "rakkar/1.0.0 (com.rakkar.digital.mobile; build:312; iOS 16.5.0) Alamofire/5.6.2"
     Given path '/auth/account/list-users'
     * request {"isGetAll":true}
     When method POST
@@ -60,6 +61,7 @@ Feature: Vault
     * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
     * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
+
 
   @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup

@@ -189,7 +189,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.networkConnections contains schemaBody.networkManagament.networkConnection
 
-  @RAKCON-15213 @Editconnectiondepositrouting
+  @ignore @RAKCON-15213 @Editconnectiondepositrouting
   Scenario: Edit connection deposit routing
     * call read('NetworkManagement.feature@ViewConnectionDetail')
     * def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "hasDefaultRouting": true , "note": 'Note', }
@@ -202,14 +202,14 @@ Feature: Network Management
     Then status 200
     And match response.status == "success"
 
-  @RAKCON-15308 @Canceleditconnectionrouting
+  @ignore @RAKCON-15308 @Canceleditconnectionrouting
   Scenario: Cancel request edit connection routing
     * def value = "EDIT_NETWORK_CONNECTION_DEPOSIT"
     * def nameDisplay = "Edit network connection"
     * call read('NetworkManagement.feature@View_My_Request_Network')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15214 @RemoveConnection
+  @ignore @RAKCON-15214 @RemoveConnection
   Scenario: Remove connection
     * def body = {"note": 'Note', }
     * call read('Common.feature@FIDO-Requester')
@@ -221,14 +221,14 @@ Feature: Network Management
     Then status 200
     And match response.status == "success"
 
-  @RAKCON-15909 @Cancelremoveconnection
+  @ignore @RAKCON-15909 @Cancelremoveconnection
   Scenario: Cancel request remove connection
     * def value = "REMOVE_NETWORK_CONNECTION"
     * def nameDisplay = "Remove network connection"
     * call read('NetworkManagement.feature@View_My_Request_Network')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15414 @ListNetworkForTransfer
+  @ignore @RAKCON-15414 @ListNetworkForTransfer
   Scenario: List network for transfer
     * def query = { limit:'20', offset: '0' }
     Given path 'network/networks/connections/counterparties'

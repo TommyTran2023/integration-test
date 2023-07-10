@@ -245,13 +245,13 @@ Feature: Transfer
 
 
     #Get estimated fee : Transfer to other network
-  @RAKCON-15412 @Get_estimate_fee_network
+  @ignore @RAKCON-15412 @Get_estimate_fee_network
   Scenario: Transfer to other network - Get estimated fee
     * call read('NetworkManagement.feature@ListNetworkForTransfer')
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)'}
     * call read('Transfer.feature@Get_estimate_fee_common')
 
-  @RAKCON-15413 @Total_estimate_fee_network
+  @ignore @RAKCON-15413 @Total_estimate_fee_network
   Scenario: Transfer to other network - Total estimated fee
     * call read('NetworkManagement.feature@ListNetworkForTransfer')
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}

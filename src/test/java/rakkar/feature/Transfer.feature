@@ -21,7 +21,7 @@ Feature: Transfer
   #Get estimated fee : Hot to Hot
   @ignore @Get_estimate_fee_common
     Scenario: Transfer Hot to hot - Get estimated fee common
-      Given path 'transaction/transactions/estimated-fee'
+      Given path 'core/transactions/estimated-fee'
       And request body_estimate_fee
       When method POST
       Then status 201
@@ -54,7 +54,7 @@ Feature: Transfer
 
   @ignore @Total_estimate_fee_common
   Scenario: Transfer Hot to hot - Total estimated fee common
-    Given path 'transaction/transactions/total-estimate-fee'
+    Given path 'core/transactions/total-estimate-fee'
     And request body_total_estimate
     When method POST
     Then status 201
@@ -90,7 +90,7 @@ Feature: Transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -107,7 +107,7 @@ Feature: Transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -124,7 +124,7 @@ Feature: Transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -142,7 +142,7 @@ Feature: Transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -172,7 +172,7 @@ Feature: Transfer
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -205,7 +205,7 @@ Feature: Transfer
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -232,7 +232,7 @@ Feature: Transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201
@@ -264,7 +264,7 @@ Feature: Transfer
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header User-Agent = "rakkar/1.0.0 (com.rakkar.digital.mobile; build:312; iOS 16.5.0) Alamofire/5.6.2"
-    Given path 'transaction/transactions'
+    Given path 'core/transactions'
     And request body
     When method POST
     Then status 201

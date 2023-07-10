@@ -63,7 +63,7 @@ Feature: Generate Challenge Answer for Biometric
 
   @ignore @TIERS_SIGNER
   Scenario: Transfer - View asset list for transfer
-    Given path 'core/transactions/tiers-signer'
+    Given path 'transaction/transactions/tiers-signer'
     When method GET
     Then status 200
 
@@ -89,7 +89,7 @@ Feature: Generate Challenge Answer for Biometric
   Scenario: Caculate the limit transfer
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":10,"destinationId":'#(destinationId_hot)'}
-    Given path 'core/transactions/estimated-fee'
+    Given path 'transaction/transactions/estimated-fee'
     And request body_estimate_fee
     When method POST
     Then status 201

@@ -155,11 +155,9 @@ Feature: HomePage
     
   @RAKCON-10993 @RecentTransactions
   Scenario: Recent transactions
-    Given path '/core/transactions'
-    * param limit = 5
-    * param offset = 0
-    * param status = 'COMPLETED'
-    When method GET
-    Then status 200
+    Given path '/transaction/transactions'
+    * request { "limit" : 5, "offset":0, "status" : [ "COMPLETED" ] }
+    When method POST
+    Then status 201
     * def transactionsCount = response.data.transactions
     * assert transactionsCount.length == 5

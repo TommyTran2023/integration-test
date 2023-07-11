@@ -2,6 +2,7 @@ def SLACK_CHANNEL = "rakkar-alert-automation-test"
 def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e-4e80-b129-ff3321a59709@201a91bf-99c5-4514-99f9-725c381f0f8f/JenkinsCI/4cce63699dd64472878a3bc7d767d694/98b4bffe-269c-449b-8152-e60965a8c794"
 // def ENV = "SIT" // will be passed as parameter
 def KARATE_ENV = "qa"
+def BRANCH = "develop"
 def testSummary
 def failedTestMsg = []
 def failedScenarios = []
@@ -17,21 +18,26 @@ pipeline {
     stages {
         stage ('Git Checkout') {
             steps {
-                git branch: 'develop',
-                credentialsId: 'github',
-                url: 'https://github.com/rakkar-digital-org/integration-test.git'
+                // update branch and test environment
+                script {
+                    if (params.ENV == "PROD") {
+                        BRANCH = "main"
+                        KARATE_ENV = "prod"
+                    } else if (params.ENV == "UAT") {
+                        BRANCH = "uat"
+                        KARATE_ENV = "uat"
+                    }
+                    echo "BRANCH = ${BRANCH}"
+                }
+                git branch: "${BRANCH}",
+                    credentialsId: 'github',
+                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
             }
         }
 
         stage ('Test Execution') {
             steps {
                 script {
-                    //default KARATE_ENV = qa
-                    if (params.ENV == "PROD") {
-                        KARATE_ENV = "prod"
-                    } else if (params.ENV == "UAT") {
-                        KARATE_ENV = "uat"
-                    }
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     withMaven(maven: 'Maven') {
                         sh "mvn clean test -Dkarate.env=${KARATE_ENV}"

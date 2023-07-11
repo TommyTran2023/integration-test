@@ -155,7 +155,7 @@ Feature: HomePage
     
   @RAKCON-10993 @RecentTransactions
   Scenario: Recent transactions
-    Given path '/transaction/transactions'
+    Given path '/transaction/transactions/v1'
     * request { "limit" : 5, "offset":0, "status" : [ "COMPLETED" ] }
     When method POST
     Then status 201

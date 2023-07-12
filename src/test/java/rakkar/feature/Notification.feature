@@ -36,7 +36,7 @@ Feature: Notification
     * match notificationCenter.response.data.notifications[0].requestId == rejectTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.rejectTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == testData.notification.rejectTransfer.state
-    * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+testData.transfer.withdraw.symbol+">> from <<"+testData.transfer.withdraw.sourceName_hot+">> to <<"+testData.transfer.withdraw.destinationName_cold+">> has been rejected."
+    * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+rejectTransfer.value.response.data.symbol+">> from <<"+rejectTransfer.value.response.data.sourceName+">> to <<"+rejectTransfer.value.response.data.destinationName+">> has been rejected."
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
   @RAKCON-12515 @ViewNotificationCenterTransactionAlert
@@ -47,7 +47,7 @@ Feature: Notification
     * match notificationCenter.response.data.notifications[0].requestId == approveTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.approveTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == testData.notification.approveTransfer.state
-    * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+testData.transfer.withdraw.symbol+">>"+" from <<"+testData.transfer.withdraw.sourceName_hot+">> to <<"+testData.transfer.withdraw.destinationName_cold+">> has been approved"
+    * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+approveTransfer.value.response.data.symbol+">>"+" from <<"+approveTransfer.value.response.data.sourceName+">> to <<"+approveTransfer.value.response.data.destinationName+">> has been approved"
     * match notificationCenter.response.data.notifications[0].body == notificationContent
 
   @ignore @ViewNotificationCenter-Common

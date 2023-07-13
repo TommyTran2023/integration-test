@@ -338,14 +338,7 @@ Feature: Vault
 
   @RAKCON-11287 @ViewHiddenVaultList
   Scenario: View hidden listing vault
-    Given path '/core/vault/accounts'
-    * param isHideList = true
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'DESC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * call read('Vault.feature@ViewHiddenVaultCommon')
     * def vaultsSchema = schemaBody.vault.schema_list
     * match response.data.vaults == '#[]vaultsSchema'
     * match response.data.hasSmallBalance == '#boolean'
@@ -363,3 +356,25 @@ Feature: Vault
     * def listSearchedVault = response.data.vaults
     * def listSearchedVaultName = $listSearchedVault[*].name
     * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
+
+  @RAKCON-16523 @Unhidevault
+  Scenario: Unhide a vault
+    * def value = call read('Vault.feature@ViewHiddenVaultCommon')
+    * def vaultId = value.response.data.vaults[0].id
+    Given path '/core/vault/accounts/'+vaultId+'/unhide'
+    When method POST
+    Then status 201
+    * match response.status == 'success'
+
+  @ignore @ViewHiddenVaultCommon
+  Scenario: View hidden listing vault common
+    Given path '/core/vault/accounts'
+    * param isHideList = true
+    * param limit = 10
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    When method GET
+    Then status 200
+
+

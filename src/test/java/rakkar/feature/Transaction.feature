@@ -145,7 +145,7 @@ Feature: Transaction
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
-    Given path 'core/transactions/export-web'
+    Given path 'transaction/transactions/export-web'
     And request body
     When method POST
     Then status 201

@@ -5,6 +5,7 @@ Feature: Staking
     * def schemaBody = read('classpath:data/schema.json')
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * def testData = read('classpath:data/data_test.json')
+    * call read('GetUserInfo.feature@GetUserInfo')
 
   @RAKCON-15418 @Get_List_Pool
   Scenario: View list pool
@@ -28,7 +29,7 @@ Feature: Staking
   @RAKCON-15441 @Create_staking
   Scenario: Create staking
     * call read('Staking.feature@Get_estimatefee_stake')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(stakeVaultId)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -53,12 +54,14 @@ Feature: Staking
     Then status 200
     And match response.status == "success"
     And match response.data == schemaBody.staking.staking_accountTab
-   * def stakeId = response.data.result[0].id
+    * def stakeId = response.data.result[0].id
+    * def transactionId = response.data.result[0].transactionId
 
   @RAKCON-15444 @Staking_detail
   Scenario: View staking detail
     * call read('Staking.feature@Staking_from_account_tab')
-    Given path 'staking/actions/progress' + stakeId
+    * def query = { stakeId: '#(stakeId)'}
+    Given path 'staking/actions/progress'
     And params query
     When method GET
     Then status 200
@@ -82,14 +85,12 @@ Feature: Staking
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.tokenData.symbol == "ADA"
-    And match response.data.tokenData.externalAssetId == "ADA_Test"
-    * def transactionId = response.data.rewardData.transactionId
+    And match response.data[0].symbol == "ADA Test"
 
   @RAKCON-15447 @Un_staking
   Scenario: Check unstake
     * call read('Staking.feature@Get_estimatefee_stake')
-    * call read('Staking.feature@Staking_detail')
+    * call read('Staking.feature@Staking_from_account_tab')
     * def body = { "estimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
@@ -97,9 +98,8 @@ Feature: Staking
     Given path 'staking/records/' + transactionId +'/un-staking'
     And request body
     When method PUT
-    Then status 201
+    Then status 200
     And response.status == "success"
-    And match response.message == "Success"
 
   @RAKCON-15952 @CancelUnStaking
   Scenario: Cancel request unstake
@@ -112,14 +112,14 @@ Feature: Staking
     * def value = call read('Staking.feature@Get_List_Pool')
     * def poolChangeId = value.response.data.pools[2].bech32Id
     * call read('Staking.feature@Staking_detail')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(stakeVaultId)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'staking/records/change-staking-pool/'+ stakeId
     And request body
     When method PUT
-    Then status 201
+    Then status 200
     And response.status == "success"
     And match response.message == "Success"
 

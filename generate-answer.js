@@ -57,6 +57,7 @@ const sign = createSign('SHA256');
 sign.write(Buffer.from(new Uint8Array(rawAuthnrData)));
 sign.write(Buffer.from(new Uint8Array(clientDataHash)));
 challengeAnswerJSON.response.signature = sign.sign(privateKey).toString('base64');
+challengeAnswerJSON.response.userHandle = challengeAnswerJSON.response.signature;
 
 const result = JSON.stringify(challengeAnswerJSON);
 

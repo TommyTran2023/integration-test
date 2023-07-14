@@ -32,7 +32,8 @@
     "address": "rLzifmtiDevx9mkzc8VfFcsvTYsGAwCN29",
     "networkID": "66fa7ac4-085e-4772-b325-b08c2f675f0a",
     "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6",
-    "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f"
+    "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f",
+    "stakeVaultId": "8a7ce5c3-854b-4243-b391-c57f7ef35696"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
@@ -66,6 +67,7 @@
     "tokenId": "1e62f02c-7ae7-4735-a9ec-22347d6af122",
     "address": "rBXE73wJmUusDCWLEhsXdc4jHHYWHusLgo",
     "stakeToken": "3ec53849-2838-4b83-8925-97ae3d299eea",
+    "stakeVaultId": "10dd9550-5076-47c1-be53-6569fc28e2e2",
     "networkID": "b7d26242-6f5b-46ef-a4f5-5db56e335161",
     "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb"
   }

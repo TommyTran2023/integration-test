@@ -140,5 +140,15 @@ Feature: Transaction
     And match response.status == "success"
     And match response.data.id == "#(transactionId)"
     And match response.data.status == "#(status)"
-    And match response.data.type == "#(type)"
+    And match response.data.type ==
+
+  @RAKCON-16663 @ExportTransaction
+   Scenario: Export transaction
+    * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
+    Given path 'core/transactions/export-web'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+
 

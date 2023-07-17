@@ -104,6 +104,24 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @ignore @RAKCON-16709 @RejectCreateStaking
+  Scenario: Reject request - Create staking
+    * def value = call read('Staking.feature@Create_staking')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @ignore @RAKCON-16710 @RejectUnStaking
+  Scenario: Reject request - Un staking
+    * def value = call read('Staking.feature@Un_staking')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
+  @ignore @RAKCON-16711 @RejectChangeStakingPool
+  Scenario: Reject request - Change Pool staking
+    * def value = call read('Staking.feature@ChangeStakingPool')
+    * def requestId = value.response.data.requestId
+    * call read('RejectRequest.feature@RejectRequestCommon')
+
   @ignore @RejectRequestEditUserCommon
   Scenario: Reject request edit user - Common
     * def value = call read('UserManagement.feature@View_user_detail')

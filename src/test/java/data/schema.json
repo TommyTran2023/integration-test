@@ -202,25 +202,5 @@
       "totalUsdYesterday": "#number",
       "stakedAssets" : "#[]"
     }
-  },
-  "openAPI": {
-    "getBalanceByAsset": {
-      "timestamp": "#string",
-      "balance_type": "#string",
-       "balance": [
-         {
-          "asset_id": "#string",
-          "asset_name": "#string",
-          "network_id": "#string",
-          "network_name": "#string",
-          "balances": {
-            "total_balance": "#string",
-            "available_balance": "#string",
-            "processing_balance": "#string",
-            "staking_balance": "#string",
-           "claimable_balance": "#string"
-                      }
-           }]
-       }
   }
 }

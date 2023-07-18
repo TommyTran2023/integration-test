@@ -8,7 +8,7 @@ Feature: Open API
     * call read('OpenAPI_readSchema.feature@Read_schema_balance')
     * header x-api-key = x-api-key
     * header account-id = client-id
-    * def query = { assetId: 'XRP_Test'}
+    * def query = { asset_id: 'XRP_TEST'}
     Given path 'v1/balances'
     And params query
     When method GET
@@ -22,7 +22,7 @@ Feature: Open API
     * call read('OpenAPI_readSchema.feature@Read_schema_balance')
     * header x-api-key = x-api-key
     * header account-id = client-id
-    * def query = { assetId: 'XRP_Test', vault_type: 'HOT_WALLET' }
+    * def query = { asset_id: 'XRP_TEST', vault_type: 'HOT_WALLET' }
     Given path 'v1/balances'
     And params query
     When method GET

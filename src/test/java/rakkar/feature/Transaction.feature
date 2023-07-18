@@ -140,7 +140,7 @@ Feature: Transaction
     And match response.status == "success"
     And match response.data.id == "#(transactionId)"
     And match response.data.status == "#(status)"
-    And match response.data.type ==
+    And match response.data.type == "#(type)"
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction

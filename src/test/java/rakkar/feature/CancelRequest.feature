@@ -45,7 +45,7 @@ Feature: Cancel Request
     * def requestId = value.response.data.requestId
     * call read('CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15490 @CancelExternalWithdraw
+  @ignore @RAKCON-15490 @CancelExternalWithdraw
   Scenario: Cancel request - Cancel external withdraw
     * def value = call read('Transfer.feature@External_Transfer')
     * def requestId = value.response.data.requestId

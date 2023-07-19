@@ -2,10 +2,12 @@
 Feature: Open API - Read schema from external link
   Background:
     * url openAPI_doc
+    * def testData = read('classpath:data/data_test.json')
+    * def pathData = testData.common.openAPI_path
 
   @Get_schema_structure_common
   Scenario: Open API - Read schema from external link
-    Given path 'openapi/649a7c11ec5bf2001e31a3c7'
+    Given path pathData
     When method GET
 
   @Read_schema_balance

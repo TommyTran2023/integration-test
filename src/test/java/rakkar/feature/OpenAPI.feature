@@ -5,7 +5,7 @@ Feature: Open API
 
   @RAKCON-15514 @Get_balance_by_assetId
   Scenario: Open API - Get balance by assetId
-    * call read('OpenAPI_readSchema.feature@Read_schema_balance')
+    * call read('OpenAPI_ReadSchema.feature@Read_schema_balance')
     * header x-api-key = x-api-key
     * header account-id = client-id
     * def query = { asset_id: 'XRP_TEST'}
@@ -19,7 +19,7 @@ Feature: Open API
 
   @RAKCON-15515 @Get_balance_by_vaultType
   Scenario: Open API - Get balance by vault type
-    * call read('OpenAPI_readSchema.feature@Read_schema_balance')
+    * call read('OpenAPI_ReadSchema.feature@Read_schema_balance')
     * header x-api-key = x-api-key
     * header account-id = client-id
     * def query = { asset_id: 'XRP_TEST', vault_type: 'HOT_WALLET' }

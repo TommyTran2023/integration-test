@@ -13,9 +13,7 @@ Feature: Open API
     And params query
     When method GET
     Then status 200
-    * karate.match(response.timestamp, expectedSchema.timestamp)
-    * karate.match(response.balance_type, expectedSchema.balance_type)
-    * karate.match(response.balance, expectedSchema.balance)
+    And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
 
   @RAKCON-15515 @Get_balance_by_vaultType
   Scenario: Open API - Get balance by vault type
@@ -27,9 +25,32 @@ Feature: Open API
     And params query
     When method GET
     Then status 200
-    * karate.match(response.timestamp, expectedSchema.timestamp)
-    * karate.match(response.balance_type, expectedSchema.balance_type)
-    * karate.match(response.balance, expectedSchema.balance)
+    And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
+
+  @RAKCON-17445 @GetVaultList
+    Scenario: Open API - Get Vault List
+      * call read('OpenAPI_ReadSchema.feature@Read_schema_vault')
+      * header x-api-key = x-api-key
+      * header account-id = client-id
+      * def query = { asset_id: 'XRP_TEST', vault_type: 'warm', limit: 10, offset: 0 }
+      Given path 'v1/vaults'
+      And params query
+      When method GET
+      Then status 200
+      And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
+
+  @RAKCON-17446 @GetVaultDetail
+  Scenario: Open API - Get Vault Details
+    * call read('OpenAPI_ReadSchema.feature@Read_schema_vault')
+    * def vaultList = call read('OpenAPI.feature@GetVaultList')
+    * def vaultId = vaultList.response.vaults[0].vault_id
+    * header x-api-key = x-api-key
+    * header account-id = client-id
+    Given path 'v1/vaults/'+ vaultId
+    When method GET
+    Then status 200
+    And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
+
 
   @RAKCON-17447 @Get_whitelist
   Scenario: Open API - Get whitelist

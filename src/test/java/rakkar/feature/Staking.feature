@@ -1,4 +1,4 @@
-@ignore @RAKCON-10583
+@RAKCON-10583
 Feature: Staking
   Background:
     * url baseURL
@@ -29,7 +29,7 @@ Feature: Staking
   @RAKCON-15441 @Create_staking
   Scenario: Create staking
     * call read('Staking.feature@Get_estimatefee_stake')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(stakeVaultId)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -112,7 +112,7 @@ Feature: Staking
     * def value = call read('Staking.feature@Get_List_Pool')
     * def poolChangeId = value.response.data.pools[2].bech32Id
     * call read('Staking.feature@Staking_detail')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(stakeVaultId)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultUpdateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode

@@ -71,3 +71,4 @@ For each enviroment, it needs to get the api-key and client-id from web-app and 
 Staking feature is focus on ADA token now. So for each enviroment, it should have ADA tokenId, config on env
 1. Add ADA token into a specific vault
 2. Get the tokenId, add into env file with field "stakeToken"
+3. Prepare a vault already has staking,add vaultId to env file, to support for run unstake and change pool feature.

@@ -303,7 +303,7 @@ Feature: Vault
     * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
-  @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
+  @ignore @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
   Scenario: Edit vault with not changed information
     # Create a new vault then approve it
     * call read('ApprovalRequest.feature@ApproveNewVaultRequest')

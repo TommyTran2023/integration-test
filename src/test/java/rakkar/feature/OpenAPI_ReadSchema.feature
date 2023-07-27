@@ -13,4 +13,11 @@ Feature: Open API - Read schema from external link
   @Read_schema_balance
   Scenario: Open API - Read schema for balance api
     * def readSchema = call read('OpenAPI_ReadSchema.feature@Get_schema_structure_common')
-    * def expectedSchema = readSchema.response.paths['/balances'].get.responses['200'].content['application/json'].examples['Example-1'].value
+    * def expectedSchema = readSchema.response.components.schemas.resp_balances
+
+  @Read_schema_vault
+  Scenario: Open API - Read schema for vault api
+    * def readSchema = call read('OpenAPI_ReadSchema.feature@Get_schema_structure_common')
+    * def expectedSchema = readSchema.response.components.schemas.resp_vaults_list
+
+

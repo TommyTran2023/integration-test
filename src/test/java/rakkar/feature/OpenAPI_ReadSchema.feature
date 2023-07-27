@@ -19,3 +19,5 @@ Feature: Open API - Read schema from external link
   Scenario: Open API - Read schema for vault api
     * def readSchema = call read('OpenAPI_ReadSchema.feature@Get_schema_structure_common')
     * def expectedSchema = readSchema.response.components.schemas.resp_vaults_list
+
+

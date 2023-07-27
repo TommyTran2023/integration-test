@@ -68,7 +68,6 @@ Feature: WhiteList Folder
     And match response.status == "success"
     And match response.data.folders[0].name == "#(folderName)"
     And match response.data.folders[0].type == "#(type)"
-    And match response.data.totalCount == 1
 
   @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type

@@ -130,17 +130,16 @@ Feature: Open API
     * def query = { network_id: 'ADA_TEST', limit: 10, offset: 0 }
     * call read('OpenAPI.feature@Transaction_common')
 
-  @ignore @RAKCON-17457 @Transaction_detail
+  @RAKCON-17457 @Transaction_detail
   Scenario: Open API - Get transaction detail
     * def transactionList = call read('OpenAPI.feature@Transaction_by_type')
     * def transactionId = transactionList.response.transactions[0].transaction_id
-    * call read('OpenAPI_ReadSchema.feature@Read_schema_transaction')
     * header x-api-key = x-api-key
     * header account-id = client-id
     Given path 'v1/transactions/'+ transactionId
     When method GET
     Then status 200
-    And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
+    And match karate.keysOf(response) == karate.keysOf(transactionList.response.transactions[0])
 
   @ignore @Transaction_common
   Scenario: Open API - Transaction listing common

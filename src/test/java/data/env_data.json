@@ -3,8 +3,8 @@
     "baseURL": "https://qa-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "x-api-key": "d3aae1b50a0a485a8912a2ab33208333",
-    "client-id": "6b84cadd2be44deb9a237b61775ddb9e",
+    "x-api-key": "e30556190e8f41abb04a1a2d044227bc",
+    "client-id": "d662b65437174a60b0fa16d14ba5cd46",
     "requesterInfo": {
       "requesterUsername": "ID_CARDPT24121993",
       "requesterPasscode": "123123",

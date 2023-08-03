@@ -14,7 +14,7 @@ Feature: Auto generate and delete api key
     When method POST
     Then status 201
 
-  @Delete_api_key
+  @After @Delete_api_key
   Scenario: Delete x-api-key and accountId
     Given path 'v1/api-keys/' + idDeleted
     When method DELETE

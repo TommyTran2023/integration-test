@@ -5,10 +5,10 @@ The project focus on function test by API testing which you can make GET, PUT, P
 
 ### Prerequisites
 The project is developed in Java with Maven, so it will install the following software:
-* Oracle Java 11 SDK
+* Oracle Java 11 JDK
 * Apache Maven
 * Node JS
-* Your favorite IDE, including : Eclipse IDE, Intellij IDEA
+* Your favorite IDE, including : Eclipse IDE, Intellij IDEA, VS Code
 * Onboarding account manually in REP site with corresponding environment (for example: https://uat-rep.rakkardigital.com/login) and add Username in /data/env_data.json
 
 ### Installation

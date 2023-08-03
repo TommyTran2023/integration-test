@@ -377,4 +377,15 @@ Feature: Vault
     When method GET
     Then status 200
 
-
+  @RAKCON-17772 @CreateVaultCold
+  Scenario: Create vault - cold
+    Given path '/core/vault'
+    * call read('Vault.feature@GenerateVaultName')
+    * call read('Common.feature@FIDO-Requester')
+    * call read('Vault.feature@CHECK-LIST-USER')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'COLD_WALLET',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
+    * request requestBody
+    When method POST
+    Then status 201

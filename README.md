@@ -5,10 +5,10 @@ The project focus on function test by API testing which you can make GET, PUT, P
 
 ### Prerequisites
 The project is developed in Java with Maven, so it will install the following software:
-* Oracle Java 11 SDK
+* Oracle Java 11 JDK
 * Apache Maven
 * Node JS
-* Your favorite IDE, including : Eclipse IDE, Intellij IDEA
+* Your favorite IDE, including : Eclipse IDE, Intellij IDEA, VS Code
 * Onboarding account manually in REP site with corresponding environment (for example: https://uat-rep.rakkardigital.com/login) and add Username in /data/env_data.json
 
 ### Installation
@@ -63,10 +63,6 @@ For each environment, it should have specific vaults for transfer.
 - Address
 ### Setup data for network management
 For each enviroment, it should have specific profile and connection already approved manually by fire block.
-### Add api-key and client-id for open api 
-For each enviroment, it needs to get the api-key and client-id from web-app and config into env.data
-1. Open web-app , scan QR code to login
-2. Go to "API Management" menu, get any api-key and accountId in the table list.If not, user can generate by yourself. This is api-key and client-id can use to test.
 ### Setup data staking
 Staking feature is focus on ADA token now. So for each enviroment, it should have ADA tokenId, config on env
 1. Add ADA token into a specific vault

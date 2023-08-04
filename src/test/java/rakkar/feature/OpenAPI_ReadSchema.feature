@@ -25,4 +25,10 @@ Feature: Open API - Read schema from external link
     * def readSchema = call read('OpenAPI_ReadSchema.feature@Get_schema_structure_common')
     * def expectedSchema = readSchema.response.components.schemas.resp_vaults_list
 
+  @Read_schema_transaction
+  Scenario: Open API - Read schema for transaction api
+    * def readSchema = call read('OpenAPI_ReadSchema.feature@Get_schema_structure_common')
+    * def expectedSchema = readSchema.response.components.schemas.resp_transactions_list
+
+
 

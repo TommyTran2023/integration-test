@@ -3,8 +3,6 @@
     "baseURL": "https://qa-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "x-api-key": "d3aae1b50a0a485a8912a2ab33208333",
-    "client-id": "6b84cadd2be44deb9a237b61775ddb9e",
     "requesterInfo": {
       "requesterUsername": "ID_CARDPT24121993",
       "requesterPasscode": "123123",
@@ -41,8 +39,6 @@
     "baseURL": "https://uat-api.rakkardigital.com",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "x-api-key": "6b707d0e505f437183c887fa1fb835fb",
-    "client-id": "5cfa238aa9684cc1a5544379382b96fe",
     "requesterInfo": {
       "requesterUsername": "ID_CARDAT00006",
       "requesterPasscode": "123111",

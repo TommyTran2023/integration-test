@@ -128,6 +128,24 @@ Feature: Staking
     * call read('Staking.feature@View_My_Request_Stake')
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @ignore @RAKCON-17459 @GetstakeSubcription
+  Scenario: Staking from Newsletter - Get stake subscription
+    * def query = { limit: 10, offset: 0 }
+    Given path 'core/wallet/stake-subscription/tokens'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+
+  @ignore @RAKCON-17460 @Getvaultforstake
+  Scenario: Staking from Newsletter - Get vault for stake
+    * def query = { limit: 10, offset: 0 }
+    Given path 'core/vault/stake/' + '#(stakeToken)'
+    And params query
+    When method GET
+    Then status 200
+    And match response.status == "success"
+
   @ignore @View_My_Request_Stake
   Scenario: View my request for type staking
     Given path 'core/quorums'

@@ -303,14 +303,6 @@ Feature: Vault
     * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
-  @ignore @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
-  Scenario: Edit vault with not changed information
-    # Create a new vault then approve it
-    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
-    # Use the same requestBody to edit vault
-    * def editVaultPolicyCommon = call read('Vault.feature@EditVaultPolicy-Common')
-    # Should not allow user to edit vault with not changed information
-    Then match editVaultPolicyCommon.response.status != "success"
 
   @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
@@ -377,4 +369,15 @@ Feature: Vault
     When method GET
     Then status 200
 
-
+  @RAKCON-17772 @CreateVaultCold
+  Scenario: Create vault - cold
+    Given path '/core/vault'
+    * call read('Vault.feature@GenerateVaultName')
+    * call read('Common.feature@FIDO-Requester')
+    * call read('Vault.feature@CHECK-LIST-USER')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'COLD_WALLET',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
+    * request requestBody
+    When method POST
+    Then status 201

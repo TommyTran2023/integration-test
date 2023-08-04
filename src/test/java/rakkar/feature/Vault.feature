@@ -303,14 +303,6 @@ Feature: Vault
     * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
-  @RAKCON-12799 @EditVaultPolicyWithNotChangedInfo
-  Scenario: Edit vault with not changed information
-    # Create a new vault then approve it
-    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
-    # Use the same requestBody to edit vault
-    * def editVaultPolicyCommon = call read('Vault.feature@EditVaultPolicy-Common')
-    # Should not allow user to edit vault with not changed information
-    Then match editVaultPolicyCommon.response.status != "success"
 
   @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request

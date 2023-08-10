@@ -24,9 +24,9 @@ urls=(
     "audit/health"
     "reports/health"
     "openapi/health"
-    "staking/health"
+    "staking/health"    
     "transaction/health"
-    )
+)
 
 # Loop through each URL and check response status
 for url in "${urls[@]}"; do

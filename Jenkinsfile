@@ -39,11 +39,10 @@ pipeline {
             steps {
                 script {
                     sh "/bin/bash checkService.sh ${params.ENV}"
-                    }
                 }
             }
         }
-
+    
         stage ('Test Execution') {
             steps {
                 script {

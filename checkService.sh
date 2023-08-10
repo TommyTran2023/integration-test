@@ -10,21 +10,21 @@ check_url() {
     if ((${#errors[@]})); then
     	echo $errors
     	exit 1
-	fi
+    fi
 }
 
 # List of URLs to check
 endpoint="http://acf5a27f1211c42fea8ea78207b527ae-936ee4c7bfbc751f.elb.ap-southeast-1.amazonaws.com"
 env="$1"
 urls=(
-	"core/health" 
-	"auth/health" 
-    "notification/health" 
+    "core/health"
+    "auth/health" 
+    "notification/health"
     "crm/health"
     "audit/health"
     "reports/health"
     "openapi/health"
-    "staking/health"    
+    "staking/health"
     "transaction/health"
 )
 

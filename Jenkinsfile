@@ -35,6 +35,14 @@ pipeline {
             }
         }
 
+        stage ('Check Service Status') {
+            steps {
+                script {
+                    sh "/bin/bash checkService.sh ${params.ENV}"
+                }
+            }
+        }
+    
         stage ('Test Execution') {
             steps {
                 script {

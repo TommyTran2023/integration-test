@@ -80,6 +80,7 @@ Feature: Group Policies
     Scenario: Edit Members In Group
         * call read('Vault.feature@CHECK-LIST-USER')
         * call read('GroupPolicies.feature@GetGroupPolicies')
+        * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
         * call read('GroupPolicies.feature@GenerateGroupName')
         * def requestBody = { "groupName": '#(groupName)', "exceptGroupId": '#(groups[0].id)' , "userIds": [#(requesterUserID), #(approvalUserID), #(adminUserID)]}
         * call read('GroupPolicies.feature@ValidateGroupPolicies')
@@ -87,7 +88,7 @@ Feature: Group Policies
         * header challenge-answer = challengeAnswerRequest
         * header passcode = requesterInfo.requesterPasscode
         Given path '/core/group-policies/'+groups[0].id
-        * request { "name": '#(groupName)', "memberIds": [#(requesterUserID), #(approvalUserID), #(adminUserID)]}
+        * request { "names": '#(groupName)', "memberIds": ["#(requesterUserID)", "#(approvalUserID)", "#(adminUserID)"]}
         When method PUT
         Then status 200
         * match response.code == 200

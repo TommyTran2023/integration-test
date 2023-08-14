@@ -1,6 +1,7 @@
 {
   "qa": {
     "baseURL": "https://qa-api.thailaksa.net",
+    "baseMobileURL": "https://mobile-qa-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
     "requesterInfo": {
@@ -37,6 +38,7 @@
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
+    "baseMobileURL": "https://mobile-uat-api.thailaksa.net",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
     "requesterInfo": {

@@ -11,19 +11,19 @@ Feature: Vault
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
 
-  @ignore @GenerateVaultName
+    @ignore @GenerateVaultName
   Scenario: Generate vault name
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def vaultName = 'AT-RAK-' + now()
 
-  @ignore @CheckVaultNameCommon
+    @ignore @CheckVaultNameCommon
   Scenario: Check vault name common
     Given path '/core/vault/check-vault-name'
     And params query
     When method GET
     Then status 200
 
-  @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
+    @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
     * def value = call read('Vault.feature@ViewVaultListing')
     * def name = value.response.data.vaults[0].name
@@ -31,25 +31,22 @@ Feature: Vault
     * call read('Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == true
 
-  @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
+    @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
   Scenario: Check vault name is Not existed in the company
     * def query = { name:'VaultTestNotExist'}
     * call read('Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == false
 
-  @RAKCON-16175 @GET-LIST-USER
+    @RAKCON-16175 @GET-LIST-USER
   Scenario: Check user list of organization for add vault
     #Check correct user list from company
-    Given path '/auth/account/list-users'
-    * request {"isGetAll":true}
-    When method POST
-    Then status 201
-    * def totalUserToAddvault = response.data.totalCount
+    * def listUsers = call read('UserManagement.feature@ListUsers')
+    * def totalUserToAddvault = listUsers.response.data.totalCount
     * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
     * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
     And match totalUserToAddvault == totalUserInPolicy
 
-  @ignore @CHECK-LIST-USER
+    @ignore @CHECK-LIST-USER
   Scenario: Get user list to add vault
     #Get user list of organization
     * header User-Agent = "rakkar/1.0.0 (com.rakkar.digital.mobile; build:312; iOS 16.5.0) Alamofire/5.6.2"
@@ -63,7 +60,7 @@ Feature: Vault
     * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]
 
 
-  @RAKCON-10217 @AddNewVaultWithAdminSetup
+    @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
@@ -80,7 +77,7 @@ Feature: Vault
     * match vaultTypeResponseWA == testData.vault.vault_type
     * def vaultIDWA = response.data.id
 
-  @RAKCON-10220 @AddNewVaultWithOutAdminSetup
+    @RAKCON-10220 @AddNewVaultWithOutAdminSetup
   Scenario: Create a new vault without admin quorum setup
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
@@ -97,7 +94,7 @@ Feature: Vault
     * match vaultTypeResponseWOA == testData.vault.vault_type
     * def vaultIDWOA = response.data.id
 
-  @ignore @CreateVault-Common
+    @ignore @CreateVault-Common
   Scenario: Create new vault - Common
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
@@ -106,7 +103,7 @@ Feature: Vault
     When method POST
     Then status 201
 
-  @RAKCON-10218 @ViewVaultListing
+    @RAKCON-10218 @ViewVaultListing
   Scenario: View vault listing
     # View vault listing
     Given path '/core/vault/accounts'
@@ -121,7 +118,7 @@ Feature: Vault
     * def totalCount = response.data.totalCount
     * match response.status == 'success'
 
-  @ignore @GetCreateVaultRequestID
+    @ignore @GetCreateVaultRequestID
   Scenario: Get request ID of creating vault request
     * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWA
@@ -129,7 +126,7 @@ Feature: Vault
     Then status 200
     * def requestId = response.data.requestId
 
-  @RAKCON-10827 @ViewVaultDetailHasAdminSetup
+    @RAKCON-10827 @ViewVaultDetailHasAdminSetup
   Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
@@ -155,7 +152,7 @@ Feature: Vault
     * def listMembers = karate.callSingle('Vault.feature@CHECK-LIST-USER')
     * match memberIdsWA contains only vaultMemberList
 
-  @RAKCON-11146 @ViewVaultDetailHasNotAdminSetup
+    @RAKCON-11146 @ViewVaultDetailHasNotAdminSetup
   Scenario: View vault detail that has not admin quorum
     #View detail of vault that has not admin quorum after creating
     * callonce read('Vault.feature@AddNewVaultWithOutAdminSetup')
@@ -176,7 +173,7 @@ Feature: Vault
     # ---- Check vault members should be same as created
     * match memberIdsWOA contains only vaultMemberList
 
-  @RAKCON-10954 @SearchVault
+    @RAKCON-10954 @SearchVault
   Scenario: Search vaults
     * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     * def keyword = vaultNameResponseWA
@@ -186,7 +183,7 @@ Feature: Vault
     * def listSearchedVaultName = $listSearchedVault[*].name
     * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
 
-  @SearchVaultCommon @ignore
+    @SearchVaultCommon @ignore
   Scenario: Search vaults - Common
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
@@ -199,7 +196,7 @@ Feature: Vault
     Then status 200
     * match response.status == 'success'
 
-  @RAKCON-10955 @SortVaultA2Z
+    @RAKCON-10955 @SortVaultA2Z
   Scenario: Sort vaults by name A - Z
     * def sortType = 'ASC'
     * call read('Vault.feature@SortVaultByName-Common')
@@ -208,7 +205,7 @@ Feature: Vault
     * def actual = listVaultNameActual.map(toUpper)
     * match actual.toString() == expected.toString()
 
-  @RAKCON-11118 @SortVaultZ2A
+    @RAKCON-11118 @SortVaultZ2A
   Scenario: Sort vaults by name Z - A
     * def sortType = 'DESC'
     * call read('Vault.feature@SortVaultByName-Common')
@@ -217,7 +214,7 @@ Feature: Vault
     * def actual = listVaultNameActual.map(toUpper)
     * match actual.toString() == expected.toString()
 
-  @ignore @SortVaultByName-Common
+    @ignore @SortVaultByName-Common
   Scenario: Sort vault by name - Common
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
@@ -238,7 +235,7 @@ Feature: Vault
     }
     """
 
-  @RAKCON-11119 @SortVaultHighestValue
+    @RAKCON-11119 @SortVaultHighestValue
   Scenario: Sort vaults by highest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
@@ -257,7 +254,7 @@ Feature: Vault
     * karate.sort(listVaultTotalUSDExpected)
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
-  @RAKCON-11120 @SortVaultLowestValue
+    @RAKCON-11120 @SortVaultLowestValue
   Scenario: Sort vaults by lowest value
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
@@ -276,7 +273,7 @@ Feature: Vault
     * karate.sort(listVaultTotalUSDExpected)
     * match listVaultTotalUSDActual == listVaultTotalUSDExpected
 
-  @RAKCON-10956 @EditVaultName
+    @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
     #Check vault name is existed or not
     * call read('Vault.feature@GenerateVaultName')
@@ -287,7 +284,7 @@ Feature: Vault
     Then status 200
     * match response.data.name == vaultName
 
-  @RAKCON-10957 @EditVaultPolicy
+    @RAKCON-10957 @EditVaultPolicy
   Scenario: Edit vault policy
     #Get list user in organization
     * callonce read('Vault.feature@CHECK-LIST-USER')
@@ -304,14 +301,14 @@ Feature: Vault
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
 
-  @RAKCON-11350 @EditVaultPolicyHasPending
+    @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
     * callonce read('Vault.feature@EditVaultPolicy')
     * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [] }
     * call read('Vault.feature@EditVaultPolicy-Common')
     Then match response.data.message == 'Exists pending requests'
 
-  @ignore @EditVaultPolicy-Common
+    @ignore @EditVaultPolicy-Common
   Scenario: Edit vault policy - Common
     Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request requestBody
@@ -320,7 +317,7 @@ Feature: Vault
     * header passcode = requesterInfo.requesterPasscode
     When method PUT
 
-  @RAKCON-11286 @HideVault
+    @RAKCON-11286 @HideVault
   Scenario: Hide a vault
     * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
@@ -328,7 +325,7 @@ Feature: Vault
     Then status 201
     * match response.status == 'success'
 
-  @RAKCON-11287 @ViewHiddenVaultList
+    @RAKCON-11287 @ViewHiddenVaultList
   Scenario: View hidden listing vault
     * call read('Vault.feature@ViewHiddenVaultCommon')
     * def vaultsSchema = schemaBody.vault.schema_list
@@ -339,7 +336,7 @@ Feature: Vault
     * match response.data.totalCount == '#number'
     * match response.data.totalBTC == '#number'
 
-  @RAKCON-11370 @SearchHiddenVault
+    @RAKCON-11370 @SearchHiddenVault
   Scenario: Search hidden vault
     * callonce read('Vault.feature@HideVault')
     * def keyword = vaultNameResponseWA
@@ -349,7 +346,7 @@ Feature: Vault
     * def listSearchedVaultName = $listSearchedVault[*].name
     * match each $listSearchedVaultName == "#regex (?i).*" + vaultNameResponseWA + ".*"
 
-  @RAKCON-16523 @Unhidevault
+    @RAKCON-16523 @Unhidevault
   Scenario: Unhide a vault
     * def value = call read('Vault.feature@ViewHiddenVaultCommon')
     * def vaultId = value.response.data.vaults[0].id
@@ -358,7 +355,7 @@ Feature: Vault
     Then status 201
     * match response.status == 'success'
 
-  @ignore @ViewHiddenVaultCommon
+    @ignore @ViewHiddenVaultCommon
   Scenario: View hidden listing vault common
     Given path '/core/vault/accounts'
     * param isHideList = true
@@ -369,7 +366,7 @@ Feature: Vault
     When method GET
     Then status 200
 
-  @RAKCON-17772 @CreateVaultCold
+    @RAKCON-17772 @CreateVaultCold
   Scenario: Create vault - cold
     Given path '/core/vault'
     * call read('Vault.feature@GenerateVaultName')
@@ -381,3 +378,58 @@ Feature: Vault
     * request requestBody
     When method POST
     Then status 201
+
+    @ignore @RequestCreateNewVaultFromWeb
+    Scenario: Request create new vault from web
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path '/core/vault/request-create-vault'
+    * request requestBody
+    When method POST
+    Then status 201
+
+    @ignore @ReadNotificationCreateVaultFromWeb
+  Scenario: Read Create Vault From Web Notifiation
+    * def notificationId = createVaultRequest.response.data.notificationId
+    * call read('Notification.feature@ReadNotificationById')
+    * match response.data.template.body == 'Vault creation for ' + vaultName + ' needs authentication'
+    * match response.data.module.notificationId == notificationId
+
+    @ignore @SubmitRequestFromMobile
+  Scenario: Submit request from mobile
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given url baseMobileURL + '/core/vault/submit-request-create-vault'
+    * request { "notificationId" : "#(createVaultRequest.response.data.notificationId)" }
+    When method POST
+    Then status 201
+    * match response.code == 200
+    * match response.status == 'success'
+    * def res = karate.match("response.data == { vaultId : '#uuid' }")
+    * match res == { pass: true, message: null }
+
+    @RAKCON-18141 @SubmitRequestCreateAdvanceVaultFromMobile
+  Scenario: Submit request create advance vault from mobile
+    * def policyType = 'advanced'
+    * call read('Vault.feature@GenerateVaultName')
+    * call read('UserManagement.feature@ListUsers')
+    * def viewer1 = listUsers[0]
+    * def viewer2 = listUsers[1]
+    * def requestBody = {"name":"#(vaultName)","approverNumber":1,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","quorums":[{"members":[],"quorumApprovals":0,"isRequired":false}],"policyType":"#(policyType)","viewers":["#(viewer1)","#(viewer2)"]}
+    * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * call read('Vault.feature@SubmitRequestFromMobile')
+
+    @RAKCON-18213 @SubmitRequestCreateSkipPolicyVaultFromMobile
+  Scenario: Submit request create skip policy vault from mobile
+    * def policyType = null
+    * call read('Vault.feature@GenerateVaultName')
+    * call read('Vault.feature@CHECK-LIST-USER')
+    * def requestBody = {"name":"#(vaultName)","approverNumber":0,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","memberIds":"#(vaultMemberList)"}
+    * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * call read('Vault.feature@SubmitRequestFromMobile')
+
+    

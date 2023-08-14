@@ -1,4 +1,4 @@
-@RAKCON-10583
+    @RAKCON-10583
   Feature: User Management
     Background:
       * url baseURL
@@ -249,3 +249,19 @@
       * call read('UserManagement.feature@View_My_Request_Edit_User')
       * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@@CancelRequestEditUserCommon')
 
+    
+    @ignore @List_Users
+    Scenario: List users
+      Given path 'auth/account/list-users'
+      * def body = { name : "",  isGetAll : true }
+      And request body
+      When method POST
+      Then status 201
+      * def listUsers = response.data.users
+
+    @ignore @GetCurrentUser
+    Scenario: Get current user
+      Given path 'auth/account/me'
+      When method GET
+      Then status 200
+      * def currentUser = response.data

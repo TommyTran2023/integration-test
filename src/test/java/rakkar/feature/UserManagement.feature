@@ -250,18 +250,10 @@
       * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@@CancelRequestEditUserCommon')
 
     
-    @ignore @List_Users
+    @ignore @ListUsers
     Scenario: List users
       Given path 'auth/account/list-users'
-      * def body = { name : "",  isGetAll : true }
-      And request body
+      And request { name : "",  isGetAll : true }
       When method POST
       Then status 201
       * def listUsers = response.data.users
-
-    @ignore @GetCurrentUser
-    Scenario: Get current user
-      Given path 'auth/account/me'
-      When method GET
-      Then status 200
-      * def currentUser = response.data

@@ -1,4 +1,4 @@
-    @RAKCON-10583
+@RAKCON-10583
 Feature: Vault
 
   Background:
@@ -40,11 +40,8 @@ Feature: Vault
     @RAKCON-16175 @GET-LIST-USER
   Scenario: Check user list of organization for add vault
     #Check correct user list from company
-    Given path '/auth/account/list-users'
-    * request {"isGetAll":true}
-    When method POST
-    Then status 201
-    * def totalUserToAddvault = response.data.totalCount
+    * def listUsers = call read('UserManagement.feature@ListUsers')
+    * def totalUserToAddvault = listUsers.response.data.totalCount
     * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
     * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
     And match totalUserToAddvault == totalUserInPolicy
@@ -417,7 +414,7 @@ Feature: Vault
   Scenario: Submit request create advance vault from mobile
     * def policyType = 'advanced'
     * call read('Vault.feature@GenerateVaultName')
-    * call read('UserManagement.feature@List_Users')
+    * call read('UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
     * def requestBody = {"name":"#(vaultName)","approverNumber":1,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","quorums":[{"members":[],"quorumApprovals":0,"isRequired":false}],"policyType":"#(policyType)","viewers":["#(viewer1)","#(viewer2)"]}

@@ -88,7 +88,7 @@ Feature: Group Policies
         * header challenge-answer = challengeAnswerRequest
         * header passcode = requesterInfo.requesterPasscode
         Given path '/core/group-policies/'+groups[0].id
-        * request { "names": '#(groupName)', "memberIds": ["#(requesterUserID)", "#(approvalUserID)", "#(adminUserID)"]}
+        * request { "memberIds": ["#(requesterUserID)", "#(approvalUserID)", "#(adminUserID)"]}
         When method PUT
         Then status 200
         * match response.code == 200

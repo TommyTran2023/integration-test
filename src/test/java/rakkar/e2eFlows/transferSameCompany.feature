@@ -1,3 +1,5 @@
-Feature:
+Feature: Transfer of assets in same company
 
-Scenario:
+Scenario: Transfer money from one HOT to HOT wallet
+* call read('')
+

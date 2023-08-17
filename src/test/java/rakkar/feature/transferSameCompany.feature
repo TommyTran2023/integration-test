@@ -47,7 +47,15 @@ Feature: Transfer of assets in same company
             }
         """
         * call read('Transfer.feature@Total_estimate_fee_common')
-        # Check existing
+        # Check existing asset
+        * def destinationId = '#(destinationId)'
+        * def destinationType = '#(destinationType)'
+        * def externalAssetId = '#(tokenSymbol)'
+        * def sourceId = '#(sourceId)'
+        * def check_exist = call read('Asset.feature@CheckExistingAsset')
+        Then check_exist.status 200
+        * match check_exist.response.code == 200
+        * match check_exist.response.status == 'success'
         # View transaction
         # Approve transaction
         # Check assets on source and destination

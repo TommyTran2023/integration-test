@@ -1,0 +1,19 @@
+{
+  "dev_workspace": {
+    "vaultId_Destination": "431b1ce6-a2b2-4cda-8548-d7be7d56f85c",
+    "walletId_Destination": "870ff087-d87f-4d7e-bbe0-bd72e4812f58",
+    "userInfo": {
+      "requesterUsername": "ID_CARDPT24121993",
+      "requesterPasscode": "123123"
+    }
+  },
+  "uat_workspace": {
+    "vaultId_Destination": "",
+    "walletId_Destination": "",
+    "userInfo": {
+      "requesterUsername": "ID_CARDPT24121993",
+      "requesterPasscode": "123123"
+    }
+  }
+
+}

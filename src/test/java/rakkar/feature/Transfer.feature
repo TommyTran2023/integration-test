@@ -229,19 +229,23 @@ Feature: Transfer
 
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * call read('Transfer.feature@External_Transfer_Common')
+    And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
+    And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+
+  @ignore @External_Transfer_Common
+  Scenario:  External - Submit external transfer common
+#    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'transaction/transactions'
-    And request body
+    And request body_transfer
     When method POST
     Then status 201
     And response.status == "success"
     And response.data.status == "PENDING"
     And response.data.amount == "#(amount_low)"
-    And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
-#    And response.data.destinationName == "#(externalName)"
-    And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 
 
     #Get estimated fee : Transfer to other network

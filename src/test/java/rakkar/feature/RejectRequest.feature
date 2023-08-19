@@ -122,6 +122,13 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('RejectRequest.feature@RejectRequestCommon')
 
+  @RAKCON-18737 @RejectEditGroupMembersRequest
+  Scenario: Reject Edit Group Members Request
+    * call read('GroupPolicies.feature@EditMembersInGroup')
+    * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+    * def requestId = groupDetails.response.data.editRequestId
+    * karate.call('RejectRequest.feature@RejectRequestCommon')
+
   @ignore @RejectRequestEditUserCommon
   Scenario: Reject request edit user - Common
     * def value = call read('UserManagement.feature@View_user_detail')
@@ -136,3 +143,5 @@ Feature: Reject Request
     When method PUT
     Then status 200
     * match response.status == 'success'
+
+  

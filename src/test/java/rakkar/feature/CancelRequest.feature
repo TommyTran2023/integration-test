@@ -45,6 +45,13 @@ Feature: Cancel Request
     * def requestId = value.response.data.requestId
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-18739 @CancelEditGroupMembers
+  Scenario: Cancel request - Edit group members
+  * call read('GroupPolicies.feature@EditMembersInGroup')
+  * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+  * def requestId = groupDetails.response.data.editRequestId
+  * call read('CancelRequest.feature@CancelRequestCommon')
+
   @ignore @RAKCON-15490 @CancelExternalWithdraw
   Scenario: Cancel request - Cancel external withdraw
     * def value = call read('Transfer.feature@External_Transfer')

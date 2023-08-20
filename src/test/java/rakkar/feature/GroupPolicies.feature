@@ -1,3 +1,4 @@
+@RAKCON-10583
 Feature: Group Policies
 
     Background:
@@ -81,6 +82,8 @@ Feature: Group Policies
         * call read('Vault.feature@CHECK-LIST-USER')
         * call read('GroupPolicies.feature@GetGroupPolicies')
         * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+        * def requestId = groupDetails.response.data.editRequestId
+        * if (requestId != null) karate.call('RejectRequest.feature@RejectRequestCommon')
         * call read('GroupPolicies.feature@GenerateGroupName')
         * def requestBody = { "groupName": '#(groupName)', "exceptGroupId": '#(groups[0].id)' , "userIds": [#(requesterUserID), #(approvalUserID), #(adminUserID)]}
         * call read('GroupPolicies.feature@ValidateGroupPolicies')

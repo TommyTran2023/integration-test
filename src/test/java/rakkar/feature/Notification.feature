@@ -59,3 +59,9 @@ Feature: Notification
     * param sort = 'DESC'
     When method GET
     Then status 200
+
+  @ignore @ReadNotificationById
+  Scenario: Read Notification Detail By Id
+    Given path '/notification/notifications/by-notification-id/' + notificationId
+    When method GET
+    Then status 200

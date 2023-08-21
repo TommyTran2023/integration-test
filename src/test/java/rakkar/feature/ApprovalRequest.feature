@@ -108,6 +108,13 @@ Feature: Approval Request
     * def requestId = value.response.data.pendingRequestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
+  @RAKCON-18737 @ApproveEditGroupMembersRequest
+  Scenario: Approve Edit Group Members Request
+    * call read('GroupPolicies.feature@EditMembersInGroup')
+    * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+    * def requestId = groupDetails.response.data.editRequestId
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+    
   @ignore @RAKCON-15106 @ApprovalEditProfileRouting
   Scenario: Approval -  Edit profile routing
     * def value = call read('NetworkManagement.feature@Editprofilerouting')
@@ -130,3 +137,4 @@ Feature: Approval Request
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+

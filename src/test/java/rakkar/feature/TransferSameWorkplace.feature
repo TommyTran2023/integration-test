@@ -1,4 +1,4 @@
-Feature: Transfer of assets in same company
+Feature: Transfer of assets in same Company
     
     Background:
         * url baseURL
@@ -16,7 +16,7 @@ Feature: Transfer of assets in same company
         # Select destination
         * def screenType = 'DESTINATION_TRANSFER'
         * def destination = call read('Vault.feature@SearchVaultForTransfer')
-        * def destinationType = 'VAULT_ACCOUNT'
+        * def destinationType = sourceType
         # Estimated fee
         * def sourceId = source.response.data.vaults[0].id
         * def destinationId = destination.response.data.vaults[0].id

@@ -165,9 +165,10 @@ Feature: HomePage
   @CheckExistingAsset @ignore
   Scenario: Check Existing Asset
       Given path '/core/assets/check-existing'
-      * param destinationId = '#(destinationId)'
-      * param destinationType = destinationType
-      * param externalAssetId = externalAssetId
-      * param sourceId = sourceId
-      And request testData
+      * params params
+      # * param destinationId = '#(destinationId)'
+      # * param destinationType = destinationType
+      # * param externalAssetId = externalAssetId
+      # * param sourceId = sourceId
+      # And request testData
       When method GET

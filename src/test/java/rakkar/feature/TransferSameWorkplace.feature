@@ -3,6 +3,7 @@ Feature: Transfer of assets in same Company
     Background:
         * url baseURL
         * def testData = read('classpath:data/data_test.json')
+        * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
 
     @TransferInSameCompanyFromHotToHot 
         Scenario: Transfer money from one HOT to HOT wallet
@@ -30,7 +31,7 @@ Feature: Transfer of assets in same Company
                 "destinationType": '#(destinationType)',, 
                 "sourceType": '#(sourceType)', 
                 "sourceId": '#(sourceId)',
-                "amount": 11,
+                "amount": '#(amount_low)',
                 "destinationId": '#(destinationId)'
             }
         """
@@ -53,20 +54,25 @@ Feature: Transfer of assets in same Company
         * def total_estimated_fee = call read('Transfer.feature@Total_estimate_fee_common')
 
         # Check existing asset
-        * def destinationId = '#(destinationId)'
-        * def destinationType = '#(destinationType)'
-        * def externalAssetId = '#(tokenSymbol)'
-        * def sourceId = '#(sourceId)'
+        * def params = 
+        """
+            { 
+                "destinationId": '#(destinationId)', 
+                "destinationType": '#(destinationType)', 
+                "externalAssetId": '#(tokenSymbol)', 
+                "sourceId": '#(sourceId)' 
+            }
+        """
         * def check_exist = call read('HomePage.feature@CheckExistingAsset')
-        Then check_exist.status 200
         * match check_exist.response.code == 200
         * match check_exist.response.status == 'success'
+        
+        # Check restrict country
+        * call read('Transfer.feature@Check_vault_missing_policy')
 
         # Submit transaction
-        * call read('Transfer.feature@View_transaction')
-
-        # View transaction
-        * call read('Transfer.feature@View_transaction')
         # Approve transaction
+        * call read('ApprovalRequest.feature@ApprovalTransferLowValue')
+
         # Check assets on source and destination
 

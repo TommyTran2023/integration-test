@@ -34,7 +34,8 @@
     "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6",
     "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f",
     "vaultCreateStake": "8a7ce5c3-854b-4243-b391-c57f7ef35696",
-    "vaultUpdateStake": "c53f723f-d313-43d6-bd56-921c65c21a49"
+    "vaultUpdateStake": "c53f723f-d313-43d6-bd56-921c65c21a49",
+    "advanceHotVaultId": "c03f1b3b-c04b-4f08-ad68-8e0c9299fa0a"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",

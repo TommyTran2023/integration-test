@@ -187,8 +187,8 @@ Feature: Vault
   Scenario: Search vaults - Common
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
-#    * param keyword = keyword
-    * param limit = 10
+    * param keyword = keyword
+    * param limit = 10vaults
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'

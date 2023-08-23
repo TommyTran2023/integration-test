@@ -153,6 +153,6 @@ Feature: Reject Request
   Scenario: Reject create advance quorum request
     * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
     * def vaultIDWA = createdVault.response.data.vaultId
-    * call read('Vault.feature@GetCreateVaultRequestID')
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
     * karate.call('RejectRequest.feature@RejectAdvanceQuorumRequest')
 

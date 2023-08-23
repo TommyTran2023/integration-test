@@ -458,7 +458,7 @@ Feature: Vault
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
-    @ignore @GetCreateVaultRequestID
+    @ignore @GetCreateVaultRequestID_NoCreate
     Scenario: Get request ID of creating vault request
       Given path '/core/vault/accounts/'+vaultIDWA
       When method GET

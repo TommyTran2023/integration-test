@@ -1,17 +1,19 @@
 {
   "dev_workspace": {
+    "url_dev": "https://mobile-dev-api.thailaksa.net",
     "vaultId_Destination": "431b1ce6-a2b2-4cda-8548-d7be7d56f85c",
     "walletId_Destination": "870ff087-d87f-4d7e-bbe0-bd72e4812f58",
     "userInfo": {
-      "requesterUsername": "ID_CARDPT24121993",
-      "requesterPasscode": "123123"
+      "requesterUsername": "PASSPORT271192SG",
+      "requesterPasscode": "271198"
     }
   },
   "uat_workspace": {
-    "vaultId_Destination": "",
-    "walletId_Destination": "",
+    "url_uat": "https://mobile-uat-api.rakkardigital.com",
+    "vaultId_Destination": "7bec5897-767a-4d10-9dd4-1c8dd36a364d",
+    "walletId_Destination": "aa470ca2-a65a-48ec-b8c7-c6695492920a",
     "userInfo": {
-      "requesterUsername": "ID_CARDPT24121993",
+      "requesterUsername": "PASSPORT02021974SG",
       "requesterPasscode": "123123"
     }
   }

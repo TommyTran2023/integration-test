@@ -188,7 +188,7 @@ Feature: Vault
     Given path '/core/vault/accounts'
     * param isHideSmallBalance = false
     * param keyword = keyword
-    * param limit = 10vaults
+    * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'

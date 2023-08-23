@@ -5,7 +5,6 @@ Feature: Transfer cross workspace
     * url baseURL
     * def testData = read('classpath:data/data_test.json')
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('GetUserInfo.feature@GetUserInfo')
     * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
 
   Scenario: Transfer WARM to WARM - CROSS workspace
@@ -77,7 +76,6 @@ Feature: Transfer cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
 
-@ignore
   Scenario: Transfer WARM to COLD - CROSS workspace
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')

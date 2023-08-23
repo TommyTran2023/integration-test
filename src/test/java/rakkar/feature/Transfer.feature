@@ -294,8 +294,8 @@ Feature: Transfer
     And response.status == "success"
 
     #Tcs: TRANSFER VAULT ADVANCE HOT TO STANDARD HOT
-  @RAKCON-11390 @Transfer_value_advance_hot_to_hot
-  Scenario: Transfer Hot to hot - Submit transfer')
+  @RAKCON-19044 @Transfer_value_advance_hot_to_hot
+  Scenario: Transfer from Advance Hot Vault to Standard Hot Vault')
     * def body = 
     """
       {

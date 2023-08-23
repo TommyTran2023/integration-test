@@ -39,7 +39,7 @@
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
-    "baseMobileURL": "https://mobile-uat-api.thailaksa.net",
+    "baseMobileURL": "https://mobile-uat-api.rakkardigital.com",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
     "requesterInfo": {
@@ -72,7 +72,8 @@
     "vaultCreateStake": "8ff83cde-f6dd-44a8-9cf7-f7c2b7866b2f",
     "vaultUpdateStake": "1f2d1c8e-3146-4525-baa9-4da8fbc1797d",
     "networkID": "b7d26242-6f5b-46ef-a4f5-5db56e335161",
-    "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb"
+    "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb",
+    "advanceHotVaultId": "c03f1b3b-c04b-4f08-ad68-8e0c9299fa0a"
   }
 
 }

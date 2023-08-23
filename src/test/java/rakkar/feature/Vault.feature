@@ -401,8 +401,9 @@ Feature: Vault
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
+    * def requestId = createVaultRequest.response.data.notificationId
     Given url baseMobileURL + '/core/vault/submit-request-create-vault'
-    * request { "notificationId" : "#(createVaultRequest.response.data.notificationId)" }
+    * request { "notificationId" : "#(requestId)" }
     When method POST
     Then status 201
     * match response.code == 200
@@ -417,7 +418,22 @@ Feature: Vault
     * call read('UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
-    * def requestBody = {"name":"#(vaultName)","approverNumber":1,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","quorums":[{"members":[],"quorumApprovals":0,"isRequired":false}],"policyType":"#(policyType)","viewers":["#(viewer1)","#(viewer2)"]}
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":1,
+        "type":"#(testData.vault.vault_type)",
+        "clientId":"bxeRJIROr8VQTBSqAAGW",
+        "quorums":[
+          {
+            "members":["#(viewer1)","#(viewer2)"],
+            "quorumApprovals":0,
+            "isRequired":false
+          }],
+          "policyType":"#(policyType)",
+      }
+    """
     * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
     * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
     * call read('Vault.feature@SubmitRequestFromMobile')
@@ -427,9 +443,26 @@ Feature: Vault
     * def policyType = null
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * def requestBody = {"name":"#(vaultName)","approverNumber":0,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","memberIds":"#(vaultMemberList)"}
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":0,
+        "type":"#(testData.vault.vault_type)",
+        "clientId":"bxeRJIROr8VQTBSqAAGW",
+        "memberIds":"#(vaultMemberList)"
+      }
+    """
     * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
     * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
+    @ignore @GetCreateVaultRequestID
+    Scenario: Get request ID of creating vault request
+      Given path '/core/vault/accounts/'+vaultIDWA
+      When method GET
+      Then status 200
+      * def requestId = response.data.requestId
+
+

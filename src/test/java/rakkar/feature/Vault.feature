@@ -203,7 +203,7 @@ Feature: Vault
     * param groupBy = 'VAULT'
     * param limit = 10
     * param offset = 0
-    * param sort = 'ASC'
+    * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
     * param tokenSymbol = tokenSymbol
     When method GET

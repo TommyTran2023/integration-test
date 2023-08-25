@@ -458,11 +458,11 @@ Feature: Vault
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
-    @ignore @GetCreateVaultRequestID_NoCreate
-    Scenario: Get request ID of creating vault request
-      Given path '/core/vault/accounts/'+vaultIDWA
-      When method GET
-      Then status 200
-      * def requestId = response.data.requestId
+  @ignore @GetCreateVaultRequestID_NoCreate
+  Scenario: Get request ID of creating vault request
+    Given path '/core/vault/accounts/'+vaultIDWA
+    When method GET
+    Then status 200
+    * def requestId = response.data.requestId
 
 

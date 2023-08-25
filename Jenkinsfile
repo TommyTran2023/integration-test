@@ -6,6 +6,7 @@ def BRANCH = "develop"
 def testSummary
 def failedTestMsg = []
 def failedScenarios = []
+def serviceStatus
 
 pipeline {
     agent any
@@ -38,7 +39,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    sh "/bin/bash checkService.sh ${params.ENV}"
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV}", returnStatus: true)
                 }
             }
         }
@@ -59,6 +60,22 @@ pipeline {
 
         always {
             script {
+
+                // Aborting build if checkService error
+                if (serviceStatus != 0) {
+
+                    slackSend(channel: "${SLACK_CHANNEL}",
+                        color: 'danger',
+                        message: "Abort the build because services healthcheck return error")
+
+                    office365ConnectorSend color: '#a82e2e',
+                        message: "Abort the build because services healthcheck return error",
+                        status: 'FAILED',
+                        webhookUrl: "${TEAM_URL}"
+
+                    error("Abort the build because services healthcheck return error")
+                }
+
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'
 
                 def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)

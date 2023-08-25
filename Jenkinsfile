@@ -66,10 +66,10 @@ pipeline {
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "Abort the build because services healthcheck return error")
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: Abort the build because services healthcheck return error")
 
                     office365ConnectorSend color: '#a82e2e',
-                        message: "Abort the build because services healthcheck return error",
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: Abort the build because services healthcheck return error",
                         status: 'FAILED',
                         webhookUrl: "${TEAM_URL}"
 

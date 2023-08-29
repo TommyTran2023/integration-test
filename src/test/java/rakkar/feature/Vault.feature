@@ -424,14 +424,14 @@ Feature: Vault
         "name":"#(vaultName)",
         "approverNumber":1,
         "type":"#(testData.vault.vault_type)",
-        "clientId":"bxeRJIROr8VQTBSqAAGW",
+        "clientId": #(clientId),
         "quorums":[
           {
             "members":["#(viewer1)","#(viewer2)"],
             "quorumApprovals":0,
             "isRequired":false
           }],
-          "policyType":"#(policyType)",
+        "policyType":"#(policyType)",
       }
     """
     * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
@@ -449,7 +449,7 @@ Feature: Vault
         "name":"#(vaultName)",
         "approverNumber":0,
         "type":"#(testData.vault.vault_type)",
-        "clientId":"bxeRJIROr8VQTBSqAAGW",
+        "clientId": #(clientId),
         "memberIds":"#(vaultMemberList)"
       }
     """

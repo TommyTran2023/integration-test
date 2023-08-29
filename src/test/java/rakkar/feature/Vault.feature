@@ -41,7 +41,8 @@ Feature: Vault
   Scenario: Check user list of organization for add vault
     #Check correct user list from company
     * def listUsers = call read('UserManagement.feature@ListUsers')
-    * def totalUserToAddvault = listUsers.response.data.totalCount
+    * def JSONpath = "$..users[?(@.role=='ADMIN')]"
+    * def totalUserToAddvault = karate.jsonPath(listUsers.response.data,JSONpath).length
     * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
     * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
     And match totalUserToAddvault == totalUserInPolicy

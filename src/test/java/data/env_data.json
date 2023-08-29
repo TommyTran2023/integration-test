@@ -34,11 +34,12 @@
     "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6",
     "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f",
     "vaultCreateStake": "8a7ce5c3-854b-4243-b391-c57f7ef35696",
-    "vaultUpdateStake": "c53f723f-d313-43d6-bd56-921c65c21a49"
+    "vaultUpdateStake": "c53f723f-d313-43d6-bd56-921c65c21a49",
+    "advanceHotVaultId": "4a4f074f-e186-4eb2-b54d-235ae41b3b8e"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
-    "baseMobileURL": "https://mobile-uat-api.thailaksa.net",
+    "baseMobileURL": "https://mobile-uat-api.rakkardigital.com",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
     "requesterInfo": {
@@ -71,7 +72,8 @@
     "vaultCreateStake": "8ff83cde-f6dd-44a8-9cf7-f7c2b7866b2f",
     "vaultUpdateStake": "1f2d1c8e-3146-4525-baa9-4da8fbc1797d",
     "networkID": "b7d26242-6f5b-46ef-a4f5-5db56e335161",
-    "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb"
+    "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb",
+    "advanceHotVaultId": "0c6915ed-938e-41d1-97ba-6d7f27773a09"
   }
 
 }

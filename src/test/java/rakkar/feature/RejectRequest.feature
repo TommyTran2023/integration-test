@@ -136,3 +136,23 @@ Feature: Reject Request
     When method PUT
     Then status 200
     * match response.status == 'success'
+
+
+  # Reject Advance Quorums Request
+  @ignore @RejectAdvanceQuorumRequest
+  Scenario: Reject pending request - Common
+    Given path '/advance-quorum/quorums/reject'
+    * header challenge-answer = challengeApprover.challengeAnswerRequest
+    * request {"recordId" : "#(requestId)", "reason" : "AT Reject Request Note"}
+    When method PUT
+    Then status 200
+    * match response.status == 'success'
+
+
+  @RAKCON-19042 @RejectAdvanceQuorums
+  Scenario: Reject create advance quorum request
+    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('RejectRequest.feature@RejectAdvanceQuorumRequest')
+

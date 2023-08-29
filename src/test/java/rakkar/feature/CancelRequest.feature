@@ -71,3 +71,21 @@ Feature: Cancel Request
     Then status 200
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  
+  @ignore @CancelAdvanceQuorumRequest
+  Scenario: Cancel a request - Common
+    Given path '/advance-quorum/quorums/cancel/'+requestId
+    * header challenge-answer = challengeApprover.challengeAnswerRequest
+    When method PUT
+    Then status 200
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+
+  @RAKCON-19043 @CancelAdvanceQuorums
+  Scenario: Cancel create advance quorum request
+    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('CancelRequest.feature@CancelAdvanceQuorumRequest')
+

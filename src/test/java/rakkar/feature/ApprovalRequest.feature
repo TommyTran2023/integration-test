@@ -130,3 +130,24 @@ Feature: Approval Request
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+
+  # Approve Advance Quorums Request
+  @ApproveAdvanceQuorumsRequest @ignore
+  Scenario: Approve pending request - Common
+    Given path '/advance-quorum/quorums/approval/'+requestId
+    * header challenge-answer = challengeApprover.challengeAnswerRequest
+    * header passcode = approverInfo.approverPasscode
+    When method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+
+  @RAKCON-19024 @ApproveAdvanceQuorums
+  Scenario: Approve create advance quorum request
+    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+
+

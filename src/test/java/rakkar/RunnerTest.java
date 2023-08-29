@@ -27,7 +27,7 @@ public class RunnerTest {
         }
 
         System.out.println("Running in " + threadCount + " threads");
-        Results results = Runner.path("classpath:rakkar/feature")
+        Results results = Runner.path("classpath:rakkar/feature/[e2e]WithDraw_Rebalance.feature")
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);

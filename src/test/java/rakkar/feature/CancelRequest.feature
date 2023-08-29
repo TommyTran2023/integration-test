@@ -89,4 +89,3 @@ Feature: Cancel Request
     * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
     * karate.call('CancelRequest.feature@CancelAdvanceQuorumRequest')
 
-  

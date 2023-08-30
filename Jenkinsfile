@@ -7,7 +7,6 @@ def testSummary
 def failedTestMsg = []
 def failedScenarios = []
 def serviceStatus
-def serviceStatusMsg
 
 pipeline {
     agent any
@@ -40,9 +39,8 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
-                    serviceStatusMsg = readFile('status.txt').trim()
-                    echo serviceStatusMsg
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} 2>&1 | tee status.txt", returnStatus: true)
+
                     if (serviceStatus) {
                         currentBuild.result = 'FAILED'
                         exit 1
@@ -69,6 +67,7 @@ pipeline {
             script {
                 // Aborting build if checkService error
                 if (serviceStatus != 0) {
+                    def serviceStatusMsg = readFile('status.txt').trim()
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',

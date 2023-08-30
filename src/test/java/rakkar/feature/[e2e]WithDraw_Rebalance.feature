@@ -78,7 +78,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
 
-  @ignore @RAKCON-19301
+  @RAKCON-19301
   Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
@@ -148,7 +148,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
 
-  @ignore @RAKCON-19302
+  @RAKCON-19302
   Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
@@ -298,7 +298,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
 
-  @ignore @RAKCON-19332
+  @RAKCON-19332
   Scenario: REBALANCE - Transfer WARM to COLD - SAME workspace
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')

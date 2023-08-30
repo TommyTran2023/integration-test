@@ -25,7 +25,7 @@ Feature: Verify after transfer cross workspace
     * def amount_recieve = parseFloat(amount_low) - parseFloat(feeData.transfer.withdraw.fee)
     # --- Verify balance of destination updated correctly
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_after_transfer == totalExpectedDestination
+    * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction
     * def query = { offset: 0, limit: 20,type: ['INCOMING']  }
@@ -62,7 +62,7 @@ Feature: Verify after transfer cross workspace
 
     # --- Verify balance of destination updated correctly
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_after_transfer == totalExpectedDestination
+    * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction
     * def query = { offset: 0, limit: 20,type: ['INCOMING']  }

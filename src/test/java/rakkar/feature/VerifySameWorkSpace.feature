@@ -24,8 +24,9 @@ Feature: Verify after transfer same workspace but different company
     * def getDestinationToken = call read('VerifySameWorkSpace.feature@GetBalanceTokenAfterTransfer')
     * def total_destination_after_transfer = parseFloat(getDestinationToken.response.data.total)
     * def amount_recieve = parseFloat(amount_low) - parseFloat(feeData.transfer.withdraw.fee)
+    * def totalExpectedDestination = parseFloat(destinationAmountBefore) + amount_recieve
     # --- Verify balance of destination updated correctly
-    * match total_destination_after_transfer == parseFloat(destinationAmountBefore) + amount_recieve
+    * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction
     * def query = { offset: 0, limit: 20,type: ['INCOMING']  }

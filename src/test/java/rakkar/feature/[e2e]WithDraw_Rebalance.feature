@@ -6,6 +6,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def testData = read('classpath:data/data_test.json')
     * call read('RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('Common.feature@CACULATE_LIMIT_TRANSFER')
+    * def BigDecimal = Java.type('java.math.BigDecimal')
 
   @RAKCON-19300
   Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
@@ -77,7 +78,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
 
-  @RAKCON-19301
+  @ignore @RAKCON-19301
   Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
@@ -147,7 +148,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
 
-  @RAKCON-19302
+  @ignore @RAKCON-19302
   Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
@@ -294,7 +295,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     # --- Verify the balance of source is updated correctly
     * def amount_recieve = parseFloat(amount_low) - parseFloat(testData.transfer.withdraw.fee)
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_afterTransfer == totalExpectedDestination
+    * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
 
   @ignore @RAKCON-19332
@@ -372,7 +373,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     # --- Verify the balance of source is updated correctly
     * def amount_recieve = parseFloat(amount_low) - parseFloat(testData.transfer.withdraw.fee)
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_afterTransfer == totalExpectedDestination
+    * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
 
 

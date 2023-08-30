@@ -20,8 +20,7 @@ Feature: Get access token for Requester
     * def Session1 = responseTest1.response.data.Session
     * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(requesterInfo.requesterUsername)', "ANSWER": '#(testData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST
-    Then def APIStatus = response.status
-    * assert (APIStatus == "success")
+    Then status 201
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
     * def accessToken = 'Bearer ' + requesterAuthToken
     * configure headers = {Authorization: '#(accessToken)'}

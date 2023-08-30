@@ -7,6 +7,7 @@ def testSummary
 def failedTestMsg = []
 def failedScenarios = []
 def serviceStatus
+def serviceStatusMsg
 
 pipeline {
     agent any
@@ -40,6 +41,8 @@ pipeline {
             steps {
                 script {
                     serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
+                    serviceStatusMsg = readFile('status.txt').trim()
+                    echo serviceStatusMsg
                     if (serviceStatus) {
                         currentBuild.result = 'FAILED'
                         exit 1
@@ -64,16 +67,15 @@ pipeline {
 
         always {
             script {
-
                 // Aborting build if checkService error
                 if (serviceStatus != 0) {
-                    def statusMsg = readFile("status.txt")
+
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED\n${statusMsg}")
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                     office365ConnectorSend color: '#a82e2e',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED<br>${statusMsg}",
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
                         status: 'FAILED',
                         webhookUrl: "${TEAM_URL}"
 

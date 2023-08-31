@@ -23,3 +23,4 @@ Feature: Get access token for User from different customer
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
     * def accessToken = 'Bearer ' + requesterAuthToken
     * configure headers = {Authorization: '#(accessToken)'}
+

@@ -221,7 +221,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     ######################### REBALANCE  #################################################################
 
   @RAKCON-19306
-  Scenario: REBALANCE - Transfer WARM to WARM - SAME workspace
+  Scenario: REBALANCE - Transfer WARM to WARM - SAME company
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
     * def tokenId_transfer = getToken.response.data.tokens[0].id
@@ -299,7 +299,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
 
   @RAKCON-19332
-  Scenario: REBALANCE - Transfer WARM to COLD - SAME workspace
+  Scenario: REBALANCE - Transfer WARM to COLD - SAME company
   # 1.Select token for doing transfer
     * def getToken = call read('Transfer.feature@Get_asset_transfer')
     * def tokenId_transfer = getToken.response.data.tokens[0].id

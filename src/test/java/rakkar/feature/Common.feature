@@ -102,21 +102,7 @@ Feature: Generate Challenge Answer for Biometric
     * def amount_medium = Math.round(limit_medium / tokenPrice)
     * def amount_high = Math.round(limit_high / tokenPrice)
 
-  @ignore @GetEstimateFee
-  Scenario: Get Estimate Fee
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    Given path 'transaction/transactions/estimated-fee'
-    And request body_estimate_fee
-    When method POST
-    Then status 201
-    * def tokenPrice = response.data.totalToUSD / 10
-    * def tier_signer = call read('Common.feature@TIERS_SIGNER')
-    * def limit_low = tier_signer.response.data[0].to - 1
-    * def limit_medium = tier_signer.response.data[1].to - 1
-    * def limit_high = tier_signer.response.data[2].from + 1
-    * def amount_low = Math.round(limit_low / tokenPrice)
-    * def amount_medium = Math.round(limit_medium / tokenPrice)
-    * def amount_high = Math.round(limit_high / tokenPrice)
+
 
 
 

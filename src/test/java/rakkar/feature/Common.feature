@@ -104,6 +104,3 @@ Feature: Generate Challenge Answer for Biometric
 
 
 
-
-
-

@@ -1,5 +1,5 @@
 @ignore
-Feature: Get access token for Requester
+Feature: Get access token for user from cross workspace
 
   Background:
     * def testData = read('classpath:data/cross_workspace_data.json')

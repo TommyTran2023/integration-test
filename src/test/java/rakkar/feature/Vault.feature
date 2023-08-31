@@ -433,3 +433,38 @@ Feature: Vault
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
+    @EditStandardColdVaultPolicy
+  Scenario: Edit Standard Cold Vault Policy
+    * call read('Vault.feature@CHECK-LIST-USER')
+    # Create cold vault
+    * def coldVault = callonce read('Vault.feature@CreateVaultCold')
+    # View vault detail to get request ID
+    * def vaultIDWA = coldVault.response.data.id
+    * def coldVaultDetails = callonce read('Vault.feature@GetVaultRequestID')
+    * def requestId = coldVaultDetails.response.data.requestId
+    # Approve created vault policy request
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
+    # Edit vault policy
+    * def requestBody = 
+    """
+      { 
+        "memberIds" : [ #(requesterUserID),#(approvalUserID) ], 
+        "note" : "#(testData.vault.editVaultNote)", 
+        "approveNumber" : #(testData.vault.newApproverNumber), 
+        "memberRequireIds" : [ #(approvalUserID) ] 
+      }
+    """
+    * def editRequest = call read('Vault.feature@EditVaultPolicy-Common')
+    * match editRequest.response.status == 'success'
+    * match editRequest.response.code == 200
+    * match editRequest.response.data.isValid == true
+
+
+  @ignore @GetVaultRequestID
+  Scenario: Get request ID of creating vault request
+    Given path '/core/vault/accounts/'+vaultIDWA
+    When method GET
+    Then status 200
+    * def requestId = response.data.requestId
+
+

@@ -108,11 +108,8 @@ Feature: Wallet
   # Add new asset
     * def addAsset = call read('Wallet.feature@RAKCON-10944')
     * def walletId = addAsset.response.data.success[0].id
-  # View token detail
-    Given path 'core/wallet/token-details/'
-    And params {vaultId: '#(vaultId)', walletId: '#(walletId)'}
-    When method GET
-    Then status 200
+    * def query_detail = { vaultId:'#(vaultId)', walletId: '#(walletId)'}
+    * call read('Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
   # Check the variable expected
     * def networkExpected = addAsset.response.data.success[0].network
     * def symbolExpected = addAsset.response.data.success[0].symbol
@@ -136,6 +133,13 @@ Feature: Wallet
     * match imageActual == imageExpected
     * match nameActual == nameExpected
     * match vaultTypeActual == vaultTypeExpected
+
+  @ignore @VIEW_TOKEN_DETAIL_COMMON
+  Scenario: View token detail common
+    Given path 'core/wallet/token-details/'
+    And params query_detail
+    When method GET
+    Then status 200
 
   @ignore @EXTRACT_WALLET_SUPPORT_MULTIPLE_ADDRESS
   Scenario: View list asset

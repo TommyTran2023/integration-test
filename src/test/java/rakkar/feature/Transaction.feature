@@ -134,13 +134,17 @@ Feature: Transaction
     * def transactionId = response.data.transactions[0].id
     * def status = response.data.transactions[0].status
     * def type = response.data.transactions[0].type
-    Given path '/transaction/transactions/' + transactionId
-    When method GET
-    Then status 200
+    * call read('Transaction.feature@View_transaction_detail_common')
     And match response.status == "success"
     And match response.data.id == "#(transactionId)"
     And match response.data.status == "#(status)"
     And match response.data.type == "#(type)"
+
+  @ignore @View_transaction_detail_common
+  Scenario: View transaction detail common
+    Given path '/transaction/transactions/' + transactionId
+    When method GET
+    Then status 200
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction

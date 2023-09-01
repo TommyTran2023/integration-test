@@ -22,6 +22,11 @@
       "phoneNumber": "+84903465186",
       "dateOfBirth": "2023-02-01"
     },
+    "userOtherCustomerInfor": {
+      "userName": "PASSPORT012993921SG",
+      "vaultId": "88656858-369a-4817-8e9f-9aff74ec75bc",
+      "walletId": "25785868-0b20-4728-a763-fe2c5c3a77c9"
+    },
     "adminUsername": "PASSPORT140234567SG",
     "sourceId_hot": "15305d83-84d5-4a72-96e3-cb7503b4c5ea",
     "destinationId_hot": "f875ac5b-54c6-4eed-b073-8ad2c3ad0c67",
@@ -59,6 +64,11 @@
       "postalCode": "069533",
       "phoneNumber": "+6598533526",
       "dateOfBirth": "1999-01-01"
+    },
+    "userOtherCustomerInfor": {
+      "userName": "PASSPORT11112222SG",
+      "vaultId": "b7ab7c93-37a4-45a7-9985-1d04f4f8ef51",
+      "walletId": "804ba507-dc76-41a6-99c8-faf08f3acc18"
     },
     "adminUsername": "PASSPORT123456",
     "sourceId_hot": "c819feb1-a494-4df7-b34d-b33bd05a6872",

@@ -197,6 +197,20 @@ Feature: Vault
     Then status 200
     * match response.status == 'success'
 
+  @ignore @SearchVaultForTransfer
+  Scenario: Search vaults for transfer
+    Given path 'core/vault/accounts'
+    * param fromScreen = screenType
+    * param groupBy = 'VAULT'
+    * param limit = 10
+    * param offset = 0
+    * param sort = 'DESC'
+    * param sortBy = 'TOTAL_USD'
+    * param tokenSymbol = tokenSymbol
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+
     @RAKCON-10955 @SortVaultA2Z
   Scenario: Sort vaults by name A - Z
     * def sortType = 'ASC'

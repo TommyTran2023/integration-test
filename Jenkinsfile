@@ -4,6 +4,7 @@ def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e
 def KARATE_ENV = "qa"
 def BRANCH = "develop"
 def testSummary
+def testType
 def failedTestMsg = []
 def failedScenarios = []
 def serviceStatus
@@ -14,7 +15,7 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: 'SIT\nUAT', description: 'Test Environment [SIT, UAT, PROD]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
-        booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow')
+        booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }
 
     stages {
@@ -30,6 +31,8 @@ pipeline {
                         KARATE_ENV = "uat"
                     }
                     echo "BRANCH = ${BRANCH}"
+                    testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+
                 }
                 git branch: "${BRANCH}",
                     credentialsId: 'github',
@@ -75,16 +78,17 @@ pipeline {
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
+                        message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                     office365ConnectorSend color: '#a82e2e',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
+                        message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
                         status: 'FAILED',
                         webhookUrl: "${TEAM_URL}"
 
                     error("Abort the build because services healthcheck return error")
                 }
 
+                //continue gather the result if checkService pass and the test was executed
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'
 
                 def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
@@ -119,7 +123,7 @@ pipeline {
             script {
                 if (params.XRAY) {
                     for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                        def testName = "${ENV} (#${BUILD_NUMBER}) Integration Test results - ${file}"
+                        def testName = "${ENV} (#${BUILD_NUMBER}) ${testType} results - ${file}"
                         step([$class: 'XrayImportBuilder',
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
@@ -165,8 +169,8 @@ pipeline {
 
         success {
             script {
-                // Back to Passed notification
-                def successMsg = "${ENV} Integration Test #${env.BUILD_NUMBER} PASSED"
+                // Passed notification
+                def successMsg = "${ENV} ${testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -183,7 +187,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${ENV} Integration Test #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "${ENV} ${testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

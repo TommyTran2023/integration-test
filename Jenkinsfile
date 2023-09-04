@@ -39,9 +39,11 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} 2>&1 | tee status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
+                        def serviceStatusMsg = readFile('status.txt').trim()
+                        echo "${serviceStatusMsg}"
                         currentBuild.result = 'FAILED'
                         exit 1
                     }

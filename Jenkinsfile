@@ -14,6 +14,7 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: 'SIT\nUAT', description: 'Test Environment [SIT, UAT, PROD]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
+        booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow')
     }
 
     stages {
@@ -55,8 +56,9 @@ pipeline {
             steps {
                 script {
                     echo "KARATE_ENV = ${KARATE_ENV}"
+                    def tag = params.E2E ? "@e2e" : "~@e2e"
                     withMaven(maven: 'Maven') {
-                        sh "mvn clean test -Dkarate.env=${KARATE_ENV}"
+                        sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
                     }
                 }
             }

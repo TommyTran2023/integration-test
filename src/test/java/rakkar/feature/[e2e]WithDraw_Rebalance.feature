@@ -1,4 +1,4 @@
-@RAKCON-10583
+@RAKCON-10583 @e2e
 Feature: Withdraw from WARM vault - Same and cross workspace
 
   Background:
@@ -374,7 +374,3 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def amount_recieve = parseFloat(amount_low) - parseFloat(testData.transfer.withdraw.fee)
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
     * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
-
-
-
-

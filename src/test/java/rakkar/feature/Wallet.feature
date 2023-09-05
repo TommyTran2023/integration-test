@@ -295,7 +295,11 @@ Feature: Wallet
     * match statusMsg == 'success'
     * match response.data contains schemaJson.wallet.checkPre_requisite
 
-
+  @RAKCON-19628 @AddAssetOnColdVault
+  Scenario: Add Asset on Cold Vault
+    * callonce read('Vault.feature@ViewStandardColdVaultDetails')
+    * def vaultId = response.data.id
+    * call read('Wallet.feature@ADD_WALLET')
 
 
 

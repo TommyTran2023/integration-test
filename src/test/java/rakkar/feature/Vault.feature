@@ -435,15 +435,7 @@ Feature: Vault
     
   @RAKCON-19626 @EditStandardColdVaultPolicy
   Scenario: Edit Standard Cold Vault Policy
-    * call read('Vault.feature@CHECK-LIST-USER')
-    # Create cold vault
-    * def coldVault = callonce read('Vault.feature@CreateVaultCold')
-    # View vault detail to get request ID
-    * def vaultIDWA = coldVault.response.data.id
-    * def coldVaultDetails = callonce read('Vault.feature@GetVaultRequestID')
-    * def requestId = coldVaultDetails.response.data.requestId
-    # Approve created vault policy request
-    * call read('ApprovalRequest.feature@ApproveRequestCommon')
+    * call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
     # Edit vault policy
     * def requestBody = 
     """
@@ -459,7 +451,6 @@ Feature: Vault
     * match editRequest.response.code == 200
     * match editRequest.response.data.isValid == true
 
-
   @ignore @GetVaultRequestID
   Scenario: Get request ID of creating vault request
     Given path '/core/vault/accounts/'+vaultIDWA
@@ -467,7 +458,19 @@ Feature: Vault
     Then status 200
     * def requestId = response.data.requestId
 
-  # @RAKCON-19627 @ViewColdVaultDetail
-  # Scenarion  
+	@RAKCON-19627 @ViewStandardColdVaultDetails
+	Scenario: View Standard Cold Vault Details
+		* call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
+		* def coldVault = call read('Vault.feature@GetVaultRequestID')
+		Then coldVault.response.data.isPendingRequest == false
+		And coldVault.response.data.type == "COLD_WALLET"
+		And coldVault.response.data.policyType == "STANDARD"
+		And coldVault.response.data.totalBTC == "0"
+		And coldVault.response.data.totalUSDYesterday == 0
+		And coldVault.response.data.totalUSD == 0
+		And coldVault.response.data.totalTransactionPending == 0
+
+
+    
 
 

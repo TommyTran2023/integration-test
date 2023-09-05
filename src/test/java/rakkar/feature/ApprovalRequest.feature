@@ -130,3 +130,17 @@ Feature: Approval Request
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  @ignore @CreateColdVaultAndApprove
+  Scenario: Create Cold Vault And Approve
+    * callonce read('Vault.feature@CHECK-LIST-USER')
+    # Create cold vault
+    * def coldVault = callonce read('Vault.feature@CreateVaultCold')
+    # View vault detail to get request ID
+    * def vaultIDWA = coldVault.response.data.id
+    * def coldVaultDetails = callonce read('Vault.feature@GetVaultRequestID')
+    * def requestId = coldVaultDetails.response.data.requestId
+    # Approve created vault policy request
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
+
+

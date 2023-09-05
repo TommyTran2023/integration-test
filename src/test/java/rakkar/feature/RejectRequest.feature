@@ -137,7 +137,7 @@ Feature: Reject Request
 
   @ignore @RejectRequestCommon
   Scenario: Reject pending request - Common
-    Given path '/core/quorums/reject'
+    Given path '/advance-quorum/quorums/reject'
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * request {"recordId" : "#(requestId)", "reason" : "AT Reject Request Note"}
     When method PUT

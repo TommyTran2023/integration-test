@@ -7,7 +7,7 @@ Feature: Group Policies
 
     @ignore @GetGroupPolicies
     Scenario: Get Group Policies
-        Given path '/core/group-policies'
+        Given path '/advance-quorum/group-policies'
         And param limit = 10
         And param offset = 0
         When method GET
@@ -23,7 +23,7 @@ Feature: Group Policies
     Scenario: Validate Group Policies
         * call read('Common.feature@FIDO-Requester')
         * header challenge-answer = challengeAnswerRequest
-        Given path '/core/group-policies/validate-group-policy'
+        Given path '/advance-quorum/group-policies/validate-group-policy'
         * request requestBody
         When method POST
         Then status 201
@@ -37,7 +37,7 @@ Feature: Group Policies
         * call read('GroupPolicies.feature@GenerateGroupName')
         * def requestBody = { "groupName": '#(groupName)' }
         * call read('GroupPolicies.feature@ValidateGroupPolicies')
-        Given path '/core/group-policies/'+groups[0].id
+        Given path '/advance-quorum/group-policies/'+groups[0].id
         * request { "name": '#(groupName)' }
         When method POST
         Then status 201
@@ -48,7 +48,7 @@ Feature: Group Policies
     @RAKCON-18245 @EditDuplicateGroupName
     Scenario: Edit Duplicate Group Name
         * call read('GroupPolicies.feature@GetGroupPolicies')
-        Given path '/core/group-policies/'+groups[0].id
+        Given path '/advance-quorum/group-policies/'+groups[0].id
         * request { "name": '#(groups[1].name)' }
         When method POST
         Then status 404
@@ -60,7 +60,7 @@ Feature: Group Policies
     @RAKCON-18246 @ViewGroupDetails
     Scenario: View Group Details
         * call read('GroupPolicies.feature@GetGroupPolicies')
-        Given path '/core/group-policies/'+groups[0].id
+        Given path '/advance-quorum/group-policies/'+groups[0].id
         When method GET
         Then status 200
         * match response.data.id == groups[0].id
@@ -71,7 +71,7 @@ Feature: Group Policies
     Scenario: Search User In Group Details
         * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
         * def username = groupDetails.response.data.memberInfos[0].name
-        Given path '/core/group-policies/'+groupDetails.response.data.id
+        Given path '/advance-quorum/group-policies/'+groupDetails.response.data.id
         And param keywordUser = username
         When method GET
         Then status 200
@@ -79,19 +79,34 @@ Feature: Group Policies
 
     @RAKCON-18248 @EditMembersInGroup
     Scenario: Edit Members In Group
+        # Get another random user from list of users
         * call read('Vault.feature@CHECK-LIST-USER')
+        * def listUsers = call read('Vault.feature@CHECK-LIST-USER')
+        * def JSONpath = "$..ADMIN[?(@.userId!='#(requesterUserID)' || @.userId!='#(approvalUserID)' || @.userId!='#(adminUserID)')]"
+        * def userToAdd = karate.jsonPath(listUsers.response.data,JSONpath)
+        * def random = function(){ return Math.floor(Math.random() * userToAdd.length) }
+        * def randomUserId = userToAdd[random()].userId
+        # Get Group Policy to edit
         * call read('GroupPolicies.feature@GetGroupPolicies')
         * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
         * def requestId = groupDetails.response.data.editRequestId
         * if (requestId != null) karate.call('RejectRequest.feature@RejectRequestCommon')
         * call read('GroupPolicies.feature@GenerateGroupName')
-        * def requestBody = { "groupName": '#(groupName)', "exceptGroupId": '#(groups[0].id)' , "userIds": [#(requesterUserID), #(approvalUserID), #(adminUserID)]}
+        * def requestBody = 
+        """
+            {
+                 "groupName": '#(groupName)', 
+                 "exceptGroupId": '#(groups[0].id)' , 
+                 "userIds": [#(requesterUserID), #(approvalUserID), #(adminUserID), #(randomUserId)]
+            }
+        """
+        # Validate Group Policy
         * call read('GroupPolicies.feature@ValidateGroupPolicies')
         * call read('Common.feature@FIDO-Requester')
         * header challenge-answer = challengeAnswerRequest
         * header passcode = requesterInfo.requesterPasscode
-        Given path '/core/group-policies/'+groups[0].id
-        * request { "memberIds": ["#(requesterUserID)", "#(approvalUserID)", "#(adminUserID)"]}
+        Given path '/advance-quorum/group-policies/'+groups[0].id
+        * request { "memberIds": [#(requesterUserID), #(approvalUserID), #(adminUserID), #(randomUserId)]}
         When method PUT
         Then status 200
         * match response.code == 200

@@ -419,19 +419,27 @@ Feature: Vault
     * call read('UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
+    * def viewer3 = listUsers[2]
+    * def viewer4 = listUsers[3]
     * def requestBody = 
     """
       {
         "name":"#(vaultName)",
-        "approverNumber":1,
+        "approverNumber":2,
         "type":"#(testData.vault.vault_type)",
-        "clientId": #(clientId),
+        "clientId": #(testData.clientId),
         "quorums":[
           {
             "members":["#(viewer1)","#(viewer2)"],
-            "quorumApprovals":0,
+            "quorumApprovals":1,
             "isRequired":false
-          }],
+          },
+          {
+            "members":["#(viewer3)","#(viewer4)"],
+            "quorumApprovals":1,
+            "isRequired":false
+          }
+        ],
         "policyType":"#(policyType)",
       }
     """

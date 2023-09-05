@@ -433,7 +433,7 @@ Feature: Vault
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
-    @EditStandardColdVaultPolicy
+  @RAKCON-19626 @EditStandardColdVaultPolicy
   Scenario: Edit Standard Cold Vault Policy
     * call read('Vault.feature@CHECK-LIST-USER')
     # Create cold vault
@@ -466,5 +466,8 @@ Feature: Vault
     When method GET
     Then status 200
     * def requestId = response.data.requestId
+
+  # @RAKCON-19627 @ViewColdVaultDetail
+  # Scenarion  
 
 

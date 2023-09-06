@@ -145,7 +145,7 @@ Feature: Approval Request
     * def coldVault = callonce read('Vault.feature@CreateVaultCold')
     # View vault detail to get request ID
     * def vaultIDWA = coldVault.response.data.id
-    * def coldVaultDetails = callonce read('Vault.feature@GetVaultRequestID')
+    * def coldVaultDetails = callonce read('Vault.feature@GetCreateVaultRequestID_NoCreate')
     * def requestId = coldVaultDetails.response.data.requestId
     # Approve created vault policy request
     * call read('ApprovalRequest.feature@ApproveRequestCommon')

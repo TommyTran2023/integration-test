@@ -509,7 +509,6 @@ Feature: Vault
 	@RAKCON-19627 @ViewStandardColdVaultDetails
 	Scenario: View Standard Cold Vault Details
 		* call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
-		* def coldVault = call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
 		Then coldVault.response.data.isPendingRequest == false
 		And coldVault.response.data.type == "COLD_WALLET"
 		And coldVault.response.data.policyType == "STANDARD"

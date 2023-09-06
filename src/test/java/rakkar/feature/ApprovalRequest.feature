@@ -108,6 +108,13 @@ Feature: Approval Request
     * def requestId = value.response.data.pendingRequestId
     * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
 
+  @RAKCON-18737 @ApproveEditGroupMembersRequest
+  Scenario: Approve Edit Group Members Request
+    * call read('GroupPolicies.feature@EditMembersInGroup')
+    * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+    * def requestId = groupDetails.response.data.editRequestId
+    * karate.call('ApprovalRequest.feature@ApproveRequestCommon')
+    
   @ignore @RAKCON-15106 @ApprovalEditProfileRouting
   Scenario: Approval -  Edit profile routing
     * def value = call read('NetworkManagement.feature@Editprofilerouting')
@@ -143,4 +150,22 @@ Feature: Approval Request
     # Approve created vault policy request
     * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
+
+  # Approve Advance Quorums Request
+  @ApproveAdvanceQuorumsRequest @ignore
+  Scenario: Approve pending request - Common
+    Given path '/advance-quorum/quorums/approval/'+requestId
+    * header challenge-answer = challengeApprover.challengeAnswerRequest
+    * header passcode = approverInfo.approverPasscode
+    When method POST
+    Then status 201
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+
+  @RAKCON-19024 @ApproveAdvanceQuorums
+  Scenario: Approve create advance quorum request
+    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
 

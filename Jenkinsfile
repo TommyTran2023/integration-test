@@ -39,7 +39,12 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV}", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} 2>&1 | tee status.txt", returnStatus: true)
+
+                    if (serviceStatus) {
+                        currentBuild.result = 'FAILED'
+                        exit 1
+                    }
                 }
             }
         }
@@ -60,16 +65,16 @@ pipeline {
 
         always {
             script {
-
                 // Aborting build if checkService error
                 if (serviceStatus != 0) {
+                    def serviceStatusMsg = readFile('status.txt').trim()
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: Abort the build because services healthcheck return error")
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                     office365ConnectorSend color: '#a82e2e',
-                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: Abort the build because services healthcheck return error",
+                        message: "${ENV} Integration Test #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
                         status: 'FAILED',
                         webhookUrl: "${TEAM_URL}"
 

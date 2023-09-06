@@ -45,6 +45,13 @@ Feature: Cancel Request
     * def requestId = value.response.data.requestId
     * call read('CancelRequest.feature@CancelRequestCommon')
 
+  @RAKCON-18739 @CancelEditGroupMembers
+  Scenario: Cancel request - Edit group members
+  * call read('GroupPolicies.feature@EditMembersInGroup')
+  * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+  * def requestId = groupDetails.response.data.editRequestId
+  * call read('CancelRequest.feature@CancelRequestCommon')
+
   @ignore @RAKCON-15490 @CancelExternalWithdraw
   Scenario: Cancel request - Cancel external withdraw
     * def value = call read('Transfer.feature@External_Transfer')
@@ -71,3 +78,21 @@ Feature: Cancel Request
     Then status 200
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  
+  @ignore @CancelAdvanceQuorumRequest
+  Scenario: Cancel a request - Common
+    Given path '/advance-quorum/quorums/cancel/'+requestId
+    * header challenge-answer = challengeApprover.challengeAnswerRequest
+    When method PUT
+    Then status 200
+    * def statusMsg = response.status
+    * match statusMsg == 'success'
+
+  @RAKCON-19043 @CancelAdvanceQuorums
+  Scenario: Cancel create advance quorum request
+    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('CancelRequest.feature@CancelAdvanceQuorumRequest')
+

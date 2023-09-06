@@ -41,7 +41,8 @@ Feature: Vault
   Scenario: Check user list of organization for add vault
     #Check correct user list from company
     * def listUsers = call read('UserManagement.feature@ListUsers')
-    * def totalUserToAddvault = listUsers.response.data.totalCount
+    * def JSONpath = "$..users[?(@.role=='ADMIN')]"
+    * def totalUserToAddvault = karate.jsonPath(listUsers.response.data,JSONpath).length
     * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
     * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
     And match totalUserToAddvault == totalUserInPolicy
@@ -401,8 +402,9 @@ Feature: Vault
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
+    * def requestId = createVaultRequest.response.data.notificationId
     Given url baseMobileURL + '/core/vault/submit-request-create-vault'
-    * request { "notificationId" : "#(createVaultRequest.response.data.notificationId)" }
+    * request { "notificationId" : "#(requestId)" }
     When method POST
     Then status 201
     * match response.code == 200
@@ -417,7 +419,22 @@ Feature: Vault
     * call read('UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
-    * def requestBody = {"name":"#(vaultName)","approverNumber":1,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","quorums":[{"members":[],"quorumApprovals":0,"isRequired":false}],"policyType":"#(policyType)","viewers":["#(viewer1)","#(viewer2)"]}
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":1,
+        "type":"#(testData.vault.vault_type)",
+        "clientId": #(clientId),
+        "quorums":[
+          {
+            "members":["#(viewer1)","#(viewer2)"],
+            "quorumApprovals":0,
+            "isRequired":false
+          }],
+        "policyType":"#(policyType)",
+      }
+    """
     * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
     * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
     * call read('Vault.feature@SubmitRequestFromMobile')
@@ -427,7 +444,16 @@ Feature: Vault
     * def policyType = null
     * call read('Vault.feature@GenerateVaultName')
     * call read('Vault.feature@CHECK-LIST-USER')
-    * def requestBody = {"name":"#(vaultName)","approverNumber":0,"type":"#(testData.vault.vault_type)","clientId":"bxeRJIROr8VQTBSqAAGW","memberIds":"#(vaultMemberList)"}
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":0,
+        "type":"#(testData.vault.vault_type)",
+        "clientId": #(clientId),
+        "memberIds":"#(vaultMemberList)"
+      }
+    """
     * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
     * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
     * call read('Vault.feature@SubmitRequestFromMobile')
@@ -451,7 +477,7 @@ Feature: Vault
     * match editRequest.response.code == 200
     * match editRequest.response.data.isValid == true
 
-  @ignore @GetVaultRequestID
+  @ignore @GetCreateVaultRequestID_NoCreate
   Scenario: Get request ID of creating vault request
     Given path '/core/vault/accounts/'+vaultIDWA
     When method GET
@@ -461,7 +487,7 @@ Feature: Vault
 	@RAKCON-19627 @ViewStandardColdVaultDetails
 	Scenario: View Standard Cold Vault Details
 		* call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
-		* def coldVault = call read('Vault.feature@GetVaultRequestID')
+		* def coldVault = call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
 		Then coldVault.response.data.isPendingRequest == false
 		And coldVault.response.data.type == "COLD_WALLET"
 		And coldVault.response.data.policyType == "STANDARD"

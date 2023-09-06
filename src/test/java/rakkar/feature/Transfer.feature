@@ -293,5 +293,36 @@ Feature: Transfer
     Then status 200
     And response.status == "success"
 
-
+    #Tcs: TRANSFER VAULT ADVANCE HOT TO STANDARD HOT
+  @RAKCON-19044 @Transfer_value_advance_hot_to_hot
+  Scenario: Transfer from Advance Hot Vault to Standard Hot Vault')
+    * def body = 
+    """
+      {
+         "operation":'#(testData.transfer.operation)',
+         "tokenId":'#(tokenId)',
+         "feeType":'#(testData.transfer.withdraw.feeType)',
+         "fee":'#(Number(testData.transfer.withdraw.fee))', 
+         "treatAsGrossAmount": true, 
+         "feeLevel": '#(testData.transfer.feeLevel)', 
+         "destination":{"type":'#(testData.transfer.source_type)',
+         "id":'#(destinationId_hot)'}, 
+         "source": {"type":'#(testData.transfer.source_type)',
+         "id":'#(advanceHotVaultId)'},
+         "amount":#(amount_low),
+         "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
+         }
+    """
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'transaction/transactions'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And response.data.status == "PENDING"
+    And response.data.amount == "#(amount_low)"
+    And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
+    And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
+    And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
 

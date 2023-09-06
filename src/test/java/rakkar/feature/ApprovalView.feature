@@ -74,9 +74,10 @@ Feature: Approval View
 
   @ApprovalView-Common @ignore
   Scenario: Approve View - Common
-    Given path '/core/quorums'
+    Given path '/advance-quorum/quorums'
     * request requestBody
     When method POST
     Then status 201
     * match each $response.data.records[*].businessRegistrationId == '#string'
     * match each $response.data.records[*].organizationName == '#string'
+

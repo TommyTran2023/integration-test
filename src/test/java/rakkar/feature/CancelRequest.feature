@@ -72,7 +72,7 @@ Feature: Cancel Request
 
   @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
-    Given path '/core/quorums/cancel/'+requestId
+    Given path '/advance-quorum/quorums/cancel/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     When method PUT
     Then status 200

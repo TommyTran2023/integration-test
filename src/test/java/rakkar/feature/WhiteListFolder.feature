@@ -60,14 +60,19 @@ Feature: WhiteList Folder
   @RAKCON-11163 @Search_folder_by_keyword
   Scenario: Check search folder by keyword
     * call read('WhiteListFolder.feature@Create_folder')
+    * call read('WhiteListFolder.feature@Search_folder_by_keyword_common')
+    And match response.data.folders[0].name == "#(folderName)"
+    And match response.data.folders[0].type == "#(type)"
+
+     #TCs: SEARCH FOLDER COMON
+  @ignore @Search_folder_by_keyword_common
+  Scenario: Check search folder by keyword common
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',keyword: '#(folderName)'}
     Given path 'core/folders'
     And params query
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.folders[0].name == "#(folderName)"
-    And match response.data.folders[0].type == "#(type)"
 
   @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type

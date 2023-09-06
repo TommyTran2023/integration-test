@@ -85,7 +85,7 @@ Feature: Approval Request
     * call read('UploadFile.feature@PUT_VIDEO')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)'}
     * print 'body', body
-    Given path '/core/quorums/approval/'+requestId
+    Given path '/advance-quorum/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * header passcode = approverInfo.approverPasscode
     And request body
@@ -130,7 +130,7 @@ Feature: Approval Request
      # Common Approve
   @ApproveRequestCommon @ignore
   Scenario: Approve pending request - Common
-    Given path '/core/quorums/approval/'+requestId
+    Given path '/advance-quorum/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * header passcode = approverInfo.approverPasscode
     When method POST

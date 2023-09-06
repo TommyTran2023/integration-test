@@ -64,7 +64,7 @@ Feature: View List My Request
 
   @ViewListMyRequest-Common @ignore
   Scenario: View My Request - Common
-    Given path '/core/quorums'
+    Given path '/advance-quorum/quorums'
     * request requestBody
     When method POST
     Then status 201

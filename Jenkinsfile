@@ -49,7 +49,6 @@ pipeline {
                         def serviceStatusMsg = readFile('status.txt').trim()
                         echo "${serviceStatusMsg}"
                         currentBuild.result = 'FAILED'
-                        exit 1
                     }
                 }
             }

@@ -138,6 +138,19 @@ Feature: Approval Request
     * def statusMsg = response.status
     * match statusMsg == 'success'
 
+  @ignore @CreateColdVaultAndApprove
+  Scenario: Create Cold Vault And Approve
+    * callonce read('Vault.feature@CHECK-LIST-USER')
+    # Create cold vault
+    * def coldVault = callonce read('Vault.feature@CreateVaultCold')
+    # View vault detail to get request ID
+    * def vaultIDWA = coldVault.response.data.id
+    * def coldVaultDetails = callonce read('Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * def requestId = coldVaultDetails.response.data.requestId
+    # Approve created vault policy request
+    * call read('ApprovalRequest.feature@ApproveRequestCommon')
+
+
   # Approve Advance Quorums Request
   @ApproveAdvanceQuorumsRequest @ignore
   Scenario: Approve pending request - Common
@@ -155,3 +168,4 @@ Feature: Approval Request
     * def vaultIDWA = createdVault.response.data.vaultId
     * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
     * karate.call('ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+

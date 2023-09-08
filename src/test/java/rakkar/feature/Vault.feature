@@ -481,11 +481,43 @@ Feature: Vault
     * call read('Vault.feature@SubmitRequestFromMobile')
 
     
+  @RAKCON-19626 @EditStandardColdVaultPolicy
+  Scenario: Edit Standard Cold Vault Policy
+    * call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
+    # Edit vault policy
+    * def requestBody = 
+    """
+      { 
+        "memberIds" : [ #(requesterUserID),#(approvalUserID) ], 
+        "note" : "#(testData.vault.editVaultNote)", 
+        "approveNumber" : #(testData.vault.newApproverNumber), 
+        "memberRequireIds" : [ #(approvalUserID) ] 
+      }
+    """
+    * def editRequest = call read('Vault.feature@EditVaultPolicy-Common')
+    * match editRequest.response.status == 'success'
+    * match editRequest.response.code == 200
+    * match editRequest.response.data.isValid == true
+
   @ignore @GetCreateVaultRequestID_NoCreate
   Scenario: Get request ID of creating vault request
     Given path '/core/vault/accounts/'+vaultIDWA
     When method GET
     Then status 200
     * def requestId = response.data.requestId
+
+	@RAKCON-19627 @ViewStandardColdVaultDetails
+	Scenario: View Standard Cold Vault Details
+		* call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
+		Then coldVault.response.data.isPendingRequest == false
+		And coldVault.response.data.type == "COLD_WALLET"
+		And coldVault.response.data.policyType == "STANDARD"
+		And coldVault.response.data.totalBTC == "0"
+		And coldVault.response.data.totalUSDYesterday == 0
+		And coldVault.response.data.totalUSD == 0
+		And coldVault.response.data.totalTransactionPending == 0
+
+
+    
 
 

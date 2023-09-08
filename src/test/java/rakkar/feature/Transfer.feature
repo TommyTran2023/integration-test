@@ -148,9 +148,29 @@ Feature: Transfer
 
   @RAKCON-11402 @Transfer_medium_value
   Scenario: Transfer medium - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_medium),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
-    * header passcode = requesterInfo.requesterPasscode
-    * call read('Transfer.feature@Internal_Transfer_Common')
+    * def body = 
+    """
+      { 
+        "operation":'#(testData.transfer.operation)',
+        "tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',
+        "fee":'#((testData.transfer.withdraw.fee))', 
+        "treatAsGrossAmount": true, 
+        "feeLevel": '#(testData.transfer.feeLevel)', 
+        "destination":
+        {
+          "type":'#(testData.transfer.source_type)',
+          "id":'#(destinationId_hot)'
+        }, 
+        "source": 
+        {
+          "type":'#(testData.transfer.source_type)',
+          "id":'#(sourceId_hot)'
+        },
+        "amount":#(amount_medium),
+        "totalEstimatedFee":'#(testData.transfer.withdraw.fee)'
+      }
+    """
+    * call read('Transfer.feature@Internal_Transfer_Medium_High_Value')
     And response.status == "success"
     And response.data.status == "PENDING"
     And response.data.amount == "#(amount_medium)"
@@ -171,14 +191,34 @@ Feature: Transfer
     * call read('Transfer.feature@Total_estimate_fee_common')
 
   @RAKCON-11405 @Transfer_high_value
-   Scenario: Transfer high - Submit transfer
+  Scenario: Transfer high - Submit transfer
     * call read('Common.feature@VIDEO_SPEECH_PROMPT')
     * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('Common.feature@UPLOAD_LINK')
     * call read('UploadFile.feature@PUT_VIDEO')
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)', "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_hot)'},"amount":#(amount_high),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
-    * header passcode = requesterInfo.requesterPasscode
-    * call read('Transfer.feature@Internal_Transfer_Common')
+    * def body = 
+    """
+      { 
+        "uploadToken":'#(uploadToken)',
+        "vdoSentence":'#(vdoSentence)', 
+        "operation":'#(testData.transfer.operation)',
+        "tokenId":'#(tokenId)',
+        "feeType":'#(testData.transfer.withdraw.feeType)',
+        "fee":'#(testData.transfer.withdraw.fee)', 
+        "treatAsGrossAmount": true, 
+        "feeLevel": '#(testData.transfer.feeLevel)', 
+        "destination":{"type":'#(testData.transfer.source_type)',
+        "id":'#(destinationId_hot)'}, 
+        "source": 
+        {
+          "type":'#(testData.transfer.source_type)',
+          "id":'#(sourceId_hot)'
+        },
+        "amount":#(amount_high),
+        "totalEstimatedFee":'#(testData.transfer.withdraw.fee)'
+      }
+    """
+    * call read('Transfer.feature@Internal_Transfer_Medium_High_Value')
     And response.status == "success"
     And response.data.status == "PENDING"
     And response.data.amount == "#(testData.transfer.amount_high)"
@@ -207,6 +247,16 @@ Feature: Transfer
   @ignore @Internal_Transfer_Common
   Scenario:  Internal - Submit internal transfer common
     * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    Given path 'transaction/transactions'
+    And request body
+    When method POST
+    Then status 201
+
+  @ignore @Internal_Transfer_Medium_High_Value
+  Scenario:  Internal - Submit internal transfer common
+    * call read('Common.feature@FIDO-Requester')
+    * header passcode = requesterInfo.requesterPasscode
     * header challenge-answer = challengeAnswerRequest
     Given path 'transaction/transactions'
     And request body

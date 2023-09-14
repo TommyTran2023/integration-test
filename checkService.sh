@@ -2,14 +2,10 @@
 
 check_url() {
     url="$1"
-    errors=()
     response=$(curl -s -o /dev/null -w "%{http_code}" "$url")
     if [ "$response" -ne 200 ]; then
-        errors+="Error: $url returned HTTP $response"
-    fi
-    if ((${#errors[@]})); then
-    	echo $errors
-    	exit 1
+        echo "Error: $url returned HTTP $response"
+        return 1
     fi
 }
 
@@ -29,8 +25,20 @@ urls=(
 )
 
 # Loop through each URL and check response status
+errors=0
 for url in "${urls[@]}"; do
     check_url "${endpoint}/${env}/${url}"
+    if [ $? -eq 1 ]; then
+        let "errors++"
+    fi
 done
 
-echo "All URLs returned HTTP 200 OK"
+if [ "$errors" -eq 0 ]; then
+    echo "All URLs returned HTTP 200 OK"
+    exit 0
+else
+    exit 1
+fi
+
+
+

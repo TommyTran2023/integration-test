@@ -201,6 +201,111 @@
       "totalUsd":"#number",
       "totalUsdYesterday": "#number",
       "stakedAssets" : "#[]"
+    },
+    "stakingRecord":{
+      "requestId": "#string",
+      "transactionId": "#string",
+      "additionalData": {
+        "data": {
+          "customerId": "#string",
+          "transactionId": "#string",
+          "assetId": "#string",
+          "tokenId": "#string",
+          "token": {
+            "id": "#string",
+            "externalAssetId": "#string",
+            "type": "#string",
+            "nativeAsset": "#string",
+            "decimals": "#number",
+            "tokenAddress": "#string",
+            "name": "#string",
+            "symbol": "#string",
+            "network": "#string",
+            "image": "#string",
+            "networkImage": "#ignore",
+            "blockExplorerUrl": "#string",
+            "blockExplorerTxUrl": "#string",
+            "minimumAmount": "#number",
+            "blockExplorerTokenUrl": "#ignore",
+            "status": "#string",
+            "createdAt": "#string",
+            "updatedAt": "#string"
+          },
+          "source": {
+            "id": "#string",
+            "externalExchangeAccountId": "#string",
+            "type": "#string",
+            "name": "#string",
+            "subType": "#ignore",
+            "workSpaceId": "#string",
+            "createdAt": "#string",
+            "updatedAt": "#string",
+            "vaultType": "#string"
+          },
+          "destination": {
+            "id": "#string",
+            "externalExchangeAccountId": "#string",
+            "type": "#string",
+            "name": "#string",
+            "subType": "#ignore",
+            "workSpaceId": "#string",
+            "createdAt": "#string",
+            "updatedAt": "#string"
+          },
+          "sourceInternalId": "#string",
+          "destinationInternalId" :"#string",
+          "amount": "#number",
+          "amountUSD": "#number",
+          "transactionType": "#string",
+          "userId": "#string",
+          "totalEstimatedFee": "#number",
+          "registrationFee": "#number",
+          "feeLevel": "#string",
+          "additionalDataLocation": {
+            "country": "#ignore",
+            "city": "#ignore"
+          },
+          "fireblockTransArgument": {
+            "assetId": "#string",
+            "source": {
+              "type": "#string",
+              "id": "#string"
+            },
+            "destination": {
+              "type": "#string",
+              "id": "#string"
+            },
+            "amount": "#number",
+            "operation": "#string",
+            "note": "#string",
+            "treatAsGrossAmount": "#boolean",
+            "feeLevel": "#string"
+          },
+          "destinationInfo": {
+            "id": "#number",
+            "bech32Id": "#string",
+            "name": "#string",
+            "size": "#string",
+            "activeSize": "#string",
+            "hash": "#string",
+            "taxRatio": "#number",
+            "taxFixed": "#string",
+            "blockCountEpoch": "#number",
+            "blockLifetime": "#number",
+            "roaRecent": "#number",
+            "roaLifetime": "#number",
+            "pledge": "#string",
+            "delegatorCount": "#number",
+            "saturationRatio": "#number",
+            "url": "#string",
+            "image": "#string",
+            "recommended": "#boolean",
+            "createdAt": "#string",
+            "updatedAt": "#string"
+          }
+        }
+      }
     }
   }
 }
+

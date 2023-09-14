@@ -150,7 +150,6 @@ Feature: Approval Request
     # Approve created vault policy request
     * call read('ApprovalRequest.feature@ApproveRequestCommon')
 
-
   # Approve Advance Quorums Request
   @ApproveAdvanceQuorumsRequest @ignore
   Scenario: Approve pending request - Common
@@ -164,8 +163,42 @@ Feature: Approval Request
 
   @RAKCON-19024 @ApproveAdvanceQuorums
   Scenario: Approve create advance quorum request
-    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def createdVault = call read('this:Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
     * def vaultIDWA = createdVault.response.data.vaultId
-    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
-    * karate.call('ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+
+  @RAKCON-19663 @ApproveTransferSmallAmountFromHotStandardVaultToHotAdvanceVault
+  Scenario: Approval - Tranfer Small Amount From Hot Standard Vault To Hot Advance Vault
+    * def destinationId = advanceHotVaultId
+    * def sourceId = destinationId_hot
+    * def req = call read('this:Transfer.feature@TransferSmallCommon')
+    * def requestId = req.response.data.requestId
+    * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+  
+  @RAKCON-19664 @ApproveTransferSmallAmountFromHotAdvanceVaultToHotSkipVault
+  Scenario: Approval - Tranfer Small Amount From Hot Advance Vault To Hot Skip Vault
+    * def destinationId = skipHotVaultId
+    * def sourceId = advanceHotVaultId
+    * def req = call read('this:Transfer.feature@TransferSmallCommon')
+    * def requestId = req.response.data.requestId
+    * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+
+  @RAKCON-19665 @ApproveTransferSmallAmountFromHotStandardVaultToHotSkipVault
+  Scenario: Approval - Tranfer Small Amount From Hot Standard Vault To Hot Skip Vault
+    * def destinationId = skipHotVaultId
+    * def sourceId = destinationId_hot
+    * def req = call read('this:Transfer.feature@TransferSmallCommon')
+    * def requestId = req.response.data.requestId
+    * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+
+  @RAKCON-19666 @ApproveTransferSmallAmountFromHotAdvanceVaultToColdAdvanceVault
+  Scenario: Approval - Tranfer Small Amount From Hot Advance Vault To Cold Advance Vault
+    * def destinationId = advanceColdVaultId
+    * def sourceId = advanceHotVaultId
+    * def req = call read('this:Transfer.feature@TransferSmallCommon')
+    * def requestId = req.response.data.requestId
+    * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+
+
 

@@ -40,7 +40,10 @@
     "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f",
     "vaultCreateStake": "8a7ce5c3-854b-4243-b391-c57f7ef35696",
     "vaultUpdateStake": "c53f723f-d313-43d6-bd56-921c65c21a49",
-    "advanceHotVaultId": "4a4f074f-e186-4eb2-b54d-235ae41b3b8e"
+    "advanceHotVaultId": "f4b82fa0-c27d-4777-8587-5ad3bb1e0a7c",
+    "advanceColdVaultId": "62e0d194-4e4c-4341-8144-f04ab2c47d22",
+    "skipHotVaultId": "603fa056-7dce-40a7-a221-7b41ef0a42bb",
+    "advanceHotVaultForStakeId": "b072682e-c590-459c-98bc-fed834a12bf9"
   },
   "uat": {
     "baseURL": "https://uat-api.rakkardigital.com",
@@ -83,7 +86,9 @@
     "vaultUpdateStake": "1f2d1c8e-3146-4525-baa9-4da8fbc1797d",
     "networkID": "b7d26242-6f5b-46ef-a4f5-5db56e335161",
     "connectionID": "094efc4d-42e3-473f-bf6e-adb8348f76cb",
-    "advanceHotVaultId": "0c6915ed-938e-41d1-97ba-6d7f27773a09"
+    "advanceHotVaultId": "8d819537-dcbd-4a9d-af67-e8d451792e31",
+    "advanceColdVaultId": "cc76bf30-d415-4265-b6f9-7631d8392833",
+    "skipHotVaultId": "7b28d83f-6965-437b-b4c2-e8b54f09fa2c"
   }
 
 }

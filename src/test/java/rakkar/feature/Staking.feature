@@ -156,5 +156,41 @@ Feature: Staking
     * def requestId = response.data.records[0].id
 
 
+  @StakingOnAdvanceVault
+  Scenario: Staking on hot advance vault
+    * def schemaBody = read('classpath:data/schema.json')
+    * call read('Staking.feature@Get_estimatefee_stake')
+    * def body = 
+    """
+      { 
+        "totalEstimatedFee":'#(totalEstimatedFee)',
+        "tokenId":'#(stakeToken)',
+        "registrationFee": 2,
+        "feeLevel":'#(testData.staking.feeLevel)', 
+        "source": 
+        {
+          "type":'#(testData.transfer.source_type)',
+          "id":'#(advanceHotVaultForStakeId)'
+        },
+        "amount":#(testData.staking.amount),
+        "destinationId":'#(testData.staking.poolID)', 
+        "tokenExternalId": '#(testData.staking.tokenExternalId)'
+      }
+    """
+    * call read('Common.feature@FIDO-Requester')
+    * header challenge-answer = challengeAnswerRequest
+    * header passcode = requesterInfo.requesterPasscode
+    Given path 'staking/records'
+    And request body
+    When method POST
+    Then status 201
+    And response.status == "success"
+    And match response.message == "Success"
+    * def data = response.data
+    * def requestId = response.data.requestId
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
+    * match data == schemaBody.staking.stakingRecord
+    
+
 
 

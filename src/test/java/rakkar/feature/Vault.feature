@@ -4,8 +4,8 @@ Feature: Vault
   Background:
     #@PRECOND_RAKCON-10225
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetUserInfo.feature@GetRequesterInfo')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -25,25 +25,25 @@ Feature: Vault
 
     @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
-    * def value = call read('Vault.feature@ViewVaultListing')
+    * def value = call read('this:Vault.feature@ViewVaultListing')
     * def name = value.response.data.vaults[0].name
     * def query = { name:'#(name)'}
-    * call read('Vault.feature@CheckVaultNameCommon')
+    * call read('this:Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == true
 
     @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
   Scenario: Check vault name is Not existed in the company
     * def query = { name:'VaultTestNotExist'}
-    * call read('Vault.feature@CheckVaultNameCommon')
+    * call read('this:Vault.feature@CheckVaultNameCommon')
     And match response.data.exist == false
 
     @RAKCON-16175 @GET-LIST-USER
   Scenario: Check user list of organization for add vault
     #Check correct user list from company
-    * def listUsers = call read('UserManagement.feature@ListUsers')
+    * def listUsers = call read('this:UserManagement.feature@ListUsers')
     * def JSONpath = "$..users[?(@.role=='ADMIN')]"
     * def totalUserToAddvault = karate.jsonPath(listUsers.response.data,JSONpath).length
-    * def dataFromPolicy = call read('AccountPolicy.feature@ViewAccountPolicy')
+    * def dataFromPolicy = call read('this:AccountPolicy.feature@ViewAccountPolicy')
     * def totalUserInPolicy = dataFromPolicy.response.data.quorumParticipants.length
     And match totalUserToAddvault == totalUserInPolicy
 
@@ -63,13 +63,13 @@ Feature: Vault
 
     @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
-    * call read('Vault.feature@GenerateVaultName')
-    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
-    * call read('Vault.feature@CreateVault-Common')
+    * call read('this:Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
     * def vaultNameResponseWA = response.data.name
@@ -80,13 +80,13 @@ Feature: Vault
 
     @RAKCON-10220 @AddNewVaultWithOutAdminSetup
   Scenario: Create a new vault without admin quorum setup
-    * call read('Vault.feature@GenerateVaultName')
-    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
-    * call read('Vault.feature@CreateVault-Common')
+    * call read('this:Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
     * def vaultNameResponseWOA = response.data.name
@@ -121,7 +121,7 @@ Feature: Vault
 
     @ignore @GetCreateVaultRequestID
   Scenario: Get request ID of creating vault request
-    * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    * callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWA
     When method GET
     Then status 200
@@ -131,8 +131,8 @@ Feature: Vault
   Scenario: View vault detail that has admin quorum
     # View detail of vault that has admin quorum after approval
     # ---- Approve creating vault request first
-    * callonce read('Vault.feature@GetCreateVaultRequestID')
-    * call read('ApprovalRequest.feature@ApproveRequestCommon')
+    * callonce read('this:Vault.feature@GetCreateVaultRequestID')
+    * call read('this:ApprovalRequest.feature@ApproveRequestCommon')
     # ---- View detail of vault that has admin quorum after approval
     Given path '/core/vault/accounts/'+vaultIDWA
     * configure headers = {Authorization: '#(accessToken)'}
@@ -150,13 +150,13 @@ Feature: Vault
     # ---- After approval, missing policy should be false
     * match response.data.missing == false
     # ---- Check vault members should be same as created
-    * def listMembers = karate.callSingle('Vault.feature@CHECK-LIST-USER')
+    * def listMembers = karate.callSingle('this:Vault.feature@CHECK-LIST-USER')
     * match memberIdsWA contains only vaultMemberList
 
     @RAKCON-11146 @ViewVaultDetailHasNotAdminSetup
   Scenario: View vault detail that has not admin quorum
     #View detail of vault that has not admin quorum after creating
-    * callonce read('Vault.feature@AddNewVaultWithOutAdminSetup')
+    * callonce read('this:Vault.feature@AddNewVaultWithOutAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWOA
     When method GET
     Then status 200
@@ -176,9 +176,9 @@ Feature: Vault
 
     @RAKCON-10954 @SearchVault
   Scenario: Search vaults
-    * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    * callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     * def keyword = vaultNameResponseWA
-    * call read('Vault.feature@SearchVaultCommon')
+    * call read('this:Vault.feature@SearchVaultCommon')
     * match response.status == 'success'
     * def listSearchedVault = response.data.vaults
     * def listSearchedVaultName = $listSearchedVault[*].name
@@ -214,7 +214,7 @@ Feature: Vault
     @RAKCON-10955 @SortVaultA2Z
   Scenario: Sort vaults by name A - Z
     * def sortType = 'ASC'
-    * call read('Vault.feature@SortVaultByName-Common')
+    * call read('this:Vault.feature@SortVaultByName-Common')
     * eval Collections.sort(listVaultNameExpected.map(toUpper), java.lang.String.CASE_INSENSITIVE_ORDER)
     * def expected = listVaultNameExpected.map(toUpper)
     * def actual = listVaultNameActual.map(toUpper)
@@ -223,7 +223,7 @@ Feature: Vault
     @RAKCON-11118 @SortVaultZ2A
   Scenario: Sort vaults by name Z - A
     * def sortType = 'DESC'
-    * call read('Vault.feature@SortVaultByName-Common')
+    * call read('this:Vault.feature@SortVaultByName-Common')
     * eval Collections.sort(listVaultNameExpected.map(toUpper), Collections.reverseOrder())
     * def expected = listVaultNameExpected.map(toUpper)
     * def actual = listVaultNameActual.map(toUpper)
@@ -291,8 +291,8 @@ Feature: Vault
     @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
     #Check vault name is existed or not
-    * call read('Vault.feature@GenerateVaultName')
-    * def creatingVault = callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * def creatingVault = callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/account/'+creatingVault.vaultIDWA
     * request {"name":#(vaultName)}
     When method PUT
@@ -302,9 +302,9 @@ Feature: Vault
     @RAKCON-10957 @EditVaultPolicy
   Scenario: Edit vault policy
     #Get list user in organization
-    * callonce read('Vault.feature@CHECK-LIST-USER')
+    * callonce read('this:Vault.feature@CHECK-LIST-USER')
     #Get a vault that has not edit vault pending request
-    * call read('ApprovalRequest.feature@ApproveNewVaultRequest')
+    * call read('this:ApprovalRequest.feature@ApproveNewVaultRequest')
     #Edit vault policy
     * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
     * def editVaultPolicy = call read('Vault.feature@EditVaultPolicy-Common')
@@ -318,23 +318,23 @@ Feature: Vault
 
     @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
-    * callonce read('Vault.feature@EditVaultPolicy')
+    * callonce read('this:Vault.feature@EditVaultPolicy')
     * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [] }
-    * call read('Vault.feature@EditVaultPolicy-Common')
+    * call read('this:Vault.feature@EditVaultPolicy-Common')
     Then match response.data.message == 'Exists pending requests'
 
     @ignore @EditVaultPolicy-Common
   Scenario: Edit vault policy - Common
     Given path '/core/vault/account/'+vaultIDWA+'/rules'
     * request requestBody
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     When method PUT
 
     @RAKCON-11286 @HideVault
   Scenario: Hide a vault
-    * callonce read('Vault.feature@AddNewVaultWithAdminSetup')
+    * callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
     When method POST
     Then status 201
@@ -342,7 +342,7 @@ Feature: Vault
 
     @RAKCON-11287 @ViewHiddenVaultList
   Scenario: View hidden listing vault
-    * call read('Vault.feature@ViewHiddenVaultCommon')
+    * call read('this:Vault.feature@ViewHiddenVaultCommon')
     * def vaultsSchema = schemaBody.vault.schema_list
     * match response.data.vaults == '#[]vaultsSchema'
     * match response.data.hasSmallBalance == '#boolean'
@@ -353,9 +353,9 @@ Feature: Vault
 
     @RAKCON-11370 @SearchHiddenVault
   Scenario: Search hidden vault
-    * callonce read('Vault.feature@HideVault')
+    * callonce read('this:Vault.feature@HideVault')
     * def keyword = vaultNameResponseWA
-    * call read('Vault.feature@SearchVaultCommon')
+    * call read('this:Vault.feature@SearchVaultCommon')
     * match response.status == 'success'
     * def listSearchedVault = response.data.vaults
     * def listSearchedVaultName = $listSearchedVault[*].name
@@ -363,7 +363,7 @@ Feature: Vault
 
     @RAKCON-16523 @Unhidevault
   Scenario: Unhide a vault
-    * def value = call read('Vault.feature@ViewHiddenVaultCommon')
+    * def value = call read('this:Vault.feature@ViewHiddenVaultCommon')
     * def vaultId = value.response.data.vaults[0].id
     Given path '/core/vault/accounts/'+vaultId+'/unhide'
     When method POST
@@ -384,9 +384,9 @@ Feature: Vault
     @RAKCON-17772 @CreateVaultCold
   Scenario: Create vault - cold
     Given path '/core/vault'
-    * call read('Vault.feature@GenerateVaultName')
-    * call read('Common.feature@FIDO-Requester')
-    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:Common.feature@FIDO-Requester')
+    * call read('this:Vault.feature@CHECK-LIST-USER')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'COLD_WALLET',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
@@ -396,7 +396,7 @@ Feature: Vault
 
     @ignore @RequestCreateNewVaultFromWeb
     Scenario: Request create new vault from web
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path '/core/vault/request-create-vault'
@@ -407,13 +407,13 @@ Feature: Vault
     @ignore @ReadNotificationCreateVaultFromWeb
   Scenario: Read Create Vault From Web Notifiation
     * def notificationId = createVaultRequest.response.data.notificationId
-    * call read('Notification.feature@ReadNotificationById')
+    * call read('this:Notification.feature@ReadNotificationById')
     * match response.data.template.body == 'Vault creation for ' + vaultName + ' needs authentication'
     * match response.data.module.notificationId == notificationId
 
     @ignore @SubmitRequestFromMobile
   Scenario: Submit request from mobile
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     * def requestId = createVaultRequest.response.data.notificationId
@@ -429,8 +429,8 @@ Feature: Vault
     @RAKCON-18141 @SubmitRequestCreateAdvanceVaultFromMobile
   Scenario: Submit request create advance vault from mobile
     * def policyType = 'advanced'
-    * call read('Vault.feature@GenerateVaultName')
-    * call read('UserManagement.feature@ListUsers')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
     * def viewer3 = listUsers[2]
@@ -457,15 +457,15 @@ Feature: Vault
         "policyType":"#(policyType)",
       }
     """
-    * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
-    * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
-    * call read('Vault.feature@SubmitRequestFromMobile')
+    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * call read('this:Vault.feature@SubmitRequestFromMobile')
 
     @RAKCON-18213 @SubmitRequestCreateSkipPolicyVaultFromMobile
   Scenario: Submit request create skip policy vault from mobile
     * def policyType = null
-    * call read('Vault.feature@GenerateVaultName')
-    * call read('Vault.feature@CHECK-LIST-USER')
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:Vault.feature@CHECK-LIST-USER')
     * def requestBody = 
     """
       {
@@ -476,14 +476,14 @@ Feature: Vault
         "memberIds":"#(vaultMemberList)"
       }
     """
-    * def createVaultRequest = call read('Vault.feature@RequestCreateNewVaultFromWeb')
-    * call read('Vault.feature@ReadNotificationCreateVaultFromWeb')
-    * call read('Vault.feature@SubmitRequestFromMobile')
+    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * call read('this:Vault.feature@SubmitRequestFromMobile')
 
     
   @RAKCON-19626 @EditStandardColdVaultPolicy
   Scenario: Edit Standard Cold Vault Policy
-    * call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
+    * call read('this:ApprovalRequest.feature@CreateColdVaultAndApprove')
     # Edit vault policy
     * def requestBody = 
     """
@@ -494,7 +494,7 @@ Feature: Vault
         "memberRequireIds" : [ #(approvalUserID) ] 
       }
     """
-    * def editRequest = call read('Vault.feature@EditVaultPolicy-Common')
+    * def editRequest = call read('this:Vault.feature@EditVaultPolicy-Common')
     * match editRequest.response.status == 'success'
     * match editRequest.response.code == 200
     * match editRequest.response.data.isValid == true
@@ -508,7 +508,7 @@ Feature: Vault
 
 	@RAKCON-19627 @ViewStandardColdVaultDetails
 	Scenario: View Standard Cold Vault Details
-		* call read('ApprovalRequest.feature@CreateColdVaultAndApprove')
+		* call read('this:ApprovalRequest.feature@CreateColdVaultAndApprove')
 		Then coldVault.response.data.isPendingRequest == false
 		And coldVault.response.data.type == "COLD_WALLET"
 		And coldVault.response.data.policyType == "STANDARD"

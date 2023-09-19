@@ -1,7 +1,7 @@
 @ignore
 Feature: Auto generate and delete api key
   Background:
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * url openApiURL
 
   @Before @Generate_api_key

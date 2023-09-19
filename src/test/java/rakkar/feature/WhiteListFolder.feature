@@ -4,8 +4,8 @@ Feature: WhiteList Folder
   Background:
     #@PRECOND_RAKCON-10582
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('GetUserInfo.feature@GetUserInfo')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:GetUserInfo.feature@GetUserInfo')
 #    * def userId = user.response.data.id
     * def testData = read('classpath:data/data_test.json')
     * def schemaJson = read('classpath:data/schema.json')
@@ -59,8 +59,8 @@ Feature: WhiteList Folder
   #TCs: SEARCH FOLDER
   @RAKCON-11163 @Search_folder_by_keyword
   Scenario: Check search folder by keyword
-    * call read('WhiteListFolder.feature@Create_folder')
-    * call read('WhiteListFolder.feature@Search_folder_by_keyword_common')
+    * call read('this:WhiteListFolder.feature@Create_folder')
+    * call read('this:WhiteListFolder.feature@Search_folder_by_keyword_common')
     And match response.data.folders[0].name == "#(folderName)"
     And match response.data.folders[0].type == "#(type)"
 
@@ -76,7 +76,7 @@ Feature: WhiteList Folder
 
   @RAKCON-11766 @Search_folder_by_type
   Scenario: Check search folder by type
-    * call read('WhiteListFolder.feature@Create_folder_external')
+    * call read('this:WhiteListFolder.feature@Create_folder_external')
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME',type: '#(testData.whitelist.type_external)'}
     Given path 'core/folders'
     And params query
@@ -101,7 +101,7 @@ Feature: WhiteList Folder
     #Pre-2.Select a vault to get list token
   @ignore @Get_listToken
   Scenario: Precondition 2: Get list token
-    * def getVault = call read('WhiteListFolder.feature@Get_listVault')
+    * def getVault = call read('this:WhiteListFolder.feature@Get_listVault')
     * def vaultId = getVault.response.data.vaults[0].id
     Given path 'core/vault/account/'+ vaultId + '/wallets'
     * def query = { limit:'10', offset: '0', sort:'DESC', sortBy: 'TOTAL_USD', isHideSmallBalance : 'false'}
@@ -111,9 +111,9 @@ Feature: WhiteList Folder
     #Pre-3.Select detail token
   @ignore @Get_detailToken
   Scenario: Precondition 3: Get detail token
-    * def getVault = call read('WhiteListFolder.feature@Get_listVault')
+    * def getVault = call read('this:WhiteListFolder.feature@Get_listVault')
     * def vaultId = getVault.response.data.vaults[0].id
-    * def getWallet = call read('WhiteListFolder.feature@Get_listToken')
+    * def getWallet = call read('this:WhiteListFolder.feature@Get_listToken')
     * def walletId = getWallet.response.data.wallets[0].id
     Given path 'core/wallet/token-details'
     * def query = { vaultId:'#(vaultId)', walletId: '#(walletId)'}
@@ -125,9 +125,9 @@ Feature: WhiteList Folder
     #Pre-4.View deposit and get the address
   @ignore @Get_address
   Scenario: Precondition 4: View deposit and get address
-    * def getVault = call read('WhiteListFolder.feature@Get_listVault')
+    * def getVault = call read('this:WhiteListFolder.feature@Get_listVault')
     * def vaultId = getVault.response.data.vaults[0].id
-    * def getWallet = call read('WhiteListFolder.feature@Get_listToken')
+    * def getWallet = call read('this:WhiteListFolder.feature@Get_listToken')
     * def walletId = getWallet.response.data.wallets[0].id
     Given path 'core/wallet/get-address-wallet'
     * def query = { limit:'10', offset: '0', vaultId:'#(vaultId)', walletId: '#(walletId)'}
@@ -153,7 +153,7 @@ Feature: WhiteList Folder
   @ignore @Create_address_common
   Scenario:Create whitelisted address common
     #Submit add new address
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(tokenId)', "note": 'Note test', "address": '#(address)'}
     Given path 'core/folders/'+ folderId +'/tokens'
     * header challenge-answer = challengeAnswerRequest
@@ -173,20 +173,20 @@ Feature: WhiteList Folder
 
   @RAKCON-10969 @Create_address_internal
   Scenario:Create internal whitelisted address
-    * call read('WhiteListFolder.feature@Create_folder')
-    * call read('WhiteListFolder.feature@Create_address_common')
-    * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * call read('this:WhiteListFolder.feature@Create_folder')
+    * call read('this:WhiteListFolder.feature@Create_address_common')
+    * call read('this:WhiteListFolder.feature@View_My_Request_Whitelist')
 
   @RAKCON-11768 @Create_address_external
   Scenario:Create external whitelisted address
-    * call read('WhiteListFolder.feature@Create_folder_external')
-    * call read('WhiteListFolder.feature@Create_address_common')
-    * call read('WhiteListFolder.feature@View_My_Request_Whitelist')
+    * call read('this:WhiteListFolder.feature@Create_folder_external')
+    * call read('this:WhiteListFolder.feature@Create_address_common')
+    * call read('this:WhiteListFolder.feature@View_My_Request_Whitelist')
 
     #TCs: VIEW DETAIL FOLDER
   @RAKCON-11164 @View_Detail_Folder
   Scenario: Check view detail a folder
-    * callonce read('WhiteListFolder.feature@Create_address_internal')
+    * callonce read('this:WhiteListFolder.feature@Create_address_internal')
     Given path 'core/folders/list-address'
     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
     And params query
@@ -199,7 +199,7 @@ Feature: WhiteList Folder
    #TCs: VIEW ADDRESS DETAIL
   @RAKCON-10970 @View_Address_Detail
    Scenario: View Whitelist address details
-    * callonce read('WhiteListFolder.feature@Create_address_internal')
+    * callonce read('this:WhiteListFolder.feature@Create_address_internal')
     Given path 'core/folders/addresses/' + addressId
     When method GET
     Then status 200
@@ -224,8 +224,8 @@ Feature: WhiteList Folder
   @RAKCON-10971 @Delete_Whitelist_Address
   Scenario: Check delete whitelist address
     #create address
-    * callonce read('WhiteListFolder.feature@Create_address_internal')
-    * call read('Common.feature@FIDO-Requester')
+    * callonce read('this:WhiteListFolder.feature@Create_address_internal')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     #delete address
     Given path 'core/folders/'+ folderId + '/address'
@@ -239,9 +239,9 @@ Feature: WhiteList Folder
   @RAKCON-10227 @Delete_folder
   Scenario: Check delete a folder
     #Create new folder
-     * call read('WhiteListFolder.feature@Create_folder')
+     * call read('this:WhiteListFolder.feature@Create_folder')
     #delete folder
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     Given path 'core/folders/'+ folderId
     When method DELETE

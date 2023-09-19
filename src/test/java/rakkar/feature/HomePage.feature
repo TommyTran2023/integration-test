@@ -3,7 +3,7 @@ Feature: HomePage
 
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
@@ -31,7 +31,7 @@ Feature: HomePage
   @RAKCON-11655 @SearchAssetsInAssetAllocation
   Scenario: Search assets in Asset Allocation
     #Get random asset for keyword to search
-    * call read('HomePage.feature@AssetAllocationDetail')
+    * call read('this:HomePage.feature@AssetAllocationDetail')
     * def randomAsset = response.data.tokens[0].symbol
     Given path '/core/assets/allocation-detail'
     * param keyword = randomAsset
@@ -64,10 +64,10 @@ Feature: HomePage
 
   @RAKCON-10979 @AddShortcut
   Scenario: Add shortcuts at homepage successfully
-    * def userId = call read('GetUserInfo.feature@GetRequesterInfo')
-    * call read('HomePage.feature@ViewShortcut')
-    * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
-    * def addShortcut = call read('HomePage.feature@AddShortcut-Common')
+    * def userId = call read('this:GetUserInfo.feature@GetRequesterInfo')
+    * call read('this:HomePage.feature@ViewShortcut')
+    * if (shortcutIds != null) karate.call('this:HomePage.feature@DeleteShortcut')
+    * def addShortcut = call read('this:HomePage.feature@AddShortcut-Common')
     Then addShortcut.response.code == 200
     * match addShortcut.response.data.userId == userId.requesterID
     * match addShortcut.response.data.externalAssetId == testData.transfer.withdraw.tokenSymbol
@@ -79,10 +79,10 @@ Feature: HomePage
   @RAKCON-11771 @AddDuplicateShortcut
   Scenario: Add shortcut with duplicate information
     # Clear shortcut list on HomePage first
-    * call read('HomePage.feature@ViewShortcut')
-    * if (shortcutIds != null) karate.call('HomePage.feature@DeleteShortcut')
+    * call read('this:HomePage.feature@ViewShortcut')
+    * if (shortcutIds != null) karate.call('this:HomePage.feature@DeleteShortcut')
     # Add shortcut with duplicate information
-    * def func = function(x){return karate.call('HomePage.feature@AddShortcut-Common')}
+    * def func = function(x){return karate.call('this:HomePage.feature@AddShortcut-Common')}
     * def duplicateResult = karate.repeat(2, func)
     * print duplicateResult
     * match duplicateResult[1].responseStatus == 400
@@ -90,7 +90,7 @@ Feature: HomePage
 
   @ignore @AddShortcut-Common
   Scenario: Add shortcut - common
-    * call read('Transfer.feature@Get_asset_transfer')
+    * call read('this:Transfer.feature@Get_asset_transfer')
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def shortCutName = 'AT-SC-' + now()
     Given path '/core/assets/shortcut'
@@ -110,7 +110,7 @@ Feature: HomePage
 
   @RAKCON-10981 @DeleteShortcut
   Scenario: Delete shortcuts from Home Page
-    * call read('HomePage.feature@ViewShortcut')
+    * call read('this:HomePage.feature@ViewShortcut')
     Given path '/core/assets/shortcut'
     * request { "shortcutIds" : "#(shortcutIds)" }
     When method DELETE
@@ -133,9 +133,9 @@ Feature: HomePage
 
   @RAKCON-10995 @AddAssetToFavourite
   Scenario: Add asset to favourite
-    * def marketPrice = call read('HomePage.feature@ViewMarketPriceListing')
+    * def marketPrice = call read('this:HomePage.feature@ViewMarketPriceListing')
     * def tokenId = marketPrice.firstToken.tokenId
-    * if (marketPrice.firstToken.interested == true) karate.call('HomePage.feature@RemoveAssetToFvourite')
+    * if (marketPrice.firstToken.interested == true) karate.call('this:HomePage.feature@RemoveAssetToFvourite')
     Given path '/core/assets/interested'
     * request { "unFavourite" : false, "externalAssetIds" : [ "(#tokenId)" ] }
     When method PUT
@@ -144,9 +144,9 @@ Feature: HomePage
 
   @RAKCON-11850 @RemoveAssetToFavourite
   Scenario: Remove asset to favourite
-    * def marketPrice = call read('HomePage.feature@ViewMarketPriceListing')
+    * def marketPrice = call read('this:HomePage.feature@ViewMarketPriceListing')
     * def tokenId = marketPrice.firstToken.tokenId
-    * if (marketPrice.firstToken.interested == false) karate.call('HomePage.feature@AddAssetToFvourite')
+    * if (marketPrice.firstToken.interested == false) karate.call('this:HomePage.feature@AddAssetToFvourite')
     Given path '/core/assets/interested'
     * request { "unFavourite" : true, "externalAssetIds" : [ "(#tokenId)" ] }
     When method PUT
@@ -166,9 +166,4 @@ Feature: HomePage
   Scenario: Check Existing Asset
       Given path '/core/assets/check-existing'
       * params params
-      # * param destinationId = '#(destinationId)'
-      # * param destinationType = destinationType
-      # * param externalAssetId = externalAssetId
-      # * param sourceId = sourceId
-      # And request testData
       When method GET

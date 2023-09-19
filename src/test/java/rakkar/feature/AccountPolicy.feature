@@ -4,8 +4,8 @@ Feature: Account admin policy
   Background:
     #@PRECOND_RAKCON-11352
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('GetUserInfo.feature@GetUserInfo')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = getRequesterIDResponse.response.data.customerId
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
@@ -23,24 +23,24 @@ Feature: Account admin policy
 
   @RAKCON-10940 @EditAccountPolicy
   Scenario: Edit account policy
-    * callonce read('AccountPolicy.feature@ViewAccountPolicy')
-    * if (requestId != null) karate.call('RejectRequest.feature@RejectEditPolicy')
+    * callonce read('this:AccountPolicy.feature@ViewAccountPolicy')
+    * if (requestId != null) karate.call('this:RejectRequest.feature@RejectEditPolicy')
     Given path '/core/customers/' + customerId
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
     When method PUT
     Then status 200
     * match response.status == 'success'
-    * call read('AccountPolicy.feature@ViewAccountPolicy')
+    * call read('this:AccountPolicy.feature@ViewAccountPolicy')
     * match requestId != null
 
   @RAKCON-11348 @EditAccountPolicyHasPending
   Scenario: Edit account policy when has pending request
-    * callonce read('AccountPolicy.feature@EditAccountPolicy')
+    * callonce read('this:AccountPolicy.feature@EditAccountPolicy')
     Given path '/core/customers/' + customerId
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
@@ -50,7 +50,7 @@ Feature: Account admin policy
 
   @RAKCON-13612 @ViewAccountPolicyRequest
   Scenario: View account policy request
-    * call read('AccountPolicy.feature@EditAccountPolicy')
+    * call read('this:AccountPolicy.feature@EditAccountPolicy')
     Given path 'core/quorums/request/'+requestId
     When method GET
     Then status 200

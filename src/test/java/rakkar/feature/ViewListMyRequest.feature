@@ -3,25 +3,25 @@ Feature: View List My Request
     # View Approvals feature by Requester account
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def requesterInformation = call read('GetUserInfo.feature@GetRequesterInfo')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def requesterInformation = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-10994 @ViewMyRequestAllType
   Scenario: View my request - All types
     # Requester adds a new vault request
-    * call read('Vault.feature@AddNewVaultWithAdminSetup')
+    * call read('this:Vault.feature@AddNewVaultWithAdminSetup')
     # Check list request by Requester ID in My Request list
     * def requestBody = { "limit" : 10, "offset" : 0, "keyword" : "", "isHistory" : true, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "createdBy" : #(requesterInformation.requesterID)}
-    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * call read('this:ViewListMyRequest.feature@ViewListMyRequest-Common')
 
 
   @RAKCON-11857 @ViewMyRequestByStatus
   Scenario: View my request by status
     # Check list request by Requester ID in My Request list by status
     * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(testData.viewListMyRequest.statusFiltering) ], "createdBy" : #(requesterInformation.requesterID) }
-    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * call read('this:ViewListMyRequest.feature@ViewListMyRequest-Common')
     * def requestStatus = $response.data.records[*].status
     * match each requestStatus == testData.viewListMyRequest.statusFiltering
 
@@ -50,7 +50,7 @@ Feature: View List My Request
     * def max = dateToLong(dateTo)
     * def isValid = function(x){ var temp = dateToLong(x); return temp >= min && temp <= max }
     * def requestBody = { "isHistory" : true, "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "limit" : 10, "keyword" : "", "dateTo" : #(dateTo), "createdBy" : #(requesterInformation.requesterID), "dateFrom" : #(dateFrom) }
-    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * call read('this:ViewListMyRequest.feature@ViewListMyRequest-Common')
     # List records should have createdAt between dateFrom and dateTo
     * match each $response.data.records[*].createdAt == '#? isValid(_)'
 
@@ -58,7 +58,7 @@ Feature: View List My Request
   Scenario: View my request by type
     # Check list request by Request ID in My Request list by type
     * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "createdBy" : #(requesterInformation.requesterID), "requestCategories" : [ #(testData.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
-    * call read('ViewListMyRequest.feature@ViewListMyRequest-Common')
+    * call read('this:ViewListMyRequest.feature@ViewListMyRequest-Common')
     * def typeValue = $response.data.records[*].type.value
     * match testData.viewListMyRequest.valueOfPolicyType contains any typeValue
 

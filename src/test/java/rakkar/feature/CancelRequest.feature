@@ -3,26 +3,26 @@ Feature: Cancel Request
 
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def challengeApprover = call read('Common.feature@FIDO-Approver')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def challengeApprover = call read('this:Common.feature@FIDO-Approver')
 
   @RAKCON-11003 @CancelEditAccountPolicy
   Scenario: Cancel request account policy
-    * call read('AccountPolicy.feature@EditAccountPolicy')
-    * call read('CancelRequest.feature@CancelRequestCommon')
-    * call read('AccountPolicy.feature@ViewAccountPolicy')
+    * call read('this:AccountPolicy.feature@EditAccountPolicy')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
+    * call read('this:AccountPolicy.feature@ViewAccountPolicy')
     * match requestId == null
 
   @RAKCON-10997 @CancelNewVaultRequest
   Scenario: Cancel request - New vault policy request
-    * callonce read('Vault.feature@GetCreateVaultRequestID')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * callonce read('this:Vault.feature@GetCreateVaultRequestID')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-10998 @CancelEditVaultPolicy
   Scenario: Cancel request - Edit Vault policy request
-    * call read('Vault.feature@EditVaultPolicy')
+    * call read('this:Vault.feature@EditVaultPolicy')
     * def requestId = editVaultPolicy.response.data.record.id
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15492 @CancelEditUser
   Scenario: Cancel request - Cancel edit user
@@ -31,44 +31,44 @@ Feature: Cancel Request
 
   @RAKCON-11051 @Cancel_Remove_Account_Access
   Scenario: Cancel request - Remove Account access
-    * call read('UserManagement.feature@Remove_account_access')
-    * call read('CancelRequest.feature@CancelRequestEditUserCommon')
+    * call read('this:UserManagement.feature@Remove_account_access')
+    * call read('this:CancelRequest.feature@CancelRequestEditUserCommon')
 
   @RAKCON-11055 @CancelWhiteListAddress
   Scenario: Cancel request - Add whitelist address
-    * call read('WhiteListFolder.feature@Create_address_internal')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:WhiteListFolder.feature@Create_address_internal')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15489 @CancelInternalWithdraw
   Scenario: Cancel request - Cancel internal withdraw
-    * def value = call read('Transfer.feature@Transfer_value_hot_to_hot')
+    * def value = call read('this:Transfer.feature@Transfer_value_hot_to_hot')
     * def requestId = value.response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-18739 @CancelEditGroupMembers
   Scenario: Cancel request - Edit group members
-  * call read('GroupPolicies.feature@EditMembersInGroup')
-  * def groupDetails = call read('GroupPolicies.feature@ViewGroupDetails')
+  * call read('this:GroupPolicies.feature@EditMembersInGroup')
+  * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')
   * def requestId = groupDetails.response.data.editRequestId
-  * call read('CancelRequest.feature@CancelRequestCommon')
+  * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @RAKCON-15490 @CancelExternalWithdraw
   Scenario: Cancel request - Cancel external withdraw
-    * def value = call read('Transfer.feature@External_Transfer')
+    * def value = call read('this:Transfer.feature@External_Transfer')
     * def requestId = value.response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @RAKCON-15491 @CancelOtherNetwork
   Scenario: Cancel request - Cancel tranfer to other network
-    * def value = call read('Transfer.feature@Transfer_to_other_network')
+    * def value = call read('this:Transfer.feature@Transfer_to_other_network')
     * def requestId = value.response.data.requestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @CancelRequestEditUserCommon
   Scenario: Cancel a request edit user - Common
-    * def value = call read('UserManagement.feature@View_user_detail')
+    * def value = call read('this:UserManagement.feature@View_user_detail')
     * def requestId = value.response.data.pendingRequestId
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @CancelRequestCommon
   Scenario: Cancel a request - Common
@@ -91,8 +91,8 @@ Feature: Cancel Request
 
   @RAKCON-19043 @CancelAdvanceQuorums
   Scenario: Cancel create advance quorum request
-    * def createdVault = call read('Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
+    * def createdVault = call read('this:Vault.feature@SubmitRequestCreateAdvanceVaultFromMobile')
     * def vaultIDWA = createdVault.response.data.vaultId
-    * call read('Vault.feature@GetCreateVaultRequestID_NoCreate')
-    * karate.call('CancelRequest.feature@CancelAdvanceQuorumRequest')
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * karate.call('this:CancelRequest.feature@CancelAdvanceQuorumRequest')
 

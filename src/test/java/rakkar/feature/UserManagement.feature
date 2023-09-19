@@ -2,13 +2,13 @@
   Feature: User Management
     Background:
       * url baseURL
-      * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+      * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
       * def Collections = Java.type('java.util.Collections')
       * def schemaJson = read('classpath:data/schema.json')
       * configure afterScenario =
         """
         function(){
-           karate.call('AfterHook.feature@Handle_Pending_Request_Edit_User');
+           karate.call('this:AfterHook.feature@Handle_Pending_Request_Edit_User');
         }
          """
 
@@ -26,7 +26,7 @@
 
     @RAKCON-11017 @Search_user_list
     Scenario: Check search for user list
-      * def user = call read('UserManagement.feature@User_listing')
+      * def user = call read('this:UserManagement.feature@User_listing')
       * def name = user.response.data.users[0].name
       * def userId = user.response.data.users[0].userId
       * def query = { limit:'10', offset: '0',keyword: '#(name)'}
@@ -96,7 +96,7 @@
 
     @RAKCON-11019 @Check_View_user_detail
     Scenario: Verification view user detail
-      * def user = call read('UserManagement.feature@User_listing')
+      * def user = call read('this:UserManagement.feature@User_listing')
       * def userId = user.response.data.users[0].userId
       * def userName = user.response.data.users[0].userName
       * def role = user.response.data.users[0].role
@@ -113,7 +113,7 @@
 
     @ignore @View_user_detail
     Scenario: View user detail to get id request
-      * def user = call read('UserManagement.feature@User_listing')
+      * def user = call read('this:UserManagement.feature@User_listing')
       * def userId = user.response.data.users[0].userId
       Given path 'auth/account/users/' + userId
       When method GET
@@ -124,10 +124,10 @@
     # EDIT OWN PROFILE
     @RAKCON-11020 @Edit_own_profile
       Scenario: Check edit own profile - edit avatar
-      * call read('GetUserInfo.feature@GetUserInfo')
+      * call read('this:GetUserInfo.feature@GetUserInfo')
       * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
-      * call read('Common.feature@UPLOAD_LINK')
-      * call read('UploadFile.feature@PUT_VIDEO')
+      * call read('this:Common.feature@UPLOAD_LINK')
+      * call read('this:UploadFile.feature@PUT_VIDEO')
       * def body = { "uploadToken":'#(uploadToken)'}
       Given path 'auth/account/users/'+ userId + '/avatar'
       And request body
@@ -138,18 +138,18 @@
     # CHANGE ROLE
     @RAKCON-12903 @Review_change_role
        Scenario: Change Role - Check review change role
-         * def data = call read('UserManagement.feature@User_listing')
+         * def data = call read('this:UserManagement.feature@User_listing')
          * def userId = data.response.data.users[1].userId
          * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-         * call read('UserManagement.feature@Review_update_user_common')
+         * call read('this:UserManagement.feature@Review_update_user_common')
          And match response.data contains schemaJson.userManagement.review_edit_user
 
     @RAKCON-11021 @Change_role
        Scenario: Change Role - Check submit change
-      * call read('UserManagement.feature@View_user_detail')
+      * call read('this:UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-      * if (isPendingRequest == true) karate.call('UserManagement.feature@Handle_existing_pending_request')
-      * call read('UserManagement.feature@Submit_edit_user_common')
+      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # ADD VAULT ACCESS
     @ignore @List_vault_unassign
@@ -164,21 +164,21 @@
 
     @RAKCON-13107 @Review_add_vault_access
     Scenario: Change vault access - Review add vault access
-      * def data = call read('UserManagement.feature@User_listing')
+      * def data = call read('this:UserManagement.feature@User_listing')
       * def userId = data.response.data.users[2].userId
-      * call read('UserManagement.feature@List_vault_unassign')
+      * call read('this:UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
-      * call read('UserManagement.feature@Review_update_user_common')
+      * call read('this:UserManagement.feature@Review_update_user_common')
       And match response.data contains schemaJson.userManagement.review_edit_user
 
 
     @RAKCON-11035 @Add_vault_access
     Scenario: Check add vault access - Submit request
-      * call read('UserManagement.feature@View_user_detail')
-      * call read('UserManagement.feature@List_vault_unassign')
+      * call read('this:UserManagement.feature@View_user_detail')
+      * call read('this:UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
-      * if (isPendingRequest == true) karate.call('UserManagement.feature@Handle_existing_pending_request')
-      * call read('UserManagement.feature@Submit_edit_user_common')
+      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # REMOVE VAULT ACCESS
     @RAKCON-13108 @Review_remove_vault_access
@@ -192,28 +192,28 @@
 
     @RAKCON-11039 @Remove_vault_access
     Scenario: Check remove vault access - Submit request
-      * call read('UserManagement.feature@View_user_detail')
-      * call read('UserManagement.feature@List_vault_unassign')
+      * call read('this:UserManagement.feature@View_user_detail')
+      * call read('this:UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
-      * if (isPendingRequest == true) karate.call('UserManagement.feature@Handle_existing_pending_request')
-      * call read('UserManagement.feature@Submit_edit_user_common')
+      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # REMOVE ACCOUNT ACCESS
     @RAKCON-13135 @Review_remove_account_access
     Scenario: Review remove account access
-      * def data = call read('UserManagement.feature@User_listing')
+      * def data = call read('this:UserManagement.feature@User_listing')
       * def userId = data.response.data.users[4].userId
       * def body = { "reason":'',"isRemoveAccountAccess":true}
-      * call read('UserManagement.feature@Review_update_user_common')
+      * call read('this:UserManagement.feature@Review_update_user_common')
       And match response.data.accountLVCheck contains schemaJson.userManagement.review_remove_account.accountLVCheck
       And match response.data.vaultLVCheck contains schemaJson.userManagement.review_remove_account.vaultLVCheck
 
     @RAKCON-11025 @Remove_account_access
     Scenario: Check remove account access - Submit
-      * call read('UserManagement.feature@View_user_detail')
+      * call read('this:UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"isRemoveAccountAccess":true}
-      * if (isPendingRequest == true) karate.call('UserManagement.feature@Handle_existing_pending_request')
-      * call read('UserManagement.feature@Submit_edit_user_common')
+      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # COMMON
     @ignore @Review_update_user_common
@@ -226,7 +226,7 @@
 
     @ignore @Submit_edit_user_common
     Scenario: Submit edit request common
-      * call read('Common.feature@FIDO-Requester')
+      * call read('this:Common.feature@FIDO-Requester')
       * header challenge-answer = challengeAnswerRequest
       Given path 'auth/account/users/' + userId
       And request body
@@ -236,7 +236,7 @@
 
     @ignore @View_My_Request_Edit_User
     Scenario: View my request for type edit user
-      * call read('GetUserInfo.feature@GetUserInfo')
+      * call read('this:GetUserInfo.feature@GetUserInfo')
       Given path 'core/quorums'
       * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
       And request body
@@ -246,7 +246,7 @@
 
     @ignore @Handle_existing_pending_request
     Scenario: Handle existing pending request for change role
-      * call read('UserManagement.feature@View_My_Request_Edit_User')
+      * call read('this:UserManagement.feature@View_My_Request_Edit_User')
       * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@@CancelRequestEditUserCommon')
 
     

@@ -16,7 +16,7 @@ Feature: Get access token for Requester
   @RAKCON-10091 @RequesterAccessToken
   Scenario: Requester - Get token for login
     Given path '/auth/authorization/respond-to-auth-challenge'
-    * def responseTest1 = call read('RequesterAuthenticator.feature@GetSessionForLogin')
+    * def responseTest1 = call read('this:RequesterAuthenticator.feature@GetSessionForLogin')
     * def Session1 = responseTest1.response.data.Session
     * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(requesterInfo.requesterUsername)', "ANSWER": '#(testData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST

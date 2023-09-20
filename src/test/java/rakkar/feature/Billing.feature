@@ -2,7 +2,7 @@
 Feature: Billing
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def schemaJson = read('classpath:data/schema.json')
 
   @RAKCON-12805 @View_billing_list

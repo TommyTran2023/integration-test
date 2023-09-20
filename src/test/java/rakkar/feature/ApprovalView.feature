@@ -61,14 +61,14 @@ Feature: Approval View
     * def max = dateToLong(dateTo)
     * def isValid = function(x){ var temp = dateToLong(x); return temp >= min && temp <= max }
     * def requestBody = { "isHistory" : true, "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "limit" : 10, "keyword" : "", "dateTo" : #(dateTo), "dateFrom" : #(dateFrom) }
-    * call read('ApprovalView.feature@ApprovalView-Common')
+    * call read('this:ApprovalView.feature@ApprovalView-Common')
     # List records should have createdAt between dateFrom and dateTo
     * match each $response.data.records[*].createdAt == '#? isValid(_)'
 
   @RAKCON-11862 @ViewRequestHistoryByType
   Scenario: View request history by type
     * def requestBody = { "offset" : 0, "status" : [ "APPROVED", "PENDING", "REJECTED", "CANCELLED" ], "keyword" : "", "requestCategories" : [ #(testData.viewListMyRequest.typeFiltering) ], "isHistory" : true, "limit" : 10 }
-    * call read('ApprovalView.feature@ApprovalView-Common')
+    * call read('this:ApprovalView.feature@ApprovalView-Common')
     * def typeValue = $response.data.records[*].type.value
     * match testData.approvalView.valueOfPolicyType contains any typeValue
 

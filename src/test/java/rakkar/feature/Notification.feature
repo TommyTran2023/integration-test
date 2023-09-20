@@ -8,7 +8,7 @@ Feature: Notification
 
   @RAKCON-11009 @NotificationSetting
   Scenario: Notification Setting
-    * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
+    * call read('this:ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     Given path '/notification/notifications/settings'
     When method GET
     Then status 200
@@ -19,9 +19,9 @@ Feature: Notification
 
   @RAKCON-11007 @ViewNotificationCenterRequest
   Scenario: View Notification Center - Request
-    * def createVaultRequestId = call read('Vault.feature@GetCreateVaultRequestID')
-    * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
-    * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
+    * def createVaultRequestId = call read('this:Vault.feature@GetCreateVaultRequestID')
+    * call read('this:ApprovalAuthenticator.feature@GetAccessTokenForLogin')
+    * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == createVaultRequestId.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.vault.labelInApp
     * match notificationCenter.response.data.notifications[0].type == testData.notification.vault.state
@@ -30,9 +30,9 @@ Feature: Notification
 
   @RAKCON-12514 @ViewNotificationCenterAlert
   Scenario: View Notification - Alert
-    * def rejectTransfer = call read('RejectRequest.feature@RejectTransfer_Hot_to_Cold')
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
+    * def rejectTransfer = call read('this:RejectRequest.feature@RejectTransfer_Hot_to_Cold')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == rejectTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.rejectTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == testData.notification.rejectTransfer.state
@@ -41,9 +41,9 @@ Feature: Notification
 
   @RAKCON-12515 @ViewNotificationCenterTransactionAlert
   Scenario: View Notification Center - Transaction Alert
-    * def approveTransfer = call read('ApprovalRequest.feature@ApprovalTransfer_Hot_to_cold')
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def notificationCenter = call read('Notification.feature@ViewNotificationCenter-Common')
+    * def approveTransfer = call read('this:ApprovalRequest.feature@ApprovalTransfer_Hot_to_cold')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
     * match notificationCenter.response.data.notifications[0].requestId == approveTransfer.requestId
     * match notificationCenter.response.data.notifications[0].title == testData.notification.approveTransfer.labelInApp
     * match notificationCenter.response.data.notifications[0].type == testData.notification.approveTransfer.state

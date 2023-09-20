@@ -13,7 +13,7 @@ Feature: Get access token for Approval
   @GetAccessTokenForLogin
   Scenario: Approval - Get token for login
     Given path '/auth/authorization/respond-to-auth-challenge'
-    * def responseTest1 = call read('ApprovalAuthenticator.feature@GetSessionForLogin')
+    * def responseTest1 = call read('this:ApprovalAuthenticator.feature@GetSessionForLogin')
     * def Session1 = responseTest1.response.data.Session
     * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(approverInfo.approvalUsername)', "ANSWER": '#(testData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST

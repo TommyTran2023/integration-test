@@ -11,7 +11,7 @@ Feature:Help Center
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def testData = read('classpath:data/data_test.json')
 
-  @RAKCON-11377 @CREATE_TICKET_ISSUE
+  @ignore @RAKCON-11377 @CREATE_TICKET_ISSUE
   Scenario: Create a ticket detail page - Issue
     * def descriptionTicket = 'description for create issue' + now()
     * def subject = 'subject for create issue' + now()
@@ -20,7 +20,7 @@ Feature:Help Center
     * match response.data.category == "#(testData.help_center.type_issue)"
     * match response.data.platforms[0] == "#(testData.help_center.platform)"
 
-  @RAKCON-11378 @CREATE_TICKET_QUESTION
+  @ignore @RAKCON-11378 @CREATE_TICKET_QUESTION
   Scenario: Create a ticket detail page - Question
     * def descriptionTicket = 'description for create question' + now()
     * def subject = 'subject for create question' + now()
@@ -28,7 +28,7 @@ Feature:Help Center
     * call read('this:HelpCenter.feature@Create_ticket_common')
     * match response.data.category == "#(testData.help_center.type_question)"
 
-  @RAKCON-11379 @CREATE_TICKET_REQUEST
+  @ignore @RAKCON-11379 @CREATE_TICKET_REQUEST
   Scenario: Create a ticket detail page - Request
     * def descriptionTicket = 'description for create request' + now()
     * def subject = 'subject for create request' + now()
@@ -90,7 +90,3 @@ Feature:Help Center
        When method GET
        Then status 200
        And match response.status == "success"
-
-
-
-

@@ -4,6 +4,7 @@
     "baseMobileURL": "https://mobile-qa-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
+    "crmUploadUrl": "https://qa-crm.thailaksa.net/api/v2/uploads.json",
     "requesterInfo": {
       "requesterUsername": "ID_CARDPT24121993",
       "requesterPasscode": "123123",
@@ -50,6 +51,7 @@
     "baseMobileURL": "https://mobile-uat-api.rakkardigital.com",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
+    "crmUploadUrl": "https://uat-crm.thailaksa.net/api/v2/uploads.json",
     "requesterInfo": {
       "requesterUsername": "ID_CARDAT00006",
       "requesterPasscode": "123111",

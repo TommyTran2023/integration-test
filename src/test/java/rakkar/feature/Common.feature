@@ -8,7 +8,7 @@ Feature: Generate Challenge Answer for Biometric
   @FIDO-Requester
   Scenario: Generate challenge answer for Requester
     Given path '/core/biometric/request-challenge'
-    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthResponse = call read('this:RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
     * def requesterAccessToken = 'Bearer ' + requesterAuthToken
     * header Authorization = requesterAccessToken
@@ -22,7 +22,7 @@ Feature: Generate Challenge Answer for Biometric
   @FIDO-Approver
   Scenario: Generate challenge answer for Approver
     Given path '/core/biometric/request-challenge'
-    * def approverAuthResponse = call read('ApprovalAuthenticator.feature')
+    * def approverAuthResponse = call read('this:ApprovalAuthenticator.feature')
     * def approverAuthToken = approverAuthResponse.response.data.AuthenticationResult.AccessToken
     * def approverAccessToken = 'Bearer ' + approverAuthToken
     * header Authorization = approverAccessToken
@@ -37,7 +37,7 @@ Feature: Generate Challenge Answer for Biometric
   Scenario: Verify passcode of Requester
     #Verify requesterPasscode
     Given path '/auth/account/verify-passcode'
-    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthResponse = call read('this:RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
     * def requesterAccessToken = 'Bearer ' + requesterAuthToken
     * header Authorization = requesterAccessToken
@@ -51,7 +51,7 @@ Feature: Generate Challenge Answer for Biometric
   Scenario: By pass biometric method
     #By pass biometric method
     Given path '/core/biometric/request-challenge'
-    * def requesterAuthResponse = call read('RequesterAuthenticator.feature')
+    * def requesterAuthResponse = call read('this:RequesterAuthenticator.feature')
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
     * def requesterAccessToken = 'Bearer ' + requesterAuthToken
     * header Authorization = requesterAccessToken
@@ -87,14 +87,14 @@ Feature: Generate Challenge Answer for Biometric
 
   @ignore @CACULATE_LIMIT_TRANSFER
   Scenario: Caculate the limit transfer
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":10,"destinationId":'#(destinationId_hot)'}
     Given path 'transaction/transactions/estimated-fee'
     And request body_estimate_fee
     When method POST
     Then status 201
     * def tokenPrice = response.data.totalToUSD / 10
-    * def tier_signer = call read('Common.feature@TIERS_SIGNER')
+    * def tier_signer = call read('this:Common.feature@TIERS_SIGNER')
     * def limit_low = tier_signer.response.data[0].to - 1
     * def limit_medium = tier_signer.response.data[1].to - 1
     * def limit_high = tier_signer.response.data[2].from + 1

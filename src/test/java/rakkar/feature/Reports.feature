@@ -2,10 +2,10 @@
 Feature: Reports
 
     Background:
-    * url baseURL
-    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('this:Common.feature@FIDO-Requester')
-    * def Collections = Java.type('java.util.Collections')
+        * url baseURL
+        * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+        * call read('this:Common.feature@FIDO-Requester')
+        * def Collections = Java.type('java.util.Collections')
 
     @ignore @RequestReport
     Scenario: Request Report From Web
@@ -44,7 +44,7 @@ Feature: Reports
         * match res == { pass: true, message: null }
     
     @RAKCON-19417 @RequestAssetReportGroupByVaultName
-    Scenario: Request Asset Report Group By Asset
+    Scenario: Request Asset Report Group By Vault Name
         * def requestReport = 
         """
             {
@@ -76,8 +76,8 @@ Feature: Reports
         * assert filterReports.response.data.totalCount > 0
         * def toUpper =
         """
-        function(x){
-        return x.toUpperCase();
+            function(x){
+                return x.toUpperCase();
         }
         """
         * def filterReports = filterReports.response.data.reports

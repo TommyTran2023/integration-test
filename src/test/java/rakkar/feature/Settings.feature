@@ -3,16 +3,16 @@ Feature: Settings
 
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def challengeRequester = call read('Common.feature@FIDO-Requester')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def challengeRequester = call read('this:Common.feature@FIDO-Requester')
     * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
     * def requestBody = { "passcode" : "#(testData.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
-    * call read('Settings.feature@ForgotPIN-Common')
+    * call read('this:Settings.feature@ForgotPIN-Common')
     # Restore to old passcode
-    * call read('Settings.feature@RestoreToOldPasscode')
+    * call read('this:Settings.feature@RestoreToOldPasscode')
 
   @RAKCON-13184 @VerifySecurityQuestion
   Scenario: Verify Security Question when performing forgot PIN
@@ -34,7 +34,7 @@ Feature: Settings
   @ignore @RestoreToOldPasscode
   Scenario: Restore to old passcode
     * def requestBody = { "passcode" : "#(requesterInfo.requesterPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
-    * call read('Settings.feature@ForgotPIN-Common')
+    * call read('this:Settings.feature@ForgotPIN-Common')
 
   @ignore @ForgotPIN-Common
   Scenario: Forgot PIN - Common
@@ -55,4 +55,4 @@ Feature: Settings
     Then status 200
     * match response.status == 'success'
     # Restore to old passcode
-    * call read('Settings.feature@RestoreToOldPasscode')
+    * call read('this:Settings.feature@RestoreToOldPasscode')

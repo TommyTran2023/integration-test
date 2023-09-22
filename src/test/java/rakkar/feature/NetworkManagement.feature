@@ -3,8 +3,8 @@ Feature: Network Management
 
   Background:
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('GetUserInfo.feature@GetUserInfo')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:GetUserInfo.feature@GetUserInfo')
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/data_test.json')
 
@@ -32,8 +32,8 @@ Feature: Network Management
 
   @RAKCON-14852 @CheckAddProfile
   Scenario: Check add profile
-    * call read('Common.feature@FIDO-Requester')
-    * def vaultData = call read('NetworkManagement.feature@DepositRouting')
+    * call read('this:Common.feature@FIDO-Requester')
+    * def vaultData = call read('this:NetworkManagement.feature@DepositRouting')
     * def vaultId = vaultData.response.data.vaults[0].id
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def profileName = 'Profile-' + now()
@@ -49,13 +49,13 @@ Feature: Network Management
   @RAKCON-14979 @ProfileListing
   Scenario: Check profile listing
     * def profile_query = { limit:'10', offset: '0'}
-    * call read('NetworkManagement.feature@ProfileListingCommon')
+    * call read('this:NetworkManagement.feature@ProfileListingCommon')
 
   @RAKCON-14980 @SearchProfile
   Scenario: Check search profile
     * def keyword = "Profile-"
     * def profile_query = { limit:'10', offset: '0', keyword :'#(keyword)'}
-    * call read('NetworkManagement.feature@ProfileListingCommon')
+    * call read('this:NetworkManagement.feature@ProfileListingCommon')
     * match each $response.data.networks[*].networkName == "#regex .*"+ keyword +".*"
 
   @ignore @ProfileListingCommon
@@ -69,7 +69,7 @@ Feature: Network Management
 
   @RAKCON-14981 @ViewProfileDetail
   Scenario: View profile detail
-    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def networkId = value.response.data.networks[0].id
     * def isDiscoverable = value.response.data.networks[0].isDiscoverable
     * def networkName = value.response.data.networks[0].networkName
@@ -83,10 +83,10 @@ Feature: Network Management
 
   @RAKCON-15076 @Editprofilerouting
   Scenario: Edit profile routing
-    * call read('NetworkManagement.feature@CheckAddProfile')
+    * call read('this:NetworkManagement.feature@CheckAddProfile')
     * def profileId = response.data.id
     * def body = {"internalNote" :'Note',"networkId": '#(profileId)', "vaultId": "#(vaultId)" }
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'network/networks/set-profile-routing'
@@ -100,8 +100,8 @@ Feature: Network Management
   Scenario: Cancel edit profile routing
     * def value = "SET_NETWORK_PROFILE_ROUTING"
     * def nameDisplay = "Set network profile routing"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:NetworkManagement.feature@View_My_Request_Network')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @View_My_Request_Network
   Scenario: View my request for type network
@@ -116,7 +116,7 @@ Feature: Network Management
 
   @RAKCON-15107 @Editprofilesetting
   Scenario: Edit profile setting
-    * def value = call read('NetworkManagement.feature@CheckAddProfile')
+    * def value = call read('this:NetworkManagement.feature@CheckAddProfile')
     * def profileId = value.response.data.id
     * def body = {"isDiscoverable" : false }
     Given path 'network/networks/setting/' + profileId
@@ -128,7 +128,7 @@ Feature: Network Management
 
   @RAKCON-15108 @Getdiscoverablenetwork
   Scenario: Get discoverable network id
-    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
     * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)' }
     Given path 'network/networks/discoverable-network-ids'
@@ -142,13 +142,13 @@ Feature: Network Management
 
   @RAKCON-15109 @Addnetworkconnection
   Scenario: Add new network connection
-    * call read('NetworkManagement.feature@Getdiscoverablenetwork')
-    * def value = call read('NetworkManagement.feature@ViewProfileDetail')
+    * call read('this:NetworkManagement.feature@Getdiscoverablenetwork')
+    * def value = call read('this:NetworkManagement.feature@ViewProfileDetail')
     * def profileId = value.response.data.id
     * def vaultId = value.response.data.vault.id
     * def vaultName = value.response.data.vault.name
     *  def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "counterpartyName": '#(counterName)' , "internalNote": 'Note', "counterpartyId": '#(counterId)',  "hasDefaultRouting": true }
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'network/networks/'+ profileId +'/connections'
@@ -163,8 +163,8 @@ Feature: Network Management
   Scenario: Cancel request add new connection
     * def value = "CREATE_NETWORK_CONNECTION"
     * def nameDisplay = "Create network connection"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:NetworkManagement.feature@View_My_Request_Network')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15111 @ViewConnectionDetail
   Scenario: View connection detail
@@ -179,7 +179,7 @@ Feature: Network Management
 
   @RAKCON-15110 @ViewListNetworkConnection
   Scenario: View list network connection
-    * def value = call read('NetworkManagement.feature@ProfileListing')
+    * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
     * def query = { limit:'10', offset: '0' }
     Given path 'network/networks/' + profileId + '/connections'
@@ -191,9 +191,9 @@ Feature: Network Management
 
   @ignore @RAKCON-15213 @Editconnectiondepositrouting
   Scenario: Edit connection deposit routing
-    * call read('NetworkManagement.feature@ViewConnectionDetail')
+    * call read('this:NetworkManagement.feature@ViewConnectionDetail')
     * def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "hasDefaultRouting": true , "note": 'Note', }
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'network/networks/' + networkID + '/connections/' + connectionID + '/deposit-routing'
@@ -206,13 +206,13 @@ Feature: Network Management
   Scenario: Cancel request edit connection routing
     * def value = "EDIT_NETWORK_CONNECTION_DEPOSIT"
     * def nameDisplay = "Edit network connection"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:NetworkManagement.feature@View_My_Request_Network')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @RAKCON-15214 @RemoveConnection
   Scenario: Remove connection
     * def body = {"note": 'Note', }
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'network/networks/' + networkID + '/connections/' + connectionID
@@ -225,8 +225,8 @@ Feature: Network Management
   Scenario: Cancel request remove connection
     * def value = "REMOVE_NETWORK_CONNECTION"
     * def nameDisplay = "Remove network connection"
-    * call read('NetworkManagement.feature@View_My_Request_Network')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:NetworkManagement.feature@View_My_Request_Network')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @RAKCON-15414 @ListNetworkForTransfer
   Scenario: List network for transfer

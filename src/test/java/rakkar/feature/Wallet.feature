@@ -4,8 +4,8 @@ Feature: Wallet
   Background:
     #@PRECOND_RAKCON-11355
     * url baseURL
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
-    * def vault = karate.callSingle('Vault.feature@RAKCON-10217')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def vault = karate.callSingle('this:Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
     * def schemaJson = read('classpath:data/schema.json')
 
@@ -22,7 +22,7 @@ Feature: Wallet
 
   @RAKCON-10944 @ADD_WALLET
   Scenario: Add asset to the vault
-    * call read('Wallet.feature@VIEW-LIST-ASSET')
+    * call read('this:Wallet.feature@VIEW-LIST-ASSET')
     Given path 'core/wallet/' + vaultId
     * request {"tokenIds": ["#(assetId)"]}
     When method POST
@@ -35,7 +35,7 @@ Feature: Wallet
   @RAKCON-10952 @SORT_WALLETS_FROM_A_Z
   Scenario: Sort wallets from A >Z
   # Add new asset
-    * call read('Wallet.feature@ADD_WALLET')
+    * call read('this:Wallet.feature@ADD_WALLET')
   # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
@@ -73,7 +73,7 @@ Feature: Wallet
   @RAKCON-10953 @SEARCH_WALLETS
   Scenario: Search wallets
   # Add new asset
-    * call read('Wallet.feature@ADD_WALLET')
+    * call read('this:Wallet.feature@ADD_WALLET')
   #View asset listing with keyword
     * def keyword = "a"
     * def pattern = '#regex ^.*['+ keyword.toUpperCase() + keyword.toLowerCase() +'].*$'
@@ -90,7 +90,7 @@ Feature: Wallet
   @RAKCON-10958 @VIEW_WALLET_ADDRESS_LISTING
   Scenario: View wallet address listing
   # Add new asset can
-    * call read('Wallet.feature@ADD_WALLET')
+    * call read('this:Wallet.feature@ADD_WALLET')
   # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'DESC', sortBy: 'TOTAL_USD', isHideList: false}
@@ -106,10 +106,10 @@ Feature: Wallet
   @RAKCON-10961 @VIEW_TOKEN_DETAIL
   Scenario: View token detail
   # Add new asset
-    * def addAsset = call read('Wallet.feature@RAKCON-10944')
+    * def addAsset = call read('this:Wallet.feature@RAKCON-10944')
     * def walletId = addAsset.response.data.success[0].id
     * def query_detail = { vaultId:'#(vaultId)', walletId: '#(walletId)'}
-    * call read('Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
+    * call read('this:Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
   # Check the variable expected
     * def networkExpected = addAsset.response.data.success[0].network
     * def symbolExpected = addAsset.response.data.success[0].symbol
@@ -153,7 +153,7 @@ Feature: Wallet
 
   @ignore @ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS
   Scenario: Add asset support multiple address to the vault
-    * call read('Wallet.feature@EXTRACT_WALLET_SUPPORT_MULTIPLE_ADDRESS')
+    * call read('this:Wallet.feature@EXTRACT_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     Given path 'core/wallet/' + vaultId
     * request {"tokenIds": ["#(assetId)"]}
     When method POST
@@ -165,7 +165,7 @@ Feature: Wallet
 
   @RAKCON-10963 @CREATE_DEPOSIT_ADDRESS
   Scenario: Create a deposit address
-    * def addWallet = karate.callSingle('Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
+    * def addWallet = karate.callSingle('this:Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     * def walletId = addWallet.response.data.success[0].id
     * karate.set('walletId', walletId)
     * def now = function(){ return java.lang.System.currentTimeMillis() }
@@ -185,9 +185,9 @@ Feature: Wallet
 
   @RAKCON-11374 @VIEW_DEPOSIT_ADDRESS
   Scenario: View deposit address
-    * def addWallet = karate.callSingle('Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
+    * def addWallet = karate.callSingle('this:Wallet.feature@ADD_WALLET_SUPPORT_MULTIPLE_ADDRESS')
     * def walletId = addWallet.response.data.success[0].id
-    * def createDepositAddress = call read('Wallet.feature@CREATE_DEPOSIT_ADDRESS')
+    * def createDepositAddress = call read('this:Wallet.feature@CREATE_DEPOSIT_ADDRESS')
     Given path 'core/wallet/get-address-wallet'
     And params {limit: '10', offset: '0', vaultId: '#(vaultId)', walletId: '#(walletId)'}
     When method GET
@@ -221,7 +221,7 @@ Feature: Wallet
 
   @RAKCON-13405 @CREATE_DEPOSIT_ADDRESS_WITH_THE_SAME_NAME
   Scenario: Cannot create a deposit address with the same name
-    * call read('Wallet.feature@CREATE_DEPOSIT_ADDRESS')
+    * call read('this:Wallet.feature@CREATE_DEPOSIT_ADDRESS')
     Given path 'core/address'
     And request {"vaultId": "#(vaultId)", "walletId": "#(walletId)", "addressName": "#(nameActual)"}
     When method POST
@@ -232,7 +232,7 @@ Feature: Wallet
 
   @RAKCON-10964 @HIDE_AN_ASSET
   Scenario: Hide an asset
-    * def addAsset = call read('Wallet.feature@ADD_WALLET')
+    * def addAsset = call read('this:Wallet.feature@ADD_WALLET')
     * def assetId = addAsset.response.data.success[0].id
     Given path 'core/wallet/' + assetId + '/hide'
     And method POST
@@ -247,7 +247,7 @@ Feature: Wallet
 
   @RAKCON-10966 @VIEW_HIDDEN_AN_ASSET
   Scenario: View hidden an asset
-    * def hideAsset = call read('Wallet.feature@HIDE_AN_ASSET')
+    * def hideAsset = call read('this:Wallet.feature@HIDE_AN_ASSET')
     # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHideList: true}
@@ -280,7 +280,7 @@ Feature: Wallet
 
   @RAKCON-10965 @UNHIDE_AN_ASSET
   Scenario: Unhide an asset
-    * call read('Wallet.feature@VIEW_HIDDEN_AN_ASSET')
+    * call read('this:Wallet.feature@VIEW_HIDDEN_AN_ASSET')
     Given path 'core/wallet/' + assetIdActual + '/unhide'
     And method POST
     Then status 201
@@ -289,7 +289,7 @@ Feature: Wallet
 
   @RAKCON-13932 @PRE_REQUISITE_NETWORK
   Scenario: Check pre-requisite for networks
-    * call read('Wallet.feature@VIEW-LIST-ASSET')
+    * call read('this:Wallet.feature@VIEW-LIST-ASSET')
     * def body = { "tokenIds":["#(assetId)"]}
     Given path 'core/wallet/assets-pre-requisite/' + vaultId
     And request body
@@ -301,9 +301,9 @@ Feature: Wallet
 
   @RAKCON-19628 @AddAssetOnColdVault
   Scenario: Add Asset on Cold Vault
-    * callonce read('Vault.feature@ViewStandardColdVaultDetails')
+    * callonce read('this:Vault.feature@ViewStandardColdVaultDetails')
     * def vaultId = response.data.id
-    * call read('Wallet.feature@ADD_WALLET')
+    * call read('this:Wallet.feature@ADD_WALLET')
 
 
 

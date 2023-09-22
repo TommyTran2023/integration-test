@@ -306,6 +306,43 @@
         }
       }
     }
+  },
+  "transaction":{
+    "filterTransaction":{
+      "status": "#string",
+      "code": "#number",
+      "data": {
+        "transactions": "#[]",
+        "totalCount": "#number",
+        "totalPendingReview": "#number"
+      }      
+    },
+    "transactionDetails": {
+      "id": "#string",
+      "transactionId": "#string",
+      "type": "#string",
+      "amount": "#number",
+      "txHash": "#ignore",
+      "status": "#string",
+      "fireblocksStatus": "#ignore",
+      "createdAt": "#string",
+      "updatedAt": "#string",
+      "amountUSD": "#number",
+      "customerName": "#string",
+      "scusId": "#ignore",
+      "dcusId": "#ignore",
+      "walletInfoId": "#string",
+      "name": "#string",
+      "symbol": "#string",
+      "network": "#string",
+      "image": "#string",
+      "sourceName": "#string",
+      "destinationName": "#string",
+      "sourceAddress": "#string",
+      "destinationAddress": "#string",
+      "sourceType": "#string",
+      "sourceMapping": "#string"
+    }
   }
 }
 

@@ -3,9 +3,9 @@ Feature: Staking
   Background:
     * url baseURL
     * def schemaBody = read('classpath:data/schema.json')
-    * call read('RequesterAuthenticator.feature@RequesterAccessToken')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def testData = read('classpath:data/data_test.json')
-    * call read('GetUserInfo.feature@GetUserInfo')
+    * call read('this:GetUserInfo.feature@GetUserInfo')
 
   @RAKCON-15418 @Get_List_Pool
   Scenario: View list pool
@@ -28,9 +28,9 @@ Feature: Staking
 
   @RAKCON-15441 @Create_staking
   Scenario: Create staking
-    * call read('Staking.feature@Get_estimatefee_stake')
+    * call read('this:Staking.feature@Get_estimatefee_stake')
     * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'staking/records'
@@ -42,8 +42,8 @@ Feature: Staking
 
   @RAKCON-15442 @CancelCreateStaking
   Scenario: Cancel request create staking
-    * call read('Staking.feature@View_My_Request_Stake')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:Staking.feature@View_My_Request_Stake')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15443 @Staking_from_account_tab
   Scenario: View staking from account tab
@@ -59,7 +59,7 @@ Feature: Staking
 
   @RAKCON-15444 @Staking_detail
   Scenario: View staking detail
-    * call read('Staking.feature@Staking_from_account_tab')
+    * call read('this:Staking.feature@Staking_from_account_tab')
     * def query = { stakeId: '#(stakeId)'}
     Given path 'staking/actions/progress'
     And params query
@@ -89,8 +89,8 @@ Feature: Staking
 
   @RAKCON-15447 @Un_staking
   Scenario: Check unstake
-    * call read('Staking.feature@Get_estimatefee_stake')
-    * call read('Staking.feature@Staking_from_account_tab')
+    * call read('this:Staking.feature@Get_estimatefee_stake')
+    * call read('this:Staking.feature@Staking_from_account_tab')
     * def body = { "estimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
@@ -103,17 +103,17 @@ Feature: Staking
 
   @RAKCON-15952 @CancelUnStaking
   Scenario: Cancel request unstake
-    * call read('Staking.feature@View_My_Request_Stake')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:Staking.feature@View_My_Request_Stake')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-15952 @ChangeStakingPool
   Scenario: Change staking pool
-    * call read('Staking.feature@Get_estimatefee_stake')
-    * def value = call read('Staking.feature@Get_List_Pool')
+    * call read('this:Staking.feature@Get_estimatefee_stake')
+    * def value = call read('this:Staking.feature@Get_List_Pool')
     * def poolChangeId = value.response.data.pools[2].bech32Id
-    * call read('Staking.feature@Staking_detail')
+    * call read('this:Staking.feature@Staking_detail')
     * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultUpdateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'staking/records/change-staking-pool/'+ stakeId
@@ -125,8 +125,8 @@ Feature: Staking
 
   @RAKCON-15954 @CancelChangePoolStaking
   Scenario: Cancel request change staking pool
-    * call read('Staking.feature@View_My_Request_Stake')
-    * call read('CancelRequest.feature@CancelRequestCommon')
+    * call read('this:Staking.feature@View_My_Request_Stake')
+    * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @ignore @RAKCON-17459 @GetstakeSubcription
   Scenario: Staking from Newsletter - Get stake subscription
@@ -159,7 +159,7 @@ Feature: Staking
   @StakingOnAdvanceVault
   Scenario: Staking on hot advance vault
     * def schemaBody = read('classpath:data/schema.json')
-    * call read('Staking.feature@Get_estimatefee_stake')
+    * call read('this:Staking.feature@Get_estimatefee_stake')
     * def body = 
     """
       { 
@@ -177,7 +177,7 @@ Feature: Staking
         "tokenExternalId": '#(testData.staking.tokenExternalId)'
       }
     """
-    * call read('Common.feature@FIDO-Requester')
+    * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
     Given path 'staking/records'

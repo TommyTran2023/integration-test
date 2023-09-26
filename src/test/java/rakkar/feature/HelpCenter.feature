@@ -3,7 +3,7 @@ Feature:Help Center
 
   Background:
     * url baseURL
-    * karate.callSingle('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
+    * karate.callSingle('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM') //this will fail on uat due to WEB-54 is not ready on UAT
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('this:GetUserInfo.feature')
     * def requesterUserEmail = getRequesterIDResponse.response.data.email

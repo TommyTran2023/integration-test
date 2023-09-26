@@ -36,7 +36,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def destinationName_warm = destination_warm.name
 
   # 3.1.Get total amount of destination token before doing transfer
-    * def getBalanceTokenBeforeTransfer = call read(classpath + 'VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
+    * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
     * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.total)
 
   # 4.Get estimated fee

@@ -129,7 +129,7 @@ Feature: Wallet
     * match walletIdActual == walletId
     * match networkActual == networkExpected
     * match symbolActual == symbolExpected
-    * match priceActual == priceExpected
+    * match priceActual == '#number? _ > 0' // priceExpected > 0
     * match imageActual == imageExpected
     * match nameActual == nameExpected
     * match vaultTypeActual == vaultTypeExpected

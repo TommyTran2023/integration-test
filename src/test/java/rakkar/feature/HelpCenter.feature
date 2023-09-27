@@ -19,7 +19,7 @@ Feature:Help Center
     * match response.data.category == "#(testData.help_center.type_issue)"
     * match response.data.platforms[0] == "#(testData.help_center.platform)"
 
-  @CreateTicketIssueWithUploadVideo
+  @RAKCON-20018 @CreateTicketIssueWithUploadVideo
   Scenario: Create Ticket Issue With Upload Video
     * karate.callSingle('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM') //this will fail on uat due to WEB-54 is not ready on UAT
     * call read('this:HelpCenter.feature@CreateTicketIssue')

@@ -46,6 +46,10 @@ mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
 
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
 
+### Execute performance test
+`mvn clean gatling:test -Dkarate.env=uat -Dgatling.simulationClass=rakkar.simulation.WalletSimulation`
+`mvn clean gatling:test -Dkarate.env=uat`
+
 ### Setup user and data 
 For each environment, it should have at least 5 users in the company using for test.There are 2 users need to get detailed information: 
 1 user for send request, 1 user do approve. 
@@ -68,3 +72,5 @@ Staking feature is focus on ADA token now. So for each enviroment, it should hav
 1. Add ADA token into a specific vault
 2. Get the tokenId, add into env file with field "stakeToken"
 3. Prepare a vault already has staking,add vaultId to env file, to support for run unstake and change pool feature.
+
+

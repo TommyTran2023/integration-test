@@ -135,9 +135,9 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
-                            <goal>test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>

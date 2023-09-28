@@ -92,6 +92,8 @@
     "advanceColdVaultId": "cc76bf30-d415-4265-b6f9-7631d8392833",
     "skipHotVaultId": "7b28d83f-6965-437b-b4c2-e8b54f09fa2c",
     "advanceHotVaultForStakeId": "bd1d6db7-a23c-4954-a802-3a08d5b36022"
+  },
+  "pt": {
+    "baseURL": "https://qa-api.thailaksa.net"
   }
-
 }

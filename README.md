@@ -47,8 +47,8 @@ mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
 
 ### Execute performance test
-`mvn clean gatling:test -Dkarate.env=uat -Dgatling.simulationClass=rakkar.simulation.WalletSimulation`
-`mvn clean gatling:test -Dkarate.env=uat`
+`mvn clean gatling:test -Dkarate.env=pt -Dgatling.simulationClass=rakkar.pt.FeederSimulation`
+`mvn clean gatling:test -Dkarate.env=pt`
 
 ### Setup user and data 
 For each environment, it should have at least 5 users in the company using for test.There are 2 users need to get detailed information: 

@@ -1,21 +1,25 @@
 Feature: Transactions
 # including all api calls related to route /transaction
+  Background:
+    * url baseURL
+    * def nameResolver = function(x){ if (x != "") return x; else return null }
 
     @GetTransactionsList
     Scenario: Get transactions list
-        Given url url + '/transaction/transactions/v1'
-        And request query
-        When method POST
+      Given path 'transaction/transactions/v1'
+      And request query
+      When method POST
 
     @ViewTransactionDetail
     Scenario: View transaction detail common
-      Given url url + '/transaction/transactions/' + transactionId
+      Given path 'transaction/transactions/' + transactionId
       When method GET
 
     @ExportTransaction
     Scenario: Export transaction
-      Given url url + '/transaction/transactions/export'
+      Given path + 'transaction/transactions/export'
       And request body
       When method POST
+
 
     

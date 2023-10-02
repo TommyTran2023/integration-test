@@ -9,7 +9,7 @@ Feature: Transaction
   @ignore @Filter_transaction_common
   Scenario: Filter transaction
     * def schemaBody = read('classpath:data/schema.json')
-    * def filterRequest = call read(transactionSvc + '@GetTransactionsList') { url: '#(baseURL)', query: '#(query)' }
+    * def filterRequest = call read(transactionSvc + '@GetTransactionsList') { query: '#(query)' }
     * def response = filterRequest.response
     * match filterRequest.responseStatus == 201
     * match $response.status == "success"
@@ -145,14 +145,14 @@ Feature: Transaction
 
   @ignore @View_transaction_detail_common
   Scenario: View transaction detail common
-    * def txnDetail = call read(transactionSvc + '@ViewTransactionDetail') { url: '#(baseURL)', transactionId: '#(transactionId)' }
+    * def txnDetail = call read(transactionSvc + '@ViewTransactionDetail') { transactionId: '#(transactionId)' }
     * def response = txnDetail.response
     * match txnDetail.responseStatus == 200
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
-    * def exportResponse = call read(transactionSvc + '@ExportTransaction') { url: '#(baseURL)', body: '#(body)' }
+    * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
     # Given path 'transaction/transactions/export-web'
     * match exportResponse.responseStatus == 201
     * match exportResponse.response.status == "success"

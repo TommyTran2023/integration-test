@@ -138,6 +138,7 @@ Feature: Transaction
     * def status = response.data.transactions[0].status
     * def type = response.data.transactions[0].type
     * call read('this:Transaction.feature@View_transaction_detail_common')
+    And match responseStatus == 200
     And match response.status == "success"
     And match response.data.id == "#(transactionId)"
     And match response.data.status == "#(status)"
@@ -147,7 +148,6 @@ Feature: Transaction
   Scenario: View transaction detail common
     Given path '/transaction/transactions/' + transactionId
     When method GET
-    Then status 200
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
@@ -163,4 +163,30 @@ Feature: Transaction
     * def listFolders = call read('WhiteListFolder.feature@List_folder')
     * def query = { limit:'10', offset: '0', destinationData: [ { "destinationType": "whitelist", "destinationId": "#(listFolders.response.data.folders[0].id)" } ]}
     * call read('this:Transaction.feature@Filter_transaction_common')
+
+  @RAKCON-20141 @CheckTransactionFromOtherCustomer
+  Scenario: Customer cannot search for another customer vault
+    * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
+    * def customerId = userInfo.response.data.customerId
+    * def query = { limit:'100', offset: '0' }
+    * call read('this:Transaction.feature@Filter_transaction_common')
+    * def transactions = response.data.transactions
+    * def isCustomerData = 
+    """
+      function(txn) { 
+        if (txn.dcusId != customerId && txn.scusId != customerId) {
+          karate.log(txn)
+          throw new Error(txn.transactionId+' - is not customer data')
+        }
+      }
+    """
+    * eval karate.forEach(transactions, isCustomerData)
+
+    @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
+    Scenario: ViewTransactionDetailsOfOtherCustomer
+      * call read('this:Transaction.feature@@View_transaction_detail_common') { transactionId: #(crossTenant.txnId) }
+      # * match responseStatus == 403
+      
+
+    
 

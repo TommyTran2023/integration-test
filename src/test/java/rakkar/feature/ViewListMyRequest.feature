@@ -73,3 +73,15 @@ Feature: View List My Request
     * match each $pendingRequest == true
     * match each $response.data.records[*].businessRegistrationId == '#string'
     * match each $response.data.records[*].organizationName == '#string'
+
+  @RAKCON-20195 @CheckCustomerRequestList
+  Scenario: User unable to see other customer quorum requests
+    * call read('this:ViewListMyRequest.feature@ViewMyRequestByType')
+    Then match $response.data.records[*].businessRegistrationId contains any [#(businessRegistrationId)]
+
+  @ignore @RAKCON-20196 @ViewRequestDetailsOfOtherCustomer
+  Scenario: User not able to get request details belongs to other customer
+    Given path 'advance-quorum/quorums/request/' + crossTenant.requestId
+    When method GET
+    Then status 403
+  

@@ -525,8 +525,7 @@ Feature: Vault
 
   @RAKCON-20194 @ViewVaultDetailOfOtherCustomer
   Scenario: User not able to view vault details of other customer
-    * def vaultIDWA = 'd71e2438-cc23-4f3f-9193-483ea8db6a36'
-    Given path '/core/vault/accounts/'+vaultIDWA
+    Given path '/core/vault/accounts/'+crossTenant.vaultId
     When method GET
     Then status 404
     And match response.status == "error"

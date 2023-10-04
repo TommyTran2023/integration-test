@@ -45,9 +45,11 @@
     "advanceColdVaultId": "62e0d194-4e4c-4341-8144-f04ab2c47d22",
     "skipHotVaultId": "603fa056-7dce-40a7-a221-7b41ef0a42bb",
     "advanceHotVaultForStakeId": "b072682e-c590-459c-98bc-fed834a12bf9",
+    "businessRegistrationId": "AT12345",
     "crossTenant":{
       "txnId": "292727f8-4988-48bc-a3e4-5e414d99f6f3",
-      "vaultId": "d71e2438-cc23-4f3f-9193-483ea8db6a36"
+      "vaultId": "d71e2438-cc23-4f3f-9193-483ea8db6a36",
+      "requestId": "eec1271b-beab-48fd-8f1b-2848edac9f39"
     }
   },
   "uat": {
@@ -96,9 +98,11 @@
     "advanceColdVaultId": "cc76bf30-d415-4265-b6f9-7631d8392833",
     "skipHotVaultId": "7b28d83f-6965-437b-b4c2-e8b54f09fa2c",
     "advanceHotVaultForStakeId": "bd1d6db7-a23c-4954-a802-3a08d5b36022",
+    "businessRegistrationId": "AT123123",
     "crossTenant":{
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
-      "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9"
+      "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
+      "requestId": "ff4b6984-3393-426a-8771-037441537a0f"
     }
   }
 

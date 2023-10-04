@@ -517,7 +517,20 @@ Feature: Vault
 		And coldVault.response.data.totalUSD == 0
 		And coldVault.response.data.totalTransactionPending == 0
 
+  @RAKCON-20193 @SearchForOtherCustomerVault
+  Scenario: User not able to search other customer vault
+    * call read('this:Vault.feature@SearchVaultCommon') { keyword: 'Cross Tenant Vault' }
+    * def noOfVault = response.data.vaults.length
+    Then match noOfVault == 0
 
+  @RAKCON-20194 @ViewVaultDetailOfOtherCustomer
+  Scenario: User not able to view vault details of other customer
+    Given path '/core/vault/accounts/'+crossTenant.vaultId
+    When method GET
+    Then status 404
+    And match response.status == "error"
+    And match response.errorCode == "VAULT_NOT_FOUND"
+    And match response.code == 404
     
 
 

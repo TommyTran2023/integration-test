@@ -101,7 +101,7 @@
     "businessRegistrationId": "AT123123",
     "crossTenant":{
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
-      "vaultId": "b84294b0-f4ab-48f8-9852-78311e4e0341",
+      "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
       "requestId": "ff4b6984-3393-426a-8771-037441537a0f"
     }
   }

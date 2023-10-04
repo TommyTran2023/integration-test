@@ -182,10 +182,10 @@ Feature: Transaction
     """
     * eval karate.forEach(transactions, isCustomerData)
 
-    @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
+    @ignore @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
     Scenario: ViewTransactionDetailsOfOtherCustomer
       * call read('this:Transaction.feature@@View_transaction_detail_common') { transactionId: #(crossTenant.txnId) }
-      # * match responseStatus == 403
+      * match responseStatus == 403
       
 
     

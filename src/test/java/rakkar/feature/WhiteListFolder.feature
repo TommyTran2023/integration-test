@@ -187,11 +187,8 @@ Feature: WhiteList Folder
   @RAKCON-11164 @View_Detail_Folder
   Scenario: Check view detail a folder
     * callonce read('this:WhiteListFolder.feature@Create_address_internal')
-    Given path 'core/folders/list-address'
-    * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
-    And params query
-    When method GET
-    Then status 200
+    * call read('this:WhiteListFolder.feature@ViewDetailFolder') { folderId: '#(folderId)'}
+    Then match responseStatus == 200
     And match response.status == "success"
     And match response.data.listAddress[0].address == "#(address)"
     And match response.data.listAddress[0].id == "#(tokenID)"
@@ -248,5 +245,23 @@ Feature: WhiteList Folder
     Then status 200
     And match response.status == "success"
 
+  @RAKCON-20319 @SearchWhitelistFromOtherCustomer
+  Scenario: User unable to search whitelist folder belongs to other customer
+    * call read('this:WhiteListFolder.feature@Search_folder_by_keyword_common') {keyword: '#(crossTenant.whitelistExternalName)'}
+    Then match response.data.folders == []
+    * call read('this:WhiteListFolder.feature@Search_folder_by_keyword_common') {keyword: '#(crossTenant.whitelistInternalName)'}
+    Then match response.data.folders == []
 
+  @ignore @RAKCON-20320 @GetDetailsWhitelistFromOtherCustomer
+  Scenario: User unable to get details of whitelist folder belongs to other customer
+    * call read('this:WhiteListFolder.feature@ViewDetailFolder') { folderId: '#(crossTenant.whitelistExternalId)'}
+    Then match responseStatus == 403
+    * call read('this:WhiteListFolder.feature@ViewDetailFolder') { folderId: '#(crossTenant.whitelistInternalId)'}
+    Then match responseStatus == 403
+    
+  @ignore @ViewDetailFolder
+  Scenario: Check view detail a folder
+    Given path 'core/folders/list-address'
+    And params { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
+    When method GET
 

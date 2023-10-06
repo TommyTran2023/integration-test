@@ -49,7 +49,9 @@
     "crossTenant":{
       "txnId": "292727f8-4988-48bc-a3e4-5e414d99f6f3",
       "vaultId": "d71e2438-cc23-4f3f-9193-483ea8db6a36",
-      "requestId": "eec1271b-beab-48fd-8f1b-2848edac9f39"
+      "requestId": "eec1271b-beab-48fd-8f1b-2848edac9f39",
+      "apiKey": "afa0433da7824e4b88323f4859dc24ab",
+      "accountId":"06c4d3d9adcd4361819375855e76275f"
     }
   },
   "uat": {
@@ -102,7 +104,9 @@
     "crossTenant":{
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
       "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
-      "requestId": "ff4b6984-3393-426a-8771-037441537a0f"
+      "requestId": "ff4b6984-3393-426a-8771-037441537a0f",
+      "apiKey": "",
+      "accountId":""
     }
   }
 

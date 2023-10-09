@@ -1,5 +1,5 @@
 def SLACK_CHANNEL = "rakkar-alert-automation-test"
-def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e-4e80-b129-ff3321a59709@201a91bf-99c5-4514-99f9-725c381f0f8f/JenkinsCI/4cce63699dd64472878a3bc7d767d694/98b4bffe-269c-449b-8152-e60965a8c794"
+// def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e-4e80-b129-ff3321a59709@201a91bf-99c5-4514-99f9-725c381f0f8f/JenkinsCI/4cce63699dd64472878a3bc7d767d694/98b4bffe-269c-449b-8152-e60965a8c794"
 // def ENV = "SIT" // will be passed as parameter
 def KARATE_ENV = "qa"
 def BRANCH = "develop"
@@ -79,10 +79,10 @@ pipeline {
                         color: 'danger',
                         message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
-                    office365ConnectorSend color: '#a82e2e',
-                        message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
-                        status: 'FAILED',
-                        webhookUrl: "${TEAM_URL}"
+                    // office365ConnectorSend color: '#a82e2e',
+                    //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
+                    //     status: 'FAILED',
+                    //     webhookUrl: "${TEAM_URL}"
 
                     error("Abort the build because services healthcheck return error")
                 }
@@ -176,10 +176,10 @@ pipeline {
                     color: 'good',
                     message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
 
-                office365ConnectorSend color: '#4b8869',
-                    message: "${successMsg}<br>${passedSummary}",
-                    status: 'PASSED',
-                    webhookUrl: "${TEAM_URL}"
+                // office365ConnectorSend color: '#4b8869',
+                //     message: "${successMsg}<br>${passedSummary}",
+                //     status: 'PASSED',
+                //     webhookUrl: "${TEAM_URL}"
             }
         }
 
@@ -204,14 +204,14 @@ pipeline {
                 echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
                 echo "Failed Details: " + failedDetailsTeams
 
-                office365ConnectorSend color: '#a82e2e',
-                    message: "${buildSummary}<br>${failedSummary}",
-                    status: 'FAILED',
-                    webhookUrl: "${TEAM_URL}",
-                    factDefinitions:[
-                        [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
-                        [ name: "Error", template: "${failedDetailsTeams}"]
-                    ]
+                // office365ConnectorSend color: '#a82e2e',
+                //     message: "${buildSummary}<br>${failedSummary}",
+                //     status: 'FAILED',
+                //     webhookUrl: "${TEAM_URL}",
+                //     factDefinitions:[
+                //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
+                //         [ name: "Error", template: "${failedDetailsTeams}"]
+                //     ]
             }
         }
     }

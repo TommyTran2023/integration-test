@@ -6,6 +6,7 @@ Feature: Transfer
     * call read('this:GetUserInfo.feature@GetUserInfo')
     * call read('this:Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
+    * def a = read('classpath:data/enum.json')
     * configure afterFeature = function(){ karate.call('this:AfterHook.feature@Handle_Pending_Request_Transfer'); }
 
     #TCs: GET LIST ASSET FOR TRANSFER
@@ -232,14 +233,15 @@ Feature: Transfer
     * def body_estimate_fee = 
     """
       { 
-        "assetId":'#(testData.transfer.withdraw.tokenSymbol)', 
-        "destinationType": '#(testData.transfer.destinationType)', 
-        "sourceType":'#(testData.transfer.source_type)', 
+        "assetId":'#(a.TokenSymbol.XRP)', 
+        "destinationType": a.PeerType.EXTERNAL_WALLET, 
+        "sourceType":'#(a.PeerType.VAULT_ACCOUNT)', 
         "sourceId": '#(sourceId_hot)',
         "amount":#(amount_low),
         "destinationId":'#(externalId)'
       }
     """
+    * print body_estimate_fee
     * call read('this:Transfer.feature@Get_estimate_fee_common')
 
   @Total_estimate_fee_external_transfer

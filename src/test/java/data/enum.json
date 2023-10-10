@@ -15,5 +15,23 @@
             "SOURCE":"SOURCE_TRANSFER",
             "DESTINATION":"DESTINATION_TRANSFER"
         }
+    },
+    "TokenSymbol":{
+        "XRP":"XRP_TEST"
+    },
+    "Symbol":{
+        "XRP":"XRP"
+    },
+    "PeerType":{
+        "VAULT_ACCOUNT" : "VAULT_ACCOUNT",
+        "EXCHANGE_ACCOUNT" : "EXCHANGE_ACCOUNT",
+        "INTERNAL_WALLET" : "INTERNAL_WALLET",
+        "EXTERNAL_WALLET" : "EXTERNAL_WALLET",
+        "UNKNOWN" : "UNKNOWN",
+        "NETWORK_CONNECTION" : "NETWORK_CONNECTION",
+        "FIAT_ACCOUNT" : "FIAT_ACCOUNT",
+        "COMPOUND" : "COMPOUND",
+        "ONE_TIME_ADDRESS" : "ONE_TIME_ADDRESS",
+        "OEC_PARTNER" : "OEC_PARTNER"
     }
 }

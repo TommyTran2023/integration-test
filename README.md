@@ -46,6 +46,10 @@ mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
 
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
 
+### Execute performance test
+`mvn clean gatling:test -Dkarate.env=pt -Dgatling.simulationClass=rakkar.pt.FeederSimulation`
+`mvn clean gatling:test -Dkarate.env=pt`
+
 ### Setup user and data 
 For each environment, it should have at least 5 users in the company using for test.There are 2 users need to get detailed information: 
 1 user for send request, 1 user do approve. 
@@ -73,4 +77,6 @@ Staking feature is focus on ADA token now. So for each enviroment, it should hav
 For each enviroment,
 1. It should have specific data on another customer. Describe in env_data.json > {env} > crossTenant
 2. crossTenant customer should have a Vault name "Cross Tenant Vault"
+
+
 

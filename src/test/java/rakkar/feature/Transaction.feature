@@ -4,19 +4,19 @@ Feature: Transaction
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
+    * def transactionSvc = 'classpath:rakkar/services/Transaction.feature'
 
   @ignore @Filter_transaction_common
   Scenario: Filter transaction
     * def schemaBody = read('classpath:data/schema.json')
-    Given path '/transaction/transactions/v1'
-    And request query
-    When method POST
-    Then status 201
-    And match response.status == "success"
-    * match response == schemaBody.transaction.filterTransaction
-    * match each response.data.transactions == schemaBody.transaction.transactionDetails
+    * def filterRequest = call read(transactionSvc + '@GetTransactionsList') { query: '#(query)' }
+    * def response = filterRequest.response
+    * match filterRequest.responseStatus == 201
+    * match $response.status == "success"
+    * match $response == schemaBody.transaction.filterTransaction
+    * match each $response.data.transactions == schemaBody.transaction.transactionDetails
 
-  @RAKCON-10904 @view_transaction_listing
+  @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing
     # View transaction listing
     * def query = { offset: '0', limit:'10'}
@@ -146,17 +146,17 @@ Feature: Transaction
 
   @ignore @View_transaction_detail_common
   Scenario: View transaction detail common
-    Given path '/transaction/transactions/' + transactionId
-    When method GET
+    * def txnDetail = call read(transactionSvc + '@ViewTransactionDetail') { transactionId: '#(transactionId)' }
+    * def response = txnDetail.response
+    * match txnDetail.responseStatus == 200
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
-    Given path 'transaction/transactions/export-web'
-    And request body
-    When method POST
-    Then status 201
-    And response.status == "success"
+    * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
+    # Given path 'transaction/transactions/export-web'
+    * match exportResponse.responseStatus == 201
+    * match exportResponse.response.status == "success"
 
   @RAKCON-18275 @FilterTransactionFromWhitelistAddress
   Scenario: Filter transaction from whitelist address

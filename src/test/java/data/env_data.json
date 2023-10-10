@@ -116,6 +116,10 @@
       "apiKey": "0ae7230600954bfc9d4c805faf28d353",
       "accountId":"f61c8e36da61491693208be475a5e3ae"
     }
+  },
+  "pt": {
+    "baseURL": "https://pt-api.thailaksa.net",
+    "sourceVault": "ee720faa-ade2-4127-a334-9e2e2474431f",
+    "destinationVault": "c1f74e34-74b7-4464-b14e-7578275f71d6"
   }
-
 }

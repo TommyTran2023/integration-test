@@ -31,5 +31,4 @@ Feature: Authorization
         * def approvalAuthToken = response.data.AuthenticationResult.AccessToken
         * def approvalAccessToken = 'Bearer ' + approvalAuthToken
         * configure headers = {Authorization: '#(approvalAccessToken)'}
-    
-    
+

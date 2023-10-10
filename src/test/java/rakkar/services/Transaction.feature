@@ -22,4 +22,3 @@ Feature: Transactions
       When method POST
 
 
-    

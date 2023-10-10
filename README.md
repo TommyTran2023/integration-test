@@ -73,4 +73,10 @@ Staking feature is focus on ADA token now. So for each enviroment, it should hav
 2. Get the tokenId, add into env file with field "stakeToken"
 3. Prepare a vault already has staking,add vaultId to env file, to support for run unstake and change pool feature.
 
+### Setup data for muti tenancy testing
+For each enviroment,
+1. It should have specific data on another customer. Describe in env_data.json > {env} > crossTenant
+2. crossTenant customer should have a Vault name "Cross Tenant Vault"
+
+
 

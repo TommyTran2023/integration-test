@@ -79,12 +79,12 @@ Feature: Approval Request
   Scenario: Approval - Transfer with high value
     * def value = call read('this:Transfer.feature@Transfer_high_value')
     * def requestId = value.response.data.requestId
+    # * call read('this:GetUserInfo.feature@GetApproverInfo')
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
     * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
     * call read('this:Common.feature@UPLOAD_LINK')
-    * call read('this:UploadFile.feature@PUT_VIDEO')
+    * call read('this:ApprovalRequest.feature@PutVideoForApprover')
     * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)'}
-    * print 'body', body
     Given path '/advance-quorum/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
     * header passcode = approverInfo.approverPasscode
@@ -93,6 +93,15 @@ Feature: Approval Request
     Then status 201
     * def statusMsg = response.status
     * match statusMsg == 'success'
+
+  @ignore @PutVideoForApprover
+  Scenario: Put video
+    Given url uploadUrl
+    * request {}
+    And header Content-type = "video/mp4"
+    When method PUT
+    Then status 200
+    And response.status == "success"
 
   @RAKCON-11046 @ApprovalChangeRole
     Scenario: Approval - Edit role

@@ -229,12 +229,34 @@ Feature: Transfer
   #EXTERNAL WITHDRAW
   @Get_estimate_fee_external_transfer
   Scenario: External - Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(externalId)'}
+    * def body_estimate_fee = 
+    """
+      { 
+        "assetId":'#(testData.transfer.withdraw.tokenSymbol)', 
+        "destinationType": '#(testData.transfer.destinationType)', 
+        "sourceType":'#(testData.transfer.source_type)', 
+        "sourceId": '#(sourceId_hot)',
+        "amount":#(amount_low),
+        "destinationId":'#(externalId)'
+      }
+    """
     * call read('this:Transfer.feature@Get_estimate_fee_common')
 
   @Total_estimate_fee_external_transfer
   Scenario: External - Total estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(externalId)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
+    * def body_total_estimate = 
+    """
+      { 
+        "assetId":'#(testData.transfer.withdraw.tokenSymbol)', 
+        "destinationType": '#(testData.transfer.destinationType)', 
+        "sourceType":'#(testData.transfer.source_type)', 
+        "sourceId": '#(sourceId_hot)',
+        "amount":#(amount_low),
+        "destinationId":'#(externalId)', 
+        "fee":'#(Number(testData.transfer.withdraw.fee))',
+        "isNetAmount":false
+      }
+    """
     * call read('this:Transfer.feature@Total_estimate_fee_common')
 
   @RAKCON-11408 @External_Transfer

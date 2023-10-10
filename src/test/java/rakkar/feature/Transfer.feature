@@ -22,6 +22,7 @@ Feature: Transfer
   #Get estimated fee : Hot to Hot
   @ignore @Get_estimate_fee_common
     Scenario: Transfer Hot to hot - Get estimated fee common
+      * print body_estimate_fee
       Given path 'transaction/transactions/estimated-fee'
       And request body_estimate_fee
       When method POST
@@ -33,25 +34,25 @@ Feature: Transfer
   @RAKCON-13154 @Get_estimate_fee_hot_to_hot
   Scenario: Transfer Hot to Hot- Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_hot)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   #Get estimated fee : Hot to Cold
    @RAKCON-13155 @Get_estimate_fee_hot_to_cold
   Scenario: Transfer Hot to cold- Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   #Get estimated fee : Cold to Hot
    @RAKCON-13156 @Get_estimate_fee_cold_to_hot
   Scenario: Transfer Cold to hot - Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":#(amount_low),"destinationId":'#(destinationId_hot)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
      #Get estimated fee : Cold to Cold
    @RAKCON-13157 @Get_estimate_fee_cold_to_cold
   Scenario: Transfer Cold to cold - Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_cold)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @ignore @Total_estimate_fee_common
   Scenario: Transfer Hot to hot - Total estimated fee common
@@ -139,13 +140,13 @@ Feature: Transfer
   @Get_estimate_fee_medium_value
   Scenario: Transfer medium - Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_medium),"destinationId":'#(destinationId_hot)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
     #Total estimate fee for high value
   @Total_estimate_fee_medium_value
   Scenario: Transfer medium - Total estimated fee
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_medium),"destinationId":'#(destinationId_hot)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
-    * call read('this:Transfer.feature@Total_estimate_fee_common')
+    * call read('this:Transfer.feature@Total_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @RAKCON-11402 @Transfer_medium_value
   Scenario: Transfer medium - Submit transfer
@@ -184,12 +185,12 @@ Feature: Transfer
   @Get_estimate_fee_high_value
   Scenario: Transfer high - Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_high),"destinationId":'#(destinationId_hot)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @Total_estimate_fee_high_value
   Scenario: Transfer high - Total estimated fee
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_high),"destinationId":'#(destinationId_hot)', "fee":'#(Number(testData.transfer.withdraw.fee))',"isNetAmount":false}
-    * call read('this:Transfer.feature@Total_estimate_fee_common')
+    * call read('this:Transfer.feature@Total_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @RAKCON-11405 @Transfer_high_value
   Scenario: Transfer high - Submit transfer
@@ -234,7 +235,7 @@ Feature: Transfer
     """
       { 
         "assetId":'#(a.TokenSymbol.XRP)', 
-        "destinationType": a.PeerType.EXTERNAL_WALLET, 
+        "destinationType": '#(a.PeerType.EXTERNAL_WALLET)', 
         "sourceType":'#(a.PeerType.VAULT_ACCOUNT)', 
         "sourceId": '#(sourceId_hot)',
         "amount":#(amount_low),
@@ -242,7 +243,7 @@ Feature: Transfer
       }
     """
     * print body_estimate_fee
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @Total_estimate_fee_external_transfer
   Scenario: External - Total estimated fee
@@ -306,7 +307,7 @@ Feature: Transfer
   Scenario: Transfer to other network - Get estimated fee
     * call read('this:NetworkManagement.feature@ListNetworkForTransfer')
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.network_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":#(amount_low),"destinationId":'#(destinationId_network)'}
-    * call read('this:Transfer.feature@Get_estimate_fee_common')
+    * call read('this:Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
 
   @ignore @RAKCON-15413 @Total_estimate_fee_network
   Scenario: Transfer to other network - Total estimated fee

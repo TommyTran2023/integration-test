@@ -41,12 +41,12 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 4.Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common')
+    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee
     * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
+    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
 
   # 6.Submit transfer
@@ -113,7 +113,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 4.Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common')
+    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee
@@ -185,7 +185,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 4.Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common')
+    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee
@@ -260,7 +260,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 4.Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common')
+    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee
@@ -341,7 +341,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 4.Get estimated fee
     * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common')
+    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee

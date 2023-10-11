@@ -154,9 +154,8 @@ Feature: Transaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
-    # Given path 'transaction/transactions/export-web'
     * match exportResponse.responseStatus == 201
-    * match exportResponse.response.status == "success"
+    * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
 
   @RAKCON-18275 @FilterTransactionFromWhitelistAddress
   Scenario: Filter transaction from whitelist address

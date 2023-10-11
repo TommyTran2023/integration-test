@@ -17,7 +17,7 @@ Feature: Transactions
 
     @ExportTransaction
     Scenario: Export transaction
-      Given path + 'transaction/transactions/export'
+      Given path 'transaction/transactions/export-web'
       And request body
       When method POST
 

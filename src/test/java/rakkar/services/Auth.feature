@@ -6,12 +6,35 @@ Feature: Authorization
     @GetSession
         Scenario: Get session for login
         Given path '/auth/authorization/initiate-auth'
+        * def body = 
+        """
+        {
+            "initiateAuthRequest": { 
+                "AuthFlow": "CUSTOM_AUTH", 
+                "AuthParameters": { 
+                        "USERNAME": '#(userName)' 
+                    } 
+                }
+        }
+        """
         And request body
         When method POST
 
     @GetAccessToken
     Scenario: Approval - Get token for login
       Given path '/auth/authorization/respond-to-auth-challenge'
+      * def body =
+      """
+        { 
+            "respondToAuthChallengeRequest": { 
+                "ChallengeName": "CUSTOM_CHALLENGE", 
+                "ChallengeResponses": { 
+                    "USERNAME": '#(userName)', 
+                    "ANSWER": '#(answer)' }, 
+                    "Session": '#(session)' 
+                }, 
+            "deviceName": "duncan" }
+      """
       And request body
       When method POST
 
@@ -20,15 +43,10 @@ Feature: Authorization
         Given path '/auth/account/me'
         When method GET
 
-# Common call for Authorization scenarios 
-    @GetAccessTokenForLogin
-        Scenario: Approval - Get token for login
-        Given path '/auth/authorization/respond-to-auth-challenge'
-        * request body
+    @GetListUsers
+    Scenario: Get list of users
+        Given path '/auth/account/list-users'
+        * request requestBody
         When method POST
-        Then def APIStatus = response.status
-        * assert (APIStatus == "success")
-        * def approvalAuthToken = response.data.AuthenticationResult.AccessToken
-        * def approvalAccessToken = 'Bearer ' + approvalAuthToken
-        * configure headers = {Authorization: '#(approvalAccessToken)'}
+
 

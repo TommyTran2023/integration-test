@@ -1,14 +1,12 @@
 {
-    "Vault": {
-        "VaultType": {
-            "HOT_WALLET":"HOT_WALLET",
-            "COLD_WALLET":"COLD_WALLET"
-        },
-        "VaultPolicyType": {
-            "STANDARD":"standard",
-            "ADVANCE":"advance",
-            "SKIP":null
-        }
+    "VaultType": {
+        "HOT_WALLET":"HOT_WALLET",
+        "COLD_WALLET":"COLD_WALLET"
+    },
+    "VaultPolicyType": {
+        "STANDARD":"standard",
+        "ADVANCE":"advance",
+        "SKIP":null
     },
     "Transfer":{
         "FromScreen":{

@@ -20,7 +20,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.Vault.VaultType.HOT_WALLET
+    * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
@@ -92,7 +92,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.Vault.VaultType.HOT_WALLET
+    * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
@@ -164,7 +164,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.Vault.VaultType.HOT_WALLET
+    * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
@@ -238,7 +238,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.Vault.VaultType.HOT_WALLET
+    * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
@@ -318,7 +318,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.Vault.VaultType.HOT_WALLET
+    * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
@@ -328,7 +328,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 3.Select destination from internal.
     * def screenType = Const.Transfer.FromScreen.DESTINATION
-    * def vaultType = Const.Vault.VaultType.COLD_WALLET
+    * def vaultType = Const.VaultType.COLD_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
     * def destination_cold = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def destinationId_cold = destination_cold.id

@@ -14,7 +14,7 @@ Feature: Common call from Auth services
 
     @GetApproverAccessToken
     Scenario: Get Approver Access Token
-        * call read('this:AuthCommon.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.requesterUsername)', answer: '#(testData.common.challengeAnswerAuth)'}
+        * call read('this:AuthCommon.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.approvalUsername)', answer: '#(testData.common.challengeAnswerAuth)'}
         * def approvalAuthToken = response.data.AuthenticationResult.AccessToken
         * def approvalAccessToken = 'Bearer ' + approvalAuthToken
         * configure headers = {Authorization: '#(approvalAccessToken)'}
@@ -29,8 +29,8 @@ Feature: Common call from Auth services
     @GetRequesterInfo
     Scenario: Get Requester Info
         * call read('this:AuthCommon.feature@GetRequesterAccessToken')
-        * call read('this:Auth.feature@GetRequesterInfo')
-        Then status 200
+        * call read('this:Auth.feature@GetUserInfo')
+        * match responseStatus == 200
         * def userId = response.data.id
         * def requesterID = response.data.id
         * def requesterEmail = response.data.email
@@ -40,8 +40,8 @@ Feature: Common call from Auth services
     Scenario: Get All Users
         * def requestBody = {"isGetAll":true}
         * call read('this:Auth.feature@GetListUsers') {requestBody: #(requestBody)}
-        Then status 201
+        * match responseStatus == 201
         * def result = response.data.users
-        * def approvalUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
-        * def adminUserID = karate.jsonPath(result, "$.ADMIN[?(@.username=='"+ adminUsername +"')].userId")[0]
+        * def approvalUserID = karate.jsonPath(result, "$[?(@.username=='"+ approverInfo.approvalUsername +"')].userId")[0]
+        * def adminUserID = karate.jsonPath(result, "$[?(@.username=='"+ adminUsername +"')].userId")[0]
         * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID)]

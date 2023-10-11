@@ -4,20 +4,19 @@ Feature: Create data
     * url baseURL
     * def svc = "classpath:rakkar/services/"
     * def testData = read('classpath:data/data_test.json')
-    * def enum = read('classpath:data/enum.json')
+    * def Const = read('classpath:data/enum.json')
     * callonce read(svc + 'AuthCommon.feature@GetRequesterInfo')
     * callonce read(svc + 'AuthCommon.feature@GetAllUsers')
 
-    Scenario: Create Vault
-        
+    Scenario: Create Hot Vault
         * def requestBody = 
         """
             {
                 "memberRequiredApprove":[],
                 "name":#(vaultName),
                 "hasRequiredApprover":false,
-                "memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],
-                "type":'#(enum.VaultType.HOT_WALLET)',
+                "memberIds":[#(requesterID),#(approvalUserID),#(adminUserID)],
+                "type":'#(Const.VaultType.HOT_WALLET)',
                 "approverNumber":'#(testData.vault.approve_number)',
                 "note":"AT Create Test Data"
             }

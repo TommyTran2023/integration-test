@@ -5,7 +5,7 @@
     },
     "VaultPolicyType": {
         "STANDARD":"standard",
-        "ADVANCE":"advance",
+        "ADVANCED":"advanced",
         "SKIP":null
     },
     "Transfer":{

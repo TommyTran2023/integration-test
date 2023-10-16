@@ -42,11 +42,13 @@ Feature: Authorization
     @GetUserInfo  
     Scenario: Get user information
         Given path '/auth/account/me'
+        * header Authorization = authorization
         When method GET
 
     @GetListUsers
     Scenario: Get list of users
         Given path '/auth/account/list-users'
+        * header Authorization = authorization
         * request requestBody
         When method POST
 

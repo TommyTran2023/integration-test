@@ -18,3 +18,11 @@ Scenario: Reject request
     * header challenge-answer = data.challengeAnswer
     * header passcode = data.passcode
     When method POST
+
+@GetApprovalList
+Scenario: Get approval list
+    Given path 'advance-quorum/quorums'
+    * header Authorization = authorization
+    * request data
+    When method POST
+

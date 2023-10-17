@@ -37,3 +37,25 @@ Feature: Vault
     @GetVaultDetail
     Scenario: Get Vault Detail by Id
         * call read(coreSvc + 'GetVaultById') {vaultId: '#(vaultId)', authorization: '#(requesterAccessToken)'}
+
+    @GetAllVaults
+    Scenario: Get all vaults
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'DESC')
+        * def sortBy = karate.get('sortBy', 'TOTAL_USD')
+        * def isHideSmallBalance = karate.get('isHideSmallBalance', false)
+        * def params = 
+        """
+            { 
+                isHideSmallBalance: #(isHideSmallBalance),
+                keyword: #(keyword),
+                limit: 10,
+                offset: 0,
+                sort: #(sort),
+                sortBy: #(sortBy)
+            }
+        """
+        * print params
+        * call read(coreSvc + 'GetAllVaults') {authorization: '#(requesterAccessToken)', params:#(params)}
+        Then match responseStatus == 200
+        * match response.status == 'success'

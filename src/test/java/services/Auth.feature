@@ -10,7 +10,7 @@ Feature: Common call from Auth services
         * def responseTest1 = call read(svc + 'authSvc.feature@GetSession') { userName: '#(userName)' }
         * def Session1 = responseTest1.response.data.Session
         * call read(svc + 'authSvc.feature@GetAccessToken') { userName: '#(userName)', answer: '#(answer)', session: '#(Session1)' }
-        Then response.status == "success"
+        Then match response.status == "success"
 
     @GetApproverAccessToken
     Scenario: Get Approver Access Token

@@ -40,6 +40,7 @@ Background:
         When method POST
 
     @AddNetworkConnection
+    Scenario: Add Network Connection
         Given path 'network/networks/'+ data.profileId +'/connections'
         * header challenge-answer = data.challengeAnswer
         * header authorization = data.authorization

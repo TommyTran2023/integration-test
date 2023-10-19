@@ -17,7 +17,6 @@
   "tokenId": "8053beee-fedd-4408-9337-987774e105ae",
   "address": "rLzifmtiDevx9mkzc8VfFcsvTYsGAwCN29",
   "networkVault": "AT - Network Vault",
-  "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6",
   "stakeToken": "d757f635-15b6-413e-8f6d-ca8e7782278f",
   "businessRegistrationId": "AT12345",
   "crossTenant":{
@@ -29,7 +28,9 @@
     "whitelistInternalName":"Internal Whitelist QA 1696826581 1697083851",
     "requestId": "eec1271b-beab-48fd-8f1b-2848edac9f39",
     "apiKey": "afa0433da7824e4b88323f4859dc24ab",
-    "accountId":"06c4d3d9adcd4361819375855e76275f"
+    "accountId":"06c4d3d9adcd4361819375855e76275f",
+    "networkProfileId":"d6b0c9e0-5b1a-4b0e-8b0a-9a9a9a9a9a9a",
+    "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6"
   },
   "clientId":"bxeRJIROr8VQTBSqAAGW"
 }

@@ -7,7 +7,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetAllUsers')
-    * def str_random = ' 100072'
+    * def str_random = ' 100079'
     * def getQuorumList = 
     """
         function(){
@@ -237,19 +237,30 @@ Feature: Create Vault data
     * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.networkVault)'}
     * if (response.data.vaults.length == 0) karate.call('Create.feature@CreateStandardVault',{name: testData.networkVault,type: Const.VaultType.HOT_WALLET})
     * call read(svc + 'Network.feature@GetDepositRouting') {keyword:'#(testData.networkVault)'}
-    * def vaultId = response.data.vaults[0].id
+    * def vault = response.data.vaults[0]
     
     # 2. Create network
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    * call read(svc + 'Network.feature@CreateNetworkProfile') {profileName:'#(testData.networkVault)', vaulId:'#(vaultId)'}
+    * call read(svc + 'Network.feature@CreateNetworkProfile') {profileName:'#(testData.networkVault + str_random)', vaultId:'#(vault.id)'}
     Then match responseStatus == 201
     * def profileId = response.data.id
     
     # 3. Get discovery network
     * call read(svc + 'Network.feature@GetDiscoverableNetwork') {keyword:'Rakkar', profileId:'#(profileId)', vaultId:'#(vaultId)'}
-    
+    * def counter = response.data.counterParties[0]
+        
     # 4. Add connection
-    * call read(svc + 'Network.feature@AddNetworkConnection') {profileId:'#(profileId)',vaultId:'#(vaultId)',counterpartyId:'#(response.data.counterParties[0].id)', vaultId:'#(vaultId)'}
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Network.feature@AddNetworkConnection') {profileId:'#(profileId)',vaultId:'#(vaultId)',counterId:'#(counter.id)', counterName:'#(counter.name)', vaultId:'#(vault.id)', vaultName:'#(vault.name)'}
+
+    # 5. Get request to connect
+    * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+    * call read(svc + 'AdvanceQuorum.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
+    * def requestId = karate.jsonPath(response.data.records, "$..[?(@.type.value == '"+Const.QuorumDataType.CREATE_NETWORK_CONNECTION+"')]")[0].id
+
+    # 6. Approve request to connect
+    * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}
+
         
         
 

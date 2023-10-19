@@ -43,5 +43,12 @@
         "REJECTED" : "REJECTED",
         "CANCELLED" : "CANCELLED",
         "FAILED" : "FAILED"
-      }
+    },
+    "NetworkConnectionType": {
+        "INTERNAL_CONNECTION" : "INTERNAL_CONNECTION",
+        "EXTERNAL_CONNECTION" : "EXTERNAL_CONNECTION"
+    },
+    "QuorumDataType":{
+        "CREATE_NETWORK_CONNECTION":"CREATE_NETWORK_CONNECTION"
+    }
 }

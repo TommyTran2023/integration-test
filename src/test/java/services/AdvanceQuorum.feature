@@ -21,6 +21,6 @@ Feature: Advance-quorum
     Scenario: Get Approval List
         * def data = { limit: 10, offset: 0, status: #(status) }
         * call read(svc + 'advQuorumSvc.feature@GetApprovalList') {data: '#(data)', authorization: '#(approvalAccessToken)'}
-        Then match responseStatus == 200
+        Then match responseStatus == 201
         * match response.status == 'success'
     

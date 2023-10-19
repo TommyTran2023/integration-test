@@ -84,11 +84,10 @@ Background:
             body:{
                 "isDiscoverable" : #(isDiscoverable),
                 "networkName": '#(profileName)', 
-                "vaultId": "#(vaultId)"
+                "vaultId": '#(vaultId)'
             }
         }
         """
-        * print data
         * call read(svc + 'networkSvc.feature@CreateNetworkProfile') {data: '#(data)'}
         Then match responseStatus == 201
         * match response.status == "success"
@@ -105,14 +104,15 @@ Background:
             passcode: '#(requesterInfo.requesterPasscode)',
             profileId: '#(profileId)',
             body:{
-                "vaultId": '#(vaultId)', 
                 "internalNote": '#(note)', 
                 "counterpartyId": '#(counterId)',  
-                "hasDefaultRouting": #(hasDefaultRouting) 
+                "counterpartyName" : '#(counterName)',
+                "hasDefaultRouting": #(hasDefaultRouting),
+                "vaultId": '#(vaultId)', 
+                "vaultName" : '#(vaultName)'
             }
         }
         """
-        * print data
         * call read(svc + 'networkSvc.feature@AddNetworkConnection') {data:'#(data)'}
         Then match responseStatus == 201
         And match response.status == "success"

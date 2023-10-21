@@ -4,7 +4,7 @@ Feature: Transaction
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
-    * def transactionSvc = 'classpath:rakkar/services/Transaction.feature'
+    * def transactionSvc = 'classpath:services/Transaction.feature'
 
   @ignore @Filter_transaction_common
   Scenario: Filter transaction

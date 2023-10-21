@@ -120,3 +120,10 @@ Feature: All api call to core services
     * header challenge-answer = challengeAnswerRequest
     And request data.body
     When method POST
+
+    @GetWhitelistFolders
+  Scenario: Get Whitelist Folders
+    Given path 'core/folders'
+    * header Authorization = data.authorization
+    * params data.params
+    When method GET

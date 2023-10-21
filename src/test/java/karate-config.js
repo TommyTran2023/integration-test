@@ -8,5 +8,10 @@ function fn () {
     var config = envFile[env];
     karate.configure('headers', { Accept: 'application/json' });
     karate.log(config);
+
+    karate.set('svc', 'classpath:services/')
+    karate.set('dataEnv', 'src/test/java/data/data_'+env+'.json');
+    var myClass = Java.type('util.FileUtils');
+    karate.set('fileUtils', myClass)
     return config;
 }

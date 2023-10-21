@@ -7,3 +7,4 @@ Scenario: Read data.json file
 @ReadEnumFile
 Scenario: Read enum.json file
     * def Const = read('classpath:data/enum.json')
+

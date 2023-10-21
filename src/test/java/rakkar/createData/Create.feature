@@ -1,4 +1,4 @@
-@Create
+@Create @ignore
 Feature: Create Vault data
     
   Background:
@@ -7,7 +7,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetAllUsers')
-    * def str_random = ' 100079'
+    * def str_random = ' 100080'
     * def getQuorumList = 
     """
         function(){
@@ -134,15 +134,15 @@ Feature: Create Vault data
 
     @CreateHotAdvanceVault
     Scenario: Create Cold Advance Vault AT - Hot Advance Vault 1
-        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVaultId), type: #(Const.VaultType.HOT_WALLET)}
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVault), type: #(Const.VaultType.HOT_WALLET)}
     
     @CreateColdAdvanceVault
     Scenario: Create Cold Advance Vault AT - Cold Advance Vault 1
-        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceColdVaultId), type: #(Const.VaultType.COLD_WALLET)}
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceColdVault), type: #(Const.VaultType.COLD_WALLET)}
         
     @CreateHotAdvanceVaultForStake
     Scenario: Create AT - Warm Advance Vault for Stake
-        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVaultForStakeId), type: #(Const.VaultType.HOT_WALLET)}
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVaultForStake), type: #(Const.VaultType.HOT_WALLET)}
     
 #-----------------Skip Vault-----------------#
     @CreateSkipVault @ignore
@@ -170,11 +170,11 @@ Feature: Create Vault data
 
     @CreateHotSkipVault
     Scenario: Create Hot Skip Vault
-        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipHotVaultId), type: #(Const.VaultType.HOT_WALLET)}
+        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipHotVault), type: #(Const.VaultType.HOT_WALLET)}
 
     @CreateColdSkipVault
     Scenario: Create Cold Skip Vault
-        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipColdVaultId), type: #(Const.VaultType.COLD_WALLET)}
+        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipColdVault), type: #(Const.VaultType.COLD_WALLET)}
 
     @ignore @ApproveRequest 
     Scenario: Approve Request    
@@ -220,7 +220,7 @@ Feature: Create Vault data
     
     # 2. Add whitelist address (get from step 1)
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(tokenXRP.id), note: 'AT Hot External Whitelist', address:#(testData.externalAddress)}
+        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(tokenXRP.id), note: 'AT Hot External Whitelist', address:#(testData.crossTenant.externalAddress)}
         Then match responseStatus == 201
 
     # 3. Get request Id
@@ -233,33 +233,34 @@ Feature: Create Vault data
 
     @CreateNetworking
     Scenario: Create Networking
-    # 1. Routing Setup - Get deposit routing
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.networkVault)'}
-    * if (response.data.vaults.length == 0) karate.call('Create.feature@CreateStandardVault',{name: testData.networkVault,type: Const.VaultType.HOT_WALLET})
-    * call read(svc + 'Network.feature@GetDepositRouting') {keyword:'#(testData.networkVault)'}
-    * def vault = response.data.vaults[0]
-    
-    # 2. Create network
-    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    * call read(svc + 'Network.feature@CreateNetworkProfile') {profileName:'#(testData.networkVault + str_random)', vaultId:'#(vault.id)'}
-    Then match responseStatus == 201
-    * def profileId = response.data.id
-    
-    # 3. Get discovery network
-    * call read(svc + 'Network.feature@GetDiscoverableNetwork') {keyword:'Rakkar', profileId:'#(profileId)', vaultId:'#(vaultId)'}
-    * def counter = response.data.counterParties[0]
+        # 1. Routing Setup - Get deposit routing
+        * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.networkVault)'}
+        * if (response.data.vaults.length == 0) karate.call('Create.feature@CreateStandardVault',{name: testData.networkVault,type: Const.VaultType.HOT_WALLET})
+        * call read(svc + 'Network.feature@GetDepositRouting') {keyword:'#(testData.networkVault)'}
+        * def vault = response.data.vaults[0]
         
-    # 4. Add connection
-    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    * call read(svc + 'Network.feature@AddNetworkConnection') {profileId:'#(profileId)',vaultId:'#(vaultId)',counterId:'#(counter.id)', counterName:'#(counter.name)', vaultId:'#(vault.id)', vaultName:'#(vault.name)'}
+        # 2. Create network
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Network.feature@CreateNetworkProfile') {profileName:'#(testData.networkVault + str_random)', vaultId:'#(vault.id)'}
+        Then match responseStatus == 201
+        * def profileId = response.data.id
+        
+        # 3. Get discovery network
+        * call read(svc + 'Network.feature@GetDiscoverableNetwork') {keyword:'Rakkar', profileId:'#(profileId)', vaultId:'#(vaultId)'}
+        * def counter = response.data.counterParties[0]
+            
+        # 4. Add connection
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Network.feature@AddNetworkConnection') {profileId:'#(profileId)',vaultId:'#(vaultId)',counterId:'#(counter.id)', counterName:'#(counter.name)', vaultId:'#(vault.id)', vaultName:'#(vault.name)'}
 
-    # 5. Get request to connect
-    * call read(svc + 'Biometric.feature@ApproverDoBiometric')
-    * call read(svc + 'AdvanceQuorum.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
-    * def requestId = karate.jsonPath(response.data.records, "$..[?(@.type.value == '"+Const.QuorumDataType.CREATE_NETWORK_CONNECTION+"')]")[0].id
+        # 5. Get request to connect
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'AdvanceQuorum.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
+        * def requestId = karate.jsonPath(response.data.records, "$..[?(@.type.value == '"+Const.QuorumDataType.CREATE_NETWORK_CONNECTION+"')]")[0].id
 
-    # 6. Approve request to connect
-    * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}
+        # 6. Approve request to connect
+        * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}
+    
 
         
         

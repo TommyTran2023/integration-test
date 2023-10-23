@@ -78,5 +78,17 @@ For each enviroment,
 1. It should have specific data on another customer. Describe in env_data.json > {env} > crossTenant
 2. crossTenant customer should have a Vault name "Cross Tenant Vault"
 
+### Run script for setup data
+At the first time, GetData.feature under rakkar/createData folder should be run to get all data needed for test.
+1. To get data for UAT
+```
+mvn clean test -Dkarate.env=uat -Dkarate.options="--tags @tags"
+```
+2. To get data for QA
+```
+mvn clean test -Dkarate.env=qa -Dkarate.options="--tags @tags"
+```
+3. New data_{env}.json file will be created under data folder. And data is stored by ```dataSet``` variable
+Usage: ```dataSet.advanceHotVaultId```
 
 

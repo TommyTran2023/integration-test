@@ -6,7 +6,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadDataFile')
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
-    * callonce read(svc + 'Auth.feature@GetAllUsers')
+    * callonce read(svc + 'Auth.feature@GetListUsers')
     * def str_random = ' 100080'
     * def getQuorumList = 
     """
@@ -57,7 +57,9 @@ Feature: Create Vault data
     
     # 4. Add XRP Asset To Vault
         * call read('this:Create.feature@AddAsset') {symbol:'#(Const.Symbol.XRP)', vaultId: '#(vaultId)'}
-
+    
+    # 5. Deposit XRP to Vault
+        * call read('this:Create.feature@DepositXRP') {vaultId: '#(vaultId)'}
 
     @CreateHotStandard1
     Scenario: Create Hot Vault 'AT - Warm Standard Vault 1'
@@ -184,10 +186,10 @@ Feature: Create Vault data
     @ignore @AddAsset
     Scenario: Add Testnet For Vault
     # 1. Get token 
-        * call read('this:Create.feature@GetToken') {keyword: #(Const.Symbol.XRP)}
+        * call read('this:Create.feature@GetToken') {keyword: #(symbol)}
 
     # 2. Add XRP asset to Vault
-        * call read(svc + 'Wallet.feature@AddAssets') {tokenIds: '#(tokenXRP.id)', vaultId: '#(vaultId)'}
+        * call read(svc + 'Wallet.feature@AddAssets') {tokenIds: '#(token.id)', vaultId: '#(vaultId)'}
         Then match responseStatus == 201
 
     # 3. Get wallet address
@@ -195,17 +197,26 @@ Feature: Create Vault data
         * def walletId = response.data.success[0].id
         * call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId: '#(vaultId)', walletId: '#(walletId)'}
         Then match responseStatus == 200
+        * def address = response.data.address[0].address
 
+    @ignore @DepositXRP
+    Scenario: Deposit XRP to Vault
     # 4. Do Deposit from testnet
-        * call read(svc + 'testnet.feature@DepositXRP') {address: '#(response.data.address[0].address)'}
+        * call read(svc + 'testnet.feature@DepositXRP') {address: '#(address)'}
+        Then match responseStatus == 200
+
+    @ignore @DepositADA
+    Scenario: Deposit ADA to Vault
+    # 4. Do Deposit from testnet
+        * call read(svc + 'testnet.feature@DepositADA') {address: '#(address)'}
         Then match responseStatus == 200
 
     @ignore @GetToken
-    Scenario: Get XRP Token
+    Scenario: Get Token
         * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword:'#(keyword)'}
         Then match responseStatus == 200
         And match response.status == 'success'
-        * def tokenXRP = karate.jsonPath(response.data.tokens, "$..[?(@.symbol == '"+keyword+"')]")[0]    
+        * def token = karate.jsonPath(response.data.tokens, "$..[?(@.symbol == '"+keyword+"')]")[0]    
 
     @CreateExternalWhitelistFolder
     Scenario: Create External Whitelist Folder
@@ -220,7 +231,7 @@ Feature: Create Vault data
     
     # 2. Add whitelist address (get from step 1)
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(tokenXRP.id), note: 'AT Hot External Whitelist', address:#(testData.crossTenant.externalAddress)}
+        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(token.id), note: 'AT Hot External Whitelist', address:#(testData.crossTenant.externalAddress)}
         Then match responseStatus == 201
 
     # 3. Get request Id
@@ -236,7 +247,7 @@ Feature: Create Vault data
         # 1. Routing Setup - Get deposit routing
         * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.networkVault)'}
         * if (response.data.vaults.length == 0) karate.call('Create.feature@CreateStandardVault',{name: testData.networkVault,type: Const.VaultType.HOT_WALLET})
-        * call read(svc + 'Network.feature@GetDepositRouting') {keyword:'#(testData.networkVault)'}
+        * call read(svc + 'Vault.feature@GetDepositRouting') {keyword:'#(testData.networkVault)'}
         * def vault = response.data.vaults[0]
         
         # 2. Create network

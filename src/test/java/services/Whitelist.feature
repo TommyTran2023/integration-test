@@ -12,14 +12,16 @@ Background:
                 type: '#(type)'
             }
         """
-        * call read(svc + 'coreSvc.feature@CreateWhitelistFolder') {data: '#(data)'}
+        * call read(svc + 'coreSvc.feature@CreateWhitelistFolder') data
     
     @AddWhitelistAddress
     Scenario: Add whitelist address
         * def data = 
         """
             {
+                folderId:'#(folderId)',
                 authorization: #(requesterAccessToken),
+                challengeAnswer: '#(challengeAnswerRequest)',
                 body:{
                     "tag" : '',
                     "isRequiredTag": true,
@@ -29,7 +31,7 @@ Background:
                 }
             }
         """
-        * call read(svc + 'coreSvc.feature@AddWhitelistAddress') {folderId:'#(folderId)', data: '#(data)'}
+        * call read(svc + 'coreSvc.feature@AddWhitelistAddress') data
 
     @GetWhitelistFolders
     Scenario: Get Whitelist
@@ -49,4 +51,4 @@ Background:
                 }
             }
         """
-        * call read(svc + 'coreSvc.feature@GetWhitelistFolders') {data: '#(data)'}
+        * call read(svc + 'coreSvc.feature@GetWhitelistFolders') data

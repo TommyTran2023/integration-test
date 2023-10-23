@@ -5,17 +5,27 @@ Feature: Notitication
 
     @ReadNotificationById
     Scenario: Read notification by id
-        * call read(svc + 'notificationSvc.feature@ReadNotification') {notificationId:'#(notificationId)', authorization:#(requesterAccessToken)}
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            notificationId: '#(notificationId)'
+        }
+        """
+        * call read(svc + 'notificationSvc.feature@ReadNotification') data
 
     @ListNotifications
     Scenario: List unread notifications
-        * def params = 
+        * def data = 
         """
-            {
+        {
+            authorization: #(requesterAccessToken),
+            params: {
                 "status": 'UNREAD', 
                 "limit" : 10,
                 "offset" : 0, 
                 "sort" : 'DESC'
             }
+        }
         """
-        * call read(svc + 'notificationSvc.feature@ListNotifications') {params: '#(params)', authorization:#(requesterAccessToken)}
+        * call read(svc + 'notificationSvc.feature@ListNotifications') data

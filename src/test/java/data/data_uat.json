@@ -1,4 +1,17 @@
 {
-  "standardWarmVault_1" : "23b74fb8-ed69-4e42-8e49-751632ffabf5",
-  "standardWarmVault_2" : "6938248a-20d6-4bad-b9d8-c5055375ed89"
+  "address" : "rGGGBKLgqLHJQSM7LKARcdgSSo7cCQo5Mv",
+  "tokenId" : "1e62f02c-7ae7-4735-a9ec-22347d6af122",
+  "stakeToken" : "3ec53849-2838-4b83-8925-97ae3d299eea",
+  "advanceHotVaultForStakeId" : "61d14e68-2d97-492b-9c5b-2d7be7d2634e",
+  "skipColdVaultId" : "07c5d0d0-550b-424f-a5b5-6d95dde33b43",
+  "externalId" : "7aef5824-1e37-4f19-ae52-8880b0909603",
+  "vaultUpdateStake" : "7e2453f8-37ef-496b-8ac8-7bd52c69289c",
+  "destinationId_hot" : "6938248a-20d6-4bad-b9d8-c5055375ed89",
+  "sourceId_hot" : "23b74fb8-ed69-4e42-8e49-751632ffabf5",
+  "destinationId_cold" : "d6abe01c-2c1f-40d9-86fc-e9af59a32298",
+  "skipHotVaultId" : "f03d649f-91a8-4249-9b0a-67cd46c285e7",
+  "sourceId_cold" : "4d09ab71-4603-4eed-8ecd-ba2fea471a6e",
+  "vaultCreateStake" : "2c134a50-d793-4dc7-bd11-9234b3cbb228",
+  "advanceHotVaultId" : "0249814a-c27e-4472-b8c4-f04e887d9d15",
+  "advanceColdVaultId" : "a676b6ff-38a2-408d-ba5e-20bdadee68c5"
 }

@@ -6,15 +6,15 @@ Background:
     @GetNetworkList
     Scenario: Get Network List
         Given path 'network/networks'
-        * header authorization = #(data.authorization)
-        * params data.params
+        * header authorization = authorization
+        * params params
         When method GET
 
     @GetNetworkConnection
     Scenario: Get Network Connection
-        Given path 'network/networks' + data.networkId + 'connections'
-        * header authorization = #(data.authorization)
-        * params data.params
+        Given path 'network/networks', networkId ,'connections'
+        * header authorization = authorization
+        * params params
         When method GET
 
     @ValidateNetworkName
@@ -27,24 +27,24 @@ Background:
     @GetDiscoverableNetwork
     Scenario: Get Discoverable Network
         Given path 'network/networks/discoverable-network-ids'
-        * header authorization = data.authorization
-        * params data.params
+        * header authorization = authorization
+        * params params
         When method GET
 
     @CreateNetworkProfile
     Scenario: Create Network profile
         Given path 'network/networks'
-        * header challenge-answer = data.challengeAnswer
-        * header authorization = data.authorization
-        And request data.body
+        * header challenge-answer = challengeAnswer
+        * header authorization = authorization
+        And request body
         When method POST
 
     @AddNetworkConnection
     Scenario: Add Network Connection
-        Given path 'network/networks/'+ data.profileId +'/connections'
-        * header challenge-answer = data.challengeAnswer
-        * header authorization = data.authorization
-        * header passcode = data.passcode
-        And request data.body
+        Given path 'network/networks/'+ profileId +'/connections'
+        * header challenge-answer = challengeAnswer
+        * header authorization = authorization
+        * header passcode = passcode
+        And request body
         When method POST
 

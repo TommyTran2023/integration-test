@@ -15,10 +15,10 @@ Feature: All api call to core services
     @CreateVault
   Scenario: Create vault 
     Given path '/core/vault'
-    * header Authorization = data.authorization
-    * header challenge-answer = data.challengeAnswer
-    * header passcode = data.passcode
-    * request data.requestBody
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
+    * request requestBody
     When method POST
 
     @GetAllVaults
@@ -28,7 +28,7 @@ Feature: All api call to core services
     * params params
     When method GET
 
-    @GetVaultById
+    @GetVaultDetail
   Scenario: Get vault by id 
     Given path 'core/vault/accounts', vaultId
     * header Authorization = authorization
@@ -53,11 +53,11 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method POST
 
-    @RequestCreateVault
+    @RequestCreateAdvVault
   Scenario: Request create vault
     Given path 'core/vault/request-create-vault'
     * header Authorization = authorization
-    * request requestBody
+    * request body
     When method POST
 
     @SubmitRequestCreateVault
@@ -72,58 +72,65 @@ Feature: All api call to core services
     @GetDepositRouting
   Scenario: Get Deposit Routing - Connection Setup
     Given path 'core/vault/deposit-routing'
-    * header Authorization = data.authorization
-    * params data.params
+    * header Authorization = authorization
+    * params params
     When method GET
 
   #----------Wallet-----------#
-    @AddAsset
+    @AddAssets
   Scenario: Add asset to vault / Create wallet on vault
-    Given path 'core/wallet', data.vaultId
-    * header Authorization = data.authorization
-    * request {"tokenIds": "#(data.tokenIds)"} 
+    Given path 'core/wallet', vaultId
+    * header Authorization = authorization
+    * request { tokenIds: "#(tokenIds)"} 
     When method POST
   
     @GetTokens
   Scenario: Add asset to vault / Create wallet on vault
-    Given path 'core/wallet/tokens', data.vaultId
-    * header Authorization = data.authorization
-    * params data.params
+    Given path 'core/wallet/tokens', vaultId
+    * header Authorization = authorization
+    * params params
     When method GET
 
     @GetWalletAddress
   Scenario: Get wallet address
     Given path 'core/wallet/get-address-wallet'
-    * header Authorization = data.authorization
-    * params { vaultId: #(data.vaultId), walletId: #(data.walletId) }
+    * header Authorization = authorization
+    * params { vaultId: #(vaultId), walletId: #(walletId) }
     When method GET
 
     @GetWalletTransferTokens
   Scenario: Get wallet transfer token
     Given path 'core/wallet/transfer-tokens'
-    * header Authorization = data.authorization
-    * params data.params
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @GetWallets
+  Scenario: Get wallets
+    Given path 'core/vault/account' , vaultId , 'wallets'
+    * header Authorization = authorization
+    And params params
     When method GET
 
   #----------Whitelist Folder-----------#
     @CreateWhitelistFolder
   Scenario: Create whitelist folder
     Given path 'core/folders'
-    * header Authorization = data.authorization
-    And request {"name" : '#(data.name)',"type": '#(data.type)' }
+    * header Authorization = authorization
+    And request {"name" : '#(name)',"type": '#(type)' }
     When method POST
 
     @AddWhitelistAddress
   Scenario: Add whitelist address
     Given path 'core/folders', folderId, 'tokens'
-    * header Authorization = data.authorization
-    * header challenge-answer = challengeAnswerRequest
-    And request data.body
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    And request body
     When method POST
 
     @GetWhitelistFolders
   Scenario: Get Whitelist Folders
     Given path 'core/folders'
-    * header Authorization = data.authorization
-    * params data.params
+    * header Authorization = authorization
+    * params params
     When method GET

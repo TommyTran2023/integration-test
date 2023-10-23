@@ -154,14 +154,14 @@ Feature: WhiteList Folder
   Scenario:Create whitelisted address common
     #Submit add new address
     * call read('this:Common.feature@FIDO-Requester')
-    * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(tokenId)', "note": 'Note test', "address": '#(address)'}
+    * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(dataSet.tokenId)', "note": 'Note test', "address": '#(dataSet.address)'}
     Given path 'core/folders/'+ folderId +'/tokens'
     * header challenge-answer = challengeAnswerRequest
     And request body_submit
     When method POST
     Then status 201
     And match response.status == "success"
-    And match response.data.address == "#(address)"
+    And match response.data.address == "#(dataSet.address)"
     And match response.data.folderId == "#(folderId)"
     * def addressId = response.data.id
     * def folderId = response.data.folderId

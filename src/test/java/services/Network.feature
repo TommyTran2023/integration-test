@@ -1,6 +1,4 @@
 Feature: Network
-Background:
-    * def svc = 'classpath:services/'
 
     @GetNetworkList
     Scenario: Get Network List
@@ -9,29 +7,33 @@ Background:
         """
             {
                 authorization: #(requesterAccessToken),
-                keyword: '#(keyword)',
-                limit: 10,
-                offset: 0
+                params:{
+                    keyword: '#(keyword)',
+                    limit: 10,
+                    offset: 0
+                }
             }
         """
-        * call read(svc + 'networkSvc.feature@GetNetworkList') {data: '#(data)'}
+        * call read(svc + 'networkSvc.feature@GetNetworkList') data
         Then match responseStatus == 200
         * match response.status == 'success'
 
     @GetNetworkConnection
     Scenario: Get Network Connection
-        * def keyword = karate.get('keyword', '')
+        * def connectionName = karate.get('connectionName', '')
         * def data =
         """
             {
                 authorization: #(requesterAccessToken),
                 networkId: '#(networkId)',
-                keyword: '#(keyword)',
-                limit: 10,
-                offset: 0
+                params:{
+                    keyword: '#(connectionName)',
+                    limit: 10,
+                    offset: 0
+                }
             }
         """
-        * call read(svc + 'networkSvc.feature@GetNetworkConnection') {data: '#(data)'}
+        * call read(svc + 'networkSvc.feature@GetNetworkConnection') data
         Then match responseStatus == 200
         * match response.status == 'success'
 
@@ -50,28 +52,10 @@ Background:
                 }
             }
         """
-        * call read(svc + 'networkSvc.feature@GetDiscoverableNetwork') {data: '#(data)'}
+        * call read(svc + 'networkSvc.feature@GetDiscoverableNetwork') data
         Then match responseStatus == 200
         * match response.status == 'success'
 
-    @GetDepositRouting
-    Scenario: Get Deposit Routing
-        * def keyword = karate.get('keyword', '')
-        * def data =
-        """
-            {
-                authorization: #(requesterAccessToken),
-                params:{
-                    keyword: '#(keyword)',
-                    limit: 10,
-                    offset: 0
-                }
-            }
-        """
-        * print data
-        * call read(svc + 'coreSvc.feature@GetDepositRouting') {data: '#(data)'}
-        Then match responseStatus == 200
-        * match response.status == 'success'
     
     @CreateNetworkProfile
     Scenario: Create Network Profile
@@ -88,7 +72,7 @@ Background:
             }
         }
         """
-        * call read(svc + 'networkSvc.feature@CreateNetworkProfile') {data: '#(data)'}
+        * call read(svc + 'networkSvc.feature@CreateNetworkProfile') data
         Then match responseStatus == 201
         * match response.status == "success"
 
@@ -113,6 +97,6 @@ Background:
             }
         }
         """
-        * call read(svc + 'networkSvc.feature@AddNetworkConnection') {data:'#(data)'}
+        * call read(svc + 'networkSvc.feature@AddNetworkConnection') data
         Then match responseStatus == 201
         And match response.status == "success"

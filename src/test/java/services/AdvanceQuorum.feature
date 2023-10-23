@@ -13,14 +13,25 @@ Feature: Advance-quorum
             "passcode": "#(approverInfo.approverPasscode)"
         }
         """
-        * call read(svc + 'advQuorumSvc.feature@ApproveRequest') { data: '#(data)'}
+        * call read(svc + 'advQuorumSvc.feature@ApproveRequest') data
         Then match responseStatus == 201
         * match response.status == 'success'
 
     @Approver_GetApprovalList
     Scenario: Get Approval List
-        * def data = { limit: 10, offset: 0, status: #(status) }
-        * call read(svc + 'advQuorumSvc.feature@GetApprovalList') {data: '#(data)', authorization: '#(approvalAccessToken)'}
+        * def status = karate.get('status',[])
+        * def data = 
+        """
+        { 
+            "authorization": "#(approvalAccessToken)",
+            body:{
+                limit: 10, 
+                offset: 0, 
+                status: #(status) 
+            }
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@GetApprovalList') data
         Then match responseStatus == 201
         * match response.status == 'success'
     

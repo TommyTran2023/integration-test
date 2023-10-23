@@ -1,8 +1,6 @@
     @ignore
 Feature: Biometric
     Background:
-        * url baseURL
-        * def svc = 'classpath:services/'
         * callonce read(svc + 'ReadData.feature@ReadDataFile')
 
     @DoBiometric

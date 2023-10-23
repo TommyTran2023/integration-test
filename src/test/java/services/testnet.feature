@@ -7,4 +7,12 @@ Feature: Test net faucet
         And request {"type":"XRP","account":"#(address)","network":"Testnet"}
         When method POST
         Then status 200
+
+    @DepositADA
+    Scenario: Deposit for ADA
+        Given url 'https://faucet.tequ.dev/api/faucet'
+        And header Content-Type = 'text/plain;charset=UTF-8'
+        And request {"type":"XRP","account":"#(address)","network":"Testnet"}
+        When method POST
+        Then status 200
         

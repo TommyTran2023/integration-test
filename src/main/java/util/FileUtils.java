@@ -13,7 +13,12 @@ public class FileUtils {
         FileUtils.DataListMap.put(key, value);
     }
 
-    public static void writeToFile(String filePath, Map<String, Object> data) throws Exception {       
+    public static boolean isFileExist(String filePath) {
+        File file = new File(filePath);
+        return file.exists();
+    }
+
+    public static void writeToFile(String filePath, Map<String, Object> data) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {
             file.createNewFile();
@@ -25,5 +30,5 @@ public class FileUtils {
         writer.write(jsonString);
         writer.close();
     }
-}
 
+}

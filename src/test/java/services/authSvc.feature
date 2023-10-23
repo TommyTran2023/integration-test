@@ -4,40 +4,18 @@ Feature: Authorization
         * url baseURL
 
     @GetSession
-        Scenario: Get session for login
-        Given path '/auth/authorization/initiate-auth'
-        * def body = 
-        """
-        {
-            "initiateAuthRequest": { 
-                "AuthFlow": "CUSTOM_AUTH", 
-                "AuthParameters": { 
-                        "USERNAME": '#(userName)' 
-                    } 
-                }
-        }
-        """
+    Scenario: Get session for login
+        Given path '/auth/authorization/initiate-auth'  
         And request body
         When method POST
+        * print body
 
     @GetAccessToken
     Scenario: Approval - Get token for login
-      Given path '/auth/authorization/respond-to-auth-challenge'
-      * def body =
-      """
-        { 
-            "respondToAuthChallengeRequest": { 
-                "ChallengeName": "CUSTOM_CHALLENGE", 
-                "ChallengeResponses": { 
-                    "USERNAME": '#(userName)', 
-                    "ANSWER": '#(answer)' 
-                }, 
-                "Session": '#(session)' 
-                }, 
-            "deviceName": "duncan" }
-      """
-      And request body
-      When method POST
+        Given path '/auth/authorization/respond-to-auth-challenge'
+        And request body2
+        When method POST
+        * print body
 
     @GetUserInfo  
     Scenario: Get user information
@@ -49,7 +27,7 @@ Feature: Authorization
     Scenario: Get list of users
         Given path '/auth/account/list-users'
         * header Authorization = authorization
-        * request requestBody
+        * request body
         When method POST
 
 

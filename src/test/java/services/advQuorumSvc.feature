@@ -5,24 +5,24 @@ Background:
 #----------------Quorums----------------#
 @ApproveRequest
 Scenario: Approve request
-    Given path 'advance-quorum/quorums/approval', data.requestId
-    * header Authorization = data.authorization
-    * header challenge-answer = data.challengeAnswer
-    * header passcode = data.passcode
+    Given path 'advance-quorum/quorums/approval', requestId
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
     When method POST
 
 @RejectRequest
 Scenario: Reject request
-    Given path 'advance-quorum/quorums/reject', data.requestId
-    * header Authorization = data.authorization
-    * header challenge-answer = data.challengeAnswer
-    * header passcode = data.passcode
+    Given path 'advance-quorum/quorums/reject', requestId
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
     When method POST
 
 @GetApprovalList
 Scenario: Get approval list
     Given path 'advance-quorum/quorums'
     * header Authorization = authorization
-    * request data
+    * request body
     When method POST
 

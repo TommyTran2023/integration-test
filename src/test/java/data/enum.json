@@ -18,7 +18,8 @@
         "XRP":"XRP_TEST"
     },
     "Symbol":{
-        "XRP":"XRP"
+        "XRP":"XRP",
+        "ADA":"ADA"
     },
     "PeerType":{
         "VAULT_ACCOUNT" : "VAULT_ACCOUNT",

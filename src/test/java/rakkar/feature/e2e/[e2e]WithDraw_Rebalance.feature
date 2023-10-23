@@ -112,17 +112,17 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.total)
 
   # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
+    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(dataSet.destinationId_cold)'}
     * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
     * def fee = getEstimateFee.response.data.medium
 
   # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)', "fee":'#(fee)',"isNetAmount":false}
+    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(dataSet.destinationId_cold)', "fee":'#(fee)',"isNetAmount":false}
     * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
     * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
 
   # 6.Submit transfer
-    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read(classpath + 'Transfer.feature@External_Transfer_Common')
     * match sourceName_warm == response.data.sourceName
     * match destinationName_cold == response.data.destinationName

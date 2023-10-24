@@ -7,7 +7,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetListUsers')
-    * def str_random = ' 100080'
+    * def str_random = ' 100082'
     * def getQuorumList = 
     """
         function(){
@@ -80,11 +80,15 @@ Feature: Create Vault data
     @CreateHotStandardForStake
     Scenario: Create Hot Vault 'AT - Standard Vault for Stake'
         * call read('Create.feature@CreateStandardVault') {name: #(testData.standardHotVaultForStake), type: #(Const.VaultType.HOT_WALLET)}
-
+        # Add ADA Asset To Vault
+        * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.ADA), vaultId: '#(vaultId)'}
+    
     @CreateColdStandardForStake
     Scenario: Create Hot Vault 'AT - Standard Vault for Update Stake'
         * call read('Create.feature@CreateStandardVault') {name: #(testData.standardColdVaultForUpdateStake), type: #(Const.VaultType.COLD_WALLET)}
-
+        # Add ADA Asset To Vault
+        * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.ADA), vaultId: '#(vaultId)'}
+    
 #-----------------Advance Vault-----------------#
     @CreateAdvanceVault @ignore
     Scenario: Create Advance Vault
@@ -132,6 +136,9 @@ Feature: Create Vault data
 
     # 6. Add XRP Asset To Vault
         * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.XRP), vaultId: '#(vaultId)'}
+
+    # 7. Deposit XRP to Vault
+        * call read('this:Create.feature@DepositXRP') {vaultId: '#(vaultId)'}
         
 
     @CreateHotAdvanceVault
@@ -145,6 +152,9 @@ Feature: Create Vault data
     @CreateHotAdvanceVaultForStake
     Scenario: Create AT - Warm Advance Vault for Stake
         * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVaultForStake), type: #(Const.VaultType.HOT_WALLET)}
+        
+        # Add ADA Asset To Vault
+        * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.ADA), vaultId: '#(vaultId)'}
     
 #-----------------Skip Vault-----------------#
     @CreateSkipVault @ignore
@@ -166,9 +176,13 @@ Feature: Create Vault data
         * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
         Then match responseStatus == 201
         And match response.status == 'success'
+        * def vaultId = response.data.id
 
     # 2. Add XRP Asset To Vault
-        * call read('Create.feature@AddAsset') {symbol:'#(Const.Symbol.XRP)', vaultId: '#(response.data.id)'}
+        * call read('Create.feature@AddAsset') {symbol:'#(Const.Symbol.XRP)', vaultId: '#(vaultId)'}
+    
+    # 3. Deposit XRP to Vault
+        * call read('this:Create.feature@DepositXRP') {vaultId: '#(vaultId)'}
 
     @CreateHotSkipVault
     Scenario: Create Hot Skip Vault
@@ -201,13 +215,11 @@ Feature: Create Vault data
 
     @ignore @DepositXRP
     Scenario: Deposit XRP to Vault
-    # 4. Do Deposit from testnet
         * call read(svc + 'testnet.feature@DepositXRP') {address: '#(address)'}
         Then match responseStatus == 200
 
     @ignore @DepositADA
     Scenario: Deposit ADA to Vault
-    # 4. Do Deposit from testnet
         * call read(svc + 'testnet.feature@DepositADA') {address: '#(address)'}
         Then match responseStatus == 200
 

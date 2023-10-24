@@ -90,5 +90,9 @@ mvn clean test -Dkarate.env=qa -Dkarate.options="--tags @tags"
 ```
 3. New data_{env}.json file will be created under data folder. And data is stored by ```dataSet``` variable
 Usage: ```dataSet.advanceHotVaultId```
+4. For Staking Vault, need to manual deposit ADA token into vault, and Stake
+5. Create group manually 
+- Group1: (requester, admin1)
+- Group2: (approver, admin2)
 
 

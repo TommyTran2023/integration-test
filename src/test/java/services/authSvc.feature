@@ -5,17 +5,40 @@ Feature: Authorization
 
     @GetSession
     Scenario: Get session for login
+        * def bodyInitiateAuth = 
+        """
+        {
+            "initiateAuthRequest": { 
+                "AuthFlow": "CUSTOM_AUTH", 
+                "AuthParameters": { 
+                        "USERNAME": '#(userName)' 
+                    } 
+                }
+        }
+        """
         Given path '/auth/authorization/initiate-auth'  
-        And request body
+        And request bodyInitiateAuth
         When method POST
-        * print body
 
     @GetAccessToken
     Scenario: Approval - Get token for login
+        * def bodyGetToken =
+        """
+        { 
+          "respondToAuthChallengeRequest": { 
+              "ChallengeName": "CUSTOM_CHALLENGE", 
+              "ChallengeResponses": { 
+                  "USERNAME": '#(userName)', 
+                  "ANSWER": '#(answer)' 
+              }, 
+              "Session": '#(session)' 
+              }, 
+          "deviceName": "AT Integration Test"
+        }
+        """
         Given path '/auth/authorization/respond-to-auth-challenge'
-        And request body2
+        And request bodyGetToken
         When method POST
-        * print body
 
     @GetUserInfo  
     Scenario: Get user information

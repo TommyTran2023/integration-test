@@ -4,36 +4,11 @@ Feature: Common call from Auth services
     @GetAccessTokenForLogin
     Scenario: Get token for login
         # 1. Get session
-        * def body = 
-        """
-        {
-            "initiateAuthRequest": { 
-                "AuthFlow": "CUSTOM_AUTH", 
-                "AuthParameters": { 
-                        "USERNAME": '#(userName)' 
-                    } 
-                }
-        }
-        """
-        * def responseTest1 = call read(svc + 'authSvc.feature@GetSession') body
+        * def responseTest1 = call read(svc + 'authSvc.feature@GetSession') {userName: '#(userName)'}
         * def Session1 = responseTest1.response.data.Session
         
         # 2. Get access token
-        * def body2 =
-        """
-        { 
-          "respondToAuthChallengeRequest": { 
-              "ChallengeName": "CUSTOM_CHALLENGE", 
-              "ChallengeResponses": { 
-                  "USERNAME": '#(userName)', 
-                  "ANSWER": '#(answer)' 
-              }, 
-              "Session": '#(Session1)' 
-              }, 
-          "deviceName": "AT Integration Test"
-        }
-        """
-        * call read(svc + 'authSvc.feature@GetAccessToken') body2
+        * call read(svc + 'authSvc.feature@GetAccessToken') {userName: '#(userName)', session: '#(Session1)', answer: '#(answer)'}
         Then match response.status == "success"
 
     @GetApproverAccessToken

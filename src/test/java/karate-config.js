@@ -2,7 +2,7 @@ function fn () {
     var envFile = read('classpath:data/env_data.json');
     var env = karate.env;
     karate.log('Karate Environment: ', env);
-    if(!env){
+    if(!env) {
         env = 'uat'; //default env
     }
     var config = envFile[env];
@@ -23,8 +23,7 @@ function fn () {
         karate.callSingle('classpath:rakkar/createData/GetData.feature', config);
         karate.callSingle('classpath:rakkar/createData/WriteDataFile.feature');
         java.lang.Thread.sleep(5000);
-    }
-    else{
+    } else {
         karate.log('Data file exist: ', dataFile);
         myClass.DataListMap = karate.read('classpath:data/data_'+env+'.json');
     }

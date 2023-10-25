@@ -79,20 +79,10 @@ For each enviroment,
 2. crossTenant customer should have a Vault name "Cross Tenant Vault"
 
 ### Run script for setup data
-At the first time, GetData.feature under rakkar/createData folder should be run to get all data needed for test.
-1. To get data for UAT
-```
-mvn clean test -Dkarate.env=uat -Dkarate.options="--tags @tags"
-```
-2. To get data for QA
-```
-mvn clean test -Dkarate.env=qa -Dkarate.options="--tags @tags"
-```
-3. New data_{env}.json file will be created under data folder. And data is stored by ```dataSet``` variable
+1. The test will check the environment data file (data/data_qa.json, data/data_uat.json) every time before the test run and create a new data for that environment if it does not exist
+2. New data_{env}.json file will be created under data folder. And data is stored by ```dataSet``` variable
 Usage: ```dataSet.advanceHotVaultId```
-4. For Staking Vault, need to manual deposit ADA token into vault, and Stake
-5. Create group manually 
+3. For Staking Vault, need to manual deposit ADA token into vault, and Stake
+4. Create group manually 
 - Group1: (requester, admin1)
 - Group2: (approver, admin2)
-
-

@@ -2,7 +2,7 @@
 Feature: Open API for PT
     
     Background:
-    * def classpath = 'classpath:rakkar/feature/'
+    * def classpath = 'classpath:feature/'
 
     Scenario: Get balance by asset ID
         * call read(classpath + 'OpenAPI.feature@Get_balance_by_assetId')

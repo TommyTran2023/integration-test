@@ -9,7 +9,7 @@ Feature: Staking
 
   @RAKCON-15418 @Get_List_Pool
   Scenario: View list pool
-    * def query = { limit:'10', page: '1', tokenId: '#(stakeToken)'}
+    * def query = { limit:'10', page: '1', tokenId: '#(dataSet.stakeToken)'}
     Given path 'staking/pools'
     And params query
     When method GET
@@ -18,7 +18,7 @@ Feature: Staking
 
   @RAKCON-15440 @Get_estimatefee_stake
   Scenario: Get estimate fee for staking
-    * def query = { tokenId: '#(stakeToken)'}
+    * def query = { tokenId: '#(dataSet.stakeToken)'}
     Given path 'staking/records/estimated-fee'
     And params query
     When method GET
@@ -29,7 +29,7 @@ Feature: Staking
   @RAKCON-15441 @Create_staking
   Scenario: Create staking
     * call read('this:Staking.feature@Get_estimatefee_stake')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(dataSet.stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -112,7 +112,7 @@ Feature: Staking
     * def value = call read('this:Staking.feature@Get_List_Pool')
     * def poolChangeId = value.response.data.pools[2].bech32Id
     * call read('this:Staking.feature@Staking_detail')
-    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(vaultUpdateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
+    * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(dataSet.stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.vaultUpdateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
@@ -140,7 +140,7 @@ Feature: Staking
   @ignore @RAKCON-17460 @Getvaultforstake
   Scenario: Staking from Newsletter - Get vault for stake
     * def query = { limit: 10, offset: 0 }
-    Given path 'core/vault/stake/' + '#(stakeToken)'
+    Given path 'core/vault/stake/' + '#(dataSet.stakeToken)'
     And params query
     When method GET
     Then status 200
@@ -164,13 +164,13 @@ Feature: Staking
     """
       { 
         "totalEstimatedFee":'#(totalEstimatedFee)',
-        "tokenId":'#(stakeToken)',
+        "tokenId":'#(dataSet.stakeToken)',
         "registrationFee": 2,
         "feeLevel":'#(testData.staking.feeLevel)', 
         "source": 
         {
           "type":'#(testData.transfer.source_type)',
-          "id":'#(advanceHotVaultForStakeId)'
+          "id":'#(dataSet.advanceHotVaultForStakeId)'
         },
         "amount":#(testData.staking.amount),
         "destinationId":'#(testData.staking.poolID)', 

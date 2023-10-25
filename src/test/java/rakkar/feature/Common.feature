@@ -88,7 +88,7 @@ Feature: Generate Challenge Answer for Biometric
   @ignore @CACULATE_LIMIT_TRANSFER
   Scenario: Caculate the limit transfer
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_hot)',"amount":10,"destinationId":'#(destinationId_hot)'}
+    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(dataSet.sourceId_hot)',"amount":10,"destinationId":'#(dataSet.destinationId_hot)'}
     Given path 'transaction/transactions/estimated-fee'
     And request body_estimate_fee
     When method POST

@@ -22,7 +22,7 @@ Feature: Get user information
     * def approverName = response.data.name
 
   @ignore @GetUserInfo
-  Scenario: Get user information - Common
+  Scenario: Get user information
     Given path '/auth/account/me'
     When method GET
     Then status 200

@@ -344,6 +344,29 @@
       "sourceType": "#string",
       "sourceMapping": "#string"
     }
+  },
+  "vaultDetail":{
+    "id": "#string",
+    "name": "#string",
+    "createdAt": "#string",
+    "type": "#string",
+    "hiddenOnUI": "#boolean",
+    "quorumId": "#uuid",
+    "totalUSD": "#number",
+    "missing": "#boolean",
+    "totalBTC": "#string",
+    "totalUSDYesterday": "#number",
+    "totalTransactionPending": "#number",
+    "requestId": "#uuid",
+    "isPendingRequest": "#boolean",
+    "workspace": {},
+    "isArchived": "#boolean",
+    "policyType": "#object",
+    "approverNumber": "#number",
+    "users": []
+  },
+  "vaultUser":{
+
   }
 }
 

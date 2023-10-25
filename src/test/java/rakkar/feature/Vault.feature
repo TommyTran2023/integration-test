@@ -532,5 +532,10 @@ Feature: Vault
     And match response.errorCode == "VAULT_NOT_FOUND"
     And match response.code == 404
     
-
+  @ViewCurrentStandardPolicy
+  Scenario: Standard Vault - View Current Policy
+    * def creatingVault = callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
+    * def vaultIDWA = creatingVault.vaultIDWA
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    
 

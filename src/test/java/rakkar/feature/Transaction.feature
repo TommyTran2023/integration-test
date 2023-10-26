@@ -4,7 +4,7 @@ Feature: Transaction
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
-    * def transactionSvc = 'classpath:rakkar/services/Transaction.feature'
+    * def transactionSvc = 'classpath:services/Transaction.feature'
 
   @ignore @Filter_transaction_common
   Scenario: Filter transaction
@@ -48,7 +48,7 @@ Feature: Transaction
    Scenario: Filter transaction by asset
     * call read('Transfer.feature@Get_asset_transfer')
     * def tokenName = response.data.tokens[0].name
-    * def query = { limit:'10', offset: '0',assetId: ['#(tokenId)']}
+    * def query = { limit:'10', offset: '0',assetId: ['#(dataSet.tokenId)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].name == "#(tokenName)"
 

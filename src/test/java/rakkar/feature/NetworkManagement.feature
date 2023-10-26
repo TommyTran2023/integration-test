@@ -168,12 +168,12 @@ Feature: Network Management
 
   @RAKCON-15111 @ViewConnectionDetail
   Scenario: View connection detail
-    Given path 'network/networks/' + networkID + '/connections/' + connectionID
+    Given path 'network/networks/' + dataSet.networkID + '/connections/' + dataSet.connectionID
     When method GET
     Then status 200
     And match response.status == "success"
-    And match response.data.id == '#(connectionID)'
-    And match response.data.networkId == '#(networkID)'
+    And match response.data.id == '#(dataSet.connectionID)'
+    And match response.data.networkId == '#(dataSet.networkID)'
     * def vaultName = response.data.defaultVault.id
     * def vaultId = response.data.defaultVault.name
 
@@ -196,7 +196,7 @@ Feature: Network Management
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    Given path 'network/networks/' + networkID + '/connections/' + connectionID + '/deposit-routing'
+    Given path 'network/networks/' + dataSet.networkID + '/connections/' + dataSet.connectionID + '/deposit-routing'
     And request body
     When method PUT
     Then status 200
@@ -215,7 +215,7 @@ Feature: Network Management
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
     * header passcode = requesterInfo.requesterPasscode
-    Given path 'network/networks/' + networkID + '/connections/' + connectionID
+    Given path 'network/networks/' + dataSet.networkID + '/connections/' + dataSet.connectionID
     And request body
     When method DELETE
     Then status 200

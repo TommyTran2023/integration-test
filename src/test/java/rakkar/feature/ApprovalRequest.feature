@@ -179,32 +179,32 @@ Feature: Approval Request
 
   @RAKCON-19663 @ApproveTransferSmallAmountFromHotStandardVaultToHotAdvanceVault
   Scenario: Approval - Tranfer Small Amount From Hot Standard Vault To Hot Advance Vault
-    * def destinationId = advanceHotVaultId
-    * def sourceId = destinationId_hot
+    * def destinationId = dataSet.advanceHotVaultId
+    * def sourceId = dataSet.destinationId_hot
     * def req = call read('this:Transfer.feature@TransferSmallCommon')
     * def requestId = req.response.data.requestId
     * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
   
   @RAKCON-19664 @ApproveTransferSmallAmountFromHotAdvanceVaultToHotSkipVault
   Scenario: Approval - Tranfer Small Amount From Hot Advance Vault To Hot Skip Vault
-    * def destinationId = skipHotVaultId
-    * def sourceId = advanceHotVaultId
+    * def destinationId = dataSet.skipHotVaultId
+    * def sourceId = dataSet.advanceHotVaultId
     * def req = call read('this:Transfer.feature@TransferSmallCommon')
     * def requestId = req.response.data.requestId
     * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
 
   @RAKCON-19665 @ApproveTransferSmallAmountFromHotStandardVaultToHotSkipVault
   Scenario: Approval - Tranfer Small Amount From Hot Standard Vault To Hot Skip Vault
-    * def destinationId = skipHotVaultId
-    * def sourceId = destinationId_hot
+    * def destinationId = dataSet.skipHotVaultId
+    * def sourceId = dataSet.destinationId_hot
     * def req = call read('this:Transfer.feature@TransferSmallCommon')
     * def requestId = req.response.data.requestId
     * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
 
   @RAKCON-19666 @ApproveTransferSmallAmountFromHotAdvanceVaultToColdAdvanceVault
   Scenario: Approval - Tranfer Small Amount From Hot Advance Vault To Cold Advance Vault
-    * def destinationId = advanceColdVaultId
-    * def sourceId = advanceHotVaultId
+    * def destinationId = dataSet.advanceColdVaultId
+    * def sourceId = dataSet.advanceHotVaultId
     * def req = call read('this:Transfer.feature@TransferSmallCommon')
     * def requestId = req.response.data.requestId
     * karate.call('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')

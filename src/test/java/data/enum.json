@@ -1,19 +1,55 @@
 {
-    "Vault": {
-        "VaultType": {
-            "HOT_WALLET":"HOT_WALLET",
-            "COLD_WALLET":"COLD_WALLET"
-        },
-        "VaultPolicyType": {
-            "STANDARD":"standard",
-            "ADVANCE":"advance",
-            "SKIP":null
-        }
+    "VaultType": {
+        "HOT_WALLET":"HOT_WALLET",
+        "COLD_WALLET":"COLD_WALLET"
+    },
+    "VaultPolicyType": {
+        "STANDARD":"standard",
+        "ADVANCED":"advanced",
+        "SKIP":null
     },
     "Transfer":{
         "FromScreen":{
             "SOURCE":"SOURCE_TRANSFER",
             "DESTINATION":"DESTINATION_TRANSFER"
         }
+    },
+    "TokenSymbol":{
+        "XRP":"XRP_TEST"
+    },
+    "Symbol":{
+        "XRP":"XRP",
+        "ADA":"ADA"
+    },
+    "PeerType":{
+        "VAULT_ACCOUNT" : "VAULT_ACCOUNT",
+        "EXCHANGE_ACCOUNT" : "EXCHANGE_ACCOUNT",
+        "INTERNAL_WALLET" : "INTERNAL_WALLET",
+        "EXTERNAL_WALLET" : "EXTERNAL_WALLET",
+        "UNKNOWN" : "UNKNOWN",
+        "NETWORK_CONNECTION" : "NETWORK_CONNECTION",
+        "FIAT_ACCOUNT" : "FIAT_ACCOUNT",
+        "COMPOUND" : "COMPOUND",
+        "ONE_TIME_ADDRESS" : "ONE_TIME_ADDRESS",
+        "OEC_PARTNER" : "OEC_PARTNER"
+    },
+    "WhitelistType":{
+        "INTERNAL":"internal",
+        "EXTERNAL":"external",
+        "CONTRACT":"contract"
+    },
+    "ApprovalStatus": {
+        "PENDING" : "PENDING",
+        "APPROVED" : "APPROVED",
+        "REJECTED" : "REJECTED",
+        "CANCELLED" : "CANCELLED",
+        "FAILED" : "FAILED"
+    },
+    "NetworkConnectionType": {
+        "INTERNAL_CONNECTION" : "INTERNAL_CONNECTION",
+        "EXTERNAL_CONNECTION" : "EXTERNAL_CONNECTION"
+    },
+    "QuorumDataType":{
+        "CREATE_NETWORK_CONNECTION":"CREATE_NETWORK_CONNECTION"
     }
 }

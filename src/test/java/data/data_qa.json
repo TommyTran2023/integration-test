@@ -1,0 +1,19 @@
+{
+  "address" : "rGnyizcjZbveudBvCfhphaxr7Uu3PjEK3D",
+  "tokenId" : "8053beee-fedd-4408-9337-987774e105ae",
+  "stakeToken" : "d757f635-15b6-413e-8f6d-ca8e7782278f",
+  "advanceHotVaultForStakeId" : "b072682e-c590-459c-98bc-fed834a12bf9",
+  "skipColdVaultId" : "0e3c74b2-0e0b-4b8d-8808-c8d4fe65a66f",
+  "externalId" : "4ae2117d-b2c2-4908-82ff-6adcf0670fd5",
+  "vaultUpdateStake" : "c53f723f-d313-43d6-bd56-921c65c21a49",
+  "destinationId_hot" : "95e20644-c4f5-425b-ae80-e34154521274",
+  "sourceId_hot" : "bf2661b7-9799-4c3e-9d11-7a265c54e53c",
+  "destinationId_cold" : "eafe4f86-0c2c-492a-96f2-4f396a830686",
+  "skipHotVaultId" : "eac0a96f-33a5-4d32-84ed-fbd7a3b87e16",
+  "sourceId_cold" : "da849411-d7de-434b-8baf-f6675b0e2fa5",
+  "connectionID" : "e532db8d-d2a2-471d-bf22-355204d27baf",
+  "networkID" : "4b524cb8-bda3-42e1-8a2a-875a162b97d3",
+  "vaultCreateStake" : "8a7ce5c3-854b-4243-b391-c57f7ef35696",
+  "advanceHotVaultId" : "d6802c5f-347d-4832-95d5-3155442f71ba",
+  "advanceColdVaultId" : "41edc47f-0594-41ee-9a45-47c3877a5513"
+}

@@ -2,7 +2,7 @@
 Feature: Filter transactions
   Background:
     * url baseURL
-    * def svc = 'classpath:rakkar/services/'
+    * def svc = 'classpath:services/'
     * def testData = read('classpath:data/data_test.json')
 
   @test

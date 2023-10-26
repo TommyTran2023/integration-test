@@ -72,8 +72,8 @@ Feature: HomePage
     * match addShortcut.response.data.userId == userId.requesterID
     * match addShortcut.response.data.externalAssetId == testData.transfer.withdraw.tokenSymbol
     * match addShortcut.response.data.destinationType == "VAULT_ACCOUNT"
-    * match addShortcut.response.data.destinationId == destinationId_cold
-    * match addShortcut.response.data.sourceId == sourceId_hot
+    * match addShortcut.response.data.destinationId == dataSet.destinationId_cold
+    * match addShortcut.response.data.sourceId == dataSet.sourceId_hot
     * match addShortcut.response.data.name == addShortcut.shortCutName
 
   @RAKCON-11771 @AddDuplicateShortcut
@@ -94,7 +94,7 @@ Feature: HomePage
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def shortCutName = 'AT-SC-' + now()
     Given path '/core/assets/shortcut'
-    * request { "destinationType" : "VAULT_ACCOUNT", "destinationId" : "#(destinationId_cold)", "sourceId" : "#(sourceId_hot)", "name" : "#(shortCutName)", "externalAssetId" : "#(testData.transfer.withdraw.tokenSymbol)" }
+    * request { "destinationType" : "VAULT_ACCOUNT", "destinationId" : "#(dataSet.destinationId_cold)", "sourceId" : "#(dataSet.sourceId_hot)", "name" : "#(shortCutName)", "externalAssetId" : "#(testData.transfer.withdraw.tokenSymbol)" }
     When method POST
 
   @RAKCON-10980 @ViewShortcut

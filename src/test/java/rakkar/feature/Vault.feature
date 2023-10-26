@@ -335,10 +335,7 @@ Feature: Vault
     @RAKCON-11286 @HideVault
   Scenario: Hide a vault
     * callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
-    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
-    When method POST
-    Then status 201
-    * match response.status == 'success'
+    * call read('this:Vault.feature@HideVault_Common')
 
     @RAKCON-11287 @ViewHiddenVaultList
   Scenario: View hidden listing vault
@@ -537,5 +534,93 @@ Feature: Vault
     * def creatingVault = callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     * def vaultIDWA = creatingVault.vaultIDWA
     * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    Then match each response.data.users[*].id == "#uuid"
+    * match each response.data.users[*].email == "#string"
+    * match each response.data.users[*].name == "#string"
+    * match each response.data.users[*].enabled == "#boolean"
+    * match each response.data.users[*].role == "#string"
+    * match each response.data.users[*].roleDisplayName == "#string"
+    * match each response.data.users[*].requiredApprover == "#boolean"
+    * match each response.data.users[*].isApprover == "#boolean"
+    * call read('this:Vault.feature@HideVault_Common')
+
+  @ViewCurrentAdvancedPolicy-Users
+    Scenario: Advanced Vault - View Current Policy When Quorums Are Users
+    * def creatingVault = callonce read('this:ApprovalRequest.feature@ApproveAdvanceQuorums')
+    * def vaultIDWA = creatingVault.vaultIDWA
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    Then match response.data.policyType == "ADVANCE"
+    * match each response.data.quorums[*].members[*].type == "USER"
+    * match each response.data.quorums[*].members[*].userId == "#uuid"
+    * match each response.data.quorums[*].members[*].name == "#string"
+    * match each response.data.quorums[*].members[*].role == "#string"
+    * match each response.data.quorums[*].members[*].roleDisplayName == "#string"
+    * match each response.data.quorums[*].members[*].isRequired == "#boolean"
+    * call read('this:Vault.feature@HideVault_Common')
+
+  @ViewCurrentAdvancedPolicy-Groups
+  Scenario: Advanced Vault - View Current Policy When Quorums Are Groups
+    * def creatingVault = callonce read('this:Vault.feature@AddRequestCreateVaultWithGroups')
+    * def vaultIDWA = creatingVault.vaultIDWA
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * call read('this:Vault.feature@HideVault_Common')
+
+  @ViewCurrentAdvancedPolicy-UsersAndGroups
+
+  @AddRequestCreateVaultWithGroups @ignore
+  Scenario: Add request to create advance vault with 2 groups
+    * def policyType = 'advanced'
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:GroupPolicies.feature@GetGroupPolicies')
+    * def group1 = response.data.groups[1]
+    * def group2 = response.data.groups[2]
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":2,
+        "type":"#(testData.vault.vault_type)",
+        "clientId": #(testData.clientId),
+        "quorums":[
+          {
+            "members":[{
+              "groupId":"#(group1.id)",
+              "groupName":"#(group1.name)",
+              "members":#(group1.users),
+              "name":"#(group1.name)",
+              "numMemberInGroup":"#(group1.numMemberInGroup)",
+              "type":"group"
+            }],
+            "quorumApprovals":1,
+            "isRequired":false
+          },
+          {
+            "members":[{
+              "groupId":"#(group2.id)",
+              "groupName":"#(group2.name)",
+              "members":#(group2.users),
+              "name":"#(group2.name)",
+              "numMemberInGroup":"#(group2.numMemberInGroup)",
+              "type":"group"
+            }],
+            "quorumApprovals":1,
+            "isRequired":false
+          }
+        ],
+        "policyType":"#(policyType)",
+      }
+    """
+    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * def createdVault = call read('this:Vault.feature@SubmitRequestFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * call read('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
     
+  @HideVault_Common
+  Scenario: Hide a vault
+    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
+    When method POST
+    Then status 201
+    * match response.status == 'success'
 

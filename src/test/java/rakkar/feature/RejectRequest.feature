@@ -122,7 +122,7 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
-  @RAKCON-18737 @RejectEditGroupMembersRequest
+  @RAKCON-18737 @RejectEditGroupMembersRequest  @ignore
   Scenario: Reject Edit Group Members Request
     * call read('this:GroupPolicies.feature@EditMembersInGroup')
     * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')

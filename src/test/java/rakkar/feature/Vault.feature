@@ -564,8 +564,56 @@ Feature: Vault
     * def vaultIDWA = creatingVault.vaultIDWA
     * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
     * call read('this:Vault.feature@HideVault_Common')
-
-  @ViewCurrentAdvancedPolicy-UsersAndGroups
+  
+  @AddRequestCreateVaultWithUsersAndGroups
+  Scenario: Add request to create advance vault with 2 groups
+    * def policyType = 'advanced'
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:GroupPolicies.feature@GetGroupPolicies')
+    * def group1 = response.data.groups[1]
+    * def group2 = response.data.groups[2]
+    * def requestBody = 
+    """
+      {
+        "name":"#(vaultName)",
+        "approverNumber":2,
+        "type":"#(testData.vault.vault_type)",
+        "clientId": #(testData.clientId),
+        "quorums":[
+          {
+            "members":[{
+              "groupId":"#(group1.id)",
+              "groupName":"#(group1.name)",
+              "members":#(group1.users),
+              "name":"#(group1.name)",
+              "numMemberInGroup":"#(group1.numMemberInGroup)",
+              "type":"group"
+            }],
+            "quorumApprovals":1,
+            "isRequired":false
+          },
+          {
+            "members":[{
+              "groupId":"#(group2.id)",
+              "groupName":"#(group2.name)",
+              "members":#(group2.users),
+              "name":"#(group2.name)",
+              "numMemberInGroup":"#(group2.numMemberInGroup)",
+              "type":"group"
+            }],
+            "quorumApprovals":1,
+            "isRequired":false
+          }
+        ],
+        "policyType":"#(policyType)",
+      }
+    """
+    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
+    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
+    * def createdVault = call read('this:Vault.feature@SubmitRequestFromMobile')
+    * def vaultIDWA = createdVault.response.data.vaultId
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * call read('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
 
   @AddRequestCreateVaultWithGroups @ignore
   Scenario: Add request to create advance vault with 2 groups

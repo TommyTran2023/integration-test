@@ -2,7 +2,6 @@
 Feature: Group Policies
 
     Background:
-    * url baseMobileURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
     @ignore @GetGroupPolicies

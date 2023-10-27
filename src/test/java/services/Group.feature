@@ -4,11 +4,10 @@ Feature: Group Policies
 @GetGroupPolicies
 Scenario: Get Group Policies
     * def keyword = karate.get('keyword','')
-    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
     * def data =
     """
     {
-        "authorization":#(accessToken),
+        "authorization":#(requesterAccessToken),
         "params": {
             "limit": 10,
             "offset": 0,
@@ -20,15 +19,3 @@ Scenario: Get Group Policies
     Then match responseStatus == 200
     * match response.status == 'success'
     
-@GetGroupDetails
-Scenario: Get Group Details
-    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
-    * def data =
-    """
-    {
-        "authorization":#(accessToken),
-        "groupId":#(groupId)
-    }
-    """
-    * call read('this:advQuorumSvc.feature@GetGroupDetails') data
-

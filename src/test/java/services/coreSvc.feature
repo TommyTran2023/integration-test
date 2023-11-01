@@ -76,6 +76,34 @@ Feature: All api call to core services
     * params params
     When method GET
 
+    @RequestUpdateVaultPolicy
+  Scenario: Request Update Vault Policy
+    Given path 'core/vault/' + vaultId + '/policy/request-update'
+    * header Authorization = authorization
+    * request requestBody
+    When method POST
+
+    @ReadUpdateVaultRequest
+  Scenario: Read Update Vault Request
+    Given path 'core/vault/' + vaultId + '/policy/request-update/' + requestDraftId
+    * header Authorization = authorization
+    When method GET
+
+    @SubmitUpdateVaultRequest
+  Scenario: Submit Update Vault Request
+    Given path 'core/vault/' + vaultId + '/policy/request-update/' + requestDraftId + '/submit'
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
+    When method PATCH
+
+    @CancelUpdateVaultRequest
+  Scenario: Cancel Update Vault Request
+    Given path 'core/vault/' + vaultId + '/policy/request-update/' + requestDraftId + '/discard'
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    When method PATCH
+
   #----------Wallet-----------#
     @AddAssets
   Scenario: Add asset to vault / Create wallet on vault

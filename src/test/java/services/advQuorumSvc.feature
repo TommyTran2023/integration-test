@@ -19,12 +19,25 @@ Scenario: Reject request
     * header passcode = passcode
     When method POST
 
+@CancelRequest
+Scenario: Cancel a request
+  Given path '/advance-quorum/quorums/cancel/'+requestId
+  * header Authorization = authorization
+  * header challenge-answer = challengeAnswer
+  When method PUT
+
 @GetApprovalList
 Scenario: Get approval list
     Given path 'advance-quorum/quorums'
     * header Authorization = authorization
     * request body
     When method POST
+
+@GetQuorumPolicy
+Scenario: Get quorum policy
+    Given path 'advance-quorum/quorums', quorumId
+    * header Authorization = authorization
+    When method GET
 
 #----------------Group----------------#
 @GetGroupPolicies

@@ -51,5 +51,9 @@
     },
     "QuorumDataType":{
         "CREATE_NETWORK_CONNECTION":"CREATE_NETWORK_CONNECTION"
+    },
+    "QuorumMemberType":{
+        "USER":"USER",
+        "GROUP":"GROUP"
     }
 }

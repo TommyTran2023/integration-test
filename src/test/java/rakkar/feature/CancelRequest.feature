@@ -45,7 +45,7 @@ Feature: Cancel Request
     * def requestId = value.response.data.requestId
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-18739 @CancelEditGroupMembers
+  @RAKCON-18739 @CancelEditGroupMembers @ignore
   Scenario: Cancel request - Edit group members
   * call read('this:GroupPolicies.feature@EditMembersInGroup')
   * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')

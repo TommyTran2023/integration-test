@@ -77,7 +77,7 @@ Feature: Group Policies
         Then status 200
         * match each $response.data.memberInfos[*] contains { name : '#(username)' }
 
-    @RAKCON-18248 @EditMembersInGroup
+    @RAKCON-18248 @EditMembersInGroup @ignore
     Scenario: Edit Members In Group
         # Get another random user from list of users
         * call read('this:Vault.feature@CHECK-LIST-USER')

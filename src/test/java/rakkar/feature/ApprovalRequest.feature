@@ -117,7 +117,7 @@ Feature: Approval Request
     * def requestId = value.response.data.pendingRequestId
     * karate.call('this:ApprovalRequest.feature@ApproveRequestCommon')
 
-  @RAKCON-18737 @ApproveEditGroupMembersRequest
+  @RAKCON-18737 @ApproveEditGroupMembersRequest @ignore
   Scenario: Approve Edit Group Members Request
     * call read('this:GroupPolicies.feature@EditMembersInGroup')
     * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')

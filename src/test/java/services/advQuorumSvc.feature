@@ -39,6 +39,12 @@ Feature: Advance Quorum Service
     * header Authorization = authorization
     When method GET
 
+    @GetAccountPolicy
+  Scenario: Get Account Policy
+    Given path 'advance-quorum/quorums/account-policy'
+    * header Authorization = authorization
+    When method GET
+
     #----------------Group----------------#
     @GetGroupPolicies
   Scenario: Get Group Policies

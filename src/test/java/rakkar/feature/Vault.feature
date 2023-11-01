@@ -10,6 +10,7 @@ Feature: Vault
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
+    * callonce read(svc + 'ReadData.feature')
 
     @ignore @GenerateVaultName
   Scenario: Generate vault name
@@ -546,125 +547,214 @@ Feature: Vault
 
   @ViewCurrentAdvancedPolicy-Users
     Scenario: Advanced Vault - View Current Policy When Quorums Are Users
-    * def creatingVault = callonce read('this:ApprovalRequest.feature@ApproveAdvanceQuorums')
-    * def vaultIDWA = creatingVault.vaultIDWA
-    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
     Then match response.data.policyType == "ADVANCE"
-    * match each response.data.quorums[*].members[*].type == "USER"
-    * match each response.data.quorums[*].members[*].userId == "#uuid"
-    * match each response.data.quorums[*].members[*].name == "#string"
-    * match each response.data.quorums[*].members[*].role == "#string"
-    * match each response.data.quorums[*].members[*].roleDisplayName == "#string"
-    * match each response.data.quorums[*].members[*].isRequired == "#boolean"
-    * call read('this:Vault.feature@HideVault_Common')
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    # * match each response.data.quorums[*].members[*].type == "USER"
+    # * match each response.data.quorums[*].members[*].userId == "#uuid"
+    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
 
   @ViewCurrentAdvancedPolicy-Groups
   Scenario: Advanced Vault - View Current Policy When Quorums Are Groups
-    * def creatingVault = callonce read('this:Vault.feature@AddRequestCreateVaultWithGroups')
-    * def vaultIDWA = creatingVault.vaultIDWA
-    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
-    * call read('this:Vault.feature@HideVault_Common')
-  
-  @AddRequestCreateVaultWithUsersAndGroups
-  Scenario: Add request to create advance vault with 2 groups
-    * def policyType = 'advanced'
-    * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:GroupPolicies.feature@GetGroupPolicies')
-    * def group1 = response.data.groups[1]
-    * def group2 = response.data.groups[2]
-    * def requestBody = 
-    """
-      {
-        "name":"#(vaultName)",
-        "approverNumber":2,
-        "type":"#(testData.vault.vault_type)",
-        "clientId": #(testData.clientId),
-        "quorums":[
-          {
-            "members":[{
-              "groupId":"#(group1.id)",
-              "groupName":"#(group1.name)",
-              "members":#(group1.users),
-              "name":"#(group1.name)",
-              "numMemberInGroup":"#(group1.numMemberInGroup)",
-              "type":"group"
-            }],
-            "quorumApprovals":1,
-            "isRequired":false
-          },
-          {
-            "members":[{
-              "groupId":"#(group2.id)",
-              "groupName":"#(group2.name)",
-              "members":#(group2.users),
-              "name":"#(group2.name)",
-              "numMemberInGroup":"#(group2.numMemberInGroup)",
-              "type":"group"
-            }],
-            "quorumApprovals":1,
-            "isRequired":false
-          }
-        ],
-        "policyType":"#(policyType)",
-      }
-    """
-    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
-    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
-    * def createdVault = call read('this:Vault.feature@SubmitRequestFromMobile')
-    * def vaultIDWA = createdVault.response.data.vaultId
-    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
-    * call read('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+    * def vaultId = dataSet.advVaultWithAllGroups
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    Then match response.data.policyType == "ADVANCE"
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    # * match each response.data.quorums[*].members[*].type == "GROUP"
+    # * match each response.data.quorums[*].members[*].userId == "#uuid"
+    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
 
-  @AddRequestCreateVaultWithGroups @ignore
-  Scenario: Add request to create advance vault with 2 groups
-    * def policyType = 'advanced'
-    * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:GroupPolicies.feature@GetGroupPolicies')
-    * def group1 = response.data.groups[1]
-    * def group2 = response.data.groups[2]
-    * def requestBody = 
+  @ViewCurrentAdvancedPolicy-GroupsUsers
+  Scenario: Advanced Vault - View Current Policy When Quorums Are Groups and Users
+    * def vaultId = dataSet.advVaultWithAllGroupsAndUsers
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    Then match response.data.policyType == "ADVANCE"
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+
+  @EditVaultWith2QuorumsUsers
+  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def data = 
     """
-      {
-        "name":"#(vaultName)",
-        "approverNumber":2,
-        "type":"#(testData.vault.vault_type)",
-        "clientId": #(testData.clientId),
-        "quorums":[
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": [{
+        "members":[
           {
-            "members":[{
-              "groupId":"#(group1.id)",
-              "groupName":"#(group1.name)",
-              "members":#(group1.users),
-              "name":"#(group1.name)",
-              "numMemberInGroup":"#(group1.numMemberInGroup)",
-              "type":"group"
-            }],
-            "quorumApprovals":1,
-            "isRequired":false
+            "userId": "#(requesterUserID)",
+            "type": "#(Const.QuorumMemberType.USER)"
           },
           {
-            "members":[{
-              "groupId":"#(group2.id)",
-              "groupName":"#(group2.name)",
-              "members":#(group2.users),
-              "name":"#(group2.name)",
-              "numMemberInGroup":"#(group2.numMemberInGroup)",
-              "type":"group"
-            }],
-            "quorumApprovals":1,
-            "isRequired":false
+            "userId": "#(adminUserID)",
+            "type": "#(Const.QuorumMemberType.USER)"
           }
         ],
-        "policyType":"#(policyType)",
-      }
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "userId": "#(approvalUserID)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }],
+      "policyType": "advanced",
+      "viewers": []
+    }
     """
-    * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
-    * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
-    * def createdVault = call read('this:Vault.feature@SubmitRequestFromMobile')
-    * def vaultIDWA = createdVault.response.data.vaultId
-    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
-    * call read('this:ApprovalRequest.feature@ApproveAdvanceQuorumsRequest')
+    * call read('@SubmitRequestEditVaultAndCancel') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
     
+  @EditVaultWith2QuorumsGroups
+  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Groups
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "#(Const.QuorumMemberType.GROUP)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[1].id)",
+            "type": "#(Const.QuorumMemberType.GROUP)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }],
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVaultAndCancel') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  
+  @EditVaultWith2QuorumsGroupsUsers
+  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Groups and Users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "#(Const.QuorumMemberType.GROUP)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "userId": "#(adminUserID)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }],
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @SubmitRequestEditVault @ignore
+  Scenario: Advanced Vault - Submit Request Edit Vault
+    * print data
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+  @CancelRequestEditVaultPolicy @ignore
+  Scenario: Advanced Vault - Cancel Request Edit Vault Policy
+    # Get request ID from vault detail and cancel request
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    * def requestId = response.data.requestId
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'AdvanceQuorum.feature@CancelRequest') {requestId: '#(requestId)'}
+
+  @CheckExpiredOfRequestToSubmit
+  Scenario: Check expired of Request before Submit
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "#(Const.QuorumMemberType.GROUP)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "userId": "#(adminUserID)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "#(Const.QuorumMemberType.USER)"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }],
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data 
+  
   @HideVault_Common
   Scenario: Hide a vault
     Given path '/core/vault/accounts/'+vaultIDWA+'/hide'

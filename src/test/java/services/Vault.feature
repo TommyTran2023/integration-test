@@ -123,3 +123,71 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@GetDepositRouting') data
         Then match responseStatus == 200
         * match response.status == 'success'  
+    
+    @RequestUpdateVaultPolicy
+    Scenario: Request update vault policy
+        * def note = karate.get('note', 'test')
+        * def approverNumber = karate.get('approverNumber', 2)
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            vaultId: #(vaultId),
+            "requestBody":{
+                "approverNumber": #(approverNumber),
+                "note": "#(note)",
+                "clientId": "#(clientId)",
+                "quorums": #(quorums),
+                "policyType": "#(policyType)",
+                "viewers": #(viewers)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@RequestUpdateVaultPolicy') data
+        Then match responseStatus == 201
+        * match response.status == 'success'  
+
+    @ReadUpdateVaultRequest
+    Scenario: Read Update Vault Request
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@ReadUpdateVaultRequest') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+
+    @SubmitUpdateVaultRequest
+    Scenario: Submit Update Vault Request
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId),
+            challengeAnswer: '#(challengeAnswerRequest)',
+            passcode: '#(requesterInfo.requesterPasscode)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@SubmitUpdateVaultRequest') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+
+    @CancelUpdateVaultRequest
+    Scenario: Submit Update Vault Request
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId),
+            challengeAnswer: '#(challengeAnswerRequest)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CancelUpdateVaultRequest') data
+        Then match responseStatus == 200
+        * match response.status == 'success'

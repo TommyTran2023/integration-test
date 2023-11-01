@@ -1,6 +1,6 @@
 @ignore
 Feature: Advance-quorum
-    * def svc = 'classpath:services/'
+# /advance-quorum/quorums
 
     @ApproveRequest
     Scenario: Approve request
@@ -15,6 +15,20 @@ Feature: Advance-quorum
         """
         * call read(svc + 'advQuorumSvc.feature@ApproveRequest') data
         Then match responseStatus == 201
+        * match response.status == 'success'
+
+    @CancelRequest
+    Scenario: Cancel request
+        * def data = 
+        """
+        {
+            "requestId": "#(requestId)",
+            "authorization": "#(requesterAccessToken)",
+            "challengeAnswer": "#(challengeAnswerRequest)",
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@CancelRequest') data
+        Then match responseStatus == 200
         * match response.status == 'success'
 
     @Approver_GetApprovalList

@@ -70,12 +70,13 @@ Feature: Group Policies
     @RAKCON-18247 @SearchUserInGroupDetails
     Scenario: Search User In Group Details
         * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')
-        * def username = groupDetails.response.data.memberInfos[0].name
+        * def username = karate.lowerCase(groupDetails.response.data.memberInfos[0].name)
         Given path '/advance-quorum/group-policies/'+groupDetails.response.data.id
         And param keywordUser = username
         When method GET
         Then status 200
-        * match each $response.data.memberInfos[*] contains { name : '#(username)' }
+        * def compare = function(x){ return karate.lowerCase(x.name).contains(username) }
+        * for(var i = 0; i < response.data.memberInfos.length; i++) karate.match(compare(response.data.memberInfos[i]), true)
 
     @RAKCON-18248 @EditMembersInGroup @ignore
     Scenario: Edit Members In Group

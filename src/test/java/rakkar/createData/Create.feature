@@ -7,7 +7,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetListUsers')
-    * def str_random = ' 100083'
+    * def str_random = ' 100084'
     * def getQuorumList = 
     """
         function(){
@@ -37,7 +37,7 @@ Feature: Create Vault data
                 "hasRequiredApprover":false,
                 "memberIds":[#(requesterID),#(approvalUserID),#(adminUserID)],
                 "type":'#(type)',
-                "approverNumber": 3,
+                "approverNumber": 2,
                 "note":"AT Create Test Data"
             }
         """

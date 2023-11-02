@@ -390,5 +390,6 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def requestId = response.data.requestId
 
 

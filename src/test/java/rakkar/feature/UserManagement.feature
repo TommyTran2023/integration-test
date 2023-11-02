@@ -202,7 +202,7 @@
     @RAKCON-13135 @Review_remove_account_access
     Scenario: Review remove account access
       * def data = call read('this:UserManagement.feature@User_listing')
-      * def userId = data.response.data.users[4].userId
+      * def userId = data.response.data.users[1].userId
       * def body = { "reason":'',"isRemoveAccountAccess":true}
       * call read('this:UserManagement.feature@Review_update_user_common')
       And match response.data.accountLVCheck contains schemaJson.userManagement.review_remove_account.accountLVCheck

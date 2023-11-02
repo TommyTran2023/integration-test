@@ -82,7 +82,7 @@ Feature: Open API
 
   @RAKCON-17451 @Transaction_by_type
   Scenario: Open API - Get transaction by transaction type
-    * def query = { transaction_type: 'withdraw', limit: 10, offset: 0 }
+    * def query = { transaction_type: 'rebalance', limit: 10, offset: 0 }
     * call read('this:OpenAPI.feature@Transaction_common')
 
   @RAKCON-17449 @Transaction_by_transactionid

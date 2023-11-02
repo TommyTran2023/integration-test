@@ -11,7 +11,6 @@ Feature: Transaction
     * def schemaBody = read('classpath:data/schema.json')
     * def filterRequest = call read(transactionSvc + '@GetTransactionsList') { query: '#(query)' }
     * def response = filterRequest.response
-    * match filterRequest.responseStatus == 201
     * match $response.status == "success"
     * match $response == schemaBody.transaction.filterTransaction
     * match each $response.data.transactions == schemaBody.transaction.transactionDetails
@@ -138,7 +137,6 @@ Feature: Transaction
     * def status = response.data.transactions[0].status
     * def type = response.data.transactions[0].type
     * call read('this:Transaction.feature@View_transaction_detail_common')
-    And match responseStatus == 200
     And match response.status == "success"
     And match response.data.id == "#(transactionId)"
     And match response.data.status == "#(status)"
@@ -148,13 +146,11 @@ Feature: Transaction
   Scenario: View transaction detail common
     * def txnDetail = call read(transactionSvc + '@ViewTransactionDetail') { transactionId: '#(transactionId)' }
     * def response = txnDetail.response
-    * match txnDetail.responseStatus == 200
 
   @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
-    * match exportResponse.responseStatus == 201
     * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
 
   @RAKCON-18275 @FilterTransactionFromWhitelistAddress

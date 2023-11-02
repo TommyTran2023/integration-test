@@ -9,7 +9,21 @@ Feature: Settings
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
-    * def requestBody = { "passcode" : "#(testData.settings.newPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * def requestBody = 
+    """
+    { 
+      "passcode" : "#(testData.settings.newPasscode)", 
+      "securityAnswer" : { 
+        "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
+        "postalCode" : "#(requesterInfo.postalCode)", 
+        "identityType" : 1, 
+        "nationalityOrCountry" : "#(requesterInfo.country)", 
+        "identityNumber" : "#(requesterInfo.idNumber)", 
+        "phoneNumber" : "#(requesterInfo.phoneNumber)" 
+      }, 
+      "isForgotPasscode" : true 
+    }
+    """
     * call read('this:Settings.feature@ForgotPIN-Common')
     # Restore to old passcode
     * call read('this:Settings.feature@RestoreToOldPasscode')
@@ -33,7 +47,21 @@ Feature: Settings
 
   @ignore @RestoreToOldPasscode
   Scenario: Restore to old passcode
-    * def requestBody = { "passcode" : "#(requesterInfo.requesterPasscode)", "securityAnswer" : { "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "postalCode" : "#(requesterInfo.postalCode)", "identityType" : 1, "nationalityOrCountry" : "#(requesterInfo.country)", "identityNumber" : "#(requesterInfo.idNumber)", "phoneNumber" : "#(requesterInfo.phoneNumber)" }, "isForgotPasscode" : true }
+    * def requestBody = 
+    """
+    { 
+      "passcode" : "#(requesterInfo.requesterPasscode)", 
+      "securityAnswer" : { 
+        "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
+        "postalCode" : "#(requesterInfo.postalCode)", 
+        "identityType" : 1, 
+        "nationalityOrCountry" : "#(requesterInfo.country)", 
+        "identityNumber" : "#(requesterInfo.idNumber)", 
+        "phoneNumber" : "#(requesterInfo.phoneNumber)" 
+      }, 
+      "isForgotPasscode" : true 
+    }
+    """
     * call read('this:Settings.feature@ForgotPIN-Common')
 
   @ignore @ForgotPIN-Common

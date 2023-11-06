@@ -18,5 +18,7 @@
   "vaultCreateStake" : "bef2fcb4-7ff3-4c77-b938-2f284704068c",
   "advVaultWithAllGroups" : "81d4e41d-d441-4f88-87ae-2c8d2b2b07f5",
   "advanceHotVaultId" : "7e8d5465-4ca6-4480-9f82-6e1db0e2e603",
-  "advanceColdVaultId" : "61459521-2309-4434-a6da-6b9b2b9d2bf1"
+  "advanceColdVaultId" : "61459521-2309-4434-a6da-6b9b2b9d2bf1",
+  "standardVaultForEditPolicy":"2c431bc9-d18c-4949-bdfb-7aed65c31cbe",
+  "skipVaultForAddPolicy":"89ef7eab-69be-4aec-b7be-36a279ff0ea3"
 }

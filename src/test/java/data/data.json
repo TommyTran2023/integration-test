@@ -15,6 +15,8 @@
   "advVaultWithAllUsers": "AT - Adv Vault Users",
   "advVaultWithAllGroups": "AT - Adv Vault Group",
   "advVaultWithAllGroupsAndUsers": "AT - Adv Vault G.U",
+  "standardForEditPolicy": "Standard For Edit Policy",
+  "skipVaultForAddPolicy": "Skip For Add Policy",
   "externalWhitelist": "AT - External Whitelist",
   "tokenId": "XRP",
   "address": "rLzifmtiDevx9mkzc8VfFcsvTYsGAwCN29",

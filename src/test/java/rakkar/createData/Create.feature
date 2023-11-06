@@ -94,7 +94,7 @@ Feature: Create Vault data
                 "hasRequiredApprover":false,
                 "memberIds":[#(requesterID),#(approvalUserID),#(adminUserID)],
                 "type":'#(type)',
-                "approverNumber": 3,
+                "approverNumber": 2,
                 "note":"AT Create Test Data"
             }
         """
@@ -271,7 +271,7 @@ Feature: Create Vault data
     @ignore @AddAsset
     Scenario: Add Testnet For Vault
     # 1. Get token 
-        * call read('this:Create.feature@GetToken') {keyword: #(symbol)}
+        * call read('this:Create.feature@GetToken') {keyword: #(symbol), vaultId: '#(vaultId)'}
 
     # 2. Add XRP asset to Vault
         * call read(svc + 'Wallet.feature@AddAssets') {tokenIds: '#(token.id)', vaultId: '#(vaultId)'}
@@ -296,7 +296,7 @@ Feature: Create Vault data
 
     @ignore @GetToken
     Scenario: Get Token
-        * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword:'#(keyword)'}
+        * call read(svc + 'Wallet.feature@GetTokens') {keyword:'#(keyword)', vaultId: '#(vaultId)'}
         Then match responseStatus == 200
         And match response.status == 'success'
         * def token = karate.jsonPath(response.data.tokens, "$..[?(@.symbol == '"+keyword+"')]")[0]    
@@ -304,7 +304,8 @@ Feature: Create Vault data
     @CreateExternalWhitelistFolder
     Scenario: Create External Whitelist Folder
     # Pre. Get token 
-        * call read('this:Create.feature@GetToken') {keyword: #(Const.Symbol.XRP)}
+        * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: #(Const.Symbol.XRP)}
+        * def token = response.data.tokens[0]
 
     # 1. Add whitelist folder
         * def name = testData.externalWhitelist + str_random + '5'

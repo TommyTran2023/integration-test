@@ -254,13 +254,13 @@ Feature: Get Data From data.json
 
     @Get_tokenId
   Scenario: Get XRP token id
-    * call read('this:Create.feature@GetToken') {keyword: #(testData.tokenId)}
-    * fileUtils.addData('tokenId',token.id)
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: #(testData.tokenId)}
+    * fileUtils.addData('tokenId',response.data.tokens[0].id)
 
     @Get_stakeToken
   Scenario: Get ADA token id
-    * call read('this:Create.feature@GetToken') {keyword: #(testData.stakeToken)}
-    * fileUtils.addData('stakeToken',token.id)
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: #(testData.stakeToken)}
+    * fileUtils.addData('stakeToken',response.data.tokens[0].id)
 
     @Get_connectionID
   Scenario: Get connection id

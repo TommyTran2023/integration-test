@@ -1,24 +1,30 @@
 Feature: Transactions
-# including all api calls related to route /transaction
-  Background:
-    * url baseURL
-    * def nameResolver = function(x){ if (x != "") return x; else return null }
 
-    @GetTransactionsList
-    Scenario: Get transactions list
-      Given path 'transaction/transactions/v1'
-      And request query
-      When method POST
+@RebalanceMediumAmount
+Scenario: Rebalance Medium Amount
+    * def data =
+    """
+    {
+        authorization: #(requesterAccessToken),
+        challengeAnswer: "#(challengeAnswerRequest)",
+        passcode: "#(requesterInfo.requesterPasscode)",
+        body: #(body)
+    }
+    """
+    * call read(svc + 'transactionSvc.feature@RebalanceMediumAmount') data
+    Then match responseStatus == 201
 
-    @ViewTransactionDetail
-    Scenario: View transaction detail common
-      Given path 'transaction/transactions/' + transactionId
-      When method GET
+@GetTransactionsList
+Scenario: Get transactions list
+    * call read(svc + 'transactionSvc.feature@GetTransactionsList') {authorization: #(requesterAccessToken)}
+    Then match responseStatus == 201
 
-    @ExportTransaction
-    Scenario: Export transaction
-      Given path 'transaction/transactions/export-web'
-      And request body
-      When method POST
+@ViewTransactionDetail
+Scenario: View transaction detail common
+    * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') {authorization: #(requesterAccessToken)}
+    Then match responseStatus == 200
 
-
+@ExportTransaction
+Scenario: Export transaction
+    * call read(svc + 'transactionSvc.feature@ExportTransaction') {authorization: #(requesterAccessToken)}
+    Then match responseStatus == 201

@@ -356,8 +356,11 @@ Feature: Create Vault data
         # 6. Approve request to connect
         * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}
     
-    
+    @CreateStandardVaultForEditPolicy
+    Scenario: Create standard vault for edit policy
+        * call read('Create.feature@CreateStandardVault') {name: #(testData.standardForEditPolicy), type: #(Const.VaultType.HOT_WALLET)}
 
-        
-        
+    @CreateSkipVaultForAddPolicy
+    Scenario: Create standard vault for edit policy
+        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipVaultForAddPolicy), type: #(Const.VaultType.COLD_WALLET)}
 

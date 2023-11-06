@@ -577,15 +577,67 @@ Feature: Vault
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
 
   @RAKCON-21141 @EditVaultWith2QuorumsUsers
-  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Users
-    * callonce read(svc + 'Auth.feature@GetListUsers')
+  Scenario: Advanced to Advanced - Create Request Edit Vault With 2 Quorums as Users
     * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
     * def data = 
     """
     {
       "vaultId":"#(vaultId)",
       "clientId": "#(testData.clientId)",
-      "quorums": [{
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21146 @EditStandard2AdvanceVaultWith2QuorumsUsers
+  Scenario: Standard to Advance - Create Request Edit Vault With 2 Quorums as Users
+    * def vaultId = dataSet.standardVaultForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21147 @Skip2Adv_AllUsers
+  Scenario: Skip to Advance - Add 2 Quorums as Users
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @PreparePolicyForQuorumsOfUsers @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def quorums = 
+    """
+      [{
         "members":[
           {
             "userId": "#(requesterUserID)",
@@ -598,7 +650,7 @@ Feature: Vault
         ],
         "quorumApprovals": 1,
         "isRequired": false
-      },{
+        },{
         "members":[
           {
             "userId": "#(approvalUserID)",
@@ -611,24 +663,71 @@ Feature: Vault
         ],
         "quorumApprovals": 1,
         "isRequired": false
-      }],
+      }]
+    """
+
+  @RAKCON-21142 @EditVaultWith2QuorumsGroups
+  Scenario: Advanced To Advanced - Create Request Edit Vault With 2 Quorums as Groups
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
       "policyType": "advanced",
       "viewers": []
     }
     """
     * call read('@SubmitRequestEditVault') data
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
-    
-  @RAKCON-21142 @EditVaultWith2QuorumsGroups
-  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Groups
-    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
-    * def vaultId = dataSet.advVaultWithAllUsers
+
+  @RAKCON-21148 @EditStandard2AdvanceVaultWith2QuorumsGroups
+  Scenario: Standard to Advanced - Create Request Edit Vault With 2 Quorums as Groups
+    * def vaultId = dataSet.standardVaultForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
     * def data = 
     """
     {
       "vaultId":"#(vaultId)",
       "clientId": "#(testData.clientId)",
-      "quorums": [{
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21149 @Skip2Adv_AllGroups
+  Scenario: Skip to Advance - Add 2 Quorums as Groups
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+  
+  @PreparePolicyForQuorumsOfGroups @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some groups
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def quorums = 
+    """
+      [{
         "members":[
           {
             "groupId": "#(groups.response.data.groups[0].id)",
@@ -646,7 +745,36 @@ Feature: Vault
         ],
         "quorumApprovals": 1,
         "isRequired": false
-      }],
+      }]
+    """
+  
+  @RAKCON-21143 @EditVaultWith2QuorumsGroupsUsers
+  Scenario: Advanced To Advanced - Create Request Edit Vault With 2 Quorums as Groups and Users
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+  
+  @RAKCON-21150 @EditStandardToAdvanceWith2QuorumsGroupsUsers
+  Scenario: Standard To Advance - Create Request Edit Vault With 2 Quorums as Groups and Users
+    * def vaultId = dataSet.standardForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
       "policyType": "advanced",
       "viewers": []
     }
@@ -654,18 +782,35 @@ Feature: Vault
     * call read('@SubmitRequestEditVault') data
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
 
-  
-  @RAKCON-21143 @EditVaultWith2QuorumsGroupsUsers
-  Scenario: Advanced Vault - Create Request Edit Vault With 2 Quorums as Groups and Users
-    * callonce read(svc + 'Auth.feature@GetListUsers')
-    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
-    * def vaultId = dataSet.advVaultWithAllUsers
+  @RAKCON-21151 @Skip2Adv_AllGroupsUsers
+  Scenario: Skip to Advance - Add 2 Quorums as Groups and Users
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
     * def data = 
     """
     {
       "vaultId":"#(vaultId)",
       "clientId": "#(testData.clientId)",
-      "quorums": [{
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @PreparePolicyForQuorumsOfGroupsUsers @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some groups and users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def quorums =
+    """
+      [{
         "members":[
           {
             "groupId": "#(groups.response.data.groups[0].id)",
@@ -687,13 +832,29 @@ Feature: Vault
         ],
         "quorumApprovals": 1,
         "isRequired": false
-      }],
-      "policyType": "advanced",
-      "viewers": []
-    }
+      }]
     """
-    * call read('@SubmitRequestEditVault') data
-    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21152 @EditPolicyAdvanceToStandard
+  Scenario: Advance To Standard - Create edit advance policy to standard
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def members = vaultMemberList
+    * print members
+    * def requestBody = 
+    """
+      { 
+        "memberIds" : #(members), 
+        "note" : "#(testData.vault.editVaultNote)", 
+        "approveNumber" : #(members.length), 
+        "memberRequireIds" : [ #(approvalUserID) ] 
+      }
+    """
+    * call read('this:Vault.feature@EditVaultPolicy-Common')
+    * match response.status == 'success'
+    * match response.code == 200
+    * match response.data.isValid == true
+
 
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault
@@ -766,8 +927,6 @@ Feature: Vault
     # Submit from mobile app. It should return error
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
-    
-    # * call read('@SubmitRequestEditVault') data 
   
   @HideVault_Common @ignore
   Scenario: Hide a vault

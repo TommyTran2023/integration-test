@@ -326,13 +326,13 @@ Feature: Get Data From data.json
 
 
     @Get_advVaultWithAllGroupsAndUsers
-  Scenario: Get Advance Vault With Groups
+  Scenario: Get Advance Vault With Groups and Users
     * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllGroupsAndUsers)'}
     * def getVal = 
     """
     function(){
         if (response.data.vaults.length == 0) {
-            karate.call('this:Create.feature@CreateAdvanceVaultWithGroups')
+            karate.call('this:Create.feature@CreateAdvanceVaultWithGroupsAndUsers')
             var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllGroupsAndUsers})
             return newCreadtedVault.response.data.vaults[0].id
         }

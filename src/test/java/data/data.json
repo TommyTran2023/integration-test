@@ -13,15 +13,15 @@
   "skipHotVault": "AT - Warm Skip Vault 1",
   "skipColdVault": "AT - Cold Skip Vault 1",
   "advVaultWithAllUsers": "AT - Adv Vault Users",
-  "advVaultWithAllGroups": "AT - Adv Vault Groups",
-  "advVaultWithAllGroupsAndUsers": "AT - Adv Vault G,U",
+  "advVaultWithAllGroups": "AT - Adv Vault Group",
+  "advVaultWithAllGroupsAndUsers": "AT - Adv Vault G.U",
   "externalWhitelist": "AT - External Whitelist",
   "tokenId": "XRP",
   "address": "rLzifmtiDevx9mkzc8VfFcsvTYsGAwCN29",
   "networkVault": "AT - Network Vault",
   "stakeToken": "ADA",
   "businessRegistrationId": "AT12345",
-  "group": "AT-Group",
+  "group": "Rak Group",
   "crossTenant":{
     "txnId": "292727f8-4988-48bc-a3e4-5e414d99f6f3",
     "vaultId": "d71e2438-cc23-4f3f-9193-483ea8db6a36",
@@ -36,5 +36,6 @@
     "networkProfileId":"d6b0c9e0-5b1a-4b0e-8b0a-9a9a9a9a9a9a",
     "connectionID": "af01af7f-a86e-493b-ab11-50adad79edc6"
   },
-  "clientId":"bxeRJIROr8VQTBSqAAGW"
+  "clientId":"bxeRJIROr8VQTBSqAAGW",
+  "editVaultNote":"AT note for editing vault policy"
 }

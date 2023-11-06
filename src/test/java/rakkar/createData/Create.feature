@@ -151,7 +151,7 @@ Feature: Create Vault data
     Scenario: Create Advance Vault
     # 1. Submit create advance vault from web
         * def quorumType = karate.get('quorumType','users')
-        * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies')
+        * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword:#(testData.group)}
         * call getQuorumList quorumType
         * def requestBody =
         """

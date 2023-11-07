@@ -2,7 +2,8 @@
 Feature: Group Policies
 
     Background:
-    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+        * url baseURL
+        * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
     @ignore @GetGroupPolicies
     Scenario: Get Group Policies

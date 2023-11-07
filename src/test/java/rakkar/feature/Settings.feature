@@ -16,7 +16,7 @@ Feature: Settings
       "securityAnswer" : { 
         "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
         "postalCode" : "#(requesterInfo.postalCode)", 
-        "identityType" : 1, 
+        "identityType" : "#(requesterInfo.identityType)", 
         "nationalityOrCountry" : "#(requesterInfo.country)", 
         "identityNumber" : "#(requesterInfo.idNumber)", 
         "phoneNumber" : "#(requesterInfo.phoneNumber)" 
@@ -31,7 +31,7 @@ Feature: Settings
   @RAKCON-13184 @VerifySecurityQuestion
   Scenario: Verify Security Question when performing forgot PIN
     Given path '/auth/account/verify-security-question'
-    * request { "identityType" : 1, "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "nationalityOrCountry" : "#(requesterInfo.country)", "phoneNumber" : "#(requesterInfo.phoneNumber)", "postalCode" : "#(requesterInfo.postalCode)", "identityNumber" : "#(requesterInfo.idNumber)" }
+    * request { "identityType" : "#(requesterInfo.identityType)", "dateOfBirth" : "#(requesterInfo.dateOfBirth)", "nationalityOrCountry" : "#(requesterInfo.country)", "phoneNumber" : "#(requesterInfo.phoneNumber)", "postalCode" : "#(requesterInfo.postalCode)", "identityNumber" : "#(requesterInfo.idNumber)" }
     When method POST
     Then status 201
     * match response.data.isValid == true
@@ -54,7 +54,7 @@ Feature: Settings
       "securityAnswer" : { 
         "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
         "postalCode" : "#(requesterInfo.postalCode)", 
-        "identityType" : 1, 
+        "identityType" : "#(requesterInfo.identityType)", 
         "nationalityOrCountry" : "#(requesterInfo.country)", 
         "identityNumber" : "#(requesterInfo.idNumber)", 
         "phoneNumber" : "#(requesterInfo.phoneNumber)" 

@@ -91,5 +91,12 @@
     "baseURL": "https://pt-api.thailaksa.net",
     "sourceVault": "ee720faa-ade2-4127-a334-9e2e2474431f",
     "destinationVault": "c1f74e34-74b7-4464-b14e-7578275f71d6"
+  },
+  "dev": {
+    "baseURL": "https://dev-api.thailaksa.net",
+    "requesterInfo": {
+      "requesterUsername": "PASSPORT34567OP342HKTEMP",
+      "requesterPasscode": "123123"
+    }
   }
 }

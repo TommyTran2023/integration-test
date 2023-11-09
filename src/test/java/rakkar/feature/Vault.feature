@@ -767,7 +767,7 @@ Feature: Vault
   
   @RAKCON-21150 @EditStandardToAdvanceWith2QuorumsGroupsUsers
   Scenario: Standard To Advance - Create Request Edit Vault With 2 Quorums as Groups and Users
-    * def vaultId = dataSet.standardForEditPolicy
+    * def vaultId = dataSet.standardVaultForEditPolicy
     * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
     * def data = 
     """
@@ -837,7 +837,7 @@ Feature: Vault
 
   @RAKCON-21152 @EditPolicyAdvanceToStandard
   Scenario: Advance To Standard - Create edit advance policy to standard
-    * def vaultId = dataSet.advVaultWithAllUsers
+    * def vaultIDWA = dataSet.advVaultWithAllUsers
     * callonce read(svc + 'Auth.feature@GetListUsers')
     * def members = vaultMemberList
     * print members

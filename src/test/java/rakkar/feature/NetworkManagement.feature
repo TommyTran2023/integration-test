@@ -48,7 +48,8 @@ Feature: Network Management
 
   @RAKCON-14979 @ProfileListing
   Scenario: Check profile listing
-    * def profile_query = { limit:'10', offset: '0'}
+    * def searchdata = read('classpath:data/data.json')
+    * def profile_query = { limit:'10', offset: '0', keyword:'#(searchdata.networkVault)'}
     * call read('this:NetworkManagement.feature@ProfileListingCommon')
 
   @RAKCON-14980 @SearchProfile
@@ -181,7 +182,7 @@ Feature: Network Management
   Scenario: View list network connection
     * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
-    * def query = { limit:'10', offset: '0' }
+    * def query = { limit:'10', offset: '0'}
     Given path 'network/networks/' + profileId + '/connections'
     And params query
     When method GET

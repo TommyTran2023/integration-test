@@ -23,15 +23,10 @@ pipeline {
             steps {
                 // update branch and test environment
                 script {
-                    // if (params.ENV == "PROD") {
-                    //     BRANCH = "main"
-                    //     KARATE_ENV = "prod"
-                    // } else if (params.ENV == "UAT") {
-                    //     BRANCH = "uat"
-                    //     KARATE_ENV = "uat"
-                    // }
-                    echo ${env.BRANCH_NAME}
-                    switch (${env.BRANCH_NAME}) {
+
+                    def BRANCH
+                    def KARATE_ENV
+                    switch (env.BRANCH_NAME) {
                         case 'main':
                             BRANCH = "main"
                             KARATE_ENV = "prod"
@@ -49,9 +44,12 @@ pipeline {
                             KARATE_ENV = "qa"
                     }
 
-                    echo "BRANCH = ${BRANCH}"
-                    testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+                    println("BRANCH = ${BRANCH}")
 
+                    env.BRANCH = BRANCH
+                    env.KARATE_ENV = KARATE_ENV
+                    env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+                    
                 }
                 git branch: "${BRANCH}",
                     credentialsId: 'github',

@@ -58,7 +58,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${BRANCH} > status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${KARATE_ENV} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
                         def serviceStatusMsg = readFile('status.txt').trim()

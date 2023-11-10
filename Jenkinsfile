@@ -30,6 +30,7 @@ pipeline {
                     //     BRANCH = "uat"
                     //     KARATE_ENV = "uat"
                     // }
+                    echo ${env.BRANCH_NAME}
                     switch (${env.BRANCH_NAME}) {
                         case 'main':
                             BRANCH = "main"
@@ -61,7 +62,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${BRANCH} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
                         def serviceStatusMsg = readFile('status.txt').trim()

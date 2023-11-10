@@ -23,13 +23,31 @@ pipeline {
             steps {
                 // update branch and test environment
                 script {
-                    if (params.ENV == "PROD") {
-                        BRANCH = "main"
-                        KARATE_ENV = "prod"
-                    } else if (params.ENV == "UAT") {
-                        BRANCH = "uat"
-                        KARATE_ENV = "uat"
+                    // if (params.ENV == "PROD") {
+                    //     BRANCH = "main"
+                    //     KARATE_ENV = "prod"
+                    // } else if (params.ENV == "UAT") {
+                    //     BRANCH = "uat"
+                    //     KARATE_ENV = "uat"
+                    // }
+                    switch (${env.BRANCH_NAME}) {
+                        case 'main':
+                            BRANCH = "main"
+                            KARATE_ENV = "prod"
+                            break
+                        case 'uat':
+                            BRANCH = "uat"
+                            KARATE_ENV = "uat"
+                            break
+                        case 'develop':
+                            BRANCH = "develop"
+                            KARATE_ENV = "dev"
+                            break
+                        default:
+                            BRANCH = "sit"
+                            KARATE_ENV = "qa"
                     }
+
                     echo "BRANCH = ${BRANCH}"
                     testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 

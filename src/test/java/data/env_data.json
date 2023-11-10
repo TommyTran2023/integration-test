@@ -97,8 +97,14 @@
   "dev": {
     "baseURL": "https://dev-api.thailaksa.net",
     "requesterInfo": {
-      "requesterUsername": "PASSPORT34567OP342HKTEMP",
+      "requesterUsername": "PASSPORT34567OP342HK",
       "requesterPasscode": "123123"
-    }
+    },
+    "approverInfo": {
+      "approvalUsername": "PASSPORT34567OP342HKTEMP",
+      "approverPasscode": "123123"
+    },
+    "adminUsername": "PASSPORT34567A4HK",
+    "adminUsername2": "PASSPORT34567A5HK"
   }
 }

@@ -3,6 +3,7 @@ def SLACK_CHANNEL = "rakkar-alert-automation-test"
 // def ENV = "SIT" // will be passed as parameter
 def KARATE_ENV = "qa"
 def BRANCH = "develop"
+def HEALTH_CHECK_PATH
 def testSummary
 def testType
 def failedTestMsg = []
@@ -28,18 +29,22 @@ pipeline {
                         case 'main':
                             BRANCH = "main"
                             KARATE_ENV = "prod"
+                            HEALTH_CHECK_PATH = "prod"
                             break
                         case 'uat':
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
+                            HEALTH_CHECK_PATH = "uat"
                             break
                         case 'develop':
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
+                            HEALTH_CHECK_PATH = "dev"
                             break
                         default:
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
+                            HEALTH_CHECK_PATH = "sit"
                     }
 
                     println("BRANCH = ${BRANCH}")
@@ -58,7 +63,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${KARATE_ENV} > status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${HEALTH_CHECK_PATH} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
                         def serviceStatusMsg = readFile('status.txt').trim()

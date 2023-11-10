@@ -23,14 +23,10 @@ pipeline {
             steps {
                 // update branch and test environment
                 script {
-                    // if (params.ENV == "PROD") {
-                    //     BRANCH = "main"
-                    //     KARATE_ENV = "prod"
-                    // } else if (params.ENV == "UAT") {
-                    //     BRANCH = "uat"
-                    //     KARATE_ENV = "uat"
-                    // }
-                    switch (${env.BRANCH_NAME}) {
+
+                    def BRANCH
+                    def KARATE_ENV
+                    switch (env.BRANCH_NAME) {
                         case 'main':
                             BRANCH = "main"
                             KARATE_ENV = "prod"
@@ -48,9 +44,12 @@ pipeline {
                             KARATE_ENV = "qa"
                     }
 
-                    echo "BRANCH = ${BRANCH}"
-                    testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+                    println("BRANCH = ${BRANCH}")
 
+                    env.BRANCH = BRANCH
+                    env.KARATE_ENV = KARATE_ENV
+                    env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+                    
                 }
                 git branch: "${BRANCH}",
                     credentialsId: 'github',
@@ -61,7 +60,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${BRANCH} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
                         def serviceStatusMsg = readFile('status.txt').trim()

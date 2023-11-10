@@ -24,8 +24,6 @@ pipeline {
                 // update branch and test environment
                 script {
 
-                    def BRANCH
-                    def KARATE_ENV
                     switch (env.BRANCH_NAME) {
                         case 'main':
                             BRANCH = "main"

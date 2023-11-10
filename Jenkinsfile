@@ -3,6 +3,7 @@ def SLACK_CHANNEL = "rakkar-alert-automation-test"
 // def ENV = "SIT" // will be passed as parameter
 def KARATE_ENV = "qa"
 def BRANCH = "develop"
+def HEALTH_CHECK_PATH
 def testSummary
 def testType
 def failedTestMsg = []
@@ -23,16 +24,35 @@ pipeline {
             steps {
                 // update branch and test environment
                 script {
-                    if (params.ENV == "PROD") {
-                        BRANCH = "main"
-                        KARATE_ENV = "prod"
-                    } else if (params.ENV == "UAT") {
-                        BRANCH = "uat"
-                        KARATE_ENV = "uat"
-                    }
-                    echo "BRANCH = ${BRANCH}"
-                    testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
+                    switch (env.BRANCH_NAME) {
+                        case 'main':
+                            BRANCH = "main"
+                            KARATE_ENV = "prod"
+                            HEALTH_CHECK_PATH = "prod"
+                            break
+                        case 'uat':
+                            BRANCH = "uat"
+                            KARATE_ENV = "uat"
+                            HEALTH_CHECK_PATH = "uat"
+                            break
+                        case 'develop':
+                            BRANCH = "develop"
+                            KARATE_ENV = "dev"
+                            HEALTH_CHECK_PATH = "dev"
+                            break
+                        default:
+                            BRANCH = "sit"
+                            KARATE_ENV = "qa"
+                            HEALTH_CHECK_PATH = "sit"
+                    }
+
+                    println("BRANCH = ${BRANCH}")
+
+                    env.BRANCH = BRANCH
+                    env.KARATE_ENV = KARATE_ENV
+                    env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
+                    
                 }
                 git branch: "${BRANCH}",
                     credentialsId: 'github',
@@ -43,7 +63,7 @@ pipeline {
         stage ('Check Service Status') {
             steps {
                 script {
-                    serviceStatus = sh(script: "/bin/bash checkService.sh ${params.ENV} > status.txt", returnStatus: true)
+                    serviceStatus = sh(script: "/bin/bash checkService.sh ${HEALTH_CHECK_PATH} > status.txt", returnStatus: true)
 
                     if (serviceStatus) {
                         def serviceStatusMsg = readFile('status.txt').trim()

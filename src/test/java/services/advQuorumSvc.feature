@@ -46,3 +46,9 @@ Scenario: Get Group Policies
     And header Authorization = authorization
     * params params
     When method GET
+
+@GetGroupDetails
+Scenario: Get Group Details
+    Given path 'advance-quorum/group-policies/' + groupId
+    And header Authorization = authorization
+    When method GET

@@ -100,3 +100,21 @@ Feature: Network
         * call read(svc + 'networkSvc.feature@AddNetworkConnection') data
         Then match responseStatus == 201
         And match response.status == "success"
+
+    @GetCounterPartiesConnection
+    Scenario: Get Counter Parties Connection
+        * callonce read(svc + 'ReadData.feature@ReadEnumFile')
+        * def keyword = karate.get('keyword', '')
+        * def tokenSymbol = karate.get('tokenSymbol',Const.TokenSymbol.XRP)
+        * def data = 
+        """
+        {
+            authorization: #(requesterAccessToken),
+            params:{
+                keyword: #(keyword),
+                limit: 10,
+                offset: 0
+            }
+        }
+        """
+        * call read(svc + 'networkSvc.feature@GetCounterPartiesConnection') data

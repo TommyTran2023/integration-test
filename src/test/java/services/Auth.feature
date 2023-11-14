@@ -1,6 +1,6 @@
 @ignore
 Feature: Common call from Auth services
-
+    
     @GetAccessTokenForLogin
     Scenario: Get token for login
         # 1. Get session
@@ -23,6 +23,10 @@ Feature: Common call from Auth services
         * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
         * def requesterAccessToken = 'Bearer ' + requesterAuthToken
 
+    @GetUserAccessToken
+    Scenario: Get Requester Access Token
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(testData.challengeAnswerAuth)'}
+    
     @GetRequesterInfo
     Scenario: Get Requester Info
         * call read('this:Auth.feature@GetRequesterAccessToken')
@@ -51,3 +55,41 @@ Feature: Common call from Auth services
         * def adminUserID = karate.jsonPath(allUsers, "$[?(@.username=='"+ adminUsername +"')].userId")[0]
         * def adminUserID2 = karate.jsonPath(allUsers, "$[?(@.username=='"+ adminUsername2 +"')].userId")[0]
         * def vaultMemberList = [#(requesterUserID), #(approvalUserID), #(adminUserID), #(adminUserID2)]
+    
+    @GetUsers
+    Scenario: Get users
+        * def keyword = karate.get('keyword','')
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: '#(accessToken)',
+            params: {
+                keyword:#(keyword),
+                limit: 10,
+                offet: 0,
+                sort: ASC,
+                sortBy: NAME,
+                status: ACTIVE
+            }
+        }
+        """
+        * call read('this:authSvc.feature@GetUsers') data
+        * match responseStatus == 200
+        * match response.code == 200
+        * match response.status == 'success'
+        * karate.set('keyword',null)
+        * karate.set('accessToken',null)
+    
+    @GetUserDetails
+    Scenario: Get User Details
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: '#(accessToken)',
+            userId: '#(userId)'
+        }
+        """
+        * call read('this:authSvc.feature@GetUserDetail') data
+        

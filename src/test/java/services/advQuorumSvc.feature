@@ -54,8 +54,8 @@ Feature: Advance Quorum Service
     * params params
     When method GET
 
-@GetGroupDetails
-Scenario: Get Group Details
+    @GetGroupDetails
+  Scenario: Get Group Details
     Given path 'advance-quorum/group-policies/' + groupId
     And header Authorization = authorization
     When method GET

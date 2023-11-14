@@ -37,6 +37,11 @@ Feature: Common call from Auth services
         * def requesterEmail = response.data.email
         * def requesterName = response.data.name
 
+    @GetUserInfo
+    Scenario: Get User Info
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read('this:authSvc.feature@GetUserInfo') {authorization: '#(accessToken)'}
+
     @GetListUsers
     Scenario: Get All Users
         * def data =

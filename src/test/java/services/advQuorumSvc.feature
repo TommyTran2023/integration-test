@@ -26,3 +26,22 @@ Scenario: Get approval list
     * request body
     When method POST
 
+@GetQuorumPolicy
+Scenario: Get quorum policy
+    Given path 'advance-quorum/quorums', quorumId
+    * header Authorization = authorization
+    When method GET
+
+#----------------Group----------------#
+@GetGroupPolicies
+Scenario: Get Group Policies
+    Given path 'advance-quorum/group-policies'
+    And header Authorization = authorization
+    * params params
+    When method GET
+
+@GetGroupDetails
+Scenario: Get Group Details
+    Given path 'advance-quorum/group-policies/' + groupId
+    And header Authorization = authorization
+    When method GET

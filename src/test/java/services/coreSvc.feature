@@ -23,7 +23,7 @@ Feature: All api call to core services
 
     @GetAllVaults
   Scenario: Get all vaults 
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * header Authorization = authorization
     * params params
     When method GET

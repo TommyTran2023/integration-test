@@ -12,6 +12,10 @@
         "FromScreen":{
             "SOURCE":"SOURCE_TRANSFER",
             "DESTINATION":"DESTINATION_TRANSFER"
+        },
+        "GroupBy":{
+            "VAULT":"VAULT",
+            "ASSET":"ASSET"
         }
     },
     "TokenSymbol":{

@@ -134,3 +134,11 @@ Feature: All api call to core services
     * header Authorization = authorization
     * params params
     When method GET
+
+#----------Customer Billings-----------#  
+    @GetBillings
+  Scenario: Get Whitelist Folders
+    Given path 'core/customers/billings'
+    * header Authorization = authorization
+    * params params
+    When method GET

@@ -23,7 +23,7 @@ Feature: All api call to core services
 
     @GetAllVaults
   Scenario: Get all vaults 
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * header Authorization = authorization
     * params params
     When method GET
@@ -159,6 +159,14 @@ Feature: All api call to core services
     @GetWhitelistFolders
   Scenario: Get Whitelist Folders
     Given path 'core/folders'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+#----------Customer Billings-----------#  
+    @GetBillings
+  Scenario: Get Whitelist Folders
+    Given path 'core/customers/billings'
     * header Authorization = authorization
     * params params
     When method GET

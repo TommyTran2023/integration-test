@@ -131,7 +131,7 @@ Feature: Transaction
 
   @RAKCON-10972 @View_transaction_detail
   Scenario: View transaction detail
-    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_rebalancing)']}
+    * def query = { limit:'10', offset: '0'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transactionId = response.data.transactions[0].id
     * def status = response.data.transactions[0].status
@@ -159,7 +159,7 @@ Feature: Transaction
     * def query = { limit:'10', offset: '0', destinationData: [ { "destinationType": "whitelist", "destinationId": "#(listFolders.response.data.folders[0].id)" } ]}
     * call read('this:Transaction.feature@Filter_transaction_common')
 
-  @RAKCON-20141 @CheckTransactionFromOtherCustomer
+  @RAKCON-20141 @CheckTransactionFromOtherCustomer @RAKCON-20140
   Scenario: Customer cannot search for another customer vault
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId

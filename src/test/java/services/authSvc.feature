@@ -40,7 +40,7 @@ Feature: Authorization
         And request bodyGetToken
         When method POST
 
-    @GetUserInfo  
+    @GetUserInfo
     Scenario: Get user information
         Given path '/auth/account/me'
         * header Authorization = authorization
@@ -52,5 +52,16 @@ Feature: Authorization
         * header Authorization = authorization
         * request body
         When method POST
-
-
+    
+    @GetUsers
+    Scenario: Get users
+        Given path '/auth/account/users'
+        * header Authorization = authorization
+        * params params
+        When method GET
+    
+    @GetUserDetail
+    Scenario: Get user details
+        Given path '/auth/account/users/' + userId
+        * header Authorization = authorization
+        When method GET

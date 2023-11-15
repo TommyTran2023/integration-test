@@ -6,17 +6,17 @@ Feature: Check Multi Tenancy for Transfer Flows
         * def token = 'Bearer ' + response.data.AuthenticationResult.AccessToken   
         * call read(svc + 'Auth.feature@GetRequesterAccessToken')
 
-    @SearchOtherCustomerSourceVault
+    @RAKCON-21748 @SearchOtherCustomerSourceVault
     Scenario: Search for Cross Tenant SIT vault in Source Transfer Screen 
         * call read(svc + 'Vault.feature@GetAllVaults_TransferScreen') { accessToken:#(token), keyword:#(testData.standardWarmVault_1), fromScreen:#(Const.Transfer.FromScreen.SOURCE) }
         * assert response.data.vaults.length == 0
 
-    @SearchOtherCustomerDestinationVault
+    @RAKCON-21749 @SearchOtherCustomerDestinationVault
     Scenario: Search for Cross Tenant SIT vault in Destination Transfer Screen 
         * call read(svc + 'Vault.feature@GetAllVaults_TransferScreen') { accessToken:#(token), keyword:#(testData.standardWarmVault_2), fromScreen:#(Const.Transfer.FromScreen.DESTINATION)}
         * assert response.data.vaults.length == 0
 
-    @SearchOtherCustomerDestinationWhitelist
+    @RAKCON-21750 @SearchOtherCustomerDestinationWhitelist
     Scenario: Search for Cross Tenant SIT Whitelist Folder in Destination Screen
         * call read(svc + 'Whitelist.feature@GetWhitelistFolders_TransferDestination') {accessToken:#(token), keyword:#(testData.externalWhitelist)}
         * assert response.data.folders.length == 0

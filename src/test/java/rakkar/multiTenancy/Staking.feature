@@ -5,7 +5,7 @@ Feature: Check Multi Tenancy for Stake
         * call read(svc + 'Auth.feature@GetUserAccessToken') {userName:#(userOtherCustomerInfor.userName)}
         * def token = 'Bearer ' + response.data.AuthenticationResult.AccessToken
 
-
+    @RAKCON-21746
     Scenario: Check Listing Stake Records 
         # get Cross tenart CustomerId
         * def userInfo = call read(svc + 'Auth.feature@GetUserInfo') {accessToken:#(token)}
@@ -26,6 +26,7 @@ Feature: Check Multi Tenancy for Stake
         """
         * eval checkCustomerId(customerId)
 
+    @RAKCON-21747
     Scenario: View Stake record details of other customer
         # get a stake id of other customer
         * call read(svc + 'Auth.feature@GetRequesterAccessToken')

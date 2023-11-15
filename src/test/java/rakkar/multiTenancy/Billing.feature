@@ -5,6 +5,7 @@ Feature: Check Multi Tenancy for Billings
         * call read(svc + 'Auth.feature@GetUserAccessToken') {userName:#(userOtherCustomerInfor.userName)}
         * def token = 'Bearer ' + response.data.AuthenticationResult.AccessToken
 
+    @RAKCON-21740
     Scenario: All Cross tenant billings have it's customer name
         * def accountPolicy = call read(svc + 'AdvanceQuorum.feature@GetAccountPolicy') {accessToken:#(token)}
         * def getCrossBillings = call read(svc + 'Billing.feature@GetBillings') {accessToken:#(token)}

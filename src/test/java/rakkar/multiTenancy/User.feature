@@ -6,11 +6,12 @@ Feature: Check Multi Tenancy for Users
         * def token = 'Bearer ' + response.data.AuthenticationResult.AccessToken   
         * callonce read(svc + 'Auth.feature@GetRequesterInfo')
 
+    @RAKCON-21751
     Scenario: Search User of Cross tenant User
         * call read(svc + 'Auth.feature@GetUsers') {accessToken:#(token),keyword:#(requesterName)}
         * assert response.data.users.length == 0
     
-    @RAKSEC-110
+    @RAKSEC-110 @RAKCON-21752
     Scenario: Get Cross tenant User details
         * call read(svc + 'Auth.feature@GetUserDetails') {accessToken:#(token),userId:#(requesterID)}
         * assert responseStatus == 403

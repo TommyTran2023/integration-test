@@ -159,7 +159,7 @@ Feature: Transaction
     * def query = { limit:'10', offset: '0', destinationData: [ { "destinationType": "whitelist", "destinationId": "#(listFolders.response.data.folders[0].id)" } ]}
     * call read('this:Transaction.feature@Filter_transaction_common')
 
-  @RAKCON-20141 @CheckTransactionFromOtherCustomer
+  @RAKCON-20141 @CheckTransactionFromOtherCustomer @RAKCON-20140
   Scenario: Customer cannot search for another customer vault
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId

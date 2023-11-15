@@ -1,7 +1,7 @@
 Feature: Customer Billings
 
     @GetBillings
-    Scenario: Get Whitelist Folders
+    Scenario: Get Billings
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data = 
         """

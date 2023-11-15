@@ -2,11 +2,12 @@ Feature: Network
 
     @GetNetworkList
     Scenario: Get Network List
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def keyword = karate.get('keyword', '')
         * def data =
         """
             {
-                authorization: #(requesterAccessToken),
+                authorization: #(accessToken),
                 params:{
                     keyword: '#(keyword)',
                     limit: 10,
@@ -17,6 +18,7 @@ Feature: Network
         * call read(svc + 'networkSvc.feature@GetNetworkList') data
         Then match responseStatus == 200
         * match response.status == 'success'
+        * karate.set('keyword', null)
 
     @GetNetworkConnection
     Scenario: Get Network Connection
@@ -118,3 +120,16 @@ Feature: Network
         }
         """
         * call read(svc + 'networkSvc.feature@GetCounterPartiesConnection') data
+
+    @GetNetworkProfile
+    Scenario: Get Network Profile
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            networkId: #(networkId)
+        }
+        """
+        * call read(svc + 'networkSvc.feature@GetNetworkProfile') data
+

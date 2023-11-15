@@ -61,4 +61,12 @@ Feature: Advance-quorum
         * call read(svc + 'advQuorumSvc.feature@GetQuorumPolicy') data
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @GetAccountPolicy
+    Scenario: Get Account Policy
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@GetAccountPolicy') {authorization:#(accessToken)}
+        Then match responseStatus == 200
+        * match response.status == 'success'
+
     

@@ -52,3 +52,24 @@ Background:
             }
         """
         * call read(svc + 'coreSvc.feature@GetWhitelistFolders') data
+
+    
+    @GetWhitelistFolders_TransferDestination
+    Scenario: Get Whitelist
+        * callonce read(svc + 'ReadData.feature@ReadEnumFile')
+        * def keyword = karate.get('keyword','')
+        * def tokenSymbol = karate.get('tokenSymbol',Const.TokenSymbol.XRP)
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+            {
+                authorization: #(accessToken),
+                params: {
+                    keyword: '#(keyword)',
+                    limit: 10,
+                    offset: 0,
+                    tokenSymbol: #(tokenSymbol)
+                }
+            }
+        """
+        * call read(svc + 'coreSvc.feature@GetWhitelistFolders') data

@@ -1,6 +1,6 @@
 Feature: Networking
-Background:
-    * url baseURL
+    Background:
+        * url baseURL
 
     Scenario: Network
     @GetNetworkList
@@ -53,4 +53,10 @@ Background:
         Given path 'network/networks/connections/counterparties'
         * header authorization = authorization
         And params params
+        When method GET
+
+    @GetNetworkProfile
+    Scenario: Get Network Profile
+        Given path 'network/networks/' + networkId
+        * header authorization = authorization
         When method GET

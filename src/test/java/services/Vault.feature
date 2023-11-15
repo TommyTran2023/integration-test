@@ -76,6 +76,35 @@ Feature: Vault
         Then match responseStatus == 200
         * match response.status == 'success'
 
+    @GetAllVaults_TransferScreen
+    Scenario: Get Source vaults
+        * callonce read(svc + 'ReadData.feature@ReadEnumFile')
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'DESC')
+        * def tokenSymbol = karate.get('tokenSymbol', Const.TokenSymbol.XRP)
+        * def isHideSmallBalance = karate.get('isHideSmallBalance', false)
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization: '#(accessToken)',
+            params: { 
+                fromScreen: #(fromScreen),
+                groupBy: #(Const.Transfer.GroupBy.VAULT),
+                keyword: #(keyword),
+                limit: 10,
+                offset: 0,
+                sort: #(sort),
+                tokenSymbol: #(tokenSymbol)
+            }
+        }
+        """
+        * print data
+        * call read(coreSvc + 'GetAllVaults') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+        * karate.set('keyword', null)
+        * karate.set('accessToken',null)
       
     @GetDepositRouting
     Scenario: Get Deposit Routing

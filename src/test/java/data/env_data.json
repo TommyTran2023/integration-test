@@ -24,23 +24,23 @@
       "dateOfBirth": "2023-02-01"
     },
     "userOtherCustomerInfor": {
-      "userName": "ID_CARDID636772SG",
-      "vaultId": "88656858-369a-4817-8e9f-9aff74ec75bc",
-      "walletId": "25785868-0b20-4728-a763-fe2c5c3a77c9"
+      "userName": "PASSPORT2345678CO",
+      "vaultId": "8c5a9c41-f7d4-46b0-95e3-b4777a884e14",
+      "walletId": "f8fa988e-a039-493e-a13c-66d0a9600274"
     },
     "adminUsername": "PASSPORT234567812AAF",
     "adminUsername2": "PASSPORT234567334SG",
     "businessRegistrationId": "RaSI12345",
     "crossTenant":{
-      "txnId": "292727f8-4988-48bc-a3e4-5e414d99f6f3",
-      "vaultId": "d71e2438-cc23-4f3f-9193-483ea8db6a36",
-      "whitelistExternalId":"70274522-9f07-4319-b103-c2f99677991b",
+      "txnId": "bc4e9a1f-176f-4774-bdd1-c8476d20378b",
+      "vaultId": "8c5a9c41-f7d4-46b0-95e3-b4777a884e14",
+      "whitelistExternalId":"030d0551-c250-444d-92dc-171c652122e1",
       "whitelistExternalName":"External Whitelist QA 1696826581",
-      "whitelistInternalId":"1d73a69c-1787-42c7-8650-6bdb80e9af60",
+      "whitelistInternalId":"030d0551-c250-444d-92dc-171c652122e1",
       "whitelistInternalName":"Internal Whitelist QA 1696826581",
-      "requestId": "eec1271b-beab-48fd-8f1b-2848edac9f39",
-      "apiKey": "afa0433da7824e4b88323f4859dc24ab",
-      "accountId":"06c4d3d9adcd4361819375855e76275f"
+      "requestId": "e5a4a303-08c2-4f2b-ac97-aebb5ae3bafa",
+      "apiKey": "3ca9d140a80845b6a8f7338181d00d14",
+      "accountId":"5c1b4db2ab1b4e2c9eb245169c8de4bf"
     }
   },
   "uat": {

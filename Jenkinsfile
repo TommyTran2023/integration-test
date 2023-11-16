@@ -35,6 +35,7 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
+                            cron('30 8 * * 1,3')
                             break
                         case 'develop':
                             BRANCH = "develop"
@@ -45,6 +46,7 @@ pipeline {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
+                            cron('38 18 * * 1-5')
                     }
 
                     println("BRANCH = ${BRANCH}")

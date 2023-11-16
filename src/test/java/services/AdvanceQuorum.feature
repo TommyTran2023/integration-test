@@ -69,4 +69,19 @@ Feature: Advance-quorum
         Then match responseStatus == 200
         * match response.status == 'success'
 
+    @RejectRequest
+    Scenario: Reject request
+        * print approvalAccessToken
+        * print challengeAnswerApprover
+        * def data = 
+        """
+        {
+            requestId: "#(requestId)",
+            authorization: "#(approvalAccessToken)",
+            challengeAnswer: "#(challengeAnswerApprover)",
+            reason: "AT reject reason"
+        }
+        """
+        * print data
+        * call read(svc + 'advQuorumSvc.feature@RejectRequest') data
     

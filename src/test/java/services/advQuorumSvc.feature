@@ -13,10 +13,11 @@ Feature: Advance Quorum Service
 
     @RejectRequest
   Scenario: Reject request
-    Given path 'advance-quorum/quorums/reject', requestId
+    * configure headers = null
+    Given path 'advance-quorum/quorums/reject'
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
-    * header passcode = passcode
+    * request {recordId : "#(requestId)", reason : "#(reason)"}
     When method POST
 
     @CancelRequest

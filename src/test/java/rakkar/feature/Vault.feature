@@ -252,14 +252,7 @@ Feature: Vault
 
     @RAKCON-11119 @SortVaultHighestValue
   Scenario: Sort vaults by highest value
-    Given path '/core/vault/accounts'
-    * param isHideSmallBalance = false
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'DESC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * call read(svc + 'Vault.feature@GetAllVaults')
     * def listVault = response.data.vaults
     * def listVaultTotalUSDActual = $listVault[*].totalUSD
     * print 'List actual vault after sorting by highest value: ', listVaultTotalUSDActual
@@ -271,14 +264,7 @@ Feature: Vault
 
     @RAKCON-11120 @SortVaultLowestValue
   Scenario: Sort vaults by lowest value
-    Given path '/core/vault/accounts'
-    * param isHideSmallBalance = false
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'ASC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * call read(svc + 'Vault.feature@GetAllVaults') {sort:'ASC'}
     * def listVault = response.data.vaults
     * def listVaultTotalUSDActual = $listVault[*].totalUSD
     * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDActual

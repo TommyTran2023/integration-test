@@ -16,7 +16,7 @@ Feature: Advance Quorum Service
     Given path 'advance-quorum/quorums/reject', requestId
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
-    * header passcode = passcode
+    * request {recordId : "#(requestId)", reason : "#(reason)"}
     When method POST
 
     @CancelRequest

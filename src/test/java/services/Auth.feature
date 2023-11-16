@@ -13,19 +13,19 @@ Feature: Common call from Auth services
 
     @GetApproverAccessToken
     Scenario: Get Approver Access Token
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.approvalUsername)', answer: '#(testData.challengeAnswerAuth)'}
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.approvalUsername)', answer: '#(testData.common.challengeAnswerAuth)'}
         * def approvalAuthToken = response.data.AuthenticationResult.AccessToken
         * def approvalAccessToken = 'Bearer ' + approvalAuthToken
 
     @GetRequesterAccessToken
     Scenario: Get Requester Access Token
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(requesterInfo.requesterUsername)', answer: '#(testData.challengeAnswerAuth)'}
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(requesterInfo.requesterUsername)', answer: '#(testData.common.challengeAnswerAuth)'}
         * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
         * def requesterAccessToken = 'Bearer ' + requesterAuthToken
 
     @GetUserAccessToken
     Scenario: Get Requester Access Token
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(testData.challengeAnswerAuth)'}
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(testData.common.challengeAnswerAuth)'}
     
     @GetRequesterInfo
     Scenario: Get Requester Info

@@ -53,7 +53,7 @@ pipeline {
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
-                    println(params.E2E)
+                    println("TEST_TYPE = ${env.testType}")
                     
                 }
                 git branch: "${BRANCH}",

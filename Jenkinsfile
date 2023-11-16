@@ -35,6 +35,7 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
+                            cron('30 8 * * 1,3')
                             break
                         case 'develop':
                             BRANCH = "develop"
@@ -45,6 +46,7 @@ pipeline {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
+                            cron('00 8 * * 1-5')
                     }
 
                     println("BRANCH = ${BRANCH}")
@@ -97,7 +99,7 @@ pipeline {
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
+                        message: "${ENV} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                     // office365ConnectorSend color: '#a82e2e',
                     //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
@@ -142,7 +144,7 @@ pipeline {
             script {
                 if (params.XRAY) {
                     for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                        def testName = "${ENV} (#${BUILD_NUMBER}) ${testType} results - ${file}"
+                        def testName = "${ENV} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
                         step([$class: 'XrayImportBuilder',
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
@@ -189,7 +191,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "${ENV} ${testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "${ENV} ${env.testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -206,7 +208,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${ENV} ${testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "${ENV} ${env.testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

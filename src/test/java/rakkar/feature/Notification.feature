@@ -8,7 +8,7 @@ Feature: Notification
 
   @RAKCON-11009 @NotificationSetting
   Scenario: Notification Setting
-    * call read('this:ApprovalAuthenticator.feature@GetAccessTokenForLogin')
+    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     Given path '/notification/notifications/settings'
     When method GET
     Then status 200

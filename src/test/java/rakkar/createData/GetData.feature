@@ -242,15 +242,15 @@ Feature: Get Data From data.json
             if (response.data.networks.length == 0) {
                 karate.call('this:Create.feature@CreateNetworking')
                 var newCreadtedProfile = karate.call(svc + 'Network.feature@GetNetworkList', {keyword: testData.networkVault})
-                return newCreadtedFolder.response.data.networks[0].id
+                return newCreadtedProfile.response.data.networks[0].id
             }
             else {
                 return response.data.networks[0].id
             } 
         }
     """
-    * def folderId =  getVal()
-    * fileUtils.addData('networkID',folderId)
+    * def networkId =  getVal()
+    * fileUtils.addData('networkID',networkId)
 
     @Get_tokenId
   Scenario: Get XRP token id
@@ -273,7 +273,7 @@ Feature: Get Data From data.json
     * fileUtils.addData('connectionID',response.data.networkConnections[0].id) 
 
     @Get_address
-    Scenario: Get address
+  Scenario: Get address
     # 1. Get a vault
     * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardWarmVault_1)'}
     * def vaultId = response.data.vaults[0].id
@@ -286,4 +286,97 @@ Feature: Get Data From data.json
     * call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId: '#(vaultId)', walletId:'#(walletId)'}
     * fileUtils.addData('address',response.data.address[0].address) 
 
+    @Get_advVaultWithAllUsers
+  Scenario: Get advVaultWithAllUsers
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllUsers)'}
+    * def getVal = 
+    """
+        function(){
+            if (response.data.vaults.length == 0) {
+                karate.call('this:Create.feature@CreateAdvanceVaultWithUsers')
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllUsers})
+                return newCreadtedVault.response.data.vaults[0].id
+            }
+            else {
+                return response.data.vaults[0].id
+            }
+        }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('advVaultWithAllUsers',vaultId)
 
+    @Get_advVaultWithAllGroups
+  Scenario: Get Advance Vault With Groups
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllGroups)'}
+    * def getVal = 
+    """
+      function(){
+          if (response.data.vaults.length == 0) {
+              karate.call('this:Create.feature@CreateAdvanceVaultWithGroups')
+              var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllGroups})
+              return newCreadtedVault.response.data.vaults[0].id
+          }
+          else {
+              return response.data.vaults[0].id
+          }
+      }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('advVaultWithAllGroups',vaultId)
+
+    @Get_advVaultWithAllGroupsAndUsers
+  Scenario: Get Advance Vault With Groups and Users
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllGroupsAndUsers)'}
+    * def getVal = 
+    """
+    function(){
+        if (response.data.vaults.length == 0) {
+            karate.call('this:Create.feature@CreateAdvanceVaultWithGroupsAndUsers')
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllGroupsAndUsers})
+            return newCreadtedVault.response.data.vaults[0].id
+        }
+        else {
+            return response.data.vaults[0].id
+        }
+    }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('advVaultWithAllGroupsAndUsers',vaultId)
+
+    @Get_standardForEditPolicy
+    Scenario: Get Advance Vault With Groups and Users
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardForEditPolicy)'}
+    * def getVal = 
+    """
+    function(){
+        if (response.data.vaults.length == 0) {
+            karate.call('this:Create.feature@CreateStandardVaultForEditPolicy')
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardForEditPolicy})
+            return newCreadtedVault.response.data.vaults[0].id
+        }
+        else {
+            return response.data.vaults[0].id
+        }
+    }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('standardVaultForEditPolicy',vaultId)
+
+    @Get_standardForEditPolicy
+    Scenario: Get Advance Vault With Groups and Users
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.skipVaultForAddPolicy)'}
+    * def getVal = 
+    """
+    function(){
+        if (response.data.vaults.length == 0) {
+            karate.call('this:Create.feature@CreateSkipVaultForAddPolicy')
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.skipVaultForAddPolicy})
+            return newCreadtedVault.response.data.vaults[0].id
+        }
+        else {
+            return response.data.vaults[0].id
+        }
+    }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('skipVaultForAddPolicy',vaultId)

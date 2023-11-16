@@ -2,26 +2,83 @@
 Feature: Create Vault data
     
   Background:
-    * def svc = "classpath:services/"
     * callonce read(svc + 'ReadData.feature@ReadDataFile')
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetListUsers')
-    * def str_random = ' 100084'
+    * def str_random = ' 100092'
     * def getQuorumList = 
     """
-        function(){
+        function(type){
+            karate.log('type: --->', type)
             var list = new Array()
-            list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+requesterInfo.requesterUsername+"')]")[0])
-            list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+adminUsername+"')]")[0])
-            list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+approverInfo.approvalUsername+"')]")[0])
-            list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+adminUsername2+"')]")[0])
+            
+            if (type == 'users'){
+                list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+requesterInfo.requesterUsername+"')]")[0])
+                list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+adminUsername+"')]")[0])
+                list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+approverInfo.approvalUsername+"')]")[0])
+                list.push(karate.jsonPath(allUsers, "$..[?(@.username == '"+adminUsername2+"')]")[0])
 
-            list.forEach(function(item){
-                item.type = "user"
-            })
+                list.forEach(function(item){
+                    item.type = "user"
+                })
 
-            karate.set('quorumList', list)
+                karate.set('member1', [list[0], list[1]])
+                karate.set('member2', [list[2], list[3]])
+            }
+            else if (type == 'groups'){
+                var allGroups = groups.response.data.groups
+                
+                list.push(allGroups[0])
+                list.push(allGroups[1])
+                
+                list.forEach(function(item){
+                    item.type = "group"
+                    item.groupId = item.id
+                    item.groupName = item.name
+                    item.users.forEach(function(member){
+                        member.role = "ADMIN"
+                        member.roleDisplayName = "Admin"
+                        member.type = "user"
+                    })
+                    item.members = item.users
+                })
+                karate.set('member1', [list[0]])
+                karate.set('member2', [list[1]])
+            }
+            else {
+                var allGroups = groups.response.data.groups
+                allGroups.forEach(function(item){
+                    item.type = "group"
+                    item.groupId = item.id
+                    item.groupName = item.name
+                    item.users.forEach(function(member){
+                        member.role = "ADMIN"
+                        member.roleDisplayName = "Admin"
+                        member.type = "user"
+                    })
+                    item.members = item.users
+                })
+
+                var item = karate.jsonPath(allUsers, "$..[?(@.username == '"+requesterInfo.requesterUsername+"')]")[0]
+                item.type = 'user'
+                list.push(item)
+
+                item = allGroups[0]
+                item.type = 'group'
+                list.push(item)
+                
+                item = karate.jsonPath(allUsers, "$..[?(@.username == '"+approverInfo.approvalUsername+"')]")[0]
+                item.type = 'user'
+                list.push(item)
+
+                item = allGroups[1]
+                item.type = 'group'
+                list.push(item)
+
+                karate.set('member1', [list[0], list[1]])
+                karate.set('member2', [list[2], list[3]])
+            }
         }
     """ 
 #-----------------Standard Vault-----------------#
@@ -93,7 +150,9 @@ Feature: Create Vault data
     @CreateAdvanceVault @ignore
     Scenario: Create Advance Vault
     # 1. Submit create advance vault from web
-        * call getQuorumList
+        * def quorumType = karate.get('quorumType','users')
+        * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword:#(testData.group)}
+        * call getQuorumList quorumType
         * def requestBody =
         """
         {
@@ -102,19 +161,20 @@ Feature: Create Vault data
             "type":"#(type)",
             "clientId":"#(testData.clientId)",
             "quorums":[{
-                "members":[ "#(quorumList[0])","#(quorumList[1])" ],
+                "members": "#(member1)",
                 "quorumApprovals":1,
                 "isRequired":false
             },
             {
-                "members":[ "#(quorumList[2])","#(quorumList[3])" ],
+                "members": "#(member2)",
                 "quorumApprovals":1,
                 "isRequired":false
             }],
             "policyType":"#(Const.VaultPolicyType.ADVANCED)",
+            "viewers":[]
         }
         """
-        * call read(svc + 'Vault.feature@RequestCreateAdvVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+        * call read(svc + 'Vault.feature@RequestCreateAdvVault') {requestBody: '#(requestBody)'}
         Then match responseStatus == 201
         And match response.status == 'success'
         * def notificationId = response.data.notificationId
@@ -139,7 +199,6 @@ Feature: Create Vault data
 
     # 7. Deposit XRP to Vault
         * call read('this:Create.feature@DepositXRP') {vaultId: '#(vaultId)'}
-        
 
     @CreateHotAdvanceVault
     Scenario: Create Cold Advance Vault AT - Hot Advance Vault 1
@@ -154,8 +213,20 @@ Feature: Create Vault data
         * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advanceHotVaultForStake), type: #(Const.VaultType.HOT_WALLET)}
         
         # Add ADA Asset To Vault
-        * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.ADA), vaultId: '#(vaultId)'}
+        * call read('Create.feature@AddAsset') {symbol:#(Const.Symbol.ADA), vaultId: '#(vaultId)'}   
     
+    @CreateAdvanceVaultWithUsers
+    Scenario: Create Advance Vault With Users
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advVaultWithAllUsers), type: #(Const.VaultType.HOT_WALLET)}
+    
+    @CreateAdvanceVaultWithGroups
+    Scenario: Create Advance Vault With Groups
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advVaultWithAllGroups), type: #(Const.VaultType.HOT_WALLET), quorumType: 'groups'}
+    
+    @CreateAdvanceVaultWithGroupsAndUsers
+    Scenario: Create Advance Vault With Groups And Users
+        * call read('Create.feature@CreateAdvanceVault') {name: #(testData.advVaultWithAllGroupsAndUsers), type: #(Const.VaultType.HOT_WALLET), quorumType: 'both'}     
+         
 #-----------------Skip Vault-----------------#
     @CreateSkipVault @ignore
     Scenario: Create Skip Vault
@@ -285,7 +356,11 @@ Feature: Create Vault data
         # 6. Approve request to connect
         * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}
     
+    @CreateStandardVaultForEditPolicy
+    Scenario: Create standard vault for edit policy
+        * call read('Create.feature@CreateStandardVault') {name: #(testData.standardForEditPolicy), type: #(Const.VaultType.HOT_WALLET)}
 
-        
-        
+    @CreateSkipVaultForAddPolicy
+    Scenario: Create standard vault for edit policy
+        * call read('Create.feature@CreateSkipVault') {name: #(testData.skipVaultForAddPolicy), type: #(Const.VaultType.COLD_WALLET)}
 

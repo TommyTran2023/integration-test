@@ -170,3 +170,20 @@ Feature: All api call to core services
     * header Authorization = authorization
     * params params
     When method GET
+
+#----------Quorums-----------#  
+  @ViewAccountPolicy
+Scenario: View Account Policy
+  Given path 'core/quorums/account-policy'
+  * header Authorization = authorization
+  When method GET
+
+#----------Customer-----------#  
+  @EditAccountPolicy
+Scenario: Edit Account Policy
+  Given path '/core/customers/' + customerId
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
+    * request body
+    When method PUT

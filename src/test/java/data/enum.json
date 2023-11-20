@@ -55,5 +55,11 @@
     },
     "QuorumDataType":{
         "CREATE_NETWORK_CONNECTION":"CREATE_NETWORK_CONNECTION"
+    },
+    "ErrorCode":{
+        "EXISTS_PENDING_REQUEST": "EXISTS_PENDING_REQUEST"
+    },
+    "Action":{
+        "EDIT_ACCOUNT_POLICY":"EDIT_ACCOUNT_POLICY"
     }
 }

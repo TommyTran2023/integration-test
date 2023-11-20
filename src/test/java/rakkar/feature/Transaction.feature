@@ -53,7 +53,7 @@ Feature: Transaction
 
   @RAKCON-12327 @Filter_transaction_by_source
   Scenario: Filter transactions by source
-    * def value = call read('Vault.feature@ViewVaultListing')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults')
     * def sourceId = value.response.data.vaults[0].id
     * def sourceName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0', sourceData: [ { sourceType: 'internal', sourceId: '#(sourceId)'}] }
@@ -62,7 +62,7 @@ Feature: Transaction
 
   @RAKCON-12328 @Filter_transaction_by_destination
   Scenario: Filter transactions by destination
-    * def value = call read('Vault.feature@ViewVaultListing')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults')
     * def destinationId = value.response.data.vaults[0].id
     * def destinationName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0',destinationData: [ { destinationType: 'internal', destinationId: '#(destinationId)'}] }

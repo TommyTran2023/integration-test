@@ -66,11 +66,14 @@ Feature: Wallet
         """
         {
             authorization: #(requesterAccessToken),
+            vaultId: #(vaultId),
             params: { 
                 limit:'10', 
                 offset: '0', 
                 sort:'ASC', 
+                sortBy:'NAME',
                 groupBy: 'ASSET', 
+                isHideList: true,
                 keyword:'#(tokenSymbol)'
             }
         }
@@ -97,7 +100,7 @@ Feature: Wallet
             }
         }
         """
-        * call read(svc + 'coreSvc.feature@GetWallets') data
+        * call read(svc + 'coreSvc.feature@GetListToken') data
         
     @GetTokenDetails
     Scenario: Get Token Details
@@ -114,3 +117,74 @@ Feature: Wallet
         """
         * call read(svc + 'coreSvc.feature@GetTokenDetails') data
 
+    @HideAsset
+    Scenario: Hide Asset
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            walletId: '#(walletId)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@HideAsset') data
+    
+    @UnhideAsset
+    Scenario: Unhide Asset
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            walletId: '#(walletId)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@UnhideAsset') data
+    
+    @CheckAssetPreRequisite
+    Scenario: Check Asset Pre Requisite
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            tokenIds: '#(tokenIds)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CheckAssetPreRequisite') data
+    
+    @GetListTokenStake
+    Scenario: Get List Token Stake
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body: { 
+                limit:'10', 
+                offset: '0', 
+                sort:'ASC', 
+                platform: 'iOS', 
+                keyword:'#(tokenSymbol)'
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListTokenStake') data
+    
+    @GetListTokenStakeSubscription
+    Scenario: Get List Token Stake Subscription
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            params: { 
+                limit:'10', 
+                offset: '0', 
+                sort:'ASC'
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListTokenStakeSubscription') data
+    

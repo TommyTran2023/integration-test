@@ -174,9 +174,15 @@ Feature: All api call to core services
 #----------Quorums-----------#  
   @ViewAccountPolicy
 Scenario: View Account Policy
-  Given path 'core/quorums/account-policy'
+  Given path 'advance-quorum/quorums/account-policy'
   * header Authorization = authorization
   When method GET
+
+  @ViewAccountPolicyRequest
+  Scenario: View account policy request
+    Given path 'advance-quorum/quorums/request/'+requestId
+    * header Authorization = authorization
+    When method GET
 
 #----------Customer-----------#  
   @EditAccountPolicy

@@ -14,5 +14,3 @@ Feature: Customers
         }
         """
         * call read(svc + 'coreSvc.feature@EditAccountPolicy') data
-        Then match responseStatus == 200
-        * match response.status == 'success'

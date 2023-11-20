@@ -251,7 +251,40 @@ Feature: All api call to core services
     * header Authorization = authorization
     And params params
     When method GET
-  
+
+  @HideAsset
+  Scenario: Hide Asset
+    Given path 'core/wallet/' + walletId + '/hide'
+    * header Authorization = authorization
+    When method POST
+
+  @UnhideAsset
+  Scenario: Hide Asset
+    Given path 'core/wallet/' + walletId + '/unhide'
+    * header Authorization = authorization
+    When method POST
+
+  @CheckAssetPreRequisite
+  Scenario: Check Asset Pre Requisite
+    Given path 'core/wallet/assets-pre-requisite/'+vaultId
+    * header Authorization = authorization
+    * request tokenIds = tokenIds
+    When method POST
+
+  @GetListTokenStake
+  Scenario: Get List Token Stake
+    Given path 'core/wallet/token-stake
+    * header Authorization = authorization
+    * request body
+    When method GET
+
+  @GetListTokenStakeSubscription
+  Scenario: Get List Token Stake Subscription
+    Given path 'core/wallet/stake-subscription/tokens
+    * header Authorization = authorization
+    * params params
+    When method GET
+
 
 #----------Whitelist Folder-----------#
     @CreateWhitelistFolder
@@ -263,17 +296,83 @@ Feature: All api call to core services
 
     @AddWhitelistAddress
   Scenario: Add whitelist address
-    Given path 'core/folders', folderId, 'tokens'
+    Given path 'core/folders/' + folderId + '/tokens'
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
     And request body
     When method POST
+
+    @GetWhitelistTokens
+  Scenario: Get whitelist Tokens
+    Given path 'core/folders/' + folderId + '/tokens'
+    * header Authorization = authorization
+    And request body
+    When method GET
 
     @GetWhitelistFolders
   Scenario: Get Whitelist Folders
     Given path 'core/folders'
     * header Authorization = authorization
     * params params
+    When method GET
+
+    @DeleteWhitelistFolders
+  Scenario: Delete Whitelist Folders
+    Given path 'core/folders'
+    * header Authorization = authorization
+    * request {folderIds:folderIds}
+    When method DELETE
+
+    @DeleteWhitelistFolderById
+  Scenario: Delete Whitelist Folder By Id
+    Given path 'core/folders/' + folderId
+    * header Authorization = authorization
+    When method DELETE
+
+    @DeleteWhitelistAddress
+  Scenario: Delete Whitelist Address
+    Given path 'core/folders/' + folderId + '/address'
+    * header Authorization = authorization
+    * request { addressIds: addressIds }
+    When method DELETE
+
+    @GetFolderAddressDetail
+  Scenario: Get Folder Address Detail
+    Given path 'core/folders/addresses/' + folderAddressId
+    * header Authorization = authorization
+    When method GET
+
+    @GetListAddress
+  Scenario: Get list address
+    Given path 'core/folders/list-address
+    * header Authorization = authorization
+    * request body
+    When method GET
+
+    @ValidateAddress
+  Scenario: Validate Address
+    Given path 'core/folders/addresses/validate'
+    * header Authorization = authorization
+    When method POST
+
+    @GetFormInput
+  Scenario: Get Form Input
+    Given path 'core/folders/tokens/form-input'
+    * header Authorization = authorization
+    When method GET
+
+    @CheckFolderName
+  Scenario: Check Folder Name
+    Given path 'core/folders/check-folder-name'
+    * header Authorization = authorization
+    * param name = name
+    When method GET
+
+    @CheckAddressDeactivate
+  Scenario: Check Address Deactivate
+    Given path 'core/folders/check-address-deactivate'
+    * header Authorization = authorization
+    * param address = address
     When method GET
 
 #----------Customer-----------#  
@@ -408,4 +507,56 @@ Feature: All api call to core services
     Given path '/core/assets/assets-staking
     * header Authorization = authorization
     When method GET
+
+#----------Comments-----------#  
+  @GetComments
+  Scenario: Get Comments
+    Given path entityType + '/' + entityId + '/comments'
+    * header Authorization = authorization
+    When method GET
+  
+  @CreateComment
+  Scenario: Create Comment
+    Given path entityType + '/' + entityId + '/comments'
+    * header Authorization = authorization
+    * request {content:content}
+    When method POST
+
+  @UpdateComment
+  Scenario: Update Comment
+    Given path entityType + '/' + entityId + '/comments/' + commentId 
+    * header Authorization = authorization
+    * request {content:content}
+    When method POST
+
+  @DeleteComment
+  Scenario: Update Comment
+    Given path entityType + '/' + entityId + '/comments/' + commentId 
+    * header Authorization = authorization
+    When method DELETE
+
+#----------Address-----------#  
+  @CreateAddress
+  Scenario: Create Deposit Address
+    Given path 'core/address' 
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+  @UpdateAddress
+  Scenario: Update Deposit Address
+    Given path 'core/address' 
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+
+#----------REP Currency Convert-----------#  
+
+
+#----------REP Currency-----------#  
+
+
+#----------REP Wallet Info-----------#  
+
 

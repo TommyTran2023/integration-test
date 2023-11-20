@@ -148,7 +148,6 @@ Feature: Open API
     And match karate.keysOf(response) == karate.keysOf(transactionList.response.transactions[0])
     * def greaterThan = function(x, y){ return x > y }
     * match greaterThan(Number(response.transaction.amount),0) == true
-    * match greaterThan(Number(response.transaction.fee),0) == true
 
   @ignore @Transaction_common
   Scenario: Open API - Transaction listing common

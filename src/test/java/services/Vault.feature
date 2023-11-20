@@ -123,3 +123,248 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@GetDepositRouting') data
         Then match responseStatus == 200
         * match response.status == 'success'  
+
+    @GetPortfolioValueChart
+    Scenario: Get portfolio value chart 
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            params:{
+                dateFrom:#(dateFrom),
+                dateTo:#(dateTo)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetPortfolioValueChart') data
+
+    @GetAccountChart
+    Scenario: Get account chart
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'coreSvc.feature@GetAccountChart') {authorization:#(accessToken)}
+
+    @CancelReqTransactionCreateFromWeb
+    Scenario: Cancel request create vault from web
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body:{
+                notificationId:#(notificationId),
+                requestCancelFrom:#(requestCancelFrom)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CancelReqTransactionCreateFromWeb') data
+
+    @CheckVaultName
+    Scenario: Check Vault Name Exists
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            name: #(name)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CheckVaultName') data
+        
+    @GetChartOfVault
+    Scenario: Get chart of vault
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetChartOfVault') data
+
+    @RenameVault
+    Scenario: Rename vault 
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            name: #(name)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@RenameVault') data
+    
+    @GetListUserForVaults
+    Scenario: Get list user for Vaults
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'ASC')
+        * def forWeb = karate.get('forWeb', false)
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body:{
+                limit : 10,
+                offset : 0,
+                sort : '#(sort)',
+                keyword : '#(keyword)',
+                forWeb : #(forWeb)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListUserForVaults') data
+    
+    @GetListVaultUnassigned
+    Scenario: Get list vault unassigned by user
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'ASC')
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body:{
+                limit : 10,
+                offset : 0,
+                sort : '#(sort)',
+                keyword : '#(keyword)',
+                userId : #(userId)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListVaultUnassigned') data
+    
+    @GetVaultOnlyViewMemberAndQuorum
+    Scenario: Detail vault info with info quorum
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'coreSvc.feature@GetVaultOnlyViewMemberAndQuorum') {authorization: #(accessToken)}
+    
+    @ListVaultMissingPolicy
+    Scenario: Listing Vault Missing Policy
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'ASC')
+        * def groupBy = karate.get('groupBy', '')
+        * def tokenSymbol = karate.get('tokenSymbol', 'XRP')
+        * def onlyVaultType = karate.get('onlyVaultType', '')
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body:{
+                limit : 10,
+                offset : 0,
+                sort : '#(sort)',
+                groupBy : '#(groupBy)',
+                keyword : '#(keyword)',
+                tokenSymbol : '#(tokenSymbol)',
+                onlyVaultType : '#(onlyVaultType)',
+                userId : #(userId)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@ListVaultMissingPolicy') data
+    
+        @GetListVaultStake
+    Scenario: Get List Vault Stake
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'ASC')
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            body:{
+                limit : 10,
+                offset : 0,
+                sort : '#(sort)',
+                keyword : '#(keyword)',
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListVaultStake') data
+    
+    @GetListStakingByToken
+    Scenario: Get List Vault Stake
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def keyword = karate.get('keyword', '')
+        * def sort = karate.get('sort', 'ASC')
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            tokenId: #(tokenId),
+            body:{
+                limit : 10,
+                offset : 0,
+                sort : '#(sort)',
+                keyword : '#(keyword)',
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListStakingByToken') data
+    
+    @RequestUpdateVaultPolicy
+    Scenario: Request Update Vault Policy
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            body:{
+                approverNumber : #(approverNumber),
+                policyType : #(policyType),
+                quorums : #(quorums),
+                viewers : #(viewers),
+                clientId : #(clientId),
+                note : #(note),
+                vaultId : #(vaultId),
+                expiredAt : #(expiredAt)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@RequestUpdateVaultPolicy') data
+    
+    @GetRequestEditVaultPolicyByRequestDraftId
+    Scenario: Get Request Edit Vault Policy By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetRequestEditVaultPolicyByRequestDraftId') data
+    
+    @SubmitRequestEditVaultPolicyByRequestDraftId
+    Scenario: Submit Request Edit Vault Policy By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@SubmitRequestEditVaultPolicyByRequestDraftId') data
+
+    @DiscardRequestEditVaultPolicyByRequestDraftId
+    Scenario: Discard Request Edit Vault Policy By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            requestDraftId: #(requestDraftId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@SubmitRequestEditVaultPolicyByRequestDraftId') data
+           

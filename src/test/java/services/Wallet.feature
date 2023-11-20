@@ -79,3 +79,38 @@ Feature: Wallet
         Then match responseStatus == 200
         Then match response.status == 'success'
 
+    @GetListToken
+    Scenario: Get List Token
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def sort = karate.get('sort','ASC')
+        * def platform = karate.get('platform','iOS')
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            params: { 
+                limit:'10', 
+                offset: '0', 
+                sort:'#(sort)', 
+                platform: '#(platform)', 
+                keyword:'#(tokenSymbol)'
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetWallets') data
+        
+    @GetTokenDetails
+    Scenario: Get Token Details
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            params: { 
+                vaultId:'#(vaultId)', 
+                walletId: '#(walletId)'
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetTokenDetails') data
+

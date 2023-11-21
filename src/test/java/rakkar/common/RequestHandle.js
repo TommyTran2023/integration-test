@@ -18,27 +18,32 @@ function fn(){
 
             cancelRequest(requestId)
         },
+
         cancelPendingRequest: function(requestId){
             cancelRequest(requestId)
         },
+
         cancelAllMyTransferPendingRequest: function(userId){
             // Get all my pending requests
-            var data = {requestCategories:["TRANSFER"], createdBy: userId, status : ["PENDING"]}
+            var data = {requestCategories:["TRANSFER"], userId: userId, status : ["PENDING"]}
             var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
+            var records = requests.response.data.records
 
             // Cancel requests
-            for(var i = 0; i < requests.length; i++) {
-                cancelRequest(requests[i].id)
+            for(var i = 0; i < records.length; i++) {
+                cancelRequest(records[i].id)
             }
         },
+
         cancelAllEditUserPendingRequest: function(userId){
             // Get all my pending requests
-            var data = {requestCategories:["USER"], createdBy: userId, status : ["PENDING"]}
+            var data = {requestCategories:["USER"], userId: userId, status : ["PENDING"]}
             var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
+            var records = requests.response.data.records
 
             // Cancel requests
-            for(var i = 0; i < requests.length; i++) {
-                cancelRequest(requests[i].id)
+            for(var i = 0; i < records.length; i++) {
+                cancelRequest(records[i].id)
             }
         }
     }

@@ -10,6 +10,7 @@ Feature: Vault
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
+    # * callonce read(svc + 'ReadData.feature')
 
     @ignore @GenerateVaultName
   Scenario: Generate vault name
@@ -252,14 +253,7 @@ Feature: Vault
 
     @RAKCON-11119 @SortVaultHighestValue
   Scenario: Sort vaults by highest value
-    Given path '/core/vault/accounts'
-    * param isHideSmallBalance = false
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'DESC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * call read(svc + 'Vault.feature@GetAllVaults')
     * def listVault = response.data.vaults
     * def listVaultTotalUSDActual = $listVault[*].totalUSD
     * print 'List actual vault after sorting by highest value: ', listVaultTotalUSDActual
@@ -271,14 +265,7 @@ Feature: Vault
 
     @RAKCON-11120 @SortVaultLowestValue
   Scenario: Sort vaults by lowest value
-    Given path '/core/vault/accounts'
-    * param isHideSmallBalance = false
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'ASC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * call read(svc + 'Vault.feature@GetAllVaults') {sort:'ASC'}
     * def listVault = response.data.vaults
     * def listVaultTotalUSDActual = $listVault[*].totalUSD
     * print 'List actual vault after sorting by lowest value: ', listVaultTotalUSDActual
@@ -305,21 +292,21 @@ Feature: Vault
     * callonce read('this:Vault.feature@CHECK-LIST-USER')
     #Get a vault that has not edit vault pending request
     * call read('this:ApprovalRequest.feature@ApproveNewVaultRequest')
+    * def members = [ #(requesterUserID),#(approvalUserID) ]
     #Edit vault policy
-    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [ #(approvalUserID) ] }
+    * def requestBody = { "memberIds": #(members), "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(members.length), "memberRequireIds" : [ #(approvalUserID) ] }
     * def editVaultPolicy = call read('Vault.feature@EditVaultPolicy-Common')
-    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == testData.vault.newApproverNumber
+    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == members.length
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
     * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
     * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
     * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
 
-
     @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
     * callonce read('this:Vault.feature@EditVaultPolicy')
-    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(testData.vault.newApproverNumber), "memberRequireIds" : [] }
+    * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(members.length), "memberRequireIds" : [] }
     * call read('this:Vault.feature@EditVaultPolicy-Common')
     Then match response.data.message == 'Exists pending requests'
 
@@ -335,10 +322,7 @@ Feature: Vault
     @RAKCON-11286 @HideVault
   Scenario: Hide a vault
     * callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
-    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
-    When method POST
-    Then status 201
-    * match response.status == 'success'
+    * call read('this:Vault.feature@HideVault_Common')
 
     @RAKCON-11287 @ViewHiddenVaultList
   Scenario: View hidden listing vault
@@ -485,12 +469,13 @@ Feature: Vault
   Scenario: Edit Standard Cold Vault Policy
     * call read('this:ApprovalRequest.feature@CreateColdVaultAndApprove')
     # Edit vault policy
+    * def members = [ #(requesterUserID),#(approvalUserID) ]
     * def requestBody = 
     """
       { 
-        "memberIds" : [ #(requesterUserID),#(approvalUserID) ], 
+        "memberIds" : #(members), 
         "note" : "#(testData.vault.editVaultNote)", 
-        "approveNumber" : #(testData.vault.newApproverNumber), 
+        "approveNumber" : #(members.length), 
         "memberRequireIds" : [ #(approvalUserID) ] 
       }
     """
@@ -532,5 +517,410 @@ Feature: Vault
     And match response.errorCode == "VAULT_NOT_FOUND"
     And match response.code == 404
     
+  @RAKCON-21137 @ViewCurrentStandardPolicy
+  Scenario: Standard Vault - View Current Policy
+    * def creatingVault = call read('this:Vault.feature@AddNewVaultWithAdminSetup')
+    * def vaultIDWA = creatingVault.vaultIDWA
+    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
+    Then match each response.data.users[*].id == "#uuid"
+    * match each response.data.users[*].email == "#string"
+    * match each response.data.users[*].name == "#string"
+    * match each response.data.users[*].enabled == "#boolean"
+    * match each response.data.users[*].role == "#string"
+    * match each response.data.users[*].roleDisplayName == "#string"
+    * match each response.data.users[*].requiredApprover == "#boolean"
+    * match each response.data.users[*].isApprover == "#boolean"
+    * call read('this:Vault.feature@HideVault_Common')
 
+  @RAKCON-21138 @ViewCurrentAdvancedPolicy-Users
+    Scenario: Advanced Vault - View Current Policy When Quorums Are Users
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    Then match response.data.policyType == "ADVANCE"
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    # * match each response.data.quorums[*].members[*].type == "USER"
+    # * match each response.data.quorums[*].members[*].userId == "#uuid"
+    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
+
+  @RAKCON-21139 @ViewCurrentAdvancedPolicy-Groups
+  Scenario: Advanced Vault - View Current Policy When Quorums Are Groups
+    * def vaultId = dataSet.advVaultWithAllGroups
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    Then match response.data.policyType == "ADVANCE"
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    # * match each response.data.quorums[*].members[*].type == "GROUP"
+    # * match each response.data.quorums[*].members[*].userId == "#uuid"
+    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
+
+  @RAKCON-21140 @ViewCurrentAdvancedPolicy-GroupsUsers
+  Scenario: Advanced Vault - View Current Policy When Quorums Are Groups and Users
+    * def vaultId = dataSet.advVaultWithAllGroupsAndUsers
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    Then match response.data.policyType == "ADVANCE"
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+
+  @RAKCON-21141 @EditVaultWith2QuorumsUsers
+  Scenario: Advanced to Advanced - Create Request Edit Vault With 2 Quorums as Users
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21146 @EditStandard2AdvanceVaultWith2QuorumsUsers
+  Scenario: Standard to Advance - Create Request Edit Vault With 2 Quorums as Users
+    * def vaultId = dataSet.standardVaultForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21147 @Skip2Adv_AllUsers
+  Scenario: Skip to Advance - Add 2 Quorums as Users
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @PreparePolicyForQuorumsOfUsers @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def quorums = 
+    """
+      [{
+        "members":[
+          {
+            "userId": "#(requesterUserID)",
+            "type": "USER"
+          },
+          {
+            "userId": "#(adminUserID)",
+            "type": "USER"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+        },{
+        "members":[
+          {
+            "userId": "#(approvalUserID)",
+            "type": "USER"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "USER"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }]
+    """
+
+  @RAKCON-21142 @EditVaultWith2QuorumsGroups
+  Scenario: Advanced To Advanced - Create Request Edit Vault With 2 Quorums as Groups
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21148 @EditStandard2AdvanceVaultWith2QuorumsGroups
+  Scenario: Standard to Advanced - Create Request Edit Vault With 2 Quorums as Groups
+    * def vaultId = dataSet.standardVaultForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21149 @Skip2Adv_AllGroups
+  Scenario: Skip to Advance - Add 2 Quorums as Groups
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroups')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+  
+  @PreparePolicyForQuorumsOfGroups @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some groups
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def quorums = 
+    """
+      [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "GROUP"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[1].id)",
+            "type": "GROUP"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }]
+    """
+  
+  @RAKCON-21143 @EditVaultWith2QuorumsGroupsUsers
+  Scenario: Advanced To Advanced - Create Request Edit Vault With 2 Quorums as Groups and Users
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+  
+  @RAKCON-21150 @EditStandardToAdvanceWith2QuorumsGroupsUsers
+  Scenario: Standard To Advance - Create Request Edit Vault With 2 Quorums as Groups and Users
+    * def vaultId = dataSet.standardVaultForEditPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read('@SubmitRequestEditVault') data
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @RAKCON-21151 @Skip2Adv_AllGroupsUsers
+  Scenario: Skip to Advance - Add 2 Quorums as Groups and Users
+    * def vaultId = dataSet.skipVaultForAddPolicy
+    * def getQuorums = callonce read('@PreparePolicyForQuorumsOfGroupsUsers')
+    * def data = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": #(getQuorums.quorums),
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
+
+  @PreparePolicyForQuorumsOfGroupsUsers @ignore
+  Scenario: Prepare quorums for update vault policy to Advance with some groups and users
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def quorums =
+    """
+      [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "GROUP"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "userId": "#(adminUserID)",
+            "type": "USER"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "USER"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }]
+    """
+
+  @RAKCON-21152 @EditPolicyAdvanceToStandard
+  Scenario: Advance To Standard - Create edit advance policy to standard
+    * def vaultIDWA = dataSet.advVaultWithAllUsers
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def members = vaultMemberList
+    * print members
+    * def requestBody = 
+    """
+      { 
+        "memberIds" : #(members), 
+        "note" : "#(testData.vault.editVaultNote)", 
+        "approveNumber" : #(members.length), 
+        "memberRequireIds" : [ #(approvalUserID) ] 
+      }
+    """
+    * call read('this:Vault.feature@EditVaultPolicy-Common')
+    * match response.status == 'success'
+    * match response.code == 200
+    * match response.data.data.isValid == true
+    # clean up, cancel request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelPendingRequestOnVault(vaultIDWA)
+
+
+  @SubmitRequestEditVault @ignore
+  Scenario: Advanced Vault - Submit Request Edit Vault
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    
+  @RAKCON-21144 @CancelRequestEditVaultPolicy @ignore
+  Scenario: Advanced Vault - Cancel Request Edit Vault Policy
+    # Get request ID from vault detail and cancel request
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    * def requestId = response.data.requestId
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'AdvanceQuorum.feature@CancelRequest') {requestId: '#(requestId)'}
+
+  @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore 
+  Scenario: Edit Vault Policy - Check expired of Request before Submit
+    * def testData = read('classpath:data/data_test.json')
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
+    * def vaultId = dataSet.advVaultWithAllUsers
+    * def bodyData = 
+    """
+    {
+      "vaultId":"#(vaultId)",
+      "clientId": "#(testData.clientId)",
+      "quorums": [{
+        "members":[
+          {
+            "groupId": "#(groups.response.data.groups[0].id)",
+            "type": "GROUP"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      },{
+        "members":[
+          {
+            "userId": "#(approvalUserID)",
+            "type": "USER"
+          },
+          {
+            "userId": "#(adminUserID2)",
+            "type": "USER"
+          }
+        ],
+        "quorumApprovals": 1,
+        "isRequired": false
+      }],
+      "policyType": "advanced",
+      "viewers": []
+    }
+    """
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
+    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+
+    * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') bodyData
+    * def requestDraftId = response.data.requestDraftId
+    * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    # wait 2.5 mins to have edit vault request expired  
+    * eval java.lang.Thread.sleep(150000)
+    # Submit from mobile app. It should return error
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+  
+  @HideVault_Common @ignore
+  Scenario: Hide a vault
+    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
+    When method POST
+    Then status 201
+    * match response.status == 'success'
 

@@ -108,7 +108,7 @@ Feature: Vault
     @RAKCON-10218 @ViewVaultListing
   Scenario: View vault listing
     # View vault listing
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * param limit = 10
     * param offset = 0
     * param sort = 'DESC'
@@ -187,7 +187,7 @@ Feature: Vault
 
     @SearchVaultCommon @ignore
   Scenario: Search vaults - Common
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * param isHideSmallBalance = false
     * param keyword = keyword
     * param limit = 10
@@ -232,7 +232,7 @@ Feature: Vault
 
     @ignore @SortVaultByName-Common
   Scenario: Sort vault by name - Common
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * param isHideSmallBalance = false
     * param limit = 10
     * param offset = 0
@@ -296,19 +296,19 @@ Feature: Vault
     #Edit vault policy
     * def requestBody = { "memberIds": #(members), "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(members.length), "memberRequireIds" : [ #(approvalUserID) ] }
     * def editVaultPolicy = call read('Vault.feature@EditVaultPolicy-Common')
-    * match editVaultPolicy.response.data.record.additionalData.data.newApproverNumber == members.length
+    * match editVaultPolicy.response.data.data.record.additionalData.data.newApproverNumber == members.length
     * def expectedMemberRequiredApprove = [ #(approvalUserID) ]
-    * match editVaultPolicy.response.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
+    * match editVaultPolicy.response.data.data.record.additionalData.data.newMemberRequiredApprove == expectedMemberRequiredApprove
     * def expectedListMember = [ #(requesterUserID),#(approvalUserID) ]
-    * match $editVaultPolicy.response.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
-    * match editVaultPolicy.response.data.record.additionalData.data.note == testData.vault.editVaultNote
+    * match $editVaultPolicy.response.data.data.record.additionalData.data.currentParticipantsWhenInitialRequest[*].userId contains expectedListMember
+    * match editVaultPolicy.response.data.data.record.additionalData.data.note == testData.vault.editVaultNote
 
     @RAKCON-11350 @EditVaultPolicyHasPending
   Scenario: Edit vault policy when has pending request
     * callonce read('this:Vault.feature@EditVaultPolicy')
     * def requestBody = { "memberIds" : [ #(requesterUserID),#(approvalUserID) ], "note" : "#(testData.vault.editVaultNote)", "approveNumber" : #(members.length), "memberRequireIds" : [] }
     * call read('this:Vault.feature@EditVaultPolicy-Common')
-    Then match response.data.message == 'Exists pending requests'
+    Then match response.data.data.message == 'Exists pending requests'
 
     @ignore @EditVaultPolicy-Common
   Scenario: Edit vault policy - Common
@@ -356,7 +356,7 @@ Feature: Vault
 
     @ignore @ViewHiddenVaultCommon
   Scenario: View hidden listing vault common
-    Given path '/core/vault/accounts'
+    Given path '/core/vault/v2/accounts'
     * param isHideList = true
     * param limit = 10
     * param offset = 0
@@ -482,7 +482,7 @@ Feature: Vault
     * def editRequest = call read('this:Vault.feature@EditVaultPolicy-Common')
     * match editRequest.response.status == 'success'
     * match editRequest.response.code == 200
-    * match editRequest.response.data.isValid == true
+    * match editRequest.response.data.data.isValid == true
 
   @ignore @GetCreateVaultRequestID_NoCreate
   Scenario: Get request ID of creating vault request

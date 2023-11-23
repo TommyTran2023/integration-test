@@ -131,7 +131,7 @@ Feature: Transaction
 
   @RAKCON-10972 @View_transaction_detail
   Scenario: View transaction detail
-    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_rebalancing)']}
+    * def query = { limit:'10', offset: '0'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transactionId = response.data.transactions[0].id
     * def status = response.data.transactions[0].status

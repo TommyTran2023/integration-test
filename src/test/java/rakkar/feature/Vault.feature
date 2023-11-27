@@ -199,7 +199,7 @@ Feature: Vault
 
   @ignore @SearchVaultForTransfer
   Scenario: Search vaults for transfer
-    Given path 'core/vault/accounts'
+    Given path 'core/vault/v2/accounts'
     * param fromScreen = screenType
     * param groupBy = 'VAULT'
     * param limit = 10

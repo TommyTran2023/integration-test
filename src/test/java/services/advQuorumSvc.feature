@@ -5,7 +5,7 @@ Feature: Advance Quorum Service
     #----------------Quorums----------------#
     @ApproveRequest
   Scenario: Approve request
-    Given path 'advance-quorum/quorums/approval', requestId
+    Given path 'advance-quorum/quorums/approval/' + requestId
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
     * header passcode = passcode
@@ -36,7 +36,7 @@ Feature: Advance Quorum Service
 
     @GetQuorumPolicy
   Scenario: Get quorum policy
-    Given path 'advance-quorum/quorums', quorumId
+    Given path 'advance-quorum/quorums/' + quorumId
     * header Authorization = authorization
     When method GET
 

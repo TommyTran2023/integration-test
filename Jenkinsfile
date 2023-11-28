@@ -19,6 +19,11 @@ pipeline {
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }
 
+    triggers {
+        cron(env.BRANCH_NAME == 'uat' ? '00 8 * * 1,3')
+        cron(env.BRANCH_NAME == 'sit' ? '00 8 * * 1-5')
+    }
+
     stages {
         stage ('Git Checkout') {
             steps {
@@ -35,7 +40,6 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
-                            cron('30 8 * * 1,3')
                             break
                         case 'develop':
                             BRANCH = "develop"
@@ -46,7 +50,6 @@ pipeline {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
-                            cron('00 8 * * 1-5')
                     }
 
                     println("BRANCH = ${BRANCH}")
@@ -99,7 +102,7 @@ pipeline {
 
                     slackSend(channel: "${SLACK_CHANNEL}",
                         color: 'danger',
-                        message: "${ENV} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
+                        message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                     // office365ConnectorSend color: '#a82e2e',
                     //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
@@ -144,7 +147,7 @@ pipeline {
             script {
                 if (params.XRAY) {
                     for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                        def testName = "${ENV} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
+                        def testName = "${BRANCH} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
                         step([$class: 'XrayImportBuilder',
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
@@ -191,7 +194,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "${ENV} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -208,7 +211,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${ENV} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

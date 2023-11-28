@@ -21,10 +21,10 @@ pipeline {
 
     triggers {
         if (env.BRANCH_NAME == 'uat'){
-            cron(env.BRANCH_NAME == 'uat' ? '00 8 * * 1,3':'')
+            cron('00 8 * * 1,3':'')
         }
         if (env.BRANCH_NAME == 'sit'){
-            cron( ? '00 8 * * 1-5':'')
+            cron('00 8 * * 1-5':'')
         }
     }
 

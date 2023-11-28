@@ -65,11 +65,5 @@
     "QuorumMemberType":{
         "USER":"USER",
         "GROUP":"GROUP"
-    },
-    "ErrorCode":{
-        "EXISTS_PENDING_REQUEST": "EXISTS_PENDING_REQUEST"
-    },
-    "Action":{
-        "EDIT_ACCOUNT_POLICY":"EDIT_ACCOUNT_POLICY"
     }
 }

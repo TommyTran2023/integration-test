@@ -36,7 +36,6 @@ Feature: All api call to core services
     @GetVaultDetail
   Scenario: Get vault by id 
     Given path 'core/vault/accounts/' + vaultId
-    Given path 'core/vault/accounts/' + vaultId
     * header Authorization = authorization
     When method GET
 

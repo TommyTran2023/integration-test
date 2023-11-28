@@ -537,7 +537,7 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
     Then match response.data.policyType == "ADVANCE"
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     # * match each response.data.quorums[*].members[*].type == "USER"
     # * match each response.data.quorums[*].members[*].userId == "#uuid"
     # * match each response.data.quorums[*].members[*].groupId == "#uuid"
@@ -548,7 +548,7 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
     Then match response.data.policyType == "ADVANCE"
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     # * match each response.data.quorums[*].members[*].type == "GROUP"
     # * match each response.data.quorums[*].members[*].userId == "#uuid"
     # * match each response.data.quorums[*].members[*].groupId == "#uuid"
@@ -559,7 +559,7 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
     Then match response.data.policyType == "ADVANCE"
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
 
   @RAKCON-21141 @EditVaultWith2QuorumsUsers
   Scenario: Advanced to Advanced - Create Request Edit Vault With 2 Quorums as Users
@@ -847,8 +847,8 @@ Feature: Vault
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+    * if (response.data.requestId != null) karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:response.data.requestId})
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
     * def requestDraftId = response.data.requestDraftId
@@ -863,7 +863,7 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
     * def requestId = response.data.requestId
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    * call read(svc + 'AdvanceQuorum.feature@CancelRequest') {requestId: '#(requestId)'}
+    * call read(svc + 'Quorums.feature@CancelRequest') {requestId: '#(requestId)'}
 
   @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore 
   Scenario: Edit Vault Policy - Check expired of Request before Submit
@@ -904,8 +904,8 @@ Feature: Vault
     }
     """
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+    * if (response.data.requestId != null) karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:response.data.requestId})
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') bodyData
     * def requestDraftId = response.data.requestDraftId

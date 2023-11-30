@@ -61,7 +61,7 @@ Feature: Advance-quorum
                 "createdBy" : "#(userId)",
                 "limit" : 10,
                 "isHistory" : true,
-                "offset" : 10,
+                "offset" : 0,
                 "keyword" : ""
             }
         }
@@ -112,4 +112,107 @@ Feature: Advance-quorum
         * call read(svc + 'advQuorumSvc.feature@ViewAccountPolicyRequest') {authorization:#(accessToken)}
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @GetTotalPendingRequest
+    Scenario: Get Total Pending Request
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@GetTotalPendingRequest') {authorization:#(accessToken)}
+        
+    @GetListCreatedByUser
+    Scenario: Get list creator
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            params:{
+                "limit" : 10,
+                "offset" : 0,
+                "keyword" : ""
+            }
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@GetListCreatedByUser') data
+        
+    @CheckRequestImpact
+    Scenario: Check Request Impact
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@CheckRequestImpact') {authorization:#(accessToken)}
+        
+    @GetVideoTextSentence
+    Scenario: Get video captured sentence
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@GetVideoTextSentence') {authorization:#(accessToken)}
+        
+    @GetVideoRandomWords
+    Scenario: Get video random words speech prompt
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@GetVideoRandomWords') {authorization:#(accessToken)}
+        
+    @CountPendingRequest
+    Scenario: Get count pending request
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * call read(svc + 'advQuorumSvc.feature@CountPendingRequest') {authorization:#(accessToken)}
+        
+    @ReadPendingRequest
+    Scenario: Read pending request
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            body:{id: #(requestId)}
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@ReadPendingRequest') data
     
+    @GetQuorumDraftByIdByRequestDraftId
+    Scenario: Get Quorum Draft By Id By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            quorumDraftId:#(quorumDraftId)
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@GetQuorumDraftByIdByRequestDraftId') data
+   
+    @ApproveQuorumDraftByIdByRequestDraftId
+    Scenario: Approve Quorum Draft By Id By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            quorumDraftId:#(quorumDraftId)
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@ApproveQuorumDraftByIdByRequestDraftId') data
+    
+    @RejectQuorumDraftByIdByRequestDraftId
+    Scenario: Reject Quorum Draft By Id By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            quorumDraftId:#(quorumDraftId)
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@RejectQuorumDraftByIdByRequestDraftId') data
+        
+    @CancelQuorumDraftByIdByRequestDraftId
+    Scenario: Cancel Quorum Draft By Id By Request Draft Id
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization:#(accessToken),
+            quorumDraftId:#(quorumDraftId)
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@CancelQuorumDraftByIdByRequestDraftId') data
+        
+          
+

@@ -6,7 +6,7 @@ function fn(){
             var cancel = karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:requestId} ) 
 
             if (cancel.responseStatus != 200)
-                throw new TypeError('Cannot reject request. Error: ' + JSON.stringify(cancel, null, 4))
+                throw new TypeError('Cannot cancel request. Error: ' + JSON.stringify(cancel, null, 4))
         }   
     }
 

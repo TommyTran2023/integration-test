@@ -65,8 +65,32 @@ function fn(){
             return pendingRequestId
         },
 
-        createAddNewWhitelistRequest: function(){
-            var folder = karate.call(svc + 'Whitelist.feature@')
+        createNewWhitelistAddressRequest: function(type){
+            var folderData = {
+                name: type + '_folder - ' + generateRandomName(),
+                type: type,
+                note: ''
+            }
+            var folder = karate.call(svc + 'Whitelist.feature@CreateWhitelist', folderData)
+
+            var addressData = {
+                folderId: folder.response.data.id,
+                tokenId: dataSet.tokenId,
+                address: dataSet.address
+            }
+            karate.call(svc + 'Whitelist.feature@AddWhitelistAddress', addressData)
+
+            // Search for latest New Whitelist Address
+            var requesterInfo = karate.call(svc + 'Auth.feature@GetRequesterInfo')
+
+            var searchData = {
+                userId:requesterInfo.userId,
+                status: ['PENDING'],
+                requestCategories:["WHITELIST"]
+            }
+            var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', searchData)
+
+            return requests.response.data.records[0].id
         }
     }
 }

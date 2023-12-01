@@ -51,6 +51,7 @@ Feature: Advance-quorum
     @GetMyRequests
     Scenario: Get My Request List
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def requestCategories = karate.get('requestCategories',[])
         * def status = karate.get('status',[])
         * def data = 
         """
@@ -59,10 +60,10 @@ Feature: Advance-quorum
             body:{
                 "status" : #(status),
                 "createdBy" : "#(userId)",
+                "requestCategories": "#(requestCategories)",
                 "limit" : 10,
                 "isHistory" : true,
-                "offset" : 0,
-                "keyword" : ""
+                "offset" : 0
             }
         }
         """

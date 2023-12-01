@@ -30,6 +30,10 @@ Feature: Approval Request
   
   @ApprovalNewAddressWhitelist_internal
   Scenario: Approval - Add whitelist address internal
-    * call read('this:WhiteListFolder.feature@Create_address_internal')
-    * karate.call('this:ApprovalRequest.feature@ApproveRequestCommon')
+    # Create request edit Account Policy
+    * def requestId = requestHandle().createNewWhitelistAddressRequest(Const.WhitelistType.INTERNAL)
+    
+    # Approver do biometric scan and approve request
+    * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+    * call read(svc + 'Quorums.feature@ApproveRequest') {requestId:#(requestId)}
   

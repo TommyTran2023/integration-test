@@ -1,4 +1,4 @@
-@RAKCON-10583
+@RAKCON-10583 @parallel=false
 Feature: Account admin policy
     Background:
         * callonce read(svc + 'ReadData.feature')

@@ -10,6 +10,10 @@ function fn(){
         }   
     }
 
+    function generateRandomName(){
+        return java.lang.System.currentTimeMillis()
+    }
+
     return {
         cancelPendingRequestOnVault: function(vaultId){
             // Get vault detail
@@ -45,6 +49,24 @@ function fn(){
             for(var i = 0; i < records.length; i++) {
                 cancelRequest(records[i].id)
             }
+        },
+
+        createEditAccountPolicyRequest: function(){
+            var policy = karate.call(svc + 'Quorums.feature@GetAccountPolicy')
+            var pendingRequestId = policy.response.data.pendingRequestId
+            
+            if (pendingRequestId == null){
+                var requesterInfo = karate.call(svc + 'Auth.feature@GetRequesterInfo')
+                karate.call(svc + 'Customers.feature@EditAccountPolicy', {customerId: requesterInfo.response.data.customerId})
+                policy = karate.call(svc + 'Quorums.feature@GetAccountPolicy')
+                pendingRequestId = policy.response.data.pendingRequestId
+            }
+            
+            return pendingRequestId
+        },
+
+        createAddNewWhitelistRequest: function(){
+            var folder = karate.call(svc + 'Whitelist.feature@')
         }
     }
 }

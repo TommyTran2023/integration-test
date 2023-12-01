@@ -1,4 +1,4 @@
-@ignore
+    @ignore
 Feature: Vault 
 
     Background:
@@ -268,7 +268,7 @@ Feature: Vault
         """
         * call read(svc + 'coreSvc.feature@ListVaultMissingPolicy') data
     
-        @GetListVaultStake
+    @GetListVaultStake
     Scenario: Get List Vault Stake
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def keyword = karate.get('keyword', '')
@@ -418,3 +418,32 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@CancelUpdateVaultRequest') data
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @HideVault
+    Scenario: Hide a vault
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@HideVault') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+        
+    @UnhideVault
+    Scenario: UnhideVault a vault
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@UnhideVault') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+       

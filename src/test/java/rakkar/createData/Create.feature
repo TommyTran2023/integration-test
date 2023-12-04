@@ -364,3 +364,9 @@ Feature: Create Vault data
     Scenario: Create standard vault for edit policy
         * call read('Create.feature@CreateSkipVault') {name: #(testData.skipVaultForAddPolicy), type: #(Const.VaultType.COLD_WALLET)}
 
+    @CreateStandardVaultForEditPolicyAndApprove
+    Scenario: Create standard vault for edit policy and approve
+        * call read('Create.feature@CreateStandardVault') {name: #(testData.standardForEditPolicy2), type: #(Const.VaultType.HOT_WALLET)}
+
+                
+

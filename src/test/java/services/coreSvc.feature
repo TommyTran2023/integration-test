@@ -43,7 +43,7 @@ Feature: All api call to core services
   Scenario: Edit vault policy 
     Given path 'core/vault/account/' + vaultId + '/rules'
     * header Authorization = authorization
-    * request requestBody
+    * request body
     When method PUT
 
     @HideVault

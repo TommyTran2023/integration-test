@@ -447,3 +447,22 @@ Feature: Vault
         Then match responseStatus == 200
         * match response.status == 'success'
        
+    @EditVaultPolicy
+    Scenario: UnhideVault a vault
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: #(accessToken),
+            vaultId: #(vaultId),
+            body:{
+                "memberIds": #(members), 
+                "note" : "#(note)", 
+                "approveNumber" : #(members.length), 
+                "memberRequireIds" : [ ]
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@EditVaultPolicy') data
+        Then match responseStatus == 200
+        * match response.status == 'success'

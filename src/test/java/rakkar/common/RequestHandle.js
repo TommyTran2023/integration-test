@@ -69,7 +69,7 @@ function fn(){
             var folderData = {
                 name: type + '_folder - ' + generateRandomName(),
                 type: type,
-                note: ''
+                note: 'create New Whitelist Address Request'
             }
             var folder = karate.call(svc + 'Whitelist.feature@CreateWhitelist', folderData)
 
@@ -91,6 +91,17 @@ function fn(){
             var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', searchData)
 
             return requests.response.data.records[0].id
+        },
+
+        createEditVaultPolicyToStandardRequest: function(vaultId, members){
+            var editData = {
+                vaultId: vaultId,
+                note: "Edit Vault Policy To Standard Request",
+                members: members
+            }
+            var editRequest = karate.call(svc + 'Vault.feature@EditVaultPolicy', editData)
+            
+            return editRequest.response.data.data.record.id
         }
     }
 }

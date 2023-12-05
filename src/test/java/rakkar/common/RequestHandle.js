@@ -1,4 +1,15 @@
 function fn(){
+    function cancelRequestsByCategories(userId, categories){
+        var data = {requestCategories: categories, userId: userId, status : ["PENDING"]}
+        var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
+        var records = requests.response.data.records
+
+        // Cancel requests
+        for(var i = 0; i < records.length; i++) {
+            cancelRequest(records[i].id)
+        }
+    }
+
     function cancelRequest(requestId){
         // Cancel pending request if have
         if (requestId != null){
@@ -27,28 +38,16 @@ function fn(){
             cancelRequest(requestId)
         },
 
-        cancelAllMyTransferPendingRequest: function(userId){
-            // Get all my pending requests
-            var data = {requestCategories:["TRANSFER"], userId: userId, status : ["PENDING"]}
-            var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
-            var records = requests.response.data.records
+        cancelAllMyPendingRequest: function(userId){
+            cancelRequestsByCategories(userId, [])
+        },
 
-            // Cancel requests
-            for(var i = 0; i < records.length; i++) {
-                cancelRequest(records[i].id)
-            }
+        cancelAllMyTransferPendingRequest: function(userId){
+            cancelRequestsByCategories(userId, ["TRANSFER"])
         },
 
         cancelAllEditUserPendingRequest: function(userId){
-            // Get all my pending requests
-            var data = {requestCategories:["USER"], userId: userId, status : ["PENDING"]}
-            var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
-            var records = requests.response.data.records
-
-            // Cancel requests
-            for(var i = 0; i < records.length; i++) {
-                cancelRequest(records[i].id)
-            }
+            cancelRequestsByCategories(userId, ["USER"])
         },
 
         createEditAccountPolicyRequest: function(){

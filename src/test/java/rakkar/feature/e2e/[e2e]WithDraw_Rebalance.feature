@@ -249,7 +249,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 3.Select destination from internal.
     * def screenType = Const.Transfer.FromScreen.DESTINATION
     * def getDestination = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[1]
+    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.vaults[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
     * def destinationId_warm = destination_warm.id
     * def destinationName_warm = destination_warm.name
 

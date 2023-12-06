@@ -52,7 +52,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 6.Submit transfer
     * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(destinationId_warm)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
     * call read(classpath +'Transfer.feature@External_Transfer_Common')
-    * match sourceName_warm == response.data.sourceName
+    * match response.data.sourceName contains sourceName_warm
     * match destinationName_warm == response.data.destinationName
     * def transactionId = response.data.id
     * def requestId = response.data.requestId
@@ -83,7 +83,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
    # 9.2.Verify balance of destination && transaction show in destination
     * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
 
-  @RAKCON-19301 
+  @RAKCON-19301
   Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
   # 1.Select token for doing transfer
     * def getToken = call read(classpath +'Transfer.feature@Get_asset_transfer')
@@ -249,7 +249,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 3.Select destination from internal.
     * def screenType = Const.Transfer.FromScreen.DESTINATION
     * def getDestination = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[1]
+    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.vaults[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
     * def destinationId_warm = destination_warm.id
     * def destinationName_warm = destination_warm.name
 

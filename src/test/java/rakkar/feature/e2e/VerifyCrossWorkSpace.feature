@@ -63,6 +63,7 @@ Feature: Verify after transfer cross workspace
 
     # --- Verify balance of destination updated correctly
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
+    * print amount_recieve, destinationAmountBefore, totalExpectedDestination
     * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction

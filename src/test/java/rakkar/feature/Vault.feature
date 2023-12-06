@@ -199,6 +199,7 @@ Feature: Vault
 
   @ignore @SearchVaultForTransfer
   Scenario: Search vaults for transfer
+    * def data_v2 = read('classpath:data/data.json')
     Given path 'core/vault/v2/accounts'
     * param fromScreen = screenType
     * param groupBy = 'VAULT'
@@ -207,6 +208,7 @@ Feature: Vault
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
     * param tokenSymbol = tokenSymbol
+    * param keyword = data_v2.stdVaultE2E
     When method GET
     Then status 200
     * match response.status == 'success'

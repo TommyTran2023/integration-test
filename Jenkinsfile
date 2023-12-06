@@ -29,23 +29,22 @@ pipeline {
                 // update branch and test environment
                 script {
 
-                    switch (env.BRANCH_NAME) {
-                        case 'main':
+                    if (env.BRANCH_NAME == 'main'){
                             BRANCH = "main"
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
-                            break
-                        case 'uat':
+                    }
+                    else if ((env.BRANCH_NAME == 'uat') || (params.E2E && params.ENV = "UAT")){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
-                            break
-                        case 'develop':
+                    }
+                    else if (env.BRANCH_NAME == 'develop'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
-                            break
-                        default:
+                    }
+                    else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"

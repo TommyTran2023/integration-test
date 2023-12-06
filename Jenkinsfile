@@ -34,7 +34,7 @@ pipeline {
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
                     }
-                    else if ((env.BRANCH_NAME == 'uat') || (params.E2E && params.ENV = "UAT")){
+                    else if ((env.BRANCH_NAME == 'uat') || (params.E2E && params.ENV == "UAT")){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"

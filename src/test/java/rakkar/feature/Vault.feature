@@ -824,6 +824,11 @@ Feature: Vault
   Scenario: Advance To Standard - Create edit advance policy to standard
     * def vaultIDWA = dataSet.advVaultWithAllUsers
     * callonce read(svc + 'Auth.feature@GetListUsers')
+
+    # cancel pending request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelPendingRequestOnVault(vaultIDWA)
+
     * def members = vaultMemberList
     * print members
     * def requestBody = 
@@ -839,10 +844,6 @@ Feature: Vault
     * match response.status == 'success'
     * match response.code == 200
     * match response.data.data.isValid == true
-    # clean up, cancel request
-    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
-    * requestHandle().cancelPendingRequestOnVault(vaultIDWA)
-
 
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault

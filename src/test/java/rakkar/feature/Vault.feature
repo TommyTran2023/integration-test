@@ -825,7 +825,7 @@ Feature: Vault
     * def vaultIDWA = dataSet.advVaultWithAllUsers
     * callonce read(svc + 'Auth.feature@GetListUsers')
 
-    # clean up, cancel request
+    # cancel pending request
     * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
     * requestHandle().cancelPendingRequestOnVault(vaultIDWA)
 
@@ -844,11 +844,6 @@ Feature: Vault
     * match response.status == 'success'
     * match response.code == 200
     * match response.data.data.isValid == true
-    
-    # clean up, cancel request
-    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
-    * requestHandle().cancelPendingRequestOnVault(vaultIDWA)
-
 
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault

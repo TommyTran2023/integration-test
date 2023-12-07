@@ -844,6 +844,7 @@ Feature: Vault
     * match response.status == 'success'
     * match response.code == 200
     * match response.data.data.isValid == true
+    
     # clean up, cancel request
     * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
     * requestHandle().cancelPendingRequestOnVault(vaultIDWA)

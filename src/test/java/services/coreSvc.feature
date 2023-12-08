@@ -170,3 +170,11 @@ Feature: All api call to core services
     * header Authorization = authorization
     * params params
     When method GET
+
+#----------Groups-----------#  
+  @GetGroupsWithDetailsByIds
+  Scenario: Get Groups With Details By Ids
+    Given path 'core/groups/with-detail'
+    * header Authorization = authorization
+    * params params
+    When method GET

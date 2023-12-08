@@ -93,8 +93,16 @@ Feature: Common call from Auth services
         """
         {
             authorization: '#(accessToken)',
-            userId: '#(userId)'
+            params:{
+                userIds: '#(userIds)',
+                limit: 20,
+                offset: 0,
+                searchText: ''
+            }
         }
         """
         * call read('this:authSvc.feature@GetUserDetail') data
+        * match responseStatus == 200
+        * match response.code == 200
+        * match response.status == 'success'
         

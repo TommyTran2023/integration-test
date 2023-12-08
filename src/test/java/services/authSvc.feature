@@ -62,6 +62,7 @@ Feature: Authorization
     
     @GetUserDetail
     Scenario: Get user details
-        Given path '/auth/account/users/' + userId
+        Given path '/auth/account/users/'
         * header Authorization = authorization
+        * params params
         When method GET

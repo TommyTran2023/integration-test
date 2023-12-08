@@ -79,6 +79,37 @@
       "approverNumber":"#number",
       "name":"#string",
       "totalUSDYesterday":"##number"
+    },
+    "details":{
+      "id": "#uuid",
+      "name": "#string",
+      "createdAt": "#string",
+      "type": "#string",
+      "hiddenOnUI": "#boolean",
+      "quorumId": "#string",
+      "totalUSD": "#number",
+      "missing": "#boolean",
+      "totalBTC": "#string",
+      "totalUSDYesterday": "#number",
+      "totalTransactionPending": "#number",
+      "requestId": "##string",
+      "isPendingRequest": "#boolean",
+      "workspace": {
+        "name": "#string",
+        "type": "#string"
+      },
+      "isArchived": "#boolean",
+      "policyType": "#string",
+      "approverNumber": "#number",
+      "quorums": "##[]",
+      "users": "##[]",
+      "viewers": "##[]"
+    },
+    "quorumDetails":{
+      "isRequired": "#boolean",
+      "quorumName": "#string",
+      "quorumApprovals": "#number",
+      "members": "#[]"
     }
   },
   "wallet": {
@@ -344,6 +375,24 @@
       "sourceType": "#string",
       "sourceMapping": "#string"
     }
+  },
+  "quorumDetails":{
+      "viewers": "#[]",
+      "policyType": "#string",
+      "objectType": "#string",
+      "approverNumber": "#number",
+      "quorums": "#[]"
+  },
+  "user":{
+    "userId": "#uuid",
+    "email": "#string",
+    "name": "#string",
+    "enabled": "#boolean",
+    "role": "#string",
+    "roleDisplayName": "#string",
+    "requiredApprover": "#boolean",
+    "isApprover": "#boolean",
+    "picture": "##string"
   }
 }
 

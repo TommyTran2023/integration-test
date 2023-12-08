@@ -10,6 +10,8 @@ Feature: Vault
     * def testData = read('classpath:data/data_test.json')
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
+    * def Const = read('classpath:data/enum.json')
+    * def testData_v2 = read('classpath:data/data.json')
     # * callonce read(svc + 'ReadData.feature')
 
     @ignore @GenerateVaultName
@@ -518,48 +520,105 @@ Feature: Vault
     
   @RAKCON-21137 @ViewCurrentStandardPolicy
   Scenario: Standard Vault - View Current Policy
-    * def creatingVault = call read('this:Vault.feature@AddNewVaultWithAdminSetup')
+    * def creatingVault = call read('this:ApprovalRequest.feature@ApproveNewVaultRequest')
     * def vaultIDWA = creatingVault.vaultIDWA
-    * call read('this:Vault.feature@GetCreateVaultRequestID_NoCreate')
-    Then match each response.data.users[*].id == "#uuid"
-    * match each response.data.users[*].email == "#string"
-    * match each response.data.users[*].name == "#string"
-    * match each response.data.users[*].enabled == "#boolean"
-    * match each response.data.users[*].role == "#string"
-    * match each response.data.users[*].roleDisplayName == "#string"
-    * match each response.data.users[*].requiredApprover == "#boolean"
-    * match each response.data.users[*].isApprover == "#boolean"
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultIDWA)'}
+    Then match response.data.id == vaultIDWA
+    * match response.data.name == creatingVault.response.data.name
+    * match response.data.createdAt == creatingVault.response.data.createdAt
+    * match response.data.type == creatingVault.response.data.type
+    * match response.data.hiddenOnUI == creatingVault.response.data.hiddenOnUI
+    * match response.data.totalBTC == creatingVault.response.data.totalBTC
+    * match response.data.totalUSDYesterday == creatingVault.response.data.totalUSDYesterday
+    * match response.data.totalTransactionPending == creatingVault.response.data.totalTransactionPending
+    * match response.data.workspace.name == creatingVault.response.data.workspace.name
+    * match response.data.workspace.type == creatingVault.response.data.workspace.type
+    * match response.data.isArchived == creatingVault.response.data.isArchived
+    * match response.data.policyType == Const.VaultPolicyType.STANDARD.toUpperCase()
+    * match response.data == schemaBody.vault.details
+    * match each response.data.users[*] == schemaBody.user
+
+    * def isApprover = function(x) { return x.isApprover }
+    * def approverList = karate.filter(creatingVault.response.data.users, isApprover)
+    * match response.data.approverNumber == approverList.length
+
+    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+    * match commonHandle().checkAllUsersExpected(response.data.users, creatingVault.response.data.users) == true
     * call read('this:Vault.feature@HideVault_Common')
 
   @RAKCON-21138 @ViewCurrentAdvancedPolicy-Users
     Scenario: Advanced Vault - View Current Policy When Quorums Are Users
     * def vaultId = dataSet.advVaultWithAllUsers
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    Then match response.data.policyType == "ADVANCE"
+    Then match response.data.id == vaultId
+    * match response.data.name contains testData_v2.advVaultWithAllUsers 
+    * match response.data.type == Const.VaultType.HOT_WALLET
+    * match response.data.hiddenOnUI == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data == schemaBody.vault.details
+    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
+
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
-    # * match each response.data.quorums[*].members[*].type == "USER"
-    # * match each response.data.quorums[*].members[*].userId == "#uuid"
-    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
+    * match response.data.objectType == Const.QuorumType.VAULT_LVL
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
+    * match response.data == schemaBody.quorumDetails
+
+    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+    * match commonHandle().checkQuorumsValid(response.data.quorums) == true
 
   @RAKCON-21139 @ViewCurrentAdvancedPolicy-Groups
   Scenario: Advanced Vault - View Current Policy When Quorums Are Groups
     * def vaultId = dataSet.advVaultWithAllGroups
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    Then match response.data.policyType == "ADVANCE"
+    Then match response.data.id == vaultId
+    * match response.data.name contains testData_v2.advVaultWithAllGroups
+    * match response.data.type == Const.VaultType.HOT_WALLET
+    * match response.data.hiddenOnUI == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data == schemaBody.vault.details
+    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
+
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
-    # * match each response.data.quorums[*].members[*].type == "GROUP"
-    # * match each response.data.quorums[*].members[*].userId == "#uuid"
-    # * match each response.data.quorums[*].members[*].groupId == "#uuid"
+    * match response.data.objectType == Const.QuorumType.VAULT_LVL
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
+    * match response.data == schemaBody.quorumDetails
+
+    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+    * match commonHandle().checkQuorumsValid(response.data.quorums) == true
 
   @RAKCON-21140 @ViewCurrentAdvancedPolicy-GroupsUsers
   Scenario: Advanced Vault - View Current Policy When Quorums Are Groups and Users
     * def vaultId = dataSet.advVaultWithAllGroupsAndUsers
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    Then match response.data.policyType == "ADVANCE"
+    Then match response.data.id == vaultId
+    * match response.data.name contains testData_v2.advVaultWithAllGroupsAndUsers 
+    * match response.data.type == Const.VaultType.HOT_WALLET
+    * match response.data.hiddenOnUI == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data == schemaBody.vault.details
+    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
+
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * match response.data.objectType == Const.QuorumType.VAULT_LVL
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
+    * match response.data == schemaBody.quorumDetails
+
+    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+    * match commonHandle().checkQuorumsValid(response.data.quorums) == true
+
+  @RAKCON-23085 @GetVaultMemberDetails
+  Scenario: Get Vault Member Details (Groups, Users)
+    * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(dataSet.advVaultWithAllGroupsAndUsers)'}
+    * def quorumId = response.data.quorumId
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    
+    * def groupIds = karate.jsonPath(response.data,"$..['groupId']").join(",")
+    * def userIds = karate.jsonPath(response.data,"$..['userId']").join(",")
+    * call read(svc + 'Auth.feature@GetUserDetails') {userIds: #(userIds)}
+    * call read(svc + 'Group.feature@GetGroupsWithDetailsByIds') {ids: #(groupIds)}
 
   @RAKCON-21141 @EditVaultWith2QuorumsUsers
   Scenario: Advanced to Advanced - Create Request Edit Vault With 2 Quorums as Users

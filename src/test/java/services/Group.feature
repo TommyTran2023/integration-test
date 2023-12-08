@@ -32,3 +32,22 @@ Scenario: Get Group Details
     """
     * call read('this:advQuorumSvc.feature@GetGroupDetails') data
 
+@GetGroupsWithDetailsByIds
+Scenario: Get Groups With Details By Ids
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data =
+    """
+    {
+        "authorization":#(accessToken),
+        "params": {
+            "limit": 10,
+            "offset": 0,
+            "searchText": "",
+            "ids": #(ids)
+        }
+    }
+    """
+    * call read('this:coreSvc.feature@GetGroupsWithDetailsByIds') data
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.status == 'success'

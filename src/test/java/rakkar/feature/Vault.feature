@@ -609,8 +609,8 @@ Feature: Vault
     * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
     * match commonHandle().checkQuorumsValid(response.data.quorums) == true
 
-  @GetVaultMemberDetails
-  Scenario: Get Vault Member Details
+  @RAKCON-23085 @GetVaultMemberDetails
+  Scenario: Get Vault Member Details (Groups, Users)
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(dataSet.advVaultWithAllGroupsAndUsers)'}
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}

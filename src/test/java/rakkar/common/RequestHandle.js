@@ -101,6 +101,14 @@ function fn(){
             var editRequest = karate.call(svc + 'Vault.feature@EditVaultPolicy', editData)
             
             return editRequest.response.data.data.record.id
+        },
+
+        createTransferRequest: function(sourceId, destinationId, tokenId){
+            var transferData = {
+
+            }
+
+            var txnRequest = karate.call(svc + '')
         }
     }
 }

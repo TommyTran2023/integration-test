@@ -80,10 +80,17 @@ pipeline {
         stage ('Test Execution') {
             steps {
                 script {
-                    echo "KARATE_ENV = ${KARATE_ENV}"
-                    def tag = params.E2E ? "@e2e" : "~@e2e"
-                    withMaven(maven: 'Maven') {
-                        sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
+                    when {
+                        !serviceStatus
+                    }
+                    steps {
+
+                        // This step will only be executed if the serviceStatus = true
+                        echo "KARATE_ENV = ${KARATE_ENV}"
+                        def tag = params.E2E ? "@e2e" : "~@e2e"
+                        withMaven(maven: 'Maven') {
+                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
+                        }
                     }
                 }
             }

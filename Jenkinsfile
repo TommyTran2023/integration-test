@@ -81,7 +81,7 @@ pipeline {
             steps {
                 script {
                     when {
-                        !serviceStatus
+                        expression { !serviceStatus }
                     }
                     steps {
 

@@ -32,7 +32,27 @@ Feature: Group Policies
     """
     * call read('this:advQuorumSvc.feature@GetGroupDetails') data
 
-    @CreateGroupUsers
+@GetGroupsWithDetailsByIds
+Scenario: Get Groups With Details By Ids
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data =
+    """
+    {
+        "authorization":#(accessToken),
+        "params": {
+            "limit": 10,
+            "offset": 0,
+            "searchText": "",
+            "ids": #(ids)
+        }
+    }
+    """
+    * call read('this:coreSvc.feature@GetGroupsWithDetailsByIds') data
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.status == 'success'    
+
+@CreateGroupUsers
   Scenario: Create Group Users
     * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
     * def data =

@@ -6,7 +6,8 @@
     "VaultPolicyType": {
         "STANDARD":"standard",
         "ADVANCED":"advanced",
-        "SKIP":null
+        "SKIP":null,
+        "ADVANCE":"ADVANCE"
     },
     "Transfer":{
         "FromScreen":{
@@ -65,5 +66,11 @@
     "QuorumMemberType":{
         "USER":"USER",
         "GROUP":"GROUP"
+    },
+    "QuorumType":{
+        "ACCOUNT_LVL":"ACCOUNT_LVL",
+        "VAULT_LVL":"VAULT_LVL",
+        "TRANSACTION":"TRANSACTION",
+        "ONBOARDING":"ONBOARDING"
     }
 }

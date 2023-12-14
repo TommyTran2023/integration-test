@@ -869,3 +869,404 @@ Feature: All api call to core services
     Given path 'core/v2/rep/walletInfo/' + id + '/hard'
     * header Authorization = authorization
     When method DELETE
+
+    @GetCustomerBillingDetail
+  Scenario: Get customer billing detail
+    Given path 'core/customers/billings/' + billingId
+    * header Authorization = authorization
+    * param isHistory = #(isHistory)
+
+    @GetPathInvoicePdf
+  Scenario: Get Path Invoice Pdf
+    Given path 'core/customers/billings/' + billingId + '/view-pdf'
+    * header Authorization = authorization
+    * param isHistory = #(isHistory)
+
+    @ExportBillingDetail
+  Scenario: Export billing detail, returned as a CSV file
+    Given path 'core/customers/billings/export'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @ExportInvoicesAsPDF
+  Scenario: Export Invoices As PDF
+    Given path 'core/customers/billings/invoice'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @MarkAsReviewedInvoice
+  Scenario: Mark as reviewed invoice
+    Given path 'core/customers/billings/'+ billingId + '/review'
+    * header Authorization = authorization
+    When method POST
+    
+    @MarkAsPaidInvoice
+  Scenario: Mark as paid invoice
+    Given path 'core/customers/billings/'+ billingId + '/paid'
+    * header Authorization = authorization
+    When method POST
+
+    @GetProductSubscription
+  Scenario: Get Product Subscription
+    Given path 'core/customers/' + customerId + '/fee'
+    * header Authorization = authorization
+    When method GET
+
+    @CreateProductSubscription
+  Scenario: Create Product Subscription
+    Given path 'core/customers/' + customerId + '/fee'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @UpdateProductSubscription
+  Scenario: Update Product Subscription
+    Given path 'core/customers/' + customerId + '/fee/' + feeInformationId
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @GetListCustomer
+  Scenario: Get List Customer
+    Given path '/core/customers
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @CreateNewCustomer
+  Scenario: Create New Customer
+    Given path '/core/customers
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @Customer_GetListAssetsStaking
+  Scenario: Customer - Get List Assets Staking
+    Given path 'core/customers/assets-staking'
+    * header Authorization = authorization
+    When method GET
+
+    @Customer_GetTotalActiveCustomer
+  Scenario: Customer - Get Total Active Customer
+    Given path 'core/customers/total-active'
+    * header Authorization = authorization
+    When method GET
+
+    @Customer_GetListBusinessType
+  Scenario: Customer - Get List Business Type
+    Given path 'core/customers/business-type'
+    * header Authorization = authorization
+    When method GET
+
+    @Customer_GetListWorkspace
+  Scenario: Customer - Get List Workspace
+    Given path 'core/customers/workspace'
+    * header Authorization = authorization
+    When method GET
+
+    @Customer_GetListEntityRelation
+  Scenario: Customer - Get List Entity Relation
+    Given path 'core/customers/entity-relation'
+    * header Authorization = authorization
+    When method GET
+
+    @CheckCustomerBRIAndCountry
+  Scenario: Check Customer BRI And Country
+    Given path 'core/customers/check-bri-and-country'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @CheckCustomerShortName
+  Scenario: Validate duplicate customer by short name
+    Given path 'core/customers/check-short-name'
+    * header Authorization = authorization
+    * param customerShortName = customerShortName
+    When method GET
+
+    @Customer_GetTotalPendingRequest
+  Scenario: Customer - Get Total Pending Request
+    Given path 'core/customers/total-pending-request'
+    * header Authorization = authorization
+    When method GET
+
+#----------Country-----------#  
+    @CheckRestrictedCountries
+  Scenario: Check Restricted Countries
+    Given path '/core/restricted/check-country'
+    * header Authorization = authorization
+    When method GET
+
+#----------Assets-----------#  
+    @GetAssetsInAllAccountVaults
+  Scenario: Get Assets In All Account Vaults
+    Given path '/core/assets/chart'
+    * header Authorization = authorization
+    * param type = type
+    When method GET
+
+    @GetAssetShortcuts
+  Scenario: Get list asset shortcuts
+    Given path '/core/assets/shortcuts'
+    * header Authorization = authorization
+    * params data
+    When method GET
+
+    @GetAssetShortcutDetail
+  Scenario: Get detail asset shortcuts 
+    Given path '/core/assets/shortcuts/' + shortcutId
+    * header Authorization = authorization
+    When method GET
+
+    @RenameShortcut
+  Scenario: Rename shortcut
+    Given path '/core/assets/shortcuts/' + shortcutId
+    * header Authorization = authorization
+    * request { name: #(name) }
+    When method PUT
+
+    @GetAssetsInterested
+  Scenario: Get value assets of user interested
+    Given path '/core/assets/interested'
+    * header Authorization = authorization
+    When method GET
+
+    @UpdateAssetsInterested
+  Scenario: Update value assets of user interested
+    Given path '/core/assets/interested'
+    * header Authorization = authorization
+    * request body
+    When method GET
+
+    @GetTokenPrices
+  Scenario: Get value assets
+    Given path '/core/assets/price'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @CreateShortcut
+  Scenario: Create shortcut asset
+    Given path '/core/assets/shortcut'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @DeleteShortcut
+  Scenario: Delete shortcut asset
+    Given path '/core/assets/shortcut'
+    * header Authorization = authorization
+    * request body
+    When method DELETE
+
+    @GetShortcutName
+  Scenario: Get name of shortcut asset
+    Given path '/core/assets/shortcut/name'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @CheckShortcutNameExists
+  Scenario: Get name of shortcut asset
+    Given path '/core/assets/check-shortcut-name-exist'
+    * header Authorization = authorization
+    * param shortcutName = shortcutName
+    When method GET
+
+    @DeleteShortcutById
+  Scenario: Delete shortcut by Id
+    Given path '/core/assets/shortcut/' + shortcutId
+    * header Authorization = authorization
+    When method DELETE
+
+    @CheckExistingShortcut
+  Scenario: Check existing asset shortcuts
+    Given path '/core/assets/check-existing
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @AllocationDetail
+  Scenario: Get asset allocation detail 
+    Given path '/core/assets/allocation-detail
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @GetAllVaultOfAsset
+  Scenario: Get all asset vault
+    Given path '/core/assets/overview
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @GetListAssetsStaking
+  Scenario: Get List Assets Staking
+    Given path '/core/assets/assets-staking
+    * header Authorization = authorization
+    When method GET
+
+#----------Comments-----------#  
+    @GetComments
+  Scenario: Get Comments
+    Given path entityType + '/' + entityId + '/comments'
+    * header Authorization = authorization
+    When method GET
+  
+    @CreateComment
+  Scenario: Create Comment
+    Given path entityType + '/' + entityId + '/comments'
+    * header Authorization = authorization
+    * request {content:content}
+    When method POST
+
+    @UpdateComment
+  Scenario: Update Comment
+    Given path entityType + '/' + entityId + '/comments/' + commentId 
+    * header Authorization = authorization
+    * request {content:content}
+    When method POST
+
+    @DeleteComment
+  Scenario: Update Comment
+    Given path entityType + '/' + entityId + '/comments/' + commentId 
+    * header Authorization = authorization
+    When method DELETE
+
+#----------Address-----------#  
+    @CreateAddress
+  Scenario: Create Deposit Address
+    Given path 'core/address' 
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @UpdateAddress
+  Scenario: Update Deposit Address
+    Given path 'core/address' 
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+#----------REP Currency Convert-----------#  
+    @CurrencyConvert_GetListEntity
+  Scenario: Get List Entity Currency Convert
+    Given path 'core/v2/rep/currencyConvert'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @CurrencyConvert_SaveEntity
+  Scenario: Save Entity Currency Convert
+    Given path 'core/v2/rep/currencyConvert'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @CurrencyConvert_FindByUid
+  Scenario: Find Currency Convert By Uid
+    Given path 'core/v2/rep/currencyConvert/' + id
+    * header Authorization = authorization
+    When method GET
+
+    @CurrencyConvert_UpdateByUid
+  Scenario: Update Currency Convert
+    Given path 'core/v2/rep/currencyConvert/' + id
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+    @CurrencyConvert_DeleteByUid
+  Scenario: Delete Currency Convert By Uid
+    Given path 'core/v2/rep/currencyConvert/' + id
+    * header Authorization = authorization
+    When method DELETE
+
+    @CurrencyConvert_DeleteByUid_hard
+  Scenario: Hard Delete Currency Convert By Uid
+    Given path 'core/v2/rep/currencyConvert/' + id + '/hard'
+    * header Authorization = authorization
+    When method DELETE
+
+#----------REP Currency-----------#  
+    @Currency_GetListEntity
+  Scenario: Get List Entity Currency
+    Given path 'core/v2/rep/currency'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @Currency_SaveEntity
+  Scenario: Save Entity Currency
+    Given path 'core/v2/rep/currency'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @Currency_FindByUid
+  Scenario: Find Currency By Uid
+    Given path 'core/v2/rep/currency/' + id
+    * header Authorization = authorization
+    When method GET
+
+    @Currency_UpdateByUid
+  Scenario: Update Currency
+    Given path 'core/v2/rep/currency/' + id
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+    @Currency_DeleteByUid
+  Scenario: Delete Currency By Uid
+    Given path 'core/v2/rep/currency/' + id
+    * header Authorization = authorization
+    When method DELETE
+
+    @Currency_DeleteByUid_hard
+  Scenario: Hard Delete Currency By Uid
+    Given path 'core/v2/rep/currency/' + id + '/hard'
+    * header Authorization = authorization
+    When method DELETE
+
+#----------REP Wallet Info-----------#  
+    @WalletInfo_GetListEntity
+  Scenario: Get List Entity WalletInfo
+    Given path 'core/v2/rep/walletInfo'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @WalletInfo_SaveEntity
+  Scenario: Save Entity WalletInfo
+    Given path 'core/v2/rep/walletInfo'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @WalletInfo_FindByUid
+  Scenario: Find WalletInfo By Uid
+    Given path 'core/v2/rep/walletInfo/' + id
+    * header Authorization = authorization
+    When method GET
+
+    @WalletInfo_DeleteByUid
+  Scenario: Delete WalletInfo By Uid
+    Given path 'core/v2/rep/walletInfo/' + id
+    * header Authorization = authorization
+    When method DELETE
+
+    @WalletInfo_DeleteByUid_hard
+  Scenario: Hard Delete WalletInfo By Uid
+    Given path 'core/v2/rep/walletInfo/' + id + '/hard'
+    * header Authorization = authorization
+    When method DELETE
+
+#----------Groups-----------#  
+  @GetGroupsWithDetailsByIds
+  Scenario: Get Groups With Details By Ids
+    Given path 'core/groups/with-detail'
+    * header Authorization = authorization
+    * params params
+    When method GET

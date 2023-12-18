@@ -5,11 +5,28 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * url baseURL
     * def classpath = 'classpath:rakkar/feature/'
     * def testData = read('classpath:data/data_test.json')
+    * def testData_v2 = read('classpath:data/data.json')
     * def Const = read('classpath:data/enum.json')
     * call read(classpath + 'RequesterAuthenticator.feature@RequesterAccessToken')
     * call read(classpath + 'Common.feature@CACULATE_LIMIT_TRANSFER')
     * def BigDecimal = Java.type('java.math.BigDecimal')
-    * def sleep = function() { java.lang.Thread.sleep(120000); }
+    * def waitUntilTransactionCompleted = 
+    """
+      function(transactionId){ 
+        var retry = 12
+        do {
+          java.lang.Thread.sleep(10000); 
+          var getTransactionDetail = karate.call(classpath + 'Transaction.feature@View_transaction_detail_common', { transactionId: transactionId })
+            retry--
+        }
+        while (getTransactionDetail.response.data.status != "COMPLETED" && retry > 0)
+
+        if (retry <= 0)
+            throw Error ("Transaction cannot be completed: " + transactionId)
+
+        return getTransactionDetail
+      }
+    """
 
   @RAKCON-19300
   Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
@@ -21,7 +38,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
+    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
@@ -61,10 +78,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * call read(classpath +'ApprovalRequest.feature@ApproveRequestCommon')
 
    # 8.Waiting to auto approve in fireblock
-    * eval sleep()
 
    # 9.View transfer detail after complete
-    * def getTransactionDetail = call read(classpath +'Transaction.feature@View_transaction_detail_common')
+    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
     * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
     * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
    # --- Verify sourceName, destinationName
@@ -78,6 +94,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def getDetailTokenSource = call read(classpath +'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
     # --- Verify the balance of source is updated correctly
+    * print total, amount_low, total_source_afterTransfer
     * match total_source_afterTransfer == total - amount_low
 
    # 9.2.Verify balance of destination && transaction show in destination
@@ -93,7 +110,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
+    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
@@ -133,10 +150,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
 
    # 8.Waiting to auto approve in fireblock
-    * eval sleep()
 
    # 9.View transfer detail after complete
-    * def getTransactionDetail = call read(classpath + 'Transaction.feature@View_transaction_detail_common')
+    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
     * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
     * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
    # --- Verify sourceName, destinationName
@@ -165,7 +181,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
+    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
@@ -205,10 +221,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
 
    # 8.Waiting to auto approve in fireblock
-    * eval sleep()
 
    # 9.View transfer detail after complete
-    * def getTransactionDetail = call read(classpath + 'Transaction.feature@View_transaction_detail_common')
+    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
     * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
     * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
    # --- Verify sourceName, destinationName
@@ -239,7 +254,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
+    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
@@ -280,10 +295,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
 
    # 8.Waiting to auto approve in fireblock
-    * eval sleep()
 
    # 9.View transfer detail after complete
-    * def getTransactionDetail = call read(classpath + 'Transaction.feature@View_transaction_detail_common')
+    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
     * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
     * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
    # --- Verify sourceName, destinationName
@@ -319,7 +333,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 2.Select source
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
+    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
     * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
@@ -361,10 +375,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
 
    # 8.Waiting to auto approve in fireblock
-    * eval sleep()
 
    # 9.View transfer detail after complete
-    * def getTransactionDetail = call read(classpath + 'Transaction.feature@View_transaction_detail_common')
+    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
     * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
     * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
    # --- Verify sourceName, destinationName

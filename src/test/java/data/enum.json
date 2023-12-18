@@ -17,6 +17,15 @@
         "GroupBy":{
             "VAULT":"VAULT",
             "ASSET":"ASSET"
+        },
+        "Operation":{
+            "TRANSFER":"TRANSFER"
+        },
+        "FeeLevel":{
+            "MEDIUM":"MEDIUM"
+        },
+        "Type":{
+            "TRANSACTION_REQUEST":"TRANSACTION_REQUEST"
         }
     },
     "TokenSymbol":{

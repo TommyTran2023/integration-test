@@ -69,27 +69,35 @@ Scenario: Filter Transaction
         * def data = 
         """
         {
-            authorization: #(accessToken),
+            headers:{
+                authorization: #(accessToken),
+                challenge-answer: #(challengeAnswerRequest),
+                passcode: #(typeof passcode == 'undefined' ? null : passcode)
+            },
             body: 
             {
-                tokenId : #(tokenId), //string
-                source : #(source), //null
-                destination : #(destination), //null
-                amount : #(amount), //number
-                operation : #(operation), //string
-                fee : #(fee), //number
-                feeType : #(feeType), //string
-                totalEstimatedFee : #(totalEstimatedFee), //number
-                feeLevel : #(feeLevel), //string
-                note : #(note), //string
-                treatAsGrossAmount : #(treatAsGrossAmount), //boolean
-                uploadToken : #(uploadToken), //string
-                vdoSentence : #(vdoSentence), //string
+                tokenId : #(tokenId),
+                source : #(source), 
+                destination : #(destination), 
+                amount : #(amount), 
+                operation : #(operation),
+                fee : #(fee),
+                feeType : #(feeType), 
+                totalEstimatedFee : #(totalEstimatedFee), 
+                feeLevel : #(feeLevel), 
+                note : #(note), 
+                treatAsGrossAmount : #(treatAsGrossAmount)
             }
         }
         """
+
+        * if (typeof passcode != 'undefined') data.headers["passcode"]=passcode
+        * if (typeof uploadToken != 'undefined') data.body["uploadToken"]=uploadToken
+        * if (typeof vdoSentence != 'undefined') data.body["vdoSentence"]=vdoSentence
+
         * call read(svc + 'transactionSvc.feature@CreateTransaction') data
-    
+        Then match responseStatus == 201
+
     @GetListInitiatedBy
     Scenario: Get List Initiated By
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
@@ -152,6 +160,7 @@ Scenario: Filter Transaction
         }
         """
         * call read(svc + 'transactionSvc.feature@GetListTransactionTierSigner') data
+        Then match responseStatus == 200
      
     @GetRequestTransferByNotiId
     Scenario: Get Request Transfer By Noti Id
@@ -245,17 +254,18 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                assetId : #(assetId), //string
-                sourceId : #(sourceId), //string
-                sourceType : #(sourceType), //string
-                destinationId : #(destinationId), //string
-                destinationType : #(destinationType), //string
-                amount : #(amount), //number
-                isStake : #(isStake) //object
+                assetId : #(assetId),
+                sourceId : #(sourceId), 
+                sourceType : #(sourceType), 
+                destinationId : #(destinationId), 
+                destinationType : #(destinationType),
+                amount : #(amount),
+                isStake : false
             }
         }
         """
         * call read(svc + 'transactionSvc.feature@GetEstimatedFee') data
+        Then match responseStatus == 201
         
     @GetTotalFee
     Scenario: Get Total Fee
@@ -372,4 +382,3 @@ Scenario: Filter Transaction
         }
         """
         * call read(svc + 'transactionSvc.feature@CancelReqTransactionCreateFromWeb') data
-     

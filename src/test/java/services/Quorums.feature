@@ -62,7 +62,7 @@ Feature: Advance-quorum
                 "status" : #(status),
                 "createdBy" : "#(userId)",
                 "requestCategories": "#(requestCategories)",
-                "limit" : 10,
+                "limit" : #(typeof limit != 'number' ? 10 : limit),
                 "isHistory" : true,
                 "offset" : 0
             }

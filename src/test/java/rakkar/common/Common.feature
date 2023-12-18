@@ -7,4 +7,4 @@ Feature: Common Feature
 
     Scenario: Cancel all request
         * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
-        * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)
+        * requestHandle().cancelAllMyPendingRequest(requesterUserID)

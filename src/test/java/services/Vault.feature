@@ -226,7 +226,7 @@ Feature: Vault
         """
         {
             authorization: #(accessToken),
-            body:{
+            params:{
                 limit : 10,
                 offset : 0,
                 sort : '#(sort)',
@@ -236,6 +236,9 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@GetListVaultUnassigned') data
+        Then match responseStatus == 200
+        And match response.status == "success"
+        And match response.code == 200
     
     @GetVaultOnlyViewMemberAndQuorum
     Scenario: Detail vault info with info quorum

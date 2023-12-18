@@ -67,6 +67,12 @@ Feature: Authorization
         * params params
         When method GET
 
+   @GetUserDetailById
+   Scenario: Get user details
+       Given path '/auth/account/users/'+ userId
+       * header Authorization = authorization
+       When method GET
+
 #----------------------------------
     @GetMyPermissions
     Scenario: Get My Permissions
@@ -149,6 +155,7 @@ Scenario: Get Signed Url
 Scenario: Update User
    Given path 'auth/account/users/' + userId
    * header authorization = authorization
+   * header challenge-answer = challengeAnswerRequest
    * request body
    When method PUT
 

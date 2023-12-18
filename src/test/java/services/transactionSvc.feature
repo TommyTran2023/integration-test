@@ -1,5 +1,7 @@
-Feature: Tranaction Service
-# including all api calls related to route /transaction
+Feature: Transaction Service
+    # including all api calls related to route /transaction
+  Background:
+    Given url baseURL
   
     @GetTransactionsList
     Scenario: Get transactions list
@@ -25,7 +27,7 @@ Feature: Tranaction Service
     Scenario: Rebalance Medium Amount
       Given path 'transaction/transactions'
       * header authorization = authorization
-      * header challengeAnswer = challengeAnswer
+      * header challenge-answer = challengeAnswer
       * header passcode = passcode
       And request body
       When method POST
@@ -41,7 +43,7 @@ Feature: Tranaction Service
     @CreateTransaction
     Scenario: Create Transaction
       Given path 'transaction/transactions'
-      * header authorization = authorization
+      * headers headers
       * request body
       When method POST
   

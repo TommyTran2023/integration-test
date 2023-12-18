@@ -123,16 +123,16 @@ Feature: All api call to core services
 
     @GetListUserForVaults
   Scenario: Get list user for Vaults
-    Given path 'core/vault/list-user
+    Given path 'core/vault/list-user'
     * header Authorization = authorization
     * request body 
     When method GET
 
     @GetListVaultUnassigned
   Scenario: Get list vault unassigned by user
-    Given path 'core/vault/unassigned
+    Given path 'core/vault/unassigned'
     * header Authorization = authorization
-    * request body 
+    * params params 
     When method GET
 
     @GetVaultOnlyViewMemberAndQuorum

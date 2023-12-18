@@ -105,6 +105,22 @@ Feature: Common call from Auth services
         * match responseStatus == 200
         * match response.code == 200
         * match response.status == 'success'
+
+    @GetUserDetailById
+    Scenario: Get user details
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data =
+        """
+        {
+            authorization: '#(accessToken)',
+            userId: #(userId)
+        }
+        """
+        * call read('this:authSvc.feature@GetUserDetailById') data
+        * match responseStatus == 200
+        * match response.code == 200
+        * match response.status == 'success'
+
         
     @GetMyPermissions
     Scenario: Get My Permissions
@@ -211,7 +227,7 @@ Feature: Common call from Auth services
             authorization: #(accessToken),
             body: 
             {
-                refreshToken : #(refreshToken) //string
+                refreshToken : #(refreshToken)
             }
         }
         """
@@ -226,7 +242,7 @@ Feature: Common call from Auth services
             authorization: #(accessToken),
             body: 
             {
-                token : #(token) //string
+                token : #(token)
             }
         }
         """
@@ -240,10 +256,10 @@ Feature: Common call from Auth services
         {
             authorization: #(accessToken),
             params:{
-                fileName : #(fileName), //string
-                contentType : #(contentType), //string
-                userId : #(userId), //string
-                type : #(type) //string
+                fileName : #(typeof fileName == 'undefined' ? 'video.mp4' : fileName),
+                contentType : #(typeof contentType == 'undefined' ? 'video/mp4' : contentType),
+                userId : #(userId),
+                type : #(typeof type == 'undefined' ? 'VIDEO' : type)
             }
         }
         """
@@ -256,18 +272,22 @@ Feature: Common call from Auth services
         """
         {
             authorization: #(accessToken),
-            userId : #(userId), //string
+            challenge-answer: #(challengeAnswerRequest)
+            userId : #(userId), 
             body: 
             {
-                roleWillUpdate : #(roleWillUpdate), //string
-                vaultsWillRemoveAccess : #(vaultsWillRemoveAccess), //array
-                vaultsWillAddAccess : #(vaultsWillAddAccess), //array
-                isRemoveAccountAccess : #(isRemoveAccountAccess), //boolean
-                reason : #(reason), //string
+                roleWillUpdate : #(roleWillUpdate), 
+                vaultsWillRemoveAccess : #(vaultsWillRemoveAccess), 
+                vaultsWillAddAccess : #(vaultsWillAddAccess), 
+                isRemoveAccountAccess : #(isRemoveAccountAccess), 
+                reason : #(reason)
             }
         }
         """
         * call read(svc + 'authSvc.feature@UpdateUser') data
+        Then match responseStatus == 200
+        * match response.status == "success"
+        * match response.code == 200
      
     @GetListUsersByCustomerId
     Scenario: Get List Users By Customer Id

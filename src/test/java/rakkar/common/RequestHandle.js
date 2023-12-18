@@ -1,12 +1,18 @@
 function fn(){
     function cancelRequestsByCategories(userId, categories){
         var data = {requestCategories: categories, userId: userId, status : ["PENDING"]}
-        var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
-        var records = requests.response.data.records
+        
+        while(true){
+            var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
+            var records = requests.response.data.records
 
-        // Cancel requests
-        for(var i = 0; i < records.length; i++) {
-            cancelRequest(records[i].id)
+            if(records.length == 0)
+                break
+
+            // Cancel requests
+            for(var i = 0; i < records.length; i++) {
+                cancelRequest(records[i].id)
+            }
         }
     }
 
@@ -102,14 +108,8 @@ function fn(){
             var editRequest = karate.call(svc + 'Vault.feature@EditVaultPolicy', editData)
             
             return editRequest.response.data.data.record.id
-        },
-
-        createTransferRequest: function(sourceId, destinationId, tokenId){
-            var transferData = {
-
-            }
-
-            var txnRequest = karate.call(svc + '')
         }
+
+        
     }
 }

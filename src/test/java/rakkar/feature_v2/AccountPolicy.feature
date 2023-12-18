@@ -6,7 +6,7 @@ Feature: Account admin policy
         * def getRequesterInfo = callonce read(svc + 'Auth.feature@GetRequesterInfo')
         * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
 
-    @ViewAccountPolicy
+    @RAKCON-10939 @ViewAccountPolicy
     Scenario: View account policy
         * call read(svc + 'Quorums.feature@GetAccountPolicy')
         * match response.data.organizationName == '#string'
@@ -14,8 +14,7 @@ Feature: Account admin policy
         * match response.data.quorumParticipants contains quorumParticipantSchema
         * def requestId = response.data.pendingRequestId
         
-
-    @EditAccountPolicy
+    @RAKCON-10940 @EditAccountPolicy
     Scenario: Edit account policy
         * def customerId = getRequesterInfo.response.data.customerId
         * callonce read('@ViewAccountPolicy')
@@ -27,7 +26,7 @@ Feature: Account admin policy
         * call read('@ViewAccountPolicy')
         * match requestId != null
 
-    @EditAccountPolicyHasPending
+    @RAKCON-11348 @EditAccountPolicyHasPending
     Scenario: Edit account policy when has pending request
         * callonce read('@EditAccountPolicy')
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
@@ -35,7 +34,7 @@ Feature: Account admin policy
         Then match responseStatus == 400
         * match response.errorCode == Const.ErrorCode.EXISTS_PENDING_REQUEST
 
-    @ViewAccountPolicyRequest
+    @RAKCON-13612 @ViewAccountPolicyRequest
     Scenario: View account policy request
         * call read('@EditAccountPolicy')
         * call read(svc + 'Quorums.feature@ViewAccountPolicyRequest')

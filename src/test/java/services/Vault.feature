@@ -191,3 +191,39 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@CancelUpdateVaultRequest') data
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @GetListVault_v2
+    Scenario: Get List Vault v2
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            params:{
+                limit: #(typeof limit != 'undefined' ? limit : 10),
+                offset: #(typeof offset != 'undefined' ? offset : 0),
+                sort: #(typeof sort != 'undefined' ? sort : 'DESC'),
+                sortBy: #(typeof sortBy != 'undefined' ? sortBy : 'VAULT_NAME'),
+                searchText: #(typeof searchText != 'undefined' ? searchText : ''),
+                isShowSignificanceOnly: #(typeof isShowSignificanceOnly != 'undefined' ? isShowSignificanceOnly :false),
+                isArchived: #(typeof isArchived != 'undefined' ? isArchived : false)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetListVault_v2') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+        * match response.message == 'OK'
+
+    @GetVaultsSummary
+    Scenario: Get Vaults Summary
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetVaultsSummary') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+        * match response.message == 'OK'
+

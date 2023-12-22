@@ -104,6 +104,19 @@ Feature: All api call to core services
     * header challenge-answer = challengeAnswer
     When method PATCH
 
+  @GetListVault_v2
+  Scenario: Get List Vault v2
+    Given path '/core/v2/vault'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+  @GetVaultsSummary
+  Scenario: Get Vaults Summary
+    Given path '/core/v2/vault/summary'
+    * header Authorization = authorization
+    When method GET
+
   #----------Wallet-----------#
     @AddAssets
   Scenario: Add asset to vault / Create wallet on vault

@@ -925,7 +925,7 @@ Feature: Vault
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'AdvanceQuorum.feature@CancelRequest') {requestId: '#(requestId)'}
 
-  @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore 
+  @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore
   Scenario: Edit Vault Policy - Check expired of Request before Submit
     * def testData = read('classpath:data/data_test.json')
     * callonce read(svc + 'Auth.feature@GetListUsers')
@@ -983,3 +983,180 @@ Feature: Vault
     Then status 201
     * match response.status == 'success'
 
+  @GetListVault_v2_SortByPriceDesc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'DESC'
+    * def params = 
+    """
+    {
+      sort: 'DESC',
+      sortBy: 'PRICE'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * assert response.data.total > 0
+    * assert response.data.list.length > 0
+    * match each response.data.list[*].isArchived == false
+    # Validate vault item data
+    * def expectedVaultSchema = 
+    """
+    {
+      id: "#uuid",
+      name: "#string",
+      status: "#string",
+      type: "#string",
+      totalUSD: "#number",
+      totalUSDYesterday: "#number",
+      isMasked: "#boolean",
+      isArchived: "#boolean",
+      createdAt: "#string",
+      wallets: "#[]"
+    }
+    """
+    * def expectedWalletSchema = 
+    """
+    {
+      "id": "#uuid",
+      "name": "#string",
+      "total": "#number",
+      "symbol": "#string",
+      "totalUSD": "#number",
+      "externalAssetId": "#string"
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
+    * match each response.data.list[*].wallets[*] == expectedWalletSchema
+    * def actual = $response.data.list[*].totalUSD
+    * def expected = $response.data.list[*].totalUSD
+    * eval expected.sort((a,b) => b-a)
+    * print "actual Vault Total USD", actual
+    * print "expected Vault Total USD", expected
+    * match actual.toString() == expected.toString()
+
+  @GetListVault_v2_SortByPriceAsc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'ASC'
+    * def params = 
+    """
+    {
+      sort: 'ASC',
+      sortBy: 'PRICE'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].totalUSD
+    * def expected = $response.data.list[*].totalUSD
+    * eval expected.sort((a,b) => a-b)
+    * print "actual Vault Total USD", actual
+    * print "expected Vault Total USD", expected
+    * match actual.toString() == expected.toString()
+    
+  @GetListVault_v2_SortByVaultNameAsc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'ASC'
+    * def params = 
+    """
+    {
+      sort: 'ASC',
+      sortBy: 'VAULT_NAME'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].name
+    * def expected = $response.data.list[*].name
+    * eval expected.map((l) => l.toUpperCase()).sort()
+    * print "actual Vault Name", actual
+    * print "expected Vault Name", expected
+    * match actual.toString() == expected.toString()
+
+  @GetListVault_v2_SortByVaultNameDesc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'DESC'
+    * def params = 
+    """
+    {
+      sort: 'DESC',
+      sortBy: 'VAULT_NAME'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].name
+    * def expected = $response.data.list[*].name
+    * eval expected.map(l => l.toUpperCase()).sort().reverse()
+    * print "actual Vault Name", actual
+    * print "expected Vault Name", expected
+    * match actual.toString() == expected.toString()
+
+  @GetListVault_v2_SearchByVaultName
+  Scenario: Get List Vault v2 from Vault Listing screen, search by vault name
+    * def params = 
+    """
+    {
+      searchText: "#(testData_v2.standardWarmVault_1)"
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * match each response.data.list[*].name contains testData_v2.standardWarmVault_1
+  
+  @GetListVault_v2_SearchBySymbol
+  Scenario: Get List Vault v2 from Vault Listing screen, search by token symbol in vault
+    # Bug @MOB-2283
+    * def params = 
+    """
+    {
+      searchText: 'XRP'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * match each response.data.list[*].wallets != null
+    * match each response.data.list[*].wallets[*] contains { symbol: 'XRP'}
+
+  @GetListVault_v2_ListArchivedVault
+  Scenario: Get List Vault v2 from Vault Listing screen, view archived vault
+    * def params = 
+    """
+    {
+      isArchived: true
+    }
+    """
+  * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * match each response.data.list[*].isArchived == true
+
+  @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
+  Scenario: Get List Vault v2 from Vault Listing screen, unable to search masked Vault when isShowSignificanceOnly = true
+    * def params = 
+    """
+    {
+      searchText: #(testData_v2.maskedVault),
+      isShowSignificanceOnly: true
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked)
+    * assert maskedVault.length == 0
+
+  @GetListVault_v2_SearchMaskedVaultUncheckShowSignificanceOnly
+  Scenario: Get List Vault v2 from Vault Listing screen, able to search masked Vault when isShowSignificanceOnly = false
+    * def params = 
+    """
+    {
+      searchText: #(testData_v2.maskedVault),
+      isShowSignificanceOnly: false
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked)
+    * match each maskedVault[*].name contains testData_v2.maskedVault
+    * match each maskedVault[*].totalUSD == null
+
+  @GetVaultSummary
+  Scenario: Get Vault Summary from Vault Listing screen
+    * call read(svc + 'Vault.feature@GetVaultsSummary')
+    * def expectedSchema = 
+    """
+    {
+      total: '#number? _ > 0',
+      totalByDate: '#number? _ > 0',
+      date: '#string'
+    }
+    """
+    Then response.data == expectedSchema
+
+
+  

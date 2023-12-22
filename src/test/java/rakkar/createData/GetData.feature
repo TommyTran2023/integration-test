@@ -1,4 +1,4 @@
-@jgnore
+@ignore
 Feature: Get Data From data.json
   Background:
     * callonce read(svc + 'ReadData.feature@ReadDataFile')
@@ -7,17 +7,17 @@ Feature: Get Data From data.json
 
     @Get_standardWarmVault_1
   Scenario: Get standardWarmVault_1
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardWarmVault_1)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardWarmVault_1)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotStandard1')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardWarmVault_1})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardWarmVault_1, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -26,131 +26,132 @@ Feature: Get Data From data.json
 
     @Get_standardWarmVault_2
   Scenario: Get standardWarmVault_2
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardWarmVault_2)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardWarmVault_2)'}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotStandard2')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardWarmVault_2})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardWarmVault_2, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('destinationId_hot',response.data.vaults[0].id)
+    * fileUtils.addData('destinationId_hot',response.data.list[0].id)
 
     @Get_standardColdVault_1
   Scenario: Get standardColdVault_1
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardColdVault_1)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardColdVault_1)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateColdStandard1')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardColdVault_1})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardColdVault_1, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('sourceId_cold',response.data.vaults[0].id)
+    * fileUtils.addData('sourceId_cold',response.data.list[0].id)
 
     @Get_standardColdVault_2
   Scenario: Get standardColdVault_2
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardColdVault_2)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardColdVault_2)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateColdStandard2')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardColdVault_2})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardColdVault_2, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('destinationId_cold',response.data.vaults[0].id)
+    * fileUtils.addData('destinationId_cold',response.data.list[0].id)
 
     @Get_standardHotVaultForStake
   Scenario: Get standardHotVaultForStake
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardHotVaultForStake)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardHotVaultForStake)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotStandardForStake')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardHotVaultForStake})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardHotVaultForStake, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('vaultCreateStake',response.data.vaults[0].id)
+    * fileUtils.addData('vaultCreateStake',response.data.list[0].id)
 
     @Get_standardColdVaultForUpdateStake
   Scenario: Get standardColdVaultForUpdateStake
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardColdVaultForUpdateStake)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardColdVaultForUpdateStake)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateColdStandardForStake')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardColdVaultForUpdateStake})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardColdVaultForUpdateStake, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('vaultUpdateStake',response.data.vaults[0].id)
+    * print response
+    * fileUtils.addData('vaultUpdateStake',response.data.list[0].id)
 
     @Get_advanceHotVault
   Scenario: Get advanceHotVault
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advanceHotVault)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advanceHotVault)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotAdvanceVault')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardColdVaultForUpdateStake})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardColdVaultForUpdateStake, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
     * def vaultId =  getVal()
-    * fileUtils.addData('advanceHotVaultId',response.data.vaults[0].id)
+    * fileUtils.addData('advanceHotVaultId',response.data.list[0].id)
 
     @Get_advanceColdVault
   Scenario: Get advanceColdVault
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advanceColdVault)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advanceColdVault)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateColdAdvanceVault')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advanceColdVault})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.advanceColdVault, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -159,17 +160,17 @@ Feature: Get Data From data.json
 
     @Get_advanceHotVaultForStake
   Scenario: Get advanceHotVaultForStake
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advanceHotVaultForStake)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advanceHotVaultForStake)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotAdvanceVaultForStake')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advanceHotVaultForStake})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.advanceHotVaultForStake, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -178,17 +179,17 @@ Feature: Get Data From data.json
 
     @Get_skipHotVault
   Scenario: Get skipHotVault
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.skipHotVault)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.skipHotVault)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateHotSkipVault')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.skipHotVault})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.skipHotVault, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -197,17 +198,17 @@ Feature: Get Data From data.json
 
     @Get_skipColdVault
   Scenario: Get skipColdVault
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.skipColdVault)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.skipColdVault)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateColdSkipVault')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.skipColdVault})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.skipColdVault, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -233,24 +234,24 @@ Feature: Get Data From data.json
     * def folderId =  getVal()
     * fileUtils.addData('externalId',folderId)
 
-    @Get_networkprofile
-  Scenario: Get network profile
-    * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
-    * def getVal = 
-    """
-        function(){
-            if (response.data.networks.length == 0) {
-                karate.call('this:Create.feature@CreateNetworking')
-                var newCreadtedProfile = karate.call(svc + 'Network.feature@GetNetworkList', {keyword: testData.networkVault})
-                return newCreadtedProfile.response.data.networks[0].id
-            }
-            else {
-                return response.data.networks[0].id
-            } 
-        }
-    """
-    * def networkId =  getVal()
-    * fileUtils.addData('networkID',networkId)
+#     @Get_networkprofile
+#   Scenario: Get network profile
+#     * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
+#     * def getVal = 
+#     """
+#         function(){
+#             if (response.data.networks.length == 0) {
+#                 karate.call('this:Create.feature@CreateNetworking')
+#                 var newCreadtedProfile = karate.call(svc + 'Network.feature@GetNetworkList', {keyword: testData.networkVault})
+#                 return newCreadtedProfile.response.data.networks[0].id
+#             }
+#             else {
+#                 return response.data.networks[0].id
+#             } 
+#         }
+#     """
+#     * def networkId =  getVal()
+#     * fileUtils.addData('networkID',networkId)
 
     @Get_tokenId
   Scenario: Get XRP token id
@@ -262,21 +263,21 @@ Feature: Get Data From data.json
     * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: #(testData.stakeToken)}
     * fileUtils.addData('stakeToken',response.data.tokens[0].id)
 
-    @Get_connectionID
-  Scenario: Get connection id
-    # 1. Get network profile
-    * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
-    * def networkId = response.data.networks[0].id
+#     @Get_connectionID
+#   Scenario: Get connection id
+#     # 1. Get network profile
+#     * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
+#     * def networkId = response.data.networks[0].id
     
-    # 2. Get connection id
-    * call read(svc + 'Network.feature@GetNetworkConnection') {networkId: '#(networkId)'}
-    * fileUtils.addData('connectionID',response.data.networkConnections[0].id) 
+#     # 2. Get connection id
+#     * call read(svc + 'Network.feature@GetNetworkConnection') {networkId: '#(networkId)'}
+#     * fileUtils.addData('connectionID',response.data.networkConnections[0].id) 
 
     @Get_address
   Scenario: Get address
     # 1. Get a vault
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardWarmVault_1)'}
-    * def vaultId = response.data.vaults[0].id
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardWarmVault_1)', isShowSignificanceOnly: true}
+    * def vaultId = response.data.list[0].id
 
     # 2. Get wallet
     * call read(svc + 'Wallet.feature@GetWallets') {vaultId: '#(vaultId)', tokenSymbol: '#(testData.tokenId)'}
@@ -288,17 +289,17 @@ Feature: Get Data From data.json
 
     @Get_advVaultWithAllUsers
   Scenario: Get advVaultWithAllUsers
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllUsers)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advVaultWithAllUsers)', isShowSignificanceOnly: true}
     * def getVal = 
     """
         function(){
-            if (response.data.vaults.length == 0) {
+            if (response.data.list.length == 0) {
                 karate.call('this:Create.feature@CreateAdvanceVaultWithUsers')
-                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllUsers})
-                return newCreadtedVault.response.data.vaults[0].id
+                var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.advVaultWithAllUsers, isShowSignificanceOnly: true})
+                return newCreadtedVault.response.data.list[0].id
             }
             else {
-                return response.data.vaults[0].id
+                return response.data.list[0].id
             }
         }
     """
@@ -307,36 +308,37 @@ Feature: Get Data From data.json
 
     @Get_advVaultWithAllGroups
   Scenario: Get Advance Vault With Groups
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllGroups)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advVaultWithAllGroups)', isShowSignificanceOnly: true}
     * def getVal = 
     """
       function(){
-          if (response.data.vaults.length == 0) {
+          if (response.data.list.length == 0) {
               karate.call('this:Create.feature@CreateAdvanceVaultWithGroups')
-              var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllGroups})
-              return newCreadtedVault.response.data.vaults[0].id
+              var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.advVaultWithAllGroups, isShowSignificanceOnly: true})
+              return newCreadtedVault.response.data.list[0].id
           }
           else {
-              return response.data.vaults[0].id
+              return response.data.list[0].id
           }
       }
     """
     * def vaultId =  getVal()
+    * print response
     * fileUtils.addData('advVaultWithAllGroups',vaultId)
 
     @Get_advVaultWithAllGroupsAndUsers
   Scenario: Get Advance Vault With Groups and Users
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.advVaultWithAllGroupsAndUsers)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.advVaultWithAllGroupsAndUsers)', isShowSignificanceOnly: true}
     * def getVal = 
     """
     function(){
-        if (response.data.vaults.length == 0) {
+        if (response.data.list.length == 0) {
             karate.call('this:Create.feature@CreateAdvanceVaultWithGroupsAndUsers')
-            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.advVaultWithAllGroupsAndUsers})
-            return newCreadtedVault.response.data.vaults[0].id
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.advVaultWithAllGroupsAndUsers, isShowSignificanceOnly: true})
+            return newCreadtedVault.response.data.list[0].id
         }
         else {
-            return response.data.vaults[0].id
+            return response.data.list[0].id
         }
     }
     """
@@ -345,17 +347,17 @@ Feature: Get Data From data.json
 
     @Get_standardForEditPolicy
     Scenario: Get Advance Vault With Groups and Users
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardForEditPolicy)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.standardForEditPolicy)', isShowSignificanceOnly: true}
     * def getVal = 
     """
     function(){
-        if (response.data.vaults.length == 0) {
+        if (response.data.list.length == 0) {
             karate.call('this:Create.feature@CreateStandardVaultForEditPolicy')
-            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.standardForEditPolicy})
-            return newCreadtedVault.response.data.vaults[0].id
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.standardForEditPolicy, isShowSignificanceOnly: true})
+            return newCreadtedVault.response.data.list[0].id
         }
         else {
-            return response.data.vaults[0].id
+            return response.data.list[0].id
         }
     }
     """
@@ -364,17 +366,17 @@ Feature: Get Data From data.json
 
     @Get_standardForEditPolicy
     Scenario: Get Advance Vault With Groups and Users
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.skipVaultForAddPolicy)'}
+    * call read(svc + 'Vault.feature@GetListVault_v2') {searchText: '#(testData.skipVaultForAddPolicy)', isShowSignificanceOnly: true}
     * def getVal = 
     """
     function(){
-        if (response.data.vaults.length == 0) {
+        if (response.data.list.length == 0) {
             karate.call('this:Create.feature@CreateSkipVaultForAddPolicy')
-            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.skipVaultForAddPolicy})
-            return newCreadtedVault.response.data.vaults[0].id
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetListVault_v2', {searchText: testData.skipVaultForAddPolicy, isShowSignificanceOnly: true})
+            return newCreadtedVault.response.data.list[0].id
         }
         else {
-            return response.data.vaults[0].id
+            return response.data.list[0].id
         }
     }
     """

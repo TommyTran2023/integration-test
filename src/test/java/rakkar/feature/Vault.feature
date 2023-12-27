@@ -1108,15 +1108,21 @@ Feature: Vault
     * match each response.data.list[*].wallets[*] contains { symbol: 'XRP'}
 
   @GetListVault_v2_ListArchivedVault
-  Scenario: Get List Vault v2 from Vault Listing screen, view archived vault
+  Scenario: Get List Vault v2 from Vault Listing screen, able to search masked archived vault
     * def params = 
     """
     {
-      isArchived: true
+      isArchived: true,
+      searchText: '#(testData_v2.maskedVault)'
     }
     """
-  * call read(svc + 'Vault.feature@GetListVault_v2') params
-    * match each response.data.list[*].isArchived == true
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked).map(v => v.name.toLowerCase())
+    * match each maskedVault[*].isArchived == true
+    * match each maskedVault[*].name contains testData_v2.maskedVault
+    * match each maskedVault[*].isMasked == true
+    * match each maskedVault[*].totalUSD == null
+    * match each maskedVault[*].totalUSDYesterday == null
 
   @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
   Scenario: Get List Vault v2 from Vault Listing screen, unable to search masked Vault when isShowSignificanceOnly = true
@@ -1141,8 +1147,8 @@ Feature: Vault
     }
     """
     * call read(svc + 'Vault.feature@GetListVault_v2') params
-    * def maskedVault = response.data.list.filter((v) => v.isMasked)
-    * match each maskedVault[*].name contains testData_v2.maskedVault
+    * def maskedVault = response.data.list.filter((v) => v.isMasked).map(v => v.name.toLowerCase())
+    * match each maskedVault[*].name contains testData_v2.maskedVault.toLowerCase()
     * match each maskedVault[*].totalUSD == null
 
   @GetVaultSummary
@@ -1159,4 +1165,4 @@ Feature: Vault
     Then response.data == expectedSchema
 
 
-  
+

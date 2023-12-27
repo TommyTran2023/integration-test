@@ -234,24 +234,24 @@ Feature: Get Data From data.json
     * def folderId =  getVal()
     * fileUtils.addData('externalId',folderId)
 
-#     @Get_networkprofile
-#   Scenario: Get network profile
-#     * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
-#     * def getVal = 
-#     """
-#         function(){
-#             if (response.data.networks.length == 0) {
-#                 karate.call('this:Create.feature@CreateNetworking')
-#                 var newCreadtedProfile = karate.call(svc + 'Network.feature@GetNetworkList', {keyword: testData.networkVault})
-#                 return newCreadtedProfile.response.data.networks[0].id
-#             }
-#             else {
-#                 return response.data.networks[0].id
-#             } 
-#         }
-#     """
-#     * def networkId =  getVal()
-#     * fileUtils.addData('networkID',networkId)
+    @Get_networkprofile
+  Scenario: Get network profile
+    * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
+    * def getVal = 
+    """
+        function(){
+            if (response.data.networks.length == 0) {
+                karate.call('this:Create.feature@CreateNetworking')
+                var newCreadtedProfile = karate.call(svc + 'Network.feature@GetNetworkList', {keyword: testData.networkVault})
+                return newCreadtedProfile.response.data.networks[0].id
+            }
+            else {
+                return response.data.networks[0].id
+            } 
+        }
+    """
+    * def networkId =  getVal()
+    * fileUtils.addData('networkID',networkId)
 
     @Get_tokenId
   Scenario: Get XRP token id
@@ -263,15 +263,15 @@ Feature: Get Data From data.json
     * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: #(testData.stakeToken)}
     * fileUtils.addData('stakeToken',response.data.tokens[0].id)
 
-#     @Get_connectionID
-#   Scenario: Get connection id
-#     # 1. Get network profile
-#     * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
-#     * def networkId = response.data.networks[0].id
+    @Get_connectionID
+  Scenario: Get connection id
+    # 1. Get network profile
+    * call read(svc + 'Network.feature@GetNetworkList') {keyword: '#(testData.networkVault)'}
+    * def networkId = response.data.networks[0].id
     
-#     # 2. Get connection id
-#     * call read(svc + 'Network.feature@GetNetworkConnection') {networkId: '#(networkId)'}
-#     * fileUtils.addData('connectionID',response.data.networkConnections[0].id) 
+    # 2. Get connection id
+    * call read(svc + 'Network.feature@GetNetworkConnection') {networkId: '#(networkId)'}
+    * fileUtils.addData('connectionID',response.data.networkConnections[0].id) 
 
     @Get_address
   Scenario: Get address

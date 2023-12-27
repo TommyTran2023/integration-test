@@ -9,6 +9,8 @@ def testType
 def failedTestMsg = []
 def failedScenarios = []
 def serviceStatus
+def password
+def userName
 
 pipeline {
     agent any
@@ -32,12 +34,12 @@ pipeline {
         stage ('Git Checkout') {
             steps {
                 withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
-                    def password = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_PASSWORD
-                    def userName = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_USERNAME
+                    password = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_PASSWORD
+                    userName = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_USERNAME
                 }
                 // update branch and test environment
                 script {
-
+                    println("${userName} - {password}")
                     if (env.BRANCH_NAME == 'main'){
                             BRANCH = "main"
                             KARATE_ENV = "prod"

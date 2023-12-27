@@ -32,7 +32,7 @@ pipeline {
         stage ('Git Checkout') {
             steps {
                 withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
-                    def creds = readJSON text: secret
+                    def creds = readJSON text: SECRET_FILE_CONTENT_SIT
                     echo 'Hello world'
                     echo creds
                 }

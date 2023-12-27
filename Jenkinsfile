@@ -32,7 +32,8 @@ pipeline {
         stage ('Git Checkout') {
             steps {
                 withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
-                    println("Hello world " + env.SECRET_FILE_CONTENT_SIT)
+                    def password = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_PASSWORD
+                    def userName = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_USERNAME
                 }
                 // update branch and test environment
                 script {

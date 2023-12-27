@@ -13,6 +13,11 @@ def serviceStatus
 pipeline {
     agent any
 
+    environment {
+        SECRET_FILE_CONTENT_SIT = credentials('rakkar-db-credentials-sit')
+        SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
+    }
+
     parameters {
         choice(name: 'ENV', choices: 'SIT\nUAT', description: 'Test Environment [SIT, UAT, PROD]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
@@ -26,6 +31,8 @@ pipeline {
     stages {
         stage ('Git Checkout') {
             steps {
+                println("SECRET_FILE_CONTENT_SIT: " + SECRET_FILE_CONTENT_SIT)
+                println("SECRET_FILE_CONTENT_UAT: " + SECRET_FILE_CONTENT_UAT)
                 // update branch and test environment
                 script {
 

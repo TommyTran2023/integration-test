@@ -32,7 +32,7 @@ pipeline {
         stage ('Git Checkout') {
             steps {
                 withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
-                    println("Hello world " + echo env.SECRET_FILE_CONTENT_SIT)
+                    println("Hello world " + env.SECRET_FILE_CONTENT_SIT)
                 }
                 // update branch and test environment
                 script {

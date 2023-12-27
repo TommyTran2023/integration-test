@@ -31,8 +31,11 @@ pipeline {
     stages {
         stage ('Git Checkout') {
             steps {
-                println("SECRET_FILE_CONTENT_SIT: " + SECRET_FILE_CONTENT_SIT)
-                println("SECRET_FILE_CONTENT_UAT: " + SECRET_FILE_CONTENT_UAT)
+                withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
+                    def creds = readJSON text: secret
+                    echo 'Hello world'
+                    echo creds
+                }
                 // update branch and test environment
                 script {
 

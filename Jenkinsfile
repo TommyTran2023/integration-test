@@ -29,23 +29,22 @@ pipeline {
                 // update branch and test environment
                 script {
 
-                    switch (env.BRANCH_NAME) {
-                        case 'main':
+                    if (env.BRANCH_NAME == 'main'){
                             BRANCH = "main"
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
-                            break
-                        case 'uat':
+                    }
+                    else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
-                            break
-                        case 'develop':
+                    }
+                    else if (env.BRANCH_NAME == 'develop'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
-                            break
-                        default:
+                    }
+                    else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
@@ -68,11 +67,22 @@ pipeline {
             steps {
                 script {
                     serviceStatus = sh(script: "/bin/bash checkService.sh ${HEALTH_CHECK_PATH} > status.txt", returnStatus: true)
-
-                    if (serviceStatus) {
+                    
+                    // Aborting build if checkService error
+                    if (serviceStatus != 0) {
                         def serviceStatusMsg = readFile('status.txt').trim()
-                        echo "${serviceStatusMsg}"
                         currentBuild.result = 'FAILED'
+
+                        slackSend(channel: "${SLACK_CHANNEL}",
+                            color: 'danger',
+                            message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
+
+                        // office365ConnectorSend color: '#a82e2e',
+                        //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
+                        //     status: 'FAILED',
+                        //     webhookUrl: "${TEAM_URL}"
+
+                        error("Abort the build because services healthcheck return error")
                     }
                 }
             }
@@ -81,11 +91,13 @@ pipeline {
         stage ('Test Execution') {
             steps {
                 script {
-                    echo "KARATE_ENV = ${KARATE_ENV}"
-                    def tag = params.E2E ? "@e2e" : "~@e2e"
-                    withMaven(maven: 'Maven') {
-                        sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
-                    }
+                        // This step will only be executed if the serviceStatus = 0
+                        echo "KARATE_ENV = ${KARATE_ENV}"
+                        def tag = params.E2E ? "@e2e" : "~@e2e"
+                        withMaven(maven: 'Maven') {
+                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
+                        }
+                    
                 }
             }
         }
@@ -95,21 +107,6 @@ pipeline {
 
         always {
             script {
-                // Aborting build if checkService error
-                if (serviceStatus != 0) {
-                    def serviceStatusMsg = readFile('status.txt').trim()
-
-                    slackSend(channel: "${SLACK_CHANNEL}",
-                        color: 'danger',
-                        message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
-
-                    // office365ConnectorSend color: '#a82e2e',
-                    //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
-                    //     status: 'FAILED',
-                    //     webhookUrl: "${TEAM_URL}"
-
-                    error("Abort the build because services healthcheck return error")
-                }
 
                 //continue gather the result if checkService pass and the test was executed
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'

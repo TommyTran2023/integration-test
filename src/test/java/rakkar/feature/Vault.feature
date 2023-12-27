@@ -983,13 +983,14 @@ Feature: Vault
     Then status 201
     * match response.status == 'success'
 
-  @GetListVault_v2_SortByPriceDesc
+  @RAKCON-23651 @GetListVault_v2_SortByPriceDesc
   Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'DESC'
     * def params = 
     """
     {
       sort: 'DESC',
-      sortBy: 'PRICE'
+      sortBy: 'PRICE',
+      limit: 100
     }
     """
     * call read(svc + 'Vault.feature@GetListVault_v2') params
@@ -1032,13 +1033,14 @@ Feature: Vault
     * print "expected Vault Total USD", expected
     * match actual.toString() == expected.toString()
 
-  @GetListVault_v2_SortByPriceAsc
+  @RAKCON-23652 @GetListVault_v2_SortByPriceAsc
   Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'ASC'
     * def params = 
     """
     {
       sort: 'ASC',
-      sortBy: 'PRICE'
+      sortBy: 'PRICE',
+      limit: 100
     }
     """
     * call read(svc + 'Vault.feature@GetListVault_v2') params
@@ -1049,13 +1051,14 @@ Feature: Vault
     * print "expected Vault Total USD", expected
     * match actual.toString() == expected.toString()
     
-  @GetListVault_v2_SortByVaultNameAsc
+  @RAKCON-23653 @GetListVault_v2_SortByVaultNameAsc
   Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'ASC'
     * def params = 
     """
     {
       sort: 'ASC',
-      sortBy: 'VAULT_NAME'
+      sortBy: 'VAULT_NAME',
+      limit: 100
     }
     """
     * call read(svc + 'Vault.feature@GetListVault_v2') params
@@ -1066,13 +1069,14 @@ Feature: Vault
     * print "expected Vault Name", expected
     * match actual.toString() == expected.toString()
 
-  @GetListVault_v2_SortByVaultNameDesc
+  @RAKCON-23654 @GetListVault_v2_SortByVaultNameDesc
   Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'DESC'
     * def params = 
     """
     {
       sort: 'DESC',
-      sortBy: 'VAULT_NAME'
+      sortBy: 'VAULT_NAME',
+      limit: 100
     }
     """
     * call read(svc + 'Vault.feature@GetListVault_v2') params
@@ -1083,7 +1087,7 @@ Feature: Vault
     * print "expected Vault Name", expected
     * match actual.toString() == expected.toString()
 
-  @GetListVault_v2_SearchByVaultName
+  @RAKCON-23655 @GetListVault_v2_SearchByVaultName
   Scenario: Get List Vault v2 from Vault Listing screen, search by vault name
     * def params = 
     """
@@ -1094,7 +1098,7 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetListVault_v2') params
     * match each response.data.list[*].name contains testData_v2.standardWarmVault_1
   
-  @GetListVault_v2_SearchBySymbol
+  @RAKCON-23656 @GetListVault_v2_SearchBySymbol
   Scenario: Get List Vault v2 from Vault Listing screen, search by token symbol in vault
     # Bug @MOB-2283
     * def params = 
@@ -1107,7 +1111,7 @@ Feature: Vault
     * match each response.data.list[*].wallets != null
     * match each response.data.list[*].wallets[*] contains { symbol: 'XRP'}
 
-  @GetListVault_v2_ListArchivedVault
+  @RAKCON-23657 @GetListVault_v2_ListArchivedVault
   Scenario: Get List Vault v2 from Vault Listing screen, able to search masked archived vault
     * def params = 
     """
@@ -1124,7 +1128,7 @@ Feature: Vault
     * match each maskedVault[*].totalUSD == null
     * match each maskedVault[*].totalUSDYesterday == null
 
-  @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
+  @RAKCON-23658 @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
   Scenario: Get List Vault v2 from Vault Listing screen, unable to search masked Vault when isShowSignificanceOnly = true
     * def params = 
     """
@@ -1137,7 +1141,7 @@ Feature: Vault
     * def maskedVault = response.data.list.filter((v) => v.isMasked)
     * assert maskedVault.length == 0
 
-  @GetListVault_v2_SearchMaskedVaultUncheckShowSignificanceOnly
+  @RAKCON-23659 @GetListVault_v2_SearchMaskedVaultUncheckShowSignificanceOnly
   Scenario: Get List Vault v2 from Vault Listing screen, able to search masked Vault when isShowSignificanceOnly = false
     * def params = 
     """
@@ -1151,7 +1155,7 @@ Feature: Vault
     * match each maskedVault[*].name contains testData_v2.maskedVault.toLowerCase()
     * match each maskedVault[*].totalUSD == null
 
-  @GetVaultSummary
+  @RAKCON-23660 @GetVaultSummary
   Scenario: Get Vault Summary from Vault Listing screen
     * call read(svc + 'Vault.feature@GetVaultsSummary')
     * def expectedSchema = 

@@ -70,7 +70,18 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
-    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
+    * def requestBody = 
+    """
+      {
+        "memberRequiredApprove":[],
+        "name":#(vaultName),
+        "hasRequiredApprover":false,
+        "memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],
+        "type":'#(testData.vault.vault_type)',
+        "approverNumber":'#(testData.vault.approve_number)',
+        "note":"AT Test"
+      }
+    """
     * call read('this:Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false

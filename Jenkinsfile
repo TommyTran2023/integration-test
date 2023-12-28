@@ -9,8 +9,8 @@ def testType
 def failedTestMsg = []
 def failedScenarios = []
 def serviceStatus
-def password
-def userName
+def PASSWORD
+def USERNAME
 
 pipeline {
     agent any
@@ -33,13 +33,8 @@ pipeline {
     stages {
         stage ('Git Checkout') {
             steps {
-                withCredentials([file(credentialsId: 'rakkar-db-credentials-sit', variable: 'SECRET_FILE_CONTENT_SIT')]) {
-                    password = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_PASSWORD
-                    userName = env.SECRET_FILE_CONTENT_SIT.core-svc.DATABASE_USERNAME
-                }
                 // update branch and test environment
                 script {
-                    println("${userName} - {password}")
                     if (env.BRANCH_NAME == 'main'){
                             BRANCH = "main"
                             KARATE_ENV = "prod"
@@ -49,6 +44,7 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
+                            def credentials = readJSON file: "${SECRET_FILE_CONTENT_UAT}"
                     }
                     else if (env.BRANCH_NAME == 'develop'){
                             BRANCH = "develop"
@@ -59,9 +55,11 @@ pipeline {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
+                            def credentials = readJSON file: "${SECRET_FILE_CONTENT_SIT}"
                     }
 
-                    println("BRANCH = ${BRANCH}")
+                    USERNAME = credentials['core-svc']['DATABASE_USERNAME']
+                    PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
 
                     env.BRANCH = BRANCH
                     env.KARATE_ENV = KARATE_ENV
@@ -106,7 +104,7 @@ pipeline {
                         echo "KARATE_ENV = ${KARATE_ENV}"
                         def tag = params.E2E ? "@e2e" : "~@e2e"
                         withMaven(maven: 'Maven') {
-                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\""
+                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName=${USERNAME} -D pass=${PASSWORD}"
                         }
                     
                 }

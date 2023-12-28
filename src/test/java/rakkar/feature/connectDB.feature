@@ -2,11 +2,19 @@
 Feature: Connect to PostgreSQL
 
     Background:
-        
         # use jdbc to validate
-        * def coreConfig = { }
+        * def coreConfig = 
+        """
+        { 
+            username: #(coreUserName), 
+            password: #(corePass), 
+            url: 'jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/rak_sit_svc_core', 
+            driverClassName: 'org.postgresql.Driver' 
+        }
+        """
         * def DbUtils = Java.type('util.DbUtils')
         * def coreDb = new DbUtils(coreConfig)  
+        * print coreConfig
 
     @SelectTransactionsOfCustomer
     Scenario: Select all transactions of customer

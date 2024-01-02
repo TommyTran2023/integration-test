@@ -19,25 +19,18 @@ Feature: Vault
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def vaultName = 'AT-RAK-' + now()
 
-    @ignore @CheckVaultNameCommon
-  Scenario: Check vault name common
-    Given path '/core/vault/check-vault-name'
-    And params query
-    When method GET
-    Then status 200
-
     @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
     * def value = call read('this:Vault.feature@ViewVaultListing')
     * def name = value.response.data.vaults[0].name
-    * def query = { name:'#(name)'}
-    * call read('this:Vault.feature@CheckVaultNameCommon')
+    # * def query = { name:'#(name)'}
+    * call read(svc + 'Vault.feature@CheckVaultName') { name: #(name)}
     And match response.data.exist == true
 
     @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
   Scenario: Check vault name is Not existed in the company
-    * def query = { name:'VaultTestNotExist'}
-    * call read('this:Vault.feature@CheckVaultNameCommon')
+    # * def query = { name:'VaultTestNotExist'}
+    * call read(svc + 'Vault.feature@CheckVaultName') { name: 'VaultTestNotExist'}
     And match response.data.exist == false
 
     @RAKCON-16175 @GET-LIST-USER

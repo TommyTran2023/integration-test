@@ -117,6 +117,14 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
+  @CheckVaultName
+  Scenario: Check vault name
+    Given path '/core/vault/check-vault-name'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+
   #----------Wallet-----------#
     @AddAssets
   Scenario: Add asset to vault / Create wallet on vault

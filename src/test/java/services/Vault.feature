@@ -252,3 +252,19 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@UnarchiveVault') data
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @CheckVaultName
+    Scenario: Check vault name
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            params:{
+                name: '#(name)'
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CheckVaultName') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+

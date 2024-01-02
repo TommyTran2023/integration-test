@@ -987,12 +987,9 @@ Feature: Vault
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
   
-  @HideVault_Common @ignore
+  @HideVault_Common @ignore 
   Scenario: Hide a vault
-    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
-    When method POST
-    Then status 201
-    * match response.status == 'success'
+    * call read(svc + 'Vault.feature@ArchiveVault') { vaultId: #(vaultIDWA) }
 
   @RAKCON-23651 @GetListVault_v2_SortByPriceDesc
   Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'DESC'

@@ -30,28 +30,28 @@ Feature: All api call to core services
 
     @GetVaultDetail
   Scenario: Get vault by id 
-    Given path 'core/vault/accounts/' + vaultId
+    Given path 'core/v2/vault/' + vaultId
     * header Authorization = authorization
     When method GET
 
     @EditVaultPolicy
   Scenario: Edit vault policy 
-    Given path 'core/vault/accounts', vaultId, 'rules'
+    Given path 'core/vault/accounts/' + vaultId + 'rules'
     * header Authorization = authorization
     * request requestBody
     When method PUT
 
-    @HideVault
-  Scenario: Hide a vault
-    Given path 'core/vault/accounts', vaultId, 'hide'
+    @ArchiveVault
+  Scenario: Archive Vault
+    Given path 'core/v2/vault/' + vaultId + '/archive'
     * header Authorization = authorization
-    When method POST
+    When method PATCH
 
-    @UnhideVault
-  Scenario: Unhide a vault
-    Given path 'core/vault/accounts', vaultId, 'unhide'
+    @UnarchiveVault
+  Scenario: Unarchive Vault
+    Given path 'core/v2/vault/' + vaultId + '/unarchive'
     * header Authorization = authorization
-    When method POST
+    When method PATCH
 
     @RequestCreateAdvVault
   Scenario: Request create vault

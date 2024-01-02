@@ -227,3 +227,28 @@ Feature: Vault
         * match response.status == 'success'
         * match response.message == 'OK'
 
+    @ArchiveVault
+    Scenario: Archive Vault
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            vaultId: '#(vaultId)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@ArchiveVault') data
+        Then match responseStatus == 200
+        * match response.status == 'success'
+
+    @UnarchiveVault
+    Scenario: Unarchive Vault
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            vaultId: '#(vaultId)'
+        }
+        """
+        * call read(svc + 'coreSvc.feature@UnarchiveVault') data
+        Then match responseStatus == 200
+        * match response.status == 'success'

@@ -21,8 +21,14 @@ Scenario: Get transactions list
 
 @ViewTransactionDetail
 Scenario: View transaction detail common
-    * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') {authorization: #(requesterAccessToken)}
-    Then match responseStatus == 200
+    * def data = 
+    """
+    {
+        authorization: #(requesterAccessToken),
+        transactionId: #(transactionId)
+    }
+    """
+    * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') data
 
 @ExportTransaction
 Scenario: Export transaction

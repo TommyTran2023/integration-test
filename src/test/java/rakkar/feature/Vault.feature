@@ -213,6 +213,7 @@ Feature: Vault
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
     * param tokenSymbol = tokenSymbol
+    * param keyword = typeof keyword != 'undefined'? keyword : ''
     When method GET
     Then status 200
     * match response.status == 'success'

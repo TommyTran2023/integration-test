@@ -1,4 +1,4 @@
-@RAKCON-10583 @ignore
+@RAKCON-10583 
 Feature: Open API from another customer
 # Open API from another customer
 
@@ -18,12 +18,14 @@ Feature: Open API from another customer
 
     @RAKCON-20395 @GetAllVaultsOfCustomer
     Scenario: User unable to see list vaults from other customer
-        * call read('this:ConnectDB.feature@SelectVaultsOfCustomer') {customerId: #(crossTenant.accountId)}
         Given path 'v1/vaults'
         When method GET
         Then status 200
+        * def actualVaultId = karate.jsonPath(response.vaults,"$..['vault_id']").map(v => {return  "'" + v + "'" }).join(",")
+        * call read('this:ConnectDB.feature@SelectVaultsOfCustomer') {customerId: #(crossTenant.accountId), vaultIds: #(actualVaultId)}
+        * def result = karate.jsonPath(result,"$..['customerId']").map(v => {return  v.toString().replaceAll("-","") })
         And assert response.vaults.length == result.length
-        And match each response.vaults[*].vault_id contains karate.jsonPath(result,"$..['id']")
+        And match each result == crossTenant.accountId
 
     @RAKCON-20396 @CheckCustomerOfGetBalanceByVaultTypeAndAssetId
     Scenario: User able to see balance of customer by vault type and asset id

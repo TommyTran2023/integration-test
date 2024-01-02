@@ -4,6 +4,7 @@ function fn () {
     karate.log('Karate Environment: ', env);
     karate.set('coreUserName', karate.properties['userName']);
     karate.set('corePass', karate.properties['pass']);
+    karate.set('dbName', karate.properties['dbName']);
 
     if(!env) {
         env = 'uat'; //default env

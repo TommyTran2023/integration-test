@@ -17,7 +17,7 @@ pipeline {
 
     environment {
         SECRET_FILE_CONTENT_SIT = credentials('rakkar-db-credentials-sit')
-        SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
+        // SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
     }
 
     parameters {

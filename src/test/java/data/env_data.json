@@ -136,7 +136,7 @@
     "adminUsername2": "ID_CARD123123TH",
     "businessRegistrationId": "AT123123",
     "crossTenant":{
-      "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
+      "txnId": "24f7f355-042a-4137-a4e6-a7d49e3f0935",
       "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
       "whitelistExternalId":"65d5f02b-921e-418b-ae02-dc676610d7f3",
       "whitelistExternalName":"External Whitelist QA 1696826581",

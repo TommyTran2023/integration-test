@@ -177,11 +177,28 @@ Feature: Transaction
     """
     * eval karate.forEach(transactions, isCustomerData)
 
-    @ignore @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
-    Scenario: ViewTransactionDetailsOfOtherCustomer
-      * call read('this:Transaction.feature@@View_transaction_detail_common') { transactionId: #(crossTenant.txnId) }
-      * match responseStatus == 403
+  @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
+  Scenario: ViewTransactionDetailsOfOtherCustomer
+    * call read(svc + 'Transaction.feature@ViewTransactionDetail') { transactionId: #(crossTenant.txnId) }
+    * match responseStatus == 404
+    * match response.message == "TRANSACTION_NOT_FOUND"
       
+  @RAKCON-23649 @SearchTransactionsOnMaskedVault
+  Scenario: User unable to search transactions on Masked Vault
+    * def testData_v2 = read('classpath:data/data.json')
+    * def query = { limit:'50', offset: '0'}
+    * call read('this:Transaction.feature@Filter_transaction_common') 
+    * match each response.data.transactions[*].sourceName !contains testData_v2.maskedVault
+    * match each response.data.transactions[*].destinationName !contains testData_v2.maskedVault
+      
+  @RAKCON-23650 @ExportTransactionsOnMaskedVault
+  Scenario: User unable to export transactions on Masked Vault
+    * def testData_v2 = read('classpath:data/data.json')
+    * def query = { limit:'50', offset: '0'}
+  * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(query)' }
+  * match exportResponse.response !contains testData_v2.maskedVault
 
+
+    
     
 

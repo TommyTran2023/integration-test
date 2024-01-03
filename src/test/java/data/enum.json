@@ -76,7 +76,14 @@
         "STAKE":"stake",
         "CLAIM":"claim",
         "UNSTAKE":"unstake",
-        "CHANGEPOOL":"changepool"
+        "CHANGEPOOL":"changepool",
+        "INCOMING":"INCOMING",
+        "OUTGOING":"OUTGOING",
+        "REBALANCING":"REBALANCING",
+        "STAKING":"STAKING",
+        "UNSTAKING":"UNSTAKING",
+        "CLAIM_REWARD":"CLAIM_REWARD",
+        "CHANGE_POOL":"CHANGE_POOL"
     },
     "TransactionStatus":{
         "PENDING" : "PENDING",

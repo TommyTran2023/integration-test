@@ -1,12 +1,13 @@
-@RAKCON-10583
+    @RAKCON-10583
 Feature: Transaction
   Background:
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
     * def transactionSvc = 'classpath:services/Transaction.feature'
+    * def Const = read('classpath:data/enum.json')
 
-  @ignore @Filter_transaction_common
+    @ignore @Filter_transaction_common
   Scenario: Filter transaction
     * def schemaBody = read('classpath:data/schema.json')
     * def filterRequest = call read(transactionSvc + '@GetTransactionsList') { query: '#(query)' }
@@ -15,20 +16,20 @@ Feature: Transaction
     * match $response == schemaBody.transaction.filterTransaction
     * match each $response.data.transactions == schemaBody.transaction.transactionDetails
 
-  @RAKCON-10904 @ViewTransactionListing
+    @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing
     # View transaction listing
     * def query = { offset: '0', limit:'10'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transListResponse = response.data.transactions
 
-  @RAKCON-12325 @Filter_transaction_by_value
+    @RAKCON-12325 @Filter_transaction_by_value
     Scenario: Filter transaction by value
       * def query = { limit:'10', offset: '0', priceFrom:'0', priceTo: '100'}
       * call read('this:Transaction.feature@Filter_transaction_common')
       * match each $response.data.transactions[*].amountUSD == '#? _ <= 100'
 
-  @RAKCON-12326 @Filter_transaction_by_date_last30days
+    @RAKCON-12326 @Filter_transaction_by_date_last30days
   Scenario: Filter transaction by date
     * def getDate =
       """
@@ -43,7 +44,7 @@ Feature: Transaction
     * def query = { limit:'10', offset: '0',dateFrom: '#(dateFrom)', dateTo:'#(dateTo)' }
     * call read('this:Transaction.feature@Filter_transaction_common')
 
-  @RAKCON-10973 @Filter_transaction_by_asset
+    @RAKCON-10973 @Filter_transaction_by_asset
    Scenario: Filter transaction by asset
     * call read('Transfer.feature@Get_asset_transfer')
     * def tokenName = response.data.tokens[0].name
@@ -51,7 +52,7 @@ Feature: Transaction
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].name == "#(tokenName)"
 
-  @RAKCON-12327 @Filter_transaction_by_source
+    @RAKCON-12327 @Filter_transaction_by_source
   Scenario: Filter transactions by source
     * def value = call read(svc + 'Vault.feature@GetAllVaults')
     * def sourceId = value.response.data.vaults[0].id
@@ -60,7 +61,7 @@ Feature: Transaction
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].sourceName == "#(sourceName)"
 
-  @RAKCON-12328 @Filter_transaction_by_destination
+    @RAKCON-12328 @Filter_transaction_by_destination
   Scenario: Filter transactions by destination
     * def value = call read(svc + 'Vault.feature@GetAllVaults')
     * def destinationId = value.response.data.vaults[0].id
@@ -69,67 +70,67 @@ Feature: Transaction
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].destinationName == "#(destinationName)"
 
-  @RAKCON-12329 @Filter_transaction_by_type_outgoing
+    @RAKCON-12329 @Filter_transaction_by_type_outgoing
   Scenario: Filter transaction by type - outgoing
-    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_outgoing)']}
+    * def query = { limit:'10', offset: '0',type: ['#(Const.TransactionType.OUTGOING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "#(testData.transaction.type_outgoing)"
+    * match each $response.data.transactions[*].type == "#(Const.TransactionType.OUTGOING)"
 
-  @RAKCON-12421 @Filter_transaction_by_type_incoming
+    @RAKCON-12421 @Filter_transaction_by_type_incoming
   Scenario: Filter transaction by type - incoming
-    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_incoming)']}
+    * def query = { limit:'10', offset: '0',type: ['#(Const.TransactionType.INCOMING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "#(testData.transaction.type_incoming)"
+    * match each $response.data.transactions[*].type == "#(Const.TransactionType.INCOMING)"
 
-  @RAKCON-12422 @Filter_transaction_by_type_rebalancing
+    @RAKCON-12422 @Filter_transaction_by_type_rebalancing
   Scenario: Filter transaction by type - rebalancing
-    * def query = { limit:'10', offset: '0',type: ['#(testData.transaction.type_rebalancing)']}
+    * def query = { limit:'10', offset: '0',type: ['#(Const.TransactionType.REBALANCING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].type == "#(testData.transaction.type_rebalancing)"
+    * match each $response.data.transactions[*].type == "#(Const.TransactionType.REBALANCING)"
 
-  @RAKCON-12330 @Filter_transaction_by_status_pending
+    @RAKCON-12330 @Filter_transaction_by_status_pending
   Scenario: Filter transaction by status - pending
-    * def query = { limit:'10', offset: '0', status: ['#(testData.transaction.status_pending)']}
+    * def query = { limit:'10', offset: '0', status: ['#(Const.TransactionStatus.PENDING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_pending)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.PENDING)"
 
-  @RAKCON-12423 @Filter_transaction_by_status_processing
+    @RAKCON-12423 @Filter_transaction_by_status_processing
   Scenario: Filter transaction by status - processing
-    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_processing)']}
+    * def query = { limit:'10', offset: '0',status: ['#(Const.TransactionStatus.PROCESSING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_processing)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.PROCESSING)"
 
-  @RAKCON-12424 @Filter_transaction_by_status_confirming
+    @RAKCON-12424 @Filter_transaction_by_status_confirming
   Scenario: Filter transaction by status - confirming
-    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_confirming)']}
+    * def query = { limit:'10', offset: '0',status: ['#(Const.TransactionStatus.CONFIRMING)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_confirming)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.CONFIRMING)"
 
-  @RAKCON-12425 @Filter_transaction_by_status_completed
+    @RAKCON-12425 @Filter_transaction_by_status_completed
   Scenario: Filter transaction by status - completed
-    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_completed)']}
+    * def query = { limit:'10', offset: '0',status: ['#(Const.TransactionStatus.COMPLETED)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_completed)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.COMPLETED)"
 
-  @RAKCON-12426 @Filter_transaction_by_status_failed
+    @RAKCON-12426 @Filter_transaction_by_status_failed
   Scenario: Filter transaction by status - failed
-    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_failed)']}
+    * def query = { limit:'10', offset: '0',status: ['#(Const.TransactionStatus.FAILED)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_failed)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.FAILED)"
 
-  @RAKCON-12427 @Filter_transaction_by_status_reject
+    @RAKCON-12427 @Filter_transaction_by_status_reject
   Scenario: Filter transaction by status - reject
-    * def query = { limit:'10', offset: '0',status: ['#(testData.transaction.status_rejected)']}
+    * def query = { limit:'10', offset: '0',status: ['#(Const.TransactionStatus.REJECTED)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].status == "#(testData.transaction.status_rejected)"
+    * match each $response.data.transactions[*].status == "#(Const.TransactionStatus.REJECTED)"
 
-  @RAKCON-12428 @Filter_transaction_create_by
+    @RAKCON-12428 @Filter_transaction_create_by
   Scenario: Filter transaction created by
     * def query = { limit:'10', offset: '0',createdById: '#(userId)'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].createdById == "#(userId)"
 
-  @RAKCON-10972 @View_transaction_detail
+    @RAKCON-10972 @View_transaction_detail
   Scenario: View transaction detail
     * def query = { limit:'10', offset: '0'}
     * call read('this:Transaction.feature@Filter_transaction_common')
@@ -142,24 +143,24 @@ Feature: Transaction
     And match response.data.status == "#(status)"
     And match response.data.type == "#(type)"
 
-  @ignore @View_transaction_detail_common
+    @ignore @View_transaction_detail_common
   Scenario: View transaction detail common
     * def txnDetail = call read(transactionSvc + '@ViewTransactionDetail') { transactionId: '#(transactionId)' }
     * def response = txnDetail.response
 
-  @RAKCON-16663 @ExportTransaction
+    @RAKCON-16663 @ExportTransaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
     * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
 
-  @RAKCON-18275 @FilterTransactionFromWhitelistAddress
+    @RAKCON-18275 @FilterTransactionFromWhitelistAddress
   Scenario: Filter transaction from whitelist address
     * def listFolders = call read('WhiteListFolder.feature@List_folder')
     * def query = { limit:'10', offset: '0', destinationData: [ { "destinationType": "whitelist", "destinationId": "#(listFolders.response.data.folders[0].id)" } ]}
     * call read('this:Transaction.feature@Filter_transaction_common')
 
-  @RAKCON-20141 @CheckTransactionFromOtherCustomer @RAKCON-20140
+    @RAKCON-20141 @CheckTransactionFromOtherCustomer @RAKCON-20140
   Scenario: Customer cannot search for another customer vault
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId
@@ -177,13 +178,13 @@ Feature: Transaction
     """
     * eval karate.forEach(transactions, isCustomerData)
 
-  @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
+    @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
   Scenario: ViewTransactionDetailsOfOtherCustomer
     * call read(svc + 'Transaction.feature@ViewTransactionDetail') { transactionId: #(crossTenant.txnId) }
     * match responseStatus == 404
     * match response.message == "TRANSACTION_NOT_FOUND"
       
-  @RAKCON-23649 @SearchTransactionsOnMaskedVault
+    @RAKCON-23649 @SearchTransactionsOnMaskedVault
   Scenario: User unable to search transactions on Masked Vault
     * def testData_v2 = read('classpath:data/data.json')
     * def query = { limit:'50', offset: '0'}
@@ -191,12 +192,25 @@ Feature: Transaction
     * match each response.data.transactions[*].sourceName !contains testData_v2.maskedVault
     * match each response.data.transactions[*].destinationName !contains testData_v2.maskedVault
       
-  @RAKCON-23650 @ExportTransactionsOnMaskedVault
+    @RAKCON-23650 @ExportTransactionsOnMaskedVault
   Scenario: User unable to export transactions on Masked Vault
     * def testData_v2 = read('classpath:data/data.json')
     * def query = { limit:'50', offset: '0'}
-  * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(query)' }
-  * match exportResponse.response !contains testData_v2.maskedVault
+    * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(query)' }
+    * print 'Export transaction should not contains masked vault transactions: ', testData_v2.maskedVault
+    * def txnList = exportResponse.response.split("\n")
+    # Find index of Source column
+    * def sourceIndex = txnList[0].split(",").indexOf("Source")
+    # All transaction with mask vault information can't be Source
+    * def txnWithMaskVault = txnList.filter(x => x.contains(testData_v2.maskedVault))
+    * print txnWithMaskVault
+    * def checkSource = 
+    """
+    function(txn, index, text){
+      return txn.split(",")[index]?.contains(text)
+    }
+    """
+    * match txnWithMaskVault.filter(x => checkSource(x, sourceIndex, "AT - Cold Standard Vault 1 100092")).length == 0
 
 
     

@@ -1,7 +1,9 @@
 {
     "VaultType": {
         "HOT_WALLET":"HOT_WALLET",
-        "COLD_WALLET":"COLD_WALLET"
+        "COLD_WALLET":"COLD_WALLET",
+        "WARM": "warm",
+        "COLD": "cold"
     },
     "VaultPolicyType": {
         "STANDARD":"standard",
@@ -66,5 +68,23 @@
         "VAULT_LVL":"VAULT_LVL",
         "TRANSACTION":"TRANSACTION",
         "ONBOARDING":"ONBOARDING"
+    },
+    "TransactionType":{
+        "WITHDRAW":"withdraw",
+        "REBALANCE":"rebalance",
+        "DEPOSIT":"deposit",
+        "STAKE":"stake",
+        "CLAIM":"claim",
+        "UNSTAKE":"unstake",
+        "CHANGEPOOL":"changepool"
+    },
+    "TransactionStatus":{
+        "PENDING" : "PENDING",
+        "PROCESSING" : "PROCESSING",
+        "CONFIRMING" : "CONFIRMING",
+        "COMPLETED" : "COMPLETED",
+        "REJECTED" : "REJECTED",
+        "CANCELLED" : "CANCELLED",
+        "FAILED" : "FAILED"
     }
 }

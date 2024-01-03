@@ -11,6 +11,7 @@ def failedScenarios = []
 def serviceStatus
 def PASSWORD
 def USERNAME
+def DBNAME
 
 pipeline {
     agent any
@@ -18,6 +19,7 @@ pipeline {
     environment {
         SECRET_FILE_CONTENT_SIT = credentials('rakkar-db-credentials-sit')
         SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
+        SECRET_FILE_CONTENT_DEV = credentials('rakkar-db-credentials-dev')
     }
 
     parameters {
@@ -31,7 +33,8 @@ pipeline {
     }
 
     stages {
-        stage ('Git Checkout') {
+
+        stage ('Initialize settings') {
             steps {
                 // update branch and test environment
                 script {
@@ -44,31 +47,47 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
-                            def credentials = readJSON file: "${SECRET_FILE_CONTENT_UAT}"
+                            CONFIG_FILE = env.SECRET_FILE_CONTENT_UAT
+                            DBNAME = 'rak_svc_core_uat'
                     }
                     else if (env.BRANCH_NAME == 'develop'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
+                            CONFIG_FILE = env.SECRET_FILE_CONTENT_DEV
+                            DBNAME = 'rak_dev_svc_core'
                     }
                     else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
-                            def credentials = readJSON file: "${SECRET_FILE_CONTENT_SIT}"
+                            CONFIG_FILE = env.SECRET_FILE_CONTENT_SIT
+                            DBNAME = 'rak_sit_svc_core_cleanup'
                     }
-
-                    USERNAME = credentials['core-svc']['DATABASE_USERNAME']
-                    PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
 
                     env.BRANCH = BRANCH
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
                     
                 }
+            }
+        }
+        stage ('Git Checkout') {
+            steps {
+
                 git branch: "${BRANCH}",
                     credentialsId: 'github',
                     url: 'https://github.com/rakkar-digital-org/integration-test.git'
+            }
+        }
+
+        stage ('Load configuration') {
+            steps {
+                script {
+                    def credentials = readJSON file: "$CONFIG_FILE"
+                    USERNAME = credentials['core-svc']['DATABASE_USERNAME']
+                    PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
+                }
             }
         }
 
@@ -104,7 +123,7 @@ pipeline {
                         echo "KARATE_ENV = ${KARATE_ENV}"
                         def tag = params.E2E ? "@e2e" : "~@e2e"
                         withMaven(maven: 'Maven') {
-                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName=${USERNAME} -D pass=${PASSWORD}"
+                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}'"
                         }
                     
                 }

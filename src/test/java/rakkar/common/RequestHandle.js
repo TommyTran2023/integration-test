@@ -15,7 +15,7 @@ function fn(){
         if (requestId != null){
             karate.log('Cancel requestId: ' + requestId)
             var biometric = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
-            var cancel = karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:requestId , challengeAnswerRequest: biometric.challengeAnswerRequest} ) 
+            var cancel = karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:requestId , challengeAnswerRequest: biometric.challengeAnswerRequest} ) 
 
             if (cancel.responseStatus != 200)
                 throw new TypeError('Cannot cancel request. Error: ' + JSON.stringify(cancel, null, 4))
@@ -40,6 +40,9 @@ function fn(){
                 if (cancel.responseStatus != 200)
                     throw new TypeError('Cannot reject request. Error: ' + JSON.stringify(cancel.response, null, 4))
             }
+        }, 
+        cancelRequestById: function(requestId){
+            cancelRequest(requestId)
         }
     }
 }

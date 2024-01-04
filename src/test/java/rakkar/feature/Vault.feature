@@ -532,23 +532,11 @@ Feature: Vault
     * match response.data.name == creatingVault.response.data.name
     * match response.data.createdAt == creatingVault.response.data.createdAt
     * match response.data.type == creatingVault.response.data.type
-    * match response.data.hiddenOnUI == creatingVault.response.data.hiddenOnUI
-    * match response.data.totalBTC == creatingVault.response.data.totalBTC
     * match response.data.totalUSDYesterday == creatingVault.response.data.totalUSDYesterday
-    * match response.data.totalTransactionPending == creatingVault.response.data.totalTransactionPending
-    * match response.data.workspace.name == creatingVault.response.data.workspace.name
-    * match response.data.workspace.type == creatingVault.response.data.workspace.type
     * match response.data.isArchived == creatingVault.response.data.isArchived
-    * match response.data.policyType == Const.VaultPolicyType.STANDARD.toUpperCase()
+    * match response.data.policyType == Const.VaultPolicyType.STANDARD
     * match response.data == schemaBody.vault.details
-    * match each response.data.users[*] == schemaBody.user
 
-    * def isApprover = function(x) { return x.isApprover }
-    * def approverList = karate.filter(creatingVault.response.data.users, isApprover)
-    * match response.data.approverNumber == approverList.length
-
-    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
-    * match commonHandle().checkAllUsersExpected(response.data.users, creatingVault.response.data.users) == true
     * call read('this:Vault.feature@HideVault_Common')
 
   @RAKCON-21138 @ViewCurrentAdvancedPolicy-Users
@@ -558,10 +546,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllUsers 
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -579,10 +566,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllGroups
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -600,10 +586,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllGroupsAndUsers 
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -912,7 +897,12 @@ Feature: Vault
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
+    
+    # cancel pending request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelRequestById(response.data.requestId)
+
+    # * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data

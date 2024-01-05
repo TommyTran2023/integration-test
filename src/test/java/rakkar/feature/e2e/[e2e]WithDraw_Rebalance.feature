@@ -13,15 +13,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def waitUntilTransactionCompleted = 
     """
       function(transactionId){ 
-        var retry = 6
+        var retry = 2
         do {
+          java.lang.Thread.sleep(2*60000); 
           var getTransactionDetail = karate.call(classpath + 'Transaction.feature@View_transaction_detail_common', { transactionId: transactionId })
           retry--
-          java.lang.Thread.sleep(30000); 
         }
         while (getTransactionDetail.response.data.status != "COMPLETED" && retry > 0)
 
-        if (retry <= 0)
+        if (retry <= 0 && getTransactionDetail.response.data.status != "COMPLETED")
             throw Error ("Transaction cannot be completed: " + transactionId)
 
         return getTransactionDetail

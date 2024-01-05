@@ -35,28 +35,28 @@ Feature: All api call to core services
 
     @GetVaultDetail
   Scenario: Get vault by id 
-    Given path 'core/vault/accounts/' + vaultId
+    Given path 'core/v2/vault/' + vaultId
     * header Authorization = authorization
     When method GET
 
     @EditVaultPolicy
   Scenario: Edit vault policy 
-    Given path 'core/vault/account/' + vaultId + '/rules'
+    Given path 'core/vault/accounts/' + vaultId + 'rules'
     * header Authorization = authorization
     * request body
     When method PUT
 
-    @HideVault
-  Scenario: Hide a vault
-    Given path 'core/vault/accounts/' + vaultId + '/hide'
+    @ArchiveVault
+  Scenario: Archive Vault
+    Given path 'core/v2/vault/' + vaultId + '/archive'
     * header Authorization = authorization
-    When method POST
+    When method PATCH
 
-    @UnhideVault
-  Scenario: Unhide a vault
-    Given path 'core/vault/accounts/' + vaultId + '/unhide'
+    @UnarchiveVault
+  Scenario: Unarchive Vault
+    Given path 'core/v2/vault/' + vaultId + '/unarchive'
     * header Authorization = authorization
-    When method POST
+    When method PATCH
 
     @RequestCreateAdvVault
   Scenario: Request create vault
@@ -215,7 +215,28 @@ Feature: All api call to core services
     * header challenge-answer = challengeAnswer
     When method PATCH
 
-#----------Wallet-----------#
+  @GetListVault_v2
+  Scenario: Get List Vault v2
+    Given path '/core/v2/vault'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+  @GetVaultsSummary
+  Scenario: Get Vaults Summary
+    Given path '/core/v2/vault/summary'
+    * header Authorization = authorization
+    When method GET
+
+  @CheckVaultName
+  Scenario: Check vault name
+    Given path '/core/vault/check-vault-name'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+
+  #----------Wallet-----------#
     @AddAssets
   Scenario: Add asset to vault / Create wallet on vault
     Given path 'core/wallet/' + vaultId

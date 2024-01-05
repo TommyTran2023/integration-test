@@ -86,3 +86,7 @@ Usage: ```dataSet.advanceHotVaultId```
 4. Create group manually 
 - Group1: (requester, admin1)
 - Group2: (approver, admin2)
+
+### Run script for scenarios require db connect
+1. Add `-D userName='{username}' -D pass='{password}' -D dbName='{dbName}'` in cli
+Ex: `mvn clean test -Dkarate.env=qa -D userName='{username}' -D pass='{password}' -D dbName='{dbName}'`

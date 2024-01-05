@@ -19,25 +19,18 @@ Feature: Vault
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def vaultName = 'AT-RAK-' + now()
 
-    @ignore @CheckVaultNameCommon
-  Scenario: Check vault name common
-    Given path '/core/vault/check-vault-name'
-    And params query
-    When method GET
-    Then status 200
-
     @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
     * def value = call read('this:Vault.feature@ViewVaultListing')
     * def name = value.response.data.vaults[0].name
-    * def query = { name:'#(name)'}
-    * call read('this:Vault.feature@CheckVaultNameCommon')
+    # * def query = { name:'#(name)'}
+    * call read(svc + 'Vault.feature@CheckVaultName') { name: #(name)}
     And match response.data.exist == true
 
     @RAKCON-16104 @CHECK-VAULT-NAME-NOT-EXIST
   Scenario: Check vault name is Not existed in the company
-    * def query = { name:'VaultTestNotExist'}
-    * call read('this:Vault.feature@CheckVaultNameCommon')
+    # * def query = { name:'VaultTestNotExist'}
+    * call read(svc + 'Vault.feature@CheckVaultName') { name: 'VaultTestNotExist'}
     And match response.data.exist == false
 
     @RAKCON-16175 @GET-LIST-USER
@@ -70,7 +63,18 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
-    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
+    * def requestBody = 
+    """
+      {
+        "memberRequiredApprove":[],
+        "name":#(vaultName),
+        "hasRequiredApprover":false,
+        "memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],
+        "type":'#(testData.vault.vault_type)',
+        "approverNumber":'#(testData.vault.approve_number)',
+        "note":"AT Test"
+      }
+    """
     * call read('this:Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
@@ -209,6 +213,7 @@ Feature: Vault
     * param sort = 'DESC'
     * param sortBy = 'TOTAL_USD'
     * param tokenSymbol = tokenSymbol
+    * param keyword = typeof keyword != 'undefined'? keyword : ''
     When method GET
     Then status 200
     * match response.status == 'success'
@@ -527,23 +532,11 @@ Feature: Vault
     * match response.data.name == creatingVault.response.data.name
     * match response.data.createdAt == creatingVault.response.data.createdAt
     * match response.data.type == creatingVault.response.data.type
-    * match response.data.hiddenOnUI == creatingVault.response.data.hiddenOnUI
-    * match response.data.totalBTC == creatingVault.response.data.totalBTC
     * match response.data.totalUSDYesterday == creatingVault.response.data.totalUSDYesterday
-    * match response.data.totalTransactionPending == creatingVault.response.data.totalTransactionPending
-    * match response.data.workspace.name == creatingVault.response.data.workspace.name
-    * match response.data.workspace.type == creatingVault.response.data.workspace.type
     * match response.data.isArchived == creatingVault.response.data.isArchived
-    * match response.data.policyType == Const.VaultPolicyType.STANDARD.toUpperCase()
+    * match response.data.policyType == Const.VaultPolicyType.STANDARD
     * match response.data == schemaBody.vault.details
-    * match each response.data.users[*] == schemaBody.user
 
-    * def isApprover = function(x) { return x.isApprover }
-    * def approverList = karate.filter(creatingVault.response.data.users, isApprover)
-    * match response.data.approverNumber == approverList.length
-
-    * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
-    * match commonHandle().checkAllUsersExpected(response.data.users, creatingVault.response.data.users) == true
     * call read('this:Vault.feature@HideVault_Common')
 
   @RAKCON-21138 @ViewCurrentAdvancedPolicy-Users
@@ -553,10 +546,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllUsers 
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -574,10 +566,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllGroups
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -595,10 +586,9 @@ Feature: Vault
     Then match response.data.id == vaultId
     * match response.data.name contains testData_v2.advVaultWithAllGroupsAndUsers 
     * match response.data.type == Const.VaultType.HOT_WALLET
-    * match response.data.hiddenOnUI == false
-    * match response.data.policyType == Const.VaultPolicyType.ADVANCE
+    * match response.data.isArchived == false
+    * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.vault.details
-    * match each response.data.quorums[*] == schemaBody.vault.quorumDetails
 
     * def quorumId = response.data.quorumId
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
@@ -674,6 +664,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
 
   @PreparePolicyForQuorumsOfUsers @ignore
@@ -764,6 +756,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
   
   @PreparePolicyForQuorumsOfGroups @ignore
@@ -846,6 +840,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
 
   @PreparePolicyForQuorumsOfGroupsUsers @ignore
@@ -907,8 +903,12 @@ Feature: Vault
   @SubmitRequestEditVault @ignore
   Scenario: Advanced Vault - Submit Request Edit Vault
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:response.data.requestId})
-    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+    
+    # cancel pending request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelPendingRequest(response.data.requestId)
+
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
     * def requestDraftId = response.data.requestDraftId
@@ -916,6 +916,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     
   @RAKCON-21144 @CancelRequestEditVaultPolicy @ignore
   Scenario: Advanced Vault - Cancel Request Edit Vault Policy
@@ -925,7 +927,7 @@ Feature: Vault
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Quorums.feature@CancelRequest') {requestId: '#(requestId)'}
 
-  @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore 
+  @RAKCON-21145 @CheckExpiredOfRequestToSubmit
   Scenario: Edit Vault Policy - Check expired of Request before Submit
     * def testData = read('classpath:data/data_test.json')
     * callonce read(svc + 'Auth.feature@GetListUsers')
@@ -964,9 +966,12 @@ Feature: Vault
     }
     """
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:response.data.requestId})
-    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
+    # cancel pending request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelPendingRequest(response.data.requestId)
+
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') bodyData
     * def requestDraftId = response.data.requestDraftId
     * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
@@ -975,11 +980,199 @@ Feature: Vault
     # Submit from mobile app. It should return error
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 400
+    And match response.status == "error" 
+    And match response.errorCode == "REQUEST_EDIT_VAULT_EXPIRED" 
+    And match response.message == "REQUEST_EDIT_VAULT_EXPIRED" 
   
-  @HideVault_Common @ignore
+  @HideVault_Common @ignore 
   Scenario: Hide a vault
-    Given path '/core/vault/accounts/'+vaultIDWA+'/hide'
-    When method POST
-    Then status 201
-    * match response.status == 'success'
+    * call read(svc + 'Vault.feature@ArchiveVault') { vaultId: #(vaultIDWA) }
+
+  @RAKCON-23651 @GetListVault_v2_SortByPriceDesc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'DESC'
+    * def params = 
+    """
+    {
+      sort: 'DESC',
+      sortBy: 'PRICE',
+      limit: 100
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * assert response.data.total > 0
+    * assert response.data.list.length > 0
+    * match each response.data.list[*].isArchived == false
+    # Validate vault item data
+    * def expectedVaultSchema = 
+    """
+    {
+      id: "#uuid",
+      name: "#string",
+      status: "#string",
+      type: "#string",
+      totalUSD: "#number",
+      totalUSDYesterday: "#number",
+      isMasked: "#boolean",
+      isArchived: "#boolean",
+      createdAt: "#string",
+      wallets: "#[]"
+    }
+    """
+    * def expectedWalletSchema = 
+    """
+    {
+      "id": "#uuid",
+      "name": "#string",
+      "total": "#number",
+      "symbol": "#string",
+      "totalUSD": "#number",
+      "externalAssetId": "#string"
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
+    * match each response.data.list[*].wallets[*] == expectedWalletSchema
+    * def actual = $response.data.list[*].totalUSD
+    * def expected = $response.data.list[*].totalUSD
+    * eval expected.sort((a,b) => b-a)
+    * print "actual Vault Total USD", actual
+    * print "expected Vault Total USD", expected
+    * match actual.toString() == expected.toString()
+
+  @RAKCON-23652 @GetListVault_v2_SortByPriceAsc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'PRICE', sort: 'ASC'
+    * def params = 
+    """
+    {
+      sort: 'ASC',
+      sortBy: 'PRICE',
+      limit: 100
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].totalUSD
+    * def expected = $response.data.list[*].totalUSD
+    * eval expected.sort((a,b) => a-b)
+    * print "actual Vault Total USD", actual
+    * print "expected Vault Total USD", expected
+    * match actual.toString() == expected.toString()
+    
+  @RAKCON-23653 @GetListVault_v2_SortByVaultNameAsc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'ASC'
+    * def params = 
+    """
+    {
+      sort: 'ASC',
+      sortBy: 'VAULT_NAME',
+      limit: 100
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].name
+    * def expected = $response.data.list[*].name
+    * eval expected.map((l) => l.toUpperCase()).sort()
+    * print "actual Vault Name", actual
+    * print "expected Vault Name", expected
+    * match actual.toString() == expected.toString()
+
+  @RAKCON-23654 @GetListVault_v2_SortByVaultNameDesc
+  Scenario: Get List Vault v2 from Vault Listing screen, sortBy: 'VAULT_NAME', sort: 'DESC'
+    * def params = 
+    """
+    {
+      sort: 'DESC',
+      sortBy: 'VAULT_NAME',
+      limit: 100
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def actual = $response.data.list[*].name
+    * def expected = $response.data.list[*].name
+    * eval expected.map(l => l.toUpperCase()).sort().reverse()
+    * print "actual Vault Name", actual
+    * print "expected Vault Name", expected
+    * match actual.toString() == expected.toString()
+
+  @RAKCON-23655 @GetListVault_v2_SearchByVaultName
+  Scenario: Get List Vault v2 from Vault Listing screen, search by vault name
+    * def params = 
+    """
+    {
+      searchText: "#(testData_v2.standardWarmVault_1)"
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * match each response.data.list[*].name contains testData_v2.standardWarmVault_1
+  
+  @RAKCON-23656 @GetListVault_v2_SearchBySymbol
+  Scenario: Get List Vault v2 from Vault Listing screen, search by token symbol in vault
+    # Bug @MOB-2283
+    * def params = 
+    """
+    {
+      searchText: 'XRP'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * match each response.data.list[*].wallets != null
+    * match each response.data.list[*].wallets[*] contains { symbol: 'XRP'}
+
+  @RAKCON-23657 @GetListVault_v2_ListArchivedVault
+  Scenario: Get List Vault v2 from Vault Listing screen, able to search masked archived vault
+    * def params = 
+    """
+    {
+      isArchived: true,
+      searchText: '#(testData_v2.maskedVault)'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked).map(v => v.name.toLowerCase())
+    * match each maskedVault[*].isArchived == true
+    * match each maskedVault[*].name contains testData_v2.maskedVault
+    * match each maskedVault[*].isMasked == true
+    * match each maskedVault[*].totalUSD == null
+    * match each maskedVault[*].totalUSDYesterday == null
+
+  @RAKCON-23658 @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
+  Scenario: Get List Vault v2 from Vault Listing screen, unable to search masked Vault when isShowSignificanceOnly = true
+    * def params = 
+    """
+    {
+      searchText: #(testData_v2.maskedVault),
+      isShowSignificanceOnly: true
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked)
+    * assert maskedVault.length == 0
+
+  @RAKCON-23659 @GetListVault_v2_SearchMaskedVaultUncheckShowSignificanceOnly
+  Scenario: Get List Vault v2 from Vault Listing screen, able to search masked Vault when isShowSignificanceOnly = false
+    * def params = 
+    """
+    {
+      searchText: #(testData_v2.maskedVault),
+      isShowSignificanceOnly: false
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    * def maskedVault = response.data.list.filter((v) => v.isMasked).map(v => v.name.toLowerCase())
+    * match each maskedVault[*].name contains testData_v2.maskedVault.toLowerCase()
+    * match each maskedVault[*].totalUSD == null
+
+  @RAKCON-23660 @GetVaultSummary
+  Scenario: Get Vault Summary from Vault Listing screen
+    * call read(svc + 'Vault.feature@GetVaultsSummary')
+    * def expectedSchema = 
+    """
+    {
+      total: '#number? _ > 0',
+      totalByDate: '#number? _ > 0',
+      date: '#string'
+    }
+    """
+    Then response.data == expectedSchema
+
+
 

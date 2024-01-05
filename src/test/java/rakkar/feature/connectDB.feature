@@ -3,18 +3,19 @@ Feature: Connect to PostgreSQL
 
     Background:
         # use jdbc to validate
+        * def dbUrl = "jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/" + dbName
         * def coreConfig = 
         """
         { 
             username: #(coreUserName), 
             password: #(corePass), 
-            url: 'jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/rak_sit_svc_core', 
+            url: #(dbUrl), 
             driverClassName: 'org.postgresql.Driver' 
         }
         """
-        * def DbUtils = Java.type('util.DbUtils')
-        * def coreDb = new DbUtils(coreConfig)  
         * print coreConfig
+        * def DbUtils = Java.type('util.DbUtils')
+        * def coreDb = new DbUtils(coreConfig)
 
     @SelectTransactionsOfCustomer
     Scenario: Select all transactions of customer
@@ -23,7 +24,8 @@ Feature: Connect to PostgreSQL
             "SELECT * " +
             "FROM txn_transactions " +
             "WHERE \"customerId\" = '" + customerId + "' " +
-                "OR \"toCustomerId\" = '" + customerId + "'"
+                "OR \"toCustomerId\" = '" + customerId + "' " +
+            "ORDER BY \"createdAt\" DESC LIMIT 1000"
         """
         * print query
         * def result = coreDb.readRows(query)
@@ -34,7 +36,9 @@ Feature: Connect to PostgreSQL
         * def query = 
         """
             "SELECT * FROM vaults " +
-            "WHERE \"customerId\" = '" + customerId + "'"
+            "WHERE \"customerId\" = '" + customerId + "' " +
+            "AND id in (" + vaultIds + ") " + 
+            "LIMIT 10"
         """
         * print query
         * def result = coreDb.readRows(query)

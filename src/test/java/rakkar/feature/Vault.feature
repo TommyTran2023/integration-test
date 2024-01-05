@@ -664,6 +664,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
 
   @PreparePolicyForQuorumsOfUsers @ignore
@@ -754,6 +756,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
   
   @PreparePolicyForQuorumsOfGroups @ignore
@@ -836,6 +840,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     * call read('@CancelRequestEditVaultPolicy') {vaultId: '#(vaultId)'}
 
   @PreparePolicyForQuorumsOfGroupsUsers @ignore
@@ -902,7 +908,6 @@ Feature: Vault
     * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
     * requestHandle().cancelRequestById(response.data.requestId)
 
-    # * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
     * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
@@ -911,6 +916,8 @@ Feature: Vault
     
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 200 
+    And match response.status == "success" 
     
   @RAKCON-21144 @CancelRequestEditVaultPolicy @ignore
   Scenario: Advanced Vault - Cancel Request Edit Vault Policy
@@ -920,7 +927,7 @@ Feature: Vault
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'AdvanceQuorum.feature@CancelRequest') {requestId: '#(requestId)'}
 
-  @RAKCON-21145 @CheckExpiredOfRequestToSubmit @ignore
+  @RAKCON-21145 @CheckExpiredOfRequestToSubmit
   Scenario: Edit Vault Policy - Check expired of Request before Submit
     * def testData = read('classpath:data/data_test.json')
     * callonce read(svc + 'Auth.feature@GetListUsers')
@@ -959,9 +966,12 @@ Feature: Vault
     }
     """
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(vaultId)'}
-    * if (response.data.requestId != null) karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:response.data.requestId})
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
+    # cancel pending request
+    * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+    * requestHandle().cancelRequestById(response.data.requestId)
+
+    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') bodyData
     * def requestDraftId = response.data.requestDraftId
     * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
@@ -970,6 +980,10 @@ Feature: Vault
     # Submit from mobile app. It should return error
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Vault.feature@SubmitUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
+    Then match responseStatus == 400
+    And match response.status == "error" 
+    And match response.errorCode == "REQUEST_EDIT_VAULT_EXPIRED" 
+    And match response.message == "REQUEST_EDIT_VAULT_EXPIRED" 
   
   @HideVault_Common @ignore 
   Scenario: Hide a vault

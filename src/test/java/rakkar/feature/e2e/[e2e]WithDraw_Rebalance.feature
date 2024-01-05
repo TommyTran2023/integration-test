@@ -13,11 +13,11 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def waitUntilTransactionCompleted = 
     """
       function(transactionId){ 
-        var retry = 12
+        var retry = 6
         do {
-          java.lang.Thread.sleep(10000); 
           var getTransactionDetail = karate.call(classpath + 'Transaction.feature@View_transaction_detail_common', { transactionId: transactionId })
-            retry--
+          retry--
+          java.lang.Thread.sleep(30000); 
         }
         while (getTransactionDetail.response.data.status != "COMPLETED" && retry > 0)
 
@@ -391,6 +391,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
     # --- Verify the balance of source is updated correctly
+    * print "total(", total, ") - amount_low(", amount_low, ") = total_source_afterTransfer(", total_source_afterTransfer,")"
     * match total_source_afterTransfer == total - amount_low
 
    # 9.2.Get the balance of destination

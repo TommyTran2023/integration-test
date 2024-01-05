@@ -83,27 +83,19 @@
     "details":{
       "id": "#uuid",
       "name": "#string",
-      "createdAt": "#string",
+      "status": "#string",
       "type": "#string",
-      "hiddenOnUI": "#boolean",
-      "quorumId": "#string",
+      "wallets":"#[]",
+      "isMasked": "#boolean",
       "totalUSD": "#number",
-      "missing": "#boolean",
-      "totalBTC": "#string",
       "totalUSDYesterday": "#number",
-      "totalTransactionPending": "#number",
-      "requestId": "##string",
-      "isPendingRequest": "#boolean",
-      "workspace": {
-        "name": "#string",
-        "type": "#string"
-      },
-      "isArchived": "#boolean",
+      "quorumId": "#string",
       "policyType": "#string",
-      "approverNumber": "#number",
-      "quorums": "##[]",
-      "users": "##[]",
-      "viewers": "##[]"
+      "isArchived": "#boolean",
+      "isPendingRequest": "#boolean",
+      "canTransfer": "#boolean",
+      "requestId": "##string",
+      "createdAt": "#string"
     },
     "quorumDetails":{
       "isRequired": "#boolean",

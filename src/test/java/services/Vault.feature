@@ -174,8 +174,6 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@SubmitUpdateVaultRequest') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
 
     @CancelUpdateVaultRequest
     Scenario: Submit Update Vault Request

@@ -15,7 +15,7 @@ function fn(){
         if (requestId != null){
             karate.log('Cancel requestId: ' + requestId)
             var biometric = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
-            var cancel = karate.call(svc + 'Quorums.feature@CancelRequest', {requestId:requestId , challengeAnswerRequest: biometric.challengeAnswerRequest} ) 
+            var cancel = karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:requestId , challengeAnswerRequest: biometric.challengeAnswerRequest} ) 
 
             if (cancel.responseStatus != 200)
                 throw new TypeError('Cannot cancel request. Error: ' + JSON.stringify(cancel, null, 4))
@@ -30,16 +30,11 @@ function fn(){
         cancelPendingRequestOnVault: function(vaultId){
             // Get vault detail
             var vaultDetails = karate.call(svc + 'Vault.feature@GetVaultDetail', {vaultId:vaultId})
-            var requestId = vaultDetails.response.data.requestId
 
-            // Cancel pending request if have
-            if (requestId != null){
-                karate.log('Cancel requestId: ' + requestId)
-                var cancel = karate.call(svc + 'AdvanceQuorum.feature@CancelRequest', {requestId:requestId} ) 
-            
-                if (cancel.responseStatus != 200)
-                    throw new TypeError('Cannot reject request. Error: ' + JSON.stringify(cancel.response, null, 4))
-            }
+            cancelRequest(vaultDetails.response.data.requestId)
+        }, 
+        cancelRequestById: function(requestId){
+            cancelRequest(requestId)
         }
     }
 }

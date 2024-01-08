@@ -196,3 +196,30 @@ Feature: Customers
         """
         * call read(svc + 'coreSvc.feature@Customer_GetCustomerWorkspace') data
 
+    @GenerateBillingByCustomerId
+    Scenario: Generate Billing By Customer Id
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            params: {
+                customerId: #(customerId),
+                yearMonth: #(yearMonth)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GenerateBillingByCustomerId') data
+
+    @Customer_SyncTokenPriceByMonthYear
+    Scenario: Sync Token Price By Month Year
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            params: {
+                customerId: #(customerId),
+                yearMonth: #(yearMonth)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GenerateBillingByCustomerId') data

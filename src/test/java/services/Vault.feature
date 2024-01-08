@@ -369,9 +369,14 @@ Feature: Vault
         * def data =
         """
         {
-            authorization: #(accessToken),
-            vaultId: #(vaultId),
-            requestDraftId: #(requestDraftId)
+            authorization: '#(accessToken)',
+            vaultId: '#(vaultId)',
+            requestDraftId: '#(requestDraftId)',
+            body: 
+            {
+                notificationId: '#(notificationId)',
+                requestCancelFrom: '#(requestCancelFrom)'
+            }
         }
         """
         * call read(svc + 'coreSvc.feature@SubmitRequestEditVaultPolicyByRequestDraftId') data
@@ -405,82 +410,6 @@ Feature: Vault
         """
         * call read(svc + 'coreSvc.feature@SubmitUpdateVaultRequest') data
 
-    @CancelUpdateVaultRequest
-    Scenario: Submit Update Vault Request
-        * def data = 
-        """
-        {
-            authorization: #(requesterAccessToken),
-            vaultId: #(vaultId),
-            requestDraftId: #(requestDraftId),
-            challengeAnswer: '#(challengeAnswerRequest)'
-        }
-        """
-        * call read(svc + 'coreSvc.feature@CancelUpdateVaultRequest') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-
-    @GetListVault_v2
-    Scenario: Get List Vault v2
-        * def data =
-        """
-        {
-            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
-            params:{
-                limit: #(typeof limit != 'undefined' ? limit : 10),
-                offset: #(typeof offset != 'undefined' ? offset : 0),
-                sort: #(typeof sort != 'undefined' ? sort : 'DESC'),
-                sortBy: #(typeof sortBy != 'undefined' ? sortBy : 'VAULT_NAME'),
-                searchText: #(typeof searchText != 'undefined' ? searchText : ''),
-                isShowSignificanceOnly: #(typeof isShowSignificanceOnly != 'undefined' ? isShowSignificanceOnly :false),
-                isArchived: #(typeof isArchived != 'undefined' ? isArchived : false)
-            }
-        }
-        """
-        * call read(svc + 'coreSvc.feature@GetListVault_v2') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-        * match response.message == 'OK'
-
-    @GetVaultsSummary
-    Scenario: Get Vaults Summary
-        * def data =
-        """
-        {
-            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken)
-        }
-        """
-        * call read(svc + 'coreSvc.feature@GetVaultsSummary') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-        * match response.message == 'OK'
-
-    @ArchiveVault
-    Scenario: Archive Vault
-        * def data =
-        """
-        {
-            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
-            vaultId: '#(vaultId)'
-        }
-        """
-        * call read(svc + 'coreSvc.feature@ArchiveVault') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-
-    @UnarchiveVault
-    Scenario: Unarchive Vault
-        * def data =
-        """
-        {
-            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
-            vaultId: '#(vaultId)'
-        }
-        """
-        * call read(svc + 'coreSvc.feature@UnarchiveVault') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-
     @CheckVaultName
     Scenario: Check vault name
         * def data =
@@ -495,7 +424,6 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@CheckVaultName') data
         Then match responseStatus == 200
         * match response.status == 'success'
-
 
     @GetListVault_v2
     Scenario: Get List Vault v2
@@ -592,3 +520,60 @@ Feature: Vault
         * call read(svc + 'coreSvc.feature@EditVaultPolicy') data
         Then match responseStatus == 200
         * match response.status == 'success'
+
+    @CreateVault_v2
+    Scenario: Create Vault v2
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken),
+            body:{
+                id:#(id),
+                vaultExternalId:#(vaultExternalId),
+                name:#(name),
+                hiddenOnUI:#(hiddenOnUI),
+                customerRefId:#(customerRefId),
+                autoFuel:#(autoFuel),
+                status:#(status),
+                customerId:#(customerId),
+                type:#(type)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@CreateVault_v2') data
+
+        @UpdateVaultDetail
+    Scenario: Update vault by id 
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken),
+            vaulId: #(vaulId),
+            body:{
+                id:#(id),
+                vaultExternalId:#(vaultExternalId),
+                name:#(name),
+                hiddenOnUI:#(hiddenOnUI),
+                customerRefId:#(customerRefId),
+                autoFuel:#(autoFuel),
+                status:#(status),
+                customerId:#(customerId),
+                type:#(type)
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@UpdateVaultDetail') data
+        
+        @DeleteVault
+    Scenario: Delete vault by id 
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken),
+            vaulId: #(vaulId)
+        }
+        """
+        * call read(svc + 'coreSvc.feature@DeleteVault') data
+
+        @HardDeleteVault
+        

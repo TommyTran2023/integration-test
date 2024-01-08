@@ -108,5 +108,9 @@
         "REJECTED" : "REJECTED",
         "CANCELLED" : "CANCELLED",
         "FAILED" : "FAILED"
+    },
+    "RequestFrom":{
+        "WEB": "WEB",
+        "MOBILE": "MOBILE"
     }
 }

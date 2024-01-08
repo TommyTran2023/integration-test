@@ -32,18 +32,18 @@ Feature: Group Policies
     """
     * call read('this:advQuorumSvc.feature@GetGroupDetails') data
 
-@GetGroupsWithDetailsByIds
-Scenario: Get Groups With Details By Ids
-    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    @GetGroupsWithDetailsByIds
+  Scenario: Get Groups With Details By Ids
     * def data =
     """
     {
-        "authorization":#(accessToken),
+        "authorization":#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken),
         "params": {
             "limit": 10,
             "offset": 0,
             "searchText": "",
-            "ids": #(ids)
+            "ids": #(ids),
+            "where": #(typeof where == 'undefined' ? '' : where)
         }
     }
     """
@@ -52,7 +52,7 @@ Scenario: Get Groups With Details By Ids
     * match response.code == 200
     * match response.status == 'success'    
 
-@CreateGroupUsers
+    @CreateGroupUsers
   Scenario: Create Group Users
     * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
     * def data =
@@ -105,12 +105,30 @@ Scenario: Get Groups With Details By Ids
     {
         "authorization":#(accessToken),
         body:{
-            name : #(name), //string
-            memberIds : #(memberIds) //array
+            name : #(name),
+            memberIds : #(memberIds)
         }
     }
     """
     * call read('this:advQuorumSvc.feature@EditGroupMember') data
+
+    @GetGroups
+  Scenario: Get Groups
+    * def data =
+    """
+    {
+        authorization: #(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken),
+        params:{
+            limit : #(typeof limit == 'undefined' ? null : limit),
+            offset : #(typeof offset == 'undefined' ? 0 : limit),
+            searchText : #(typeof searchText == 'undefined' ? '' : searchText),
+            ids : #(typeof ids == 'undefined' ? [] : ids),
+            where : #(typeof where == 'undefined' ? '' : where),
+        }
+    }
+    """
+    * call read('this:coreSvc.feature@GetGroups') data
+
     
 
 

@@ -39,6 +39,19 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
+    @UpdateVaultDetail
+  Scenario: Update vault by id 
+    Given path 'core/v2/vault/' + vaultId
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+    @DeleteVault
+  Scenario: Delete vault by id 
+    Given path 'core/v2/vault/' + vaultId
+    * header Authorization = authorization
+    When method DELETE
+
     @EditVaultPolicy
   Scenario: Edit vault policy 
     Given path 'core/vault/accounts/' + vaultId + 'rules'
@@ -185,6 +198,7 @@ Feature: All api call to core services
   Scenario: Discard Request Edit Vault Policy By Request Draft Id
     Given path 'core/vault/'+ vaultId + '/policy/request-update/' + requestDraftId + '/discard'
     * header Authorization = authorization
+    * request body
     When method PATCH
 
     @RequestUpdateVaultPolicy
@@ -208,19 +222,19 @@ Feature: All api call to core services
     * header passcode = passcode
     When method PATCH
 
-    @CancelUpdateVaultRequest
-  Scenario: Cancel Update Vault Request
-    Given path 'core/vault/' + vaultId + '/policy/request-update/' + requestDraftId + '/discard'
-    * header Authorization = authorization
-    * header challenge-answer = challengeAnswer
-    When method PATCH
-
   @GetListVault_v2
   Scenario: Get List Vault v2
     Given path '/core/v2/vault'
     * header Authorization = authorization
     * params params
     When method GET
+
+  @CreateVault_v2
+  Scenario: Create Vault v2
+    Given path '/core/v2/vault'
+    * header Authorization = authorization
+    * request body
+    When method POST
 
   @GetVaultsSummary
   Scenario: Get Vaults Summary
@@ -620,6 +634,20 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
+    @GenerateBillingByCustomerId
+  Scenario: Generate Billing By Customer Id
+    Given path 'core/customers/' + customerId + '/billing/' + yearMonth
+    * header Authorization = authorization
+    * params params
+    When method PATCH
+
+    @Customer_SyncTokenPriceByMonthYear
+  Scenario: Sync Token Price By Month Year
+    Given path 'core/customers/' + customerId + '/billing/' + yearMonth + '/sync-price'
+    * header Authorization = authorization
+    * params params
+    When method PATCH
+
 #----------Country-----------#  
     @CheckRestrictedCountries
   Scenario: Check Restricted Countries
@@ -1104,21 +1132,21 @@ Feature: All api call to core services
 
     @CheckExistingShortcut
   Scenario: Check existing asset shortcuts
-    Given path '/core/assets/check-existing
+    Given path '/core/assets/check-existing'
     * header Authorization = authorization
     * params params
     When method GET
 
     @AllocationDetail
   Scenario: Get asset allocation detail 
-    Given path '/core/assets/allocation-detail
+    Given path '/core/assets/allocation-detail'
     * header Authorization = authorization
     * params params
     When method GET
 
     @GetAllVaultOfAsset
   Scenario: Get all asset vault
-    Given path '/core/assets/overview
+    Given path '/core/assets/overview'
     * header Authorization = authorization
     * params params
     When method GET
@@ -1284,10 +1312,119 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
+#----------REP Vault-----------#  
+    @REP_GetVaults
+  Scenario: REP - Get Vaults
+    Given path 'core/v2/rep/vault'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+    @REP_CreateVault
+  Scenario: REP - Create Vault
+    Given path 'core/v2/rep/vault'
+    * header Authorization = authorization
+    * request body
+    When method POST
+
+    @REP_GetVaultById
+  Scenario: REP - Get Vault By Id
+    Given path 'core/v2/rep/vault/' + vaultId
+    * header Authorization = authorization
+    When method GET
+
+    @REP_UpdateVaultDetail
+  Scenario: Update vault by id 
+    Given path 'core/v2/rep/vault/' + vaultId
+    * header Authorization = authorization
+    * request body
+    When method PUT
+
+    @REP_DeleteVault
+  Scenario: Delete vault by id 
+    Given path 'core/v2/rep/vault/' + vaultId
+    * header Authorization = authorization
+    When method DELETE
+
+#----------REP Snapshot Token Price-----------#  
+@REP_GetSnapshotTokenPrice
+Scenario: REP - Get Snapshot Token Price
+  Given path 'core/v2/rep/snapshotTokenPrice'
+  * header Authorization = authorization
+  * params params
+  When method GET
+
+  @REP_CreateSnapshotTokenPrice
+Scenario: REP - Create Snapshot Token Price
+  Given path 'core/v2/rep/snapshotTokenPrice'
+  * header Authorization = authorization
+  * request body
+  When method POST
+
+  @REP_GetSnapshotTokenPriceById
+Scenario: REP - Get Snapshot Token Price By Id
+  Given path 'core/v2/rep/snapshotTokenPrice/' + id
+  * header Authorization = authorization
+  When method GET
+
+  @REP_UpdateSnapshotTokenPrice
+Scenario: Update Snapshot Token Price by id 
+  Given path 'core/v2/rep/snapshotTokenPrice/' + id
+  * header Authorization = authorization
+  * request body
+  When method PUT
+
+  @REP_DeleteSnapshotTokenPrice
+Scenario: Delete Snapshot Token Price by id 
+  Given path 'core/v2/rep/snapshotTokenPrice/' + id
+  * header Authorization = authorization
+  When method DELETE
+
+  #----------REP Daily Journal Customers-----------#  
+@REP_GetDailyJournalCustomers
+Scenario: REP - Get Daily Journal Customers
+  Given path 'core/v2/rep/dailyJournalCustomers'
+  * header Authorization = authorization
+  * params params
+  When method GET
+
+  @REP_CreateDailyJournalCustomers
+Scenario: REP - Create Daily Journal Customers
+  Given path 'core/v2/rep/dailyJournalCustomers'
+  * header Authorization = authorization
+  * request body
+  When method POST
+
+  @REP_GetDailyJournalCustomersById
+Scenario: REP - Get Daily Journal Customers By Id
+  Given path 'core/v2/rep/dailyJournalCustomers/' + id
+  * header Authorization = authorization
+  When method GET
+
+  @REP_UpdateDailyJournalCustomers
+Scenario: Update Daily Journal Customers by id 
+  Given path 'core/v2/rep/dailyJournalCustomers/' + id
+  * header Authorization = authorization
+  * request body
+  When method PUT
+
+  @REP_DeleteDailyJournalCustomers
+Scenario: Delete Daily Journal Customers by id 
+  Given path 'core/v2/rep/dailyJournalCustomers/' + id
+  * header Authorization = authorization
+  When method DELETE
+
 #----------Groups-----------#  
   @GetGroupsWithDetailsByIds
   Scenario: Get Groups With Details By Ids
     Given path 'core/groups/with-detail'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+  @GetGroups
+  Scenario: Get Groups
+    Given path 'core/groups'
     * header Authorization = authorization
     * params params
     When method GET

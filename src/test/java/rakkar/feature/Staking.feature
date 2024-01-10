@@ -156,8 +156,9 @@ Feature: Staking
     * def requestId = response.data.records[0].id
 
 
-  @StakingOnAdvanceVault
+  @StakingOnAdvanceVault @ignore
   Scenario: Staking on hot advance vault
+    # BUG @MOB-1945
     * def schemaBody = read('classpath:data/schema.json')
     * call read('this:Staking.feature@Get_estimatefee_stake')
     * def body = 

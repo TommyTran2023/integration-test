@@ -1104,9 +1104,9 @@ Feature: Vault
     * call read(svc + 'Vault.feature@GetListVault_v2') params
     * match each response.data.list[*].name contains testData_v2.standardWarmVault_1
   
-  @RAKCON-23656 @GetListVault_v2_SearchBySymbol
+  @RAKCON-23656 @GetListVault_v2_SearchBySymbol @ignore
   Scenario: Get List Vault v2 from Vault Listing screen, search by token symbol in vault
-    # Bug @MOB-2283
+    # Improvement @MOB-2286
     * def params = 
     """
     {

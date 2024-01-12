@@ -19,7 +19,7 @@ Feature: Advance Quorum Service
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
     * request {recordId : "#(requestId)", reason : "#(reason)"}
-    When method POST
+    When method PUT
 
     @CancelRequest
   Scenario: Cancel a request

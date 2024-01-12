@@ -28,6 +28,18 @@ function fn(){
         }   
     }
 
+    function rejectRequest(requestId){
+        // Reject pending request if have
+        if (requestId != null){
+            karate.log('Reject requestId: ' + requestId)
+            var biometric = karate.call(svc + 'Biometric.feature@ApproverDoBiometric')
+            var reject = karate.call(svc + 'Quorums.feature@RejectRequest', {requestId:requestId, approvalAccessToken: biometric.approvalAccessToken, challengeAnswerApprover: biometric.challengeAnswerApprover} ) 
+
+            if (reject.responseStatus != 200)
+                throw new TypeError('Cannot reject request. Error: ' + JSON.stringify(reject, null, 4))
+        }  
+    }
+
     function generateRandomName(){
         return java.lang.System.currentTimeMillis()
     }
@@ -55,6 +67,23 @@ function fn(){
 
         cancelAllEditUserPendingRequest: function(userId){
             cancelRequestsByCategories(userId, ["USER"])
+        },
+
+        rejectAllPendingRequest: function(){
+            while(true){
+                var biometric = karate.call(svc + 'Biometric.feature@ApproverDoBiometric')
+                var approval = karate.call(svc + 'Quorums.feature@Approver_GetApprovalList', {approvalAccessToken: biometric.approvalAccessToken})
+                var approvalList = approval.response.data.records
+
+                if(approvalList.length == 0)
+                    break;
+
+                else{
+                    for(var i=0; i< approvalList.length; i++)
+                        rejectRequest(approvalList[i].id)
+                }
+
+            }
         },
 
         createEditAccountPolicyRequest: function(){

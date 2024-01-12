@@ -334,12 +334,8 @@ Feature: Vault
   Scenario: View hidden listing vault
     * call read('this:Vault.feature@ViewHiddenVaultCommon')
     * def vaultsSchema = schemaBody.vault.schema_list
-    * match response.data.vaults == '#[]vaultsSchema'
-    * match response.data.hasSmallBalance == '#boolean'
-    * match response.data.totalUSD == '#number'
-    * match response.data.totalUSDYesterday == '#number'
-    * match response.data.totalCount == '#number'
-    * match response.data.totalBTC == '#number'
+    * match response.data.list == '#[]vaultsSchema'
+    * match response.data.total == '#number'
 
     @RAKCON-11370 @SearchHiddenVault
   Scenario: Search hidden vault
@@ -354,22 +350,27 @@ Feature: Vault
     @RAKCON-16523 @Unhidevault
   Scenario: Unhide a vault
     * def value = call read('this:Vault.feature@ViewHiddenVaultCommon')
-    * def vaultId = value.response.data.vaults[0].id
-    Given path '/core/vault/accounts/'+vaultId+'/unhide'
-    When method POST
-    Then status 201
+    * def vaultId = value.response.data.list[0].id
+    * call read(svc + 'Vault.feature@UnarchiveVault') { vaultId: #(vaultId) }
+    Then match responseStatus == 200
     * match response.status == 'success'
 
     @ignore @ViewHiddenVaultCommon
   Scenario: View hidden listing vault common
-    Given path '/core/vault/v2/accounts'
-    * param isHideList = true
-    * param limit = 10
-    * param offset = 0
-    * param sort = 'DESC'
-    * param sortBy = 'TOTAL_USD'
-    When method GET
-    Then status 200
+    * def params = 
+    """
+    {
+      isArchived: true,
+      limit: 10,
+      offset: 0,
+      sort: 'DESC',
+      sortBy: 'PRICE'
+    }
+    """
+    * call read(svc + 'Vault.feature@GetListVault_v2') params
+    Then match responseStatus == 200
+    * match response.status == 'success'
+    * match response.message == 'OK'
 
     @RAKCON-17772 @CreateVaultCold
   Scenario: Create vault - cold

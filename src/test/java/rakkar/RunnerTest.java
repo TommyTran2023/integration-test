@@ -37,12 +37,14 @@ public class RunnerTest {
                             .outputJunitXml(true)
                             .parallel(threadCount);
 
+        if (System.getProperty("rerun") == "true") {
         for (ScenarioResult scenarioResult : results.getScenarioResults().collect(Collectors.toList())) {
             if (scenarioResult.isFailed()) {
                 ScenarioResult retryScenarioResult = results.getSuite().retryScenario(scenarioResult.getScenario());
                 results = results.getSuite().updateResults(retryScenarioResult);
             }
         }
+    }
         
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
 

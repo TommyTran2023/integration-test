@@ -443,9 +443,6 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@GetListVault_v2') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
-        * match response.message == 'OK'
 
     @GetVaultsSummary
     Scenario: Get Vaults Summary
@@ -483,8 +480,6 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@UnarchiveVault') data
-        Then match responseStatus == 200
-        * match response.status == 'success'
 
     @CheckVaultName
     Scenario: Check vault name
@@ -575,5 +570,4 @@ Feature: Vault
         """
         * call read(svc + 'coreSvc.feature@DeleteVault') data
 
-        @HardDeleteVault
         

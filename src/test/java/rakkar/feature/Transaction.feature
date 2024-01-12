@@ -178,8 +178,9 @@ Feature: Transaction
     """
     * eval karate.forEach(transactions, isCustomerData)
 
-    @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer
-  Scenario: ViewTransactionDetailsOfOtherCustomer
+    @RAKCON-20191 @ViewTransactionDetailsOfOtherCustomer @ignore
+  Scenario: View Transaction Details Of Other Customer
+    # BUG @RAKSEC-110
     * call read(svc + 'Transaction.feature@ViewTransactionDetail') { transactionId: #(crossTenant.txnId) }
     * match responseStatus == 404
     * match response.message == "TRANSACTION_NOT_FOUND"

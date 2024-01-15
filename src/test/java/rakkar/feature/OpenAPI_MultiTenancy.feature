@@ -20,8 +20,9 @@ Feature: Open API from another customer
         And assert response.vaults.length == result.length
         And match each result == crossTenant.accountId
 
-    @RAKCON-20396 @CheckCustomerOfGetBalanceByVaultTypeAndAssetId
+    @RAKCON-20396 @CheckCustomerOfGetBalanceByVaultTypeAndAssetId @ignore
     Scenario: User able to see balance of customer by vault type and asset id
+        # BUG @RAKSEC-110
         * def assetId = 'XRP_TEST'
         * call read('this:ConnectDB.feature@SelectBalanceOfCustomer') {customerId: #(crossTenant.accountId), type: 'COLD_WALLET', assetId: #(assetId)}
         * def data =

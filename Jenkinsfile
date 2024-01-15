@@ -117,7 +117,7 @@ pipeline {
                         echo "KARATE_ENV = ${KARATE_ENV}"
                         def tag = params.E2E ? "@e2e" : "~@e2e"
                         withMaven(maven: 'Maven') {
-                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}'"
+                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
                         }
                     
                 }

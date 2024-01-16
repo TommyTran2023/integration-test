@@ -404,17 +404,9 @@ Feature: Vault
     @ignore @SubmitRequestFromMobile
   Scenario: Submit request from mobile
     * call read('this:Common.feature@FIDO-Requester')
-    * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
-    * def requestId = createVaultRequest.response.data.notificationId
-    Given url baseMobileURL + '/core/vault/submit-request-create-vault'
-    * request { "notificationId" : "#(requestId)" }
-    When method POST
-    Then status 201
+    * call read(svc + 'Vault.feature@SubmitRequestCreateVault') {notificationId: #(createVaultRequest.response.data.notificationId)}
     * match response.code == 200
     * match response.status == 'success'
-    * def res = karate.match("response.data == { vaultId : '#uuid' }")
-    * match res == { pass: true, message: null }
 
     @RAKCON-18141 @SubmitRequestCreateAdvanceVaultFromMobile
   Scenario: Submit request create advance vault from mobile
@@ -450,6 +442,8 @@ Feature: Vault
     * def createVaultRequest = call read('this:Vault.feature@RequestCreateNewVaultFromWeb')
     * call read('this:Vault.feature@ReadNotificationCreateVaultFromWeb')
     * call read('this:Vault.feature@SubmitRequestFromMobile')
+    * def res = karate.match("response.data == { vaultId : '#uuid' , isMasked:'#boolean'}")
+    * match res == { pass: true, message: null }
 
     @RAKCON-18213 @SubmitRequestCreateSkipPolicyVaultFromMobile
   Scenario: Submit request create skip policy vault from mobile

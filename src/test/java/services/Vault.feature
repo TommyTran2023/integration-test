@@ -266,3 +266,17 @@ Feature: Vault
         Then match responseStatus == 200
         * match response.status == 'success'
 
+    @SubmitRequestCreateVault
+    Scenario: Submit Request Create Vault
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            challengeAnswer: #(challengeAnswerRequest),
+            passcode: #(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode),
+            body:{ 
+                "notificationId" : "#(notificationId)" 
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@SubmitRequestCreateVault') data

@@ -63,10 +63,10 @@ Feature: All api call to core services
     @SubmitRequestCreateVault
   Scenario: Submit Request Create Vault
     Given path 'core/vault/submit-request-create-vault'
-    * header Authorization = data.authorization
-    * header challenge-answer = data.challengeAnswer
-    * header passcode = data.passcode
-    * request data.requestBody
+    * header Authorization = authorization
+    * header challenge-answer = challengeAnswer
+    * header passcode = passcode
+    * request body
     When method POST
 
     @GetDepositRouting

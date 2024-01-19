@@ -1,8 +1,9 @@
 function fn(){
     function cancelRequestsByCategories(userId, categories){
         var data = {requestCategories: categories, userId: userId, status : ["PENDING"]}
+        var retry = 10
         
-        while(true){
+        while(retry > 0){
             var requests = karate.call(svc + 'Quorums.feature@GetMyRequests', data)
             var records = requests.response.data.records
 
@@ -13,6 +14,7 @@ function fn(){
             for(var i = 0; i < records.length; i++) {
                 cancelRequest(records[i].id)
             }
+            retry--
         }
     }
 

@@ -181,7 +181,7 @@ Feature: Create Vault data
 
     # 3. Submit request
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * call read(svc + 'Vault.feature@SubmitCreateAdvVault') {notificationId:'#(notificationId)'}
+        * call read(svc + 'Vault.feature@SubmitRequestCreateVault') {notificationId:'#(notificationId)'}
         Then match responseStatus == 201
         And match response.status == 'success'
         * def vaultId = response.data.vaultId
@@ -266,7 +266,7 @@ Feature: Create Vault data
     @ignore @ApproveRequest 
     Scenario: Approve Request    
         * call read(svc + 'Biometric.feature@ApproverDoBiometric')
-        * call read(svc + 'AdvanceQuorum.feature@ApproveRequest') {requestId: #(requestId)}
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: #(requestId)}
 
     @ignore @AddAsset
     Scenario: Add Testnet For Vault
@@ -320,7 +320,7 @@ Feature: Create Vault data
 
     # 3. Get request Id
         * call read(svc + 'Biometric.feature@ApproverDoBiometric')
-        * call read(svc + 'AdvanceQuorum.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
+        * call read(svc + 'Quorums.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
         * def requestId = karate.jsonPath(response.data.records, "$..[?(@.displayName == '"+testData.externalAddress+"')]")[0].id
         
     # 4. Approve request
@@ -350,7 +350,7 @@ Feature: Create Vault data
 
         # 5. Get request to connect
         * call read(svc + 'Biometric.feature@ApproverDoBiometric')
-        * call read(svc + 'AdvanceQuorum.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
+        * call read(svc + 'Quorums.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
         * def requestId = karate.jsonPath(response.data.records, "$..[?(@.type.value == '"+Const.QuorumDataType.CREATE_NETWORK_CONNECTION+"')]")[0].id
 
         # 6. Approve request to connect
@@ -363,4 +363,10 @@ Feature: Create Vault data
     @CreateSkipVaultForAddPolicy
     Scenario: Create standard vault for edit policy
         * call read('Create.feature@CreateSkipVault') {name: #(testData.skipVaultForAddPolicy), type: #(Const.VaultType.COLD_WALLET)}
+
+    @CreateStandardVaultForEditPolicyAndApprove
+    Scenario: Create standard vault for edit policy and approve
+        * call read('Create.feature@CreateStandardVault') {name: #(testData.standardForEditPolicy2), type: #(Const.VaultType.HOT_WALLET)}
+
+                
 

@@ -22,9 +22,11 @@ public class RunnerTest {
     public static void before(){
         System.setProperty("karate.env", "uat");
     }
+
     @Test
     public void testParallel() {
         int threadCount = 1;
+
         if (System.getProperty("thread") != null) {
             threadCount = Integer.parseInt(System.getProperty("thread"));
         }
@@ -53,6 +55,7 @@ public class RunnerTest {
         System.out.println("dir--" + results.getReportDir());
         generateReport(results.getReportDir());
     }
+    
     public static void generateReport(String karateOutputPath){
         Collection <File> jsonFiles = FileUtils.listFiles(new File(karateOutputPath), new String[] {"json"}, true);
         List<String> jsonPath = new ArrayList<String>(jsonFiles.size());

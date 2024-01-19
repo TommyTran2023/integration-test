@@ -8,3 +8,8 @@ Scenario: Read data.json file
 Scenario: Read enum.json file
     * def Const = read('classpath:data/enum.json')
 
+@ReadSchemaFile
+Scenario: Read schema.json file
+    * def schemaBody = read('classpath:data/schema.json')
+
+

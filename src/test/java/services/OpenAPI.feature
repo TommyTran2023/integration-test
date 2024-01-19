@@ -5,23 +5,23 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        params:{
-            limit: #(typeof limit == 'undefined' ? null : limit),
-            offset: #(typeof offset == 'undefined' ? 0 : offset),
-            transaction_id: #(typeof transaction_id == 'undefined' ? null : transaction_id),
-            source_id: #(typeof source_id == 'undefined' ? null : source_id),
-            source_address: #(typeof source_address == 'undefined' ? null : source_address),
-            asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
-            network_id: #(typeof network_id == 'undefined' ? null : network_id),
-            start_date: #(typeof start_date == 'undefined' ? null : start_date),
-            end_date: #(typeof end_date == 'undefined' ? null : end_date),
-            transaction_type: #(typeof transaction_type == 'undefined' ? null : transaction_type),
-            destination_id: #(typeof destination_id == 'undefined' ? null : destination_id),
-            destination_address: #(typeof destination_address == 'undefined' ? null : destination_address),
-            status: #(typeof status == 'undefined' ? null : status),
-        }
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    params:{
+        limit: #(typeof limit == 'undefined' ? null : limit),
+        offset: #(typeof offset == 'undefined' ? 0 : offset),
+        transaction_id: #(typeof transaction_id == 'undefined' ? null : transaction_id),
+        source_id: #(typeof source_id == 'undefined' ? null : source_id),
+        source_address: #(typeof source_address == 'undefined' ? null : source_address),
+        asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
+        network_id: #(typeof network_id == 'undefined' ? null : network_id),
+        start_date: #(typeof start_date == 'undefined' ? null : start_date),
+        end_date: #(typeof end_date == 'undefined' ? null : end_date),
+        transaction_type: #(typeof transaction_type == 'undefined' ? null : transaction_type),
+        destination_id: #(typeof destination_id == 'undefined' ? null : destination_id),
+        destination_address: #(typeof destination_address == 'undefined' ? null : destination_address),
+        status: #(typeof status == 'undefined' ? null : status),
+    }
     }
     """
     * call read(svc + 'openApiSvc.feature@GetTransactions') data
@@ -31,9 +31,9 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        txnId: #(txnId)
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    txnId: #(txnId)
     }
     """
     * call read(svc + 'openApiSvc.feature@GetTransactionById') data
@@ -43,15 +43,15 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        params:{
-            limit: #(typeof limit == 'undefined' ? null : limit),
-            offset: #(typeof offset == 'undefined' ? 0 : offset),
-            vault_type: #(typeof vault_type == 'undefined' ? null : vault_type),
-            asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
-            network_id: #(typeof network_id == 'undefined' ? null : network_id)
-        }
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    params:{
+        limit: #(typeof limit == 'undefined' ? null : limit),
+        offset: #(typeof offset == 'undefined' ? 0 : offset),
+        vault_type: #(typeof vault_type == 'undefined' ? null : vault_type),
+        asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
+        network_id: #(typeof network_id == 'undefined' ? null : network_id)
+    }
     }
     """
     * call read(svc + 'openApiSvc.feature@GetVaults') data
@@ -61,9 +61,9 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        vaultId: #(vaultId)
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    vaultId: #(vaultId)
     }
     """
     * call read(svc + 'openApiSvc.feature@GetVaultById') data
@@ -73,13 +73,13 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        params:{
-            limit: #(typeof limit == 'undefined' ? null : limit),
-            offset: #(typeof offset == 'undefined' ? 0 : offset),
-            asset_id: #(typeof asset_id == 'undefined' ? null : asset_id)
-        }
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    params:{
+        limit: #(typeof limit == 'undefined' ? null : limit),
+        offset: #(typeof offset == 'undefined' ? 0 : offset),
+        asset_id: #(typeof asset_id == 'undefined' ? null : asset_id)
+    }
     }
     """
     * call read(svc + 'openApiSvc.feature@GetBalances') data
@@ -89,14 +89,14 @@ Feature: Open API
     * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        vaultType: #(vaultType),
-        params:{
-            limit: #(typeof limit == 'undefined' ? null : limit),
-            offset: #(typeof offset == 'undefined' ? 0 : offset),
-            asset_id: #(typeof asset_id == 'undefined' ? null : asset_id)
-        }
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    vaultType: #(vaultType),
+    params:{
+        limit: #(typeof limit == 'undefined' ? null : limit),
+        offset: #(typeof offset == 'undefined' ? 0 : offset),
+        asset_id: #(typeof asset_id == 'undefined' ? null : asset_id)
+    }
     }
     """
     * call read(svc + 'openApiSvc.feature@GetBalancesByVaultType') data
@@ -105,18 +105,87 @@ Feature: Open API
   Scenario: Get a list of whitelisted destinations * def data =
     """
     {
-        apiKey : #(apiKey),
-        accountId: #(accountId),
-        vaultType: #(vaultType),
-        params:{
-            limit: #(typeof limit == 'undefined' ? null : limit),
-            offset: #(typeof offset == 'undefined' ? 0 : offset),
-            whitelist_type: #(typeof whitelist_type == 'undefined' ? null : whitelist_type),
-            asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
-            network_id: #(typeof network_id == 'undefined' ? null : network_id)
-        }
+    apiKey : #(apiKey),
+    accountId: #(accountId),
+    vaultType: #(vaultType),
+    params:{
+        limit: #(typeof limit == 'undefined' ? null : limit),
+        offset: #(typeof offset == 'undefined' ? 0 : offset),
+        whitelist_type: #(typeof whitelist_type == 'undefined' ? null : whitelist_type),
+        asset_id: #(typeof asset_id == 'undefined' ? null : asset_id),
+        network_id: #(typeof network_id == 'undefined' ? null : network_id)
+    }
     }
     """
     * call read(svc + 'openApiSvc.feature@GetWhitelisted') data
 
+
+    @GetListApiKeyClients
+  Scenario: Get List Api Key Clients
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        authorization: #(accessToken),
+        params:{
+            limit : 10, //number
+            offset : 0, //number
+            sort : '', //string
+            keyword : '', //string
+            sortBy : '' //string
+        }
+    }
+    """
+    * call read(svc + 'openApiSvc.feature@GetListApiKeyClients') data
+ 
+    @GenerateApiKey
+  Scenario: Generate Api Key
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        authorization: #(accessToken),
+        body: 
+        {
+            name : #(name), //string
+            permission : #(permission) //string
+        }
+    }
+    """
+    * call read(svc + 'openApiSvc.feature@GenerateApiKey') data
+ 
+    @ValidateDuplicateName
+  Scenario: Validate Duplicate Name
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        authorization: #(accessToken),
+        name : #(name) //string
+    }
+    """
+    * call read(svc + 'openApiSvc.feature@ValidateDuplicateName') data
+ 
+    @DeleteApiKey
+  Scenario: Delete Api Key
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        authorization: #(accessToken),
+        apiKeyId : #(apiKeyId) //string
+    }
+    """
+    * call read(svc + 'openApiSvc.feature@DeleteApiKey') data
+
+    @GetCustomURL
+  Scenario: Get Custom URL
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        authorization: #(accessToken)
+    }
+    """
+    * call read(svc + 'openApiSvc.feature@GetCustomURL') data
 

@@ -20,5 +20,6 @@
   "advVaultWithAllGroups" : "81d4e41d-d441-4f88-87ae-2c8d2b2b07f5",
   "advanceHotVaultId" : "a29f77f9-428a-4b1f-8718-856e80a00de0",
   "advanceColdVaultId" : "ee541ab2-236a-49d3-bda4-2d59e29633b6",
-  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe"
+  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe",
+  "standardVaultForEditPolicy2" : "b1146834-4c9e-4eaf-8e26-85c43e19dc07"
 }

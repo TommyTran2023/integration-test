@@ -31,3 +31,8 @@ Feature: Biometric
         * def approvalAccessToken = 'Bearer ' + authResponse.response.data.AuthenticationResult.AccessToken
         * print approvalAccessToken
         * print challengeAnswerApprover
+
+    @TestBiometric
+    Scenario: Test Biometric
+        * call read(svc + 'coreSvc.feature@TestBiometric')
+

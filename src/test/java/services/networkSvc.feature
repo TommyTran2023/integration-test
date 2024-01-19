@@ -12,7 +12,7 @@ Feature: Networking
 
     @GetNetworkConnection
     Scenario: Get Network Connection
-        Given path 'network/networks', networkId ,'connections'
+        Given path 'network/networks/' + networkId + '/connections'
         * header authorization = authorization
         * params params
         When method GET
@@ -60,3 +60,41 @@ Feature: Networking
         Given path 'network/networks/' + networkId
         * header authorization = authorization
         When method GET
+
+    @SetNetworkProfileSetting
+    Scenario: Set Network Profile Setting
+       Given path 'network/networks/setting/' + networkId
+       * header authorization = authorization
+       * request body
+       When method PUT
+    
+    @SetProfileRouting
+    Scenario: Set Profile Routing
+       Given path 'network/networks/set-profile-routing'
+       * header authorization = authorization
+       * request body
+       When method POST
+
+    @GetDetailNetworkConnection
+    Scenario: Get Detail Network Connection
+        Given path 'network/networks/' + networkId + '/connections/' + connectionId
+        * header authorization = authorization
+        When method GET
+        
+    @DeleteNetworkConnection
+    Scenario: Delete Network Connection
+       Given path 'network/networks/' + networkId + '/connections/' + connectionId
+       * header authorization = authorization
+       * request body
+       When method DELETE
+    
+    @EditNetworkConnectionDepositRouting
+    Scenario: Edit Network Connection Deposit Routing
+       Given path 'network/networks/' + networkId + '/connections/'+ connectionId +'/deposit-routing'
+       * header authorization = authorization
+       * request body
+       When method PUT
+    
+       
+       
+       

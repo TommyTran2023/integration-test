@@ -133,3 +133,86 @@ Feature: Network
         """
         * call read(svc + 'networkSvc.feature@GetNetworkProfile') data
 
+    @SetNetworkProfileSetting
+    Scenario: Set Network Profile Setting
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            networkId : #(networkId), //string
+            body:{
+                isDiscoverable : #(isDiscoverable), //boolean
+            }
+        }
+        """
+        * call read(svc + 'networkSvc.feature@SetNetworkProfileSetting') data
+     
+    @SetProfileRouting
+    Scenario: Set Profile Routing
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            body: 
+            {
+                networkId : #(networkId), //string
+                vaultId : #(vaultId), //string
+                internalNote : #(internalNote) //string
+            }
+        }
+        """
+        * call read(svc + 'networkSvc.feature@SetProfileRouting') data
+     
+    @GetDetailNetworkConnection
+    Scenario: Get Detail Network Connection
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            networkId : #(networkId), //string
+            connectionId : #(connectionId) //string
+        }
+        """
+        * call read(svc + 'networkSvc.feature@GetDetailNetworkConnection') data
+    
+    @DeleteNetworkConnection
+    Scenario: Delete Network Connection
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+             authorization: #(accessToken),
+             networkId : #(networkId), //string
+             connectionId : #(connectionId), //string
+             body: 
+             {
+                 note : #(note) //string
+             }
+        }
+        """
+        * call read(svc + 'networkSvc.feature@DeleteNetworkConnection') data
+     
+    @EditNetworkConnectionDepositRouting
+    Scenario: Edit Network Connection Deposit Routing
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        {
+            authorization: #(accessToken),
+            networkId : #(networkId), //string
+            connectionId : #(connectionId), //string
+            body: 
+            {
+                vaultId : #(vaultId), //string
+                vaultName : #(vaultName), //string
+                hasDefaultRouting : #(hasDefaultRouting), //boolean
+                note : #(note), //string
+            }
+        }
+        """
+        * call read(svc + 'networkSvc.feature@EditNetworkConnectionDepositRouting') data
+     
+

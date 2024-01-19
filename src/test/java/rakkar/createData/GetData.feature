@@ -382,3 +382,22 @@ Feature: Get Data From data.json
     """
     * def vaultId =  getVal()
     * fileUtils.addData('skipVaultForAddPolicy',vaultId)
+
+    @Get_standardVaultForEditPolicyAndApprove
+    Scenario: Get Advance Vault With Groups and Users
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardVaultForEditPolicy2)'}
+    * def getVal = 
+    """
+    function(){
+        if (response.data.vaults.length == 0) {
+            karate.call('this:Create.feature@CreateStandardVaultForEditPolicyAndApprove')
+            var newCreadtedVault = karate.call(svc + 'Vault.feature@GetAllVaults', {keyword: testData.skipVaultForAddPolicy2})
+            return newCreadtedVault.response.data.vaults[0].id
+        }
+        else {
+            return response.data.vaults[0].id
+        }
+    }
+    """
+    * def vaultId =  getVal()
+    * fileUtils.addData('standardVaultForEditPolicy2',vaultId)

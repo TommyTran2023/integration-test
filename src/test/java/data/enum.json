@@ -19,6 +19,15 @@
         "GroupBy":{
             "VAULT":"VAULT",
             "ASSET":"ASSET"
+        },
+        "Operation":{
+            "TRANSFER":"TRANSFER"
+        },
+        "FeeLevel":{
+            "MEDIUM":"MEDIUM"
+        },
+        "Type":{
+            "TRANSACTION_REQUEST":"TRANSACTION_REQUEST"
         }
     },
     "TokenSymbol":{
@@ -59,6 +68,12 @@
     "QuorumDataType":{
         "CREATE_NETWORK_CONNECTION":"CREATE_NETWORK_CONNECTION"
     },
+    "ErrorCode":{
+        "EXISTS_PENDING_REQUEST": "EXISTS_PENDING_REQUEST"
+    },
+    "Action":{
+        "EDIT_ACCOUNT_POLICY":"EDIT_ACCOUNT_POLICY"
+    },
     "QuorumMemberType":{
         "USER":"USER",
         "GROUP":"GROUP"
@@ -93,5 +108,9 @@
         "REJECTED" : "REJECTED",
         "CANCELLED" : "CANCELLED",
         "FAILED" : "FAILED"
+    },
+    "RequestFrom":{
+        "WEB": "WEB",
+        "MOBILE": "MOBILE"
     }
 }

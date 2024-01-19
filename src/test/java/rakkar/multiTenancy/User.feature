@@ -13,6 +13,6 @@ Feature: Check Multi Tenancy for Users
     
     @RAKSEC-110 @RAKCON-21752
     Scenario: Get Cross tenant User details
-        * call read(svc + 'Auth.feature@GetUserDetails') {accessToken:#(token),userId:#(requesterID)}
+        * call read(svc + 'Auth.feature@GetUserDetailById') {accessToken:#(token),userId:#(requesterID)}
         * assert responseStatus == 403
         

@@ -49,7 +49,7 @@ public class RunnerTest {
                 }
             }
         }
-        
+
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
 
         System.out.println("dir--" + results.getReportDir());

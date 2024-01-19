@@ -181,7 +181,7 @@ Feature: Create Vault data
 
     # 3. Submit request
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * call read(svc + 'Vault.feature@SubmitCreateAdvVault') {notificationId:'#(notificationId)'}
+        * call read(svc + 'Vault.feature@SubmitRequestCreateVault') {notificationId:'#(notificationId)'}
         Then match responseStatus == 201
         And match response.status == 'success'
         * def vaultId = response.data.vaultId

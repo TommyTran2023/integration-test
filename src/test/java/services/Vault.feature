@@ -28,19 +28,6 @@ Feature: Vault
         """
         * call read(coreSvc + 'RequestCreateAdvVault') data
 
-    @SubmitCreateAdvVault
-    Scenario: Submit Create Advance Vault From Mobile
-        * def data = 
-        """
-            {
-                authorization:"#(requesterAccessToken)",
-                requestBody: { "notificationId" : "#(notificationId)" }, 
-                challengeAnswer: '#(challengeAnswerRequest)', 
-                passcode: '#(requesterInfo.requesterPasscode)'
-            }
-        """
-        * call read(coreSvc + 'SubmitRequestCreateVault') {data: '#(data)'}
-
     @GetVaultDetail
     Scenario: Get Vault Detail by Id
         * def data =
@@ -570,4 +557,17 @@ Feature: Vault
         """
         * call read(svc + 'coreSvc.feature@DeleteVault') data
 
-        
+    @SubmitRequestCreateVault
+    Scenario: Submit Request Create Vault
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            challengeAnswer: #(challengeAnswerRequest),
+            passcode: #(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode),
+            body:{ 
+                "notificationId" : "#(notificationId)" 
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@SubmitRequestCreateVault') data

@@ -300,7 +300,6 @@ Feature: Vault
     @RequestUpdateVaultPolicy
     Scenario: Request Update Vault Policy
         * def note = karate.get('note', 'test')
-        * def expiredAt = karate.get('expiredAt', '')
         * def approverNumber = karate.get('approverNumber', 2)
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data =
@@ -315,8 +314,7 @@ Feature: Vault
                 viewers : #(viewers),
                 clientId : #(clientId),
                 note : #(note),
-                vaultId : #(vaultId),
-                expiredAt : #(expiredAt)
+                vaultId : #(vaultId)
             }
         }
         """

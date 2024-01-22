@@ -1,7 +1,7 @@
 Feature: Tranaction Service
 
-@RebalanceMediumAmount
-Scenario: Rebalance Medium Amount
+    @RebalanceMediumAmount
+  Scenario: Rebalance Medium Amount
     * def data =
     """
     {
@@ -14,13 +14,13 @@ Scenario: Rebalance Medium Amount
     * call read(svc + 'transactionSvc.feature@RebalanceMediumAmount') data
     Then match responseStatus == 201
 
-@GetTransactionsList
-Scenario: Get transactions list
+    @GetTransactionsList
+  Scenario: Get transactions list
     * call read(svc + 'transactionSvc.feature@GetTransactionsList') {authorization: #(requesterAccessToken)}
     Then match responseStatus == 201
 
-@ViewTransactionDetail
-Scenario: View transaction detail common
+    @ViewTransactionDetail
+  Scenario: View transaction detail common
     * def data = 
     """
     {
@@ -30,40 +30,53 @@ Scenario: View transaction detail common
     """
     * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') data
 
-@ExportTransaction
-Scenario: Export transaction
-    * call read(svc + 'transactionSvc.feature@ExportTransaction') {authorization: #(requesterAccessToken)}
+    @ExportTransaction
+  Scenario: Export transaction
+    * def data =
+    """
+    {
+        authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+        body: {
+            "keyword": #(typeof keyword == 'undefined' ? "" : keyword),
+            "limit": #(typeof limit == 'undefined' ? 10 : limit),
+            "offset": #(typeof offset == 'undefined' ? 0 : offset),
+            "sort": #(typeof sort == 'undefined' ? "DESC" : sort),
+            "sortBy": #(typeof sortBy == 'undefined' ? "CREATED_DATE" : sortBy)
+        }
+    }
+    """
+    * call read(svc + 'transactionSvc.feature@ExportTransactionWeb') data
     Then match responseStatus == 201
 
-@FilterTransaction
-Scenario: Filter Transaction
+    @FilterTransaction
+  Scenario: Filter Transaction
     * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
     * def data = 
     """
     {
         authorization: #(accessToken),
         params:{
-            limit : 10, //number
-            offset : 0, //number
-            sort : 'ASC', //string
-            sortBy : #(sortBy), //string
-            dateFrom : #(dateFrom), //string
-            dateTo : #(dateTo), //string
-            createdById : #(createdById), //string
-            priceFrom : #(priceFrom), //number
-            priceTo : #(priceTo), //number
-            keyword : #(keyword), //string
-            vaultId : #(vaultId), //string
-            isAllRequest : #(isAllRequest), //boolean
-            txnDateFrom : #(txnDateFrom), //string
-            txnDateTo : #(txnDateTo), //string
-            source : #(source), //array
-            destination : #(destination), //array
-            destinationType : #(destinationType), //string
-            assetId : #(assetId), //array
-            type : #(type), //string
-            status : #(status), //string
-            initiatedByIds : #(initiatedByIds) //string
+            limit : 10,
+            offset : 0, 
+            sort : 'ASC', 
+            sortBy : #(sortBy), 
+            dateFrom : #(dateFrom), 
+            dateTo : #(dateTo), 
+            createdById : #(createdById), 
+            priceFrom : #(priceFrom),
+            priceTo : #(priceTo), 
+            keyword : #(keyword), 
+            vaultId : #(vaultId), 
+            isAllRequest : #(isAllRequest), 
+            txnDateFrom : #(txnDateFrom), 
+            txnDateTo : #(txnDateTo), 
+            source : #(source), 
+            destination : #(destination), 
+            destinationType : #(destinationType), 
+            assetId : #(assetId), 
+            type : #(type), 
+            status : #(status), 
+            initiatedByIds : #(initiatedByIds) 
         }
     }
     """
@@ -112,16 +125,16 @@ Scenario: Filter Transaction
         {
             authorization: #(accessToken),
             params:{
-                limit : #(limit), //number
-                offset : #(offset), //number
-                sort : #(sort), //string
-                keyword : #(keyword) //string
+                limit : #(limit),
+                offset : #(offset),
+                sort : #(sort),
+                keyword : #(keyword)
             }
         }
         """
         * call read(svc + 'transactionSvc.feature@GetListInitiatedBy') data
         
-    @ExportTransaction
+    @ExportTransactionFull
     Scenario: Export Transaction
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data = 
@@ -130,27 +143,27 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                limit : #(limit), //number
-                offset : #(offset), //number
-                sort : #(sort), //string
-                sortBy : #(sortBy), //string
-                dateFrom : #(dateFrom), //string
-                dateTo : #(dateTo), //string
-                createdById : #(createdById), //string
-                priceFrom : #(priceFrom), //number
-                priceTo : #(priceTo), //number
-                keyword : #(keyword), //string
-                vaultId : #(vaultId), //string
-                isAllRequest : #(isAllRequest), //boolean
-                txnDateFrom : #(txnDateFrom), //string
-                txnDateTo : #(txnDateTo), //string
-                assetId : #(assetId), //array
-                type : #(type), //string
-                status : #(status), //string
-                initiatedByIds : #(initiatedByIds), //array
-                sourceData : #(sourceData), //array
-                destinationData : #(destinationData), //array
-                transactionType : #(transactionType), //string
+                limit : #(limit), 
+                offset : #(offset), 
+                sort : #(sort), 
+                sortBy : #(sortBy), 
+                dateFrom : #(dateFrom), 
+                dateTo : #(dateTo), 
+                createdById : #(createdById), 
+                priceFrom : #(priceFrom),
+                priceTo : #(priceTo), 
+                keyword : #(keyword), 
+                vaultId : #(vaultId), 
+                isAllRequest : #(isAllRequest), 
+                txnDateFrom : #(txnDateFrom), 
+                txnDateTo : #(txnDateTo), 
+                assetId : #(assetId), 
+                type : #(type), 
+                status : #(status), 
+                initiatedByIds : #(initiatedByIds),
+                sourceData : #(sourceData), 
+                destinationData : #(destinationData), 
+                transactionType : #(transactionType), 
             }
         }
         """
@@ -175,7 +188,7 @@ Scenario: Filter Transaction
         """
         {
            authorization: #(accessToken),
-           notificationId : #(notificationId) //string
+           notificationId : #(notificationId)
         }
         """
         * call read(svc + 'transactionSvc.feature@GetRequestTransferByNotiId') data
@@ -187,7 +200,7 @@ Scenario: Filter Transaction
         """
         {
             authorization: #(accessToken),
-            txId : #(txId) //string
+            txId : #(txId)
         }
         """
         * call read(svc + 'transactionSvc.feature@GetTransactionApprovalLogs') data
@@ -199,7 +212,7 @@ Scenario: Filter Transaction
         """
         {
             authorization: #(accessToken),
-            txId : #(txId) //string
+            txId : #(txId)
         }
         """
         * call read(svc + 'transactionSvc.feature@CancelTransaction') data
@@ -211,7 +224,7 @@ Scenario: Filter Transaction
         """
         {
             authorization: #(accessToken),
-            txId : #(txId) //string
+            txId : #(txId) 
         }
         """
         * call read(svc + 'transactionSvc.feature@GetTransactionMarkAsReview') data
@@ -224,16 +237,16 @@ Scenario: Filter Transaction
         """
         {
             authorization: #(accessToken),
-            txId : #(txId), //string
+            txId : #(txId), 
             body: 
             {
-                reviewStatus : #(reviewStatus), //string
-                verifyApprovalLogWithQuorumRequirement : #(verifyApprovalLogWithQuorumRequirement), //boolean
-                verifyCustomerIdentityFromLiveVideoCapture : #(verifyCustomerIdentityFromLiveVideoCapture), //boolean
-                signTransactionOnFBColdWalletApp : #(signTransactionOnFBColdWalletApp), //boolean
-                approveTransactionOnFBMobileApp : #(approveTransactionOnFBMobileApp), //boolean
-                reviewKYTInformation : #(reviewKYTInformation), //boolean
-                approveTransactionOnMobileApp : #(approveTransactionOnMobileApp) //boolean
+                reviewStatus : #(reviewStatus),
+                verifyApprovalLogWithQuorumRequirement : #(verifyApprovalLogWithQuorumRequirement), 
+                verifyCustomerIdentityFromLiveVideoCapture : #(verifyCustomerIdentityFromLiveVideoCapture), 
+                signTransactionOnFBColdWalletApp : #(signTransactionOnFBColdWalletApp), 
+                approveTransactionOnFBMobileApp : #(approveTransactionOnFBMobileApp), 
+                reviewKYTInformation : #(reviewKYTInformation), 
+                approveTransactionOnMobileApp : #(approveTransactionOnMobileApp) 
             }
         }
         """
@@ -282,15 +295,15 @@ Scenario: Filter Transaction
            authorization: #(accessToken),
            body: 
            {
-               assetId : #(assetId), //string
-               sourceId : #(sourceId), //string
-               sourceType : #(sourceType), //string
-               destinationId : #(destinationId), //string
-               destinationType : #(destinationType), //string
-               amount : #(amount), //number
-               isStake : #(isStake), //object
-               fee : #(fee), //number
-               isNetAmount : #(isNetAmount) //boolean
+               assetId : #(assetId), 
+               sourceId : #(sourceId),
+               sourceType : #(sourceType),
+               destinationId : #(destinationId), 
+               destinationType : #(destinationType), 
+               amount : #(amount), 
+               isStake : #(isStake), 
+               fee : #(fee), 
+               isNetAmount : #(isNetAmount)
            }
        }
        """
@@ -305,7 +318,7 @@ Scenario: Filter Transaction
         authorization: #(accessToken),
         body: 
         {
-            txId : #(txId) //string
+            txId : #(txId)
         }
     }
     """
@@ -320,8 +333,8 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                txId : #(txId), //string
-                reason : #(reason) //string
+                txId : #(txId),
+                reason : #(reason) 
             }
         }
         """
@@ -337,20 +350,20 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                tokenId : #(tokenId), //string
-                source : #(source), //null
-                destination : #(destination), //null
-                amount : #(amount), //number
-                operation : #(operation), //string
-                fee : #(fee), //number
-                feeType : #(feeType), //string
-                totalEstimatedFee : #(totalEstimatedFee), //number
-                feeLevel : #(feeLevel), //string
-                note : #(note), //string
-                treatAsGrossAmount : #(treatAsGrossAmount), //boolean
-                uploadToken : #(uploadToken), //string
-                vdoSentence : #(vdoSentence), //string
-                clientId : #(clientId) //string
+                tokenId : #(tokenId), 
+                source : #(source), 
+                destination : #(destination), 
+                amount : #(amount),
+                operation : #(operation), 
+                fee : #(fee), 
+                feeType : #(feeType), 
+                totalEstimatedFee : #(totalEstimatedFee), 
+                feeLevel : #(feeLevel), 
+                note : #(note), 
+                treatAsGrossAmount : #(treatAsGrossAmount), 
+                uploadToken : #(uploadToken), 
+                vdoSentence : #(vdoSentence), 
+                clientId : #(clientId) 
             }
         }
         """
@@ -365,9 +378,9 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                notificationId : #(notificationId), //string
-                uploadToken : #(uploadToken), //string
-                vdoSentence : #(vdoSentence), //string
+                notificationId : #(notificationId), 
+                uploadToken : #(uploadToken), 
+                vdoSentence : #(vdoSentence), 
             }
         }
         """
@@ -382,8 +395,8 @@ Scenario: Filter Transaction
             authorization: #(accessToken),
             body: 
             {
-                notificationId : #(notificationId), //string
-                requestCancelFrom : #(requestCancelFrom), //string
+                notificationId : #(notificationId),
+                requestCancelFrom : #(requestCancelFrom), 
             }
         }
         """

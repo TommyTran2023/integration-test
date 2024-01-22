@@ -16,7 +16,7 @@ Feature: Transaction Service
       * header authorization = authorization
       When method GET
 
-    @ExportTransaction
+    @ExportTransactionWeb
     Scenario: Export transaction
       Given path 'transaction/transactions/export-web'
       * header authorization = authorization

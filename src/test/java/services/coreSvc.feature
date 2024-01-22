@@ -205,7 +205,7 @@ Feature: All api call to core services
   Scenario: Request Update Vault Policy
     Given path 'core/vault/' + vaultId + '/policy/request-update'
     * header Authorization = authorization
-    * request requestBody
+    * request body
     When method POST
 
     @ReadUpdateVaultRequest
@@ -240,13 +240,6 @@ Feature: All api call to core services
   Scenario: Get Vaults Summary
     Given path '/core/v2/vault/summary'
     * header Authorization = authorization
-    When method GET
-
-  @CheckVaultName
-  Scenario: Check vault name
-    Given path '/core/vault/check-vault-name'
-    * header Authorization = authorization
-    * params params
     When method GET
 
 

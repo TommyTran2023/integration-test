@@ -546,7 +546,7 @@ Feature: Vault
     * match response.data == schemaBody.vault.details
 
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     * match response.data.objectType == Const.QuorumType.VAULT_LVL
     * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.quorumDetails
@@ -566,7 +566,7 @@ Feature: Vault
     * match response.data == schemaBody.vault.details
 
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     * match response.data.objectType == Const.QuorumType.VAULT_LVL
     * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.quorumDetails
@@ -586,7 +586,7 @@ Feature: Vault
     * match response.data == schemaBody.vault.details
 
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     * match response.data.objectType == Const.QuorumType.VAULT_LVL
     * match response.data.policyType == Const.VaultPolicyType.ADVANCED
     * match response.data == schemaBody.quorumDetails
@@ -598,7 +598,7 @@ Feature: Vault
   Scenario: Get Vault Member Details (Groups, Users)
     * call read(svc + 'Vault.feature@GetVaultDetail') {vaultId: '#(dataSet.advVaultWithAllGroupsAndUsers)'}
     * def quorumId = response.data.quorumId
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(quorumId)'}
     
     * def groupIds = karate.jsonPath(response.data,"$..['groupId']").join(",")
     * def userIds = karate.jsonPath(response.data,"$..['userId']").join(",")
@@ -903,7 +903,7 @@ Feature: Vault
     * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
     * requestHandle().cancelPendingRequest(response.data.requestId)
 
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
 
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') data
     * def requestDraftId = response.data.requestDraftId
@@ -966,11 +966,11 @@ Feature: Vault
     * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
     * requestHandle().cancelPendingRequest(response.data.requestId)
 
-    * call read(svc + 'AdvanceQuorum.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
+    * call read(svc + 'Quorums.feature@GetQuorumPolicy') {quorumId: '#(response.data.quorumId)'}
     * call read(svc + 'Vault.feature@RequestUpdateVaultPolicy') bodyData
     * def requestDraftId = response.data.requestDraftId
     * call read(svc + 'Vault.feature@ReadUpdateVaultRequest') {vaultId: '#(vaultId)', requestDraftId: '#(requestDraftId)'}
-    # wait 2.5 mins to have edit vault request expired  
+    # wait 1.5 mins to have edit vault request expired  
     * eval java.lang.Thread.sleep(150000)
     # Submit from mobile app. It should return error
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')

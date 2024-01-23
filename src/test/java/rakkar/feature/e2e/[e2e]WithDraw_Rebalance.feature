@@ -36,10 +36,10 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
 
   # 2.Select source
-    * def screenType = Const.Transfer.FromScreen.SOURCE
+    # * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
+    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
+    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
     * def total = source_warm.wallets[0].total
@@ -108,10 +108,10 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
 
   # 2.Select source
-    * def screenType = Const.Transfer.FromScreen.SOURCE
+    # * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
+    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
+    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
     * def total = source_warm.wallets[0].total
@@ -182,7 +182,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
+    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
     * def total = source_warm.wallets[0].total
@@ -255,7 +255,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def screenType = Const.Transfer.FromScreen.SOURCE
     * def vaultType = Const.VaultType.HOT_WALLET
     * def getSource = call read(classpath + 'Vault.feature@SearchVaultForTransfer') {keyword:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.vaults[?(@.type=='"+ vaultType +"')]")[0]
+    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
     * def sourceId_warm = source_warm.id
     * def sourceName_warm = source_warm.name
     * def total = source_warm.wallets[0].total
@@ -264,7 +264,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
   # 3.Select destination from internal.
     * def screenType = Const.Transfer.FromScreen.DESTINATION
     * def getDestination = call read(classpath + 'Vault.feature@SearchVaultForTransfer')
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.vaults[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
+    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
     * def destinationId_warm = destination_warm.id
     * def destinationName_warm = destination_warm.name
 

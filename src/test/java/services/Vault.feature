@@ -569,3 +569,37 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@SubmitRequestCreateVault') data
+
+    @GetVaultFromSourceScreen
+    Scenario: Get Vault from Transfer Source screen 
+        * karate.log(typeof searchText)
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            params:{ 
+                "externalAssetId" : "#(typeof externalAssetId != 'undefined' ? externalAssetId: 'XRP_TEST')" ,
+                "limit": 10,
+                "offset": 0,
+                "searchText": "#(typeof searchText != 'undefined' ? searchText: '')"
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetVaultFromSourceScreen') data
+
+    @GetVaultFromDestinationScreen
+    Scenario: Get Vault from Transfer Destination screen 
+        * def data =
+        """
+        {
+            authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
+            params:{ 
+                "externalAssetId" : "#(typeof externalAssetId != 'undefined' ? externalAssetId: 'XRP_TEST')",
+                "limit": 10,
+                "offset": 0,
+                "searchText": "#(typeof searchText != 'undefined' ? searchText: '')",
+                "sourceVaultId": "#(typeof sourceVaultId != 'undefined' ? sourceVaultId: '')"
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetVaultFromDestinationScreen') data

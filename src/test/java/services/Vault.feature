@@ -572,15 +572,14 @@ Feature: Vault
 
     @GetVaultFromSourceScreen
     Scenario: Get Vault from Transfer Source screen 
-        * karate.log(typeof searchText)
         * def data =
         """
         {
             authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
             params:{ 
                 "externalAssetId" : "#(typeof externalAssetId != 'undefined' ? externalAssetId: 'XRP_TEST')" ,
-                "limit": 10,
-                "offset": 0,
+                "limit": "#(typeof limit != 'undefined' ? limit: 20)",
+                "offset": "#(typeof offset != 'undefined' ? offset: 0)",
                 "searchText": "#(typeof searchText != 'undefined' ? searchText: '')"
             }
         }
@@ -595,8 +594,8 @@ Feature: Vault
             authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
             params:{ 
                 "externalAssetId" : "#(typeof externalAssetId != 'undefined' ? externalAssetId: 'XRP_TEST')",
-                "limit": 10,
-                "offset": 0,
+                "limit": "#(typeof limit != 'undefined' ? limit: 20)",
+                "offset": "#(typeof offset != 'undefined' ? offset: 0)",
                 "searchText": "#(typeof searchText != 'undefined' ? searchText: '')",
                 "sourceVaultId": "#(typeof sourceVaultId != 'undefined' ? sourceVaultId: '')"
             }

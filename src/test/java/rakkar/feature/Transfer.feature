@@ -391,4 +391,60 @@ Feature: Transfer
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
     * def requestId = response.data.requestId
 
+  @GetVaultOnTransferSourceScreen
+  Scenario: Get Vault On Transfer Source Screen
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen')
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.message == "OK"
+    * match response.status == "success"
+    * def expectedVaultSchema = 
+    """
+    {
+      status: '#string',
+      isArchived: '#boolean',
+      wallets: '#[]',
+      id: '#uuid',
+      totalUSD: '#number',
+      isMasked: '#boolean',
+      type: '#string',
+      totalUSDYesterday: '#number',
+      name: '#string',
+      createdAt: '#string',
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
+    * def expectedWalletSchema = 
+    """
+    {
+      externalAssetId:'#string',
+      id:'#uuid',
+      symbol:'#string',
+      totalUSD:'#number',
+      name:'#string',
+      total:'#number',
+    }
+    """
+    * match each response.data.list[*].wallets[*] == expectedWalletSchema
+
+  @GetVaultOnTransferDestinationScreen
+  Scenario: Get Vault On Transfer Destination Screen
+    * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(dataSet.sourceId_hot)}
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.message == "OK"
+    * match response.status == "success"
+    * def expectedVaultSchema = 
+    """
+    {
+      externalAssetId: '#string',
+      id: '#string',
+      totalUSD: '#number',
+      isMasked: '#boolean',
+      type: '#string',
+      total: '#number',
+      name: '#string'
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
 

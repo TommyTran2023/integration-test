@@ -1131,6 +1131,7 @@ Feature: Vault
 
   @RAKCON-23658 @GetListVault_v2_SearchMaskedVaultShowSignificanceOnly
   Scenario: Get List Vault v2 from Vault Listing screen, unable to search masked Vault when isShowSignificanceOnly = true
+    # Bug MOB-3552
     * def params = 
     """
     {

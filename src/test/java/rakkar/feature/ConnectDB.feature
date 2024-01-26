@@ -13,7 +13,6 @@ Feature: Connect to PostgreSQL
             driverClassName: 'org.postgresql.Driver' 
         }
         """
-        * print coreConfig
         * def DbUtils = Java.type('util.DbUtils')
         * def coreDb = new DbUtils(coreConfig)
 
@@ -75,3 +74,55 @@ Feature: Connect to PostgreSQL
         * def result = coreDb.readRows(query)
         * print result
 
+    @SelectVaultOfUser
+    Scenario: Select vault by user
+        * def query =
+        """
+        "select a.\"assetExternalId\", a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
+        "    case " +
+        "        when \"uv\".\"id\" is not null then false " +
+        "        else true " +
+        "    end as \"isMasked\" " +
+        "from vaults v  " +
+        "left join \"userVaults\" uv  " +
+        "on \"uv\".\"vaultId\" = \"v\".\"id\" AND \"uv\".\"userId\" = '"+ userId +"' " +
+        "left join \"quorumRules\" qr  " +
+        "on v.id = qr.\"objectId\" and qr.\"status\" = 'ACTIVE' " +
+        "left join \"vaultWallets\" vw   " +
+        "on v.id = vw.\"vaultId\"  " +
+        "left join \"assetWallets\" aw  " +
+        "on vw.\"walletId\" = aw.\"walletId\" " +
+        "left join assets a " +
+        "on aw.\"assetId\"  = a.id " +
+        "where v.\"customerId\" = '"+customerId+"' " +
+        "and v.\"hiddenOnUI\" = false  " +
+        "order by a.total desc, v.name asc; "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+        * print result
+
+    @SelectAssignVault
+    Scenario: Select assign vault 
+        * def query =
+        """
+        "select a.total, qr.\"type\" as policyType ,v.* " +
+        "from vaults v " +
+        "inner join \"userVaults\" uv " +
+        "on \"uv\".\"vaultId\" = \"v\".\"id\" AND \"uv\".\"userId\" = '"+ userId +"' " +
+        "left join \"quorumRules\" qr " +
+        "on v.id = qr.\"objectId\" " +
+        "left join \"vaultWallets\" vw  " +
+        "on v.id = vw.\"vaultId\" "+
+        "left join \"assetWallets\" aw " +
+        "on vw.\"walletId\" = aw.\"walletId\" "+
+        "left join assets a " +
+        "on aw.\"assetId\"  = a.id " +
+        "where v.\"customerId\" = '" + customerId +"' " +
+        "and a.\"assetExternalId\" = '"+ assetExternalId +"' " +
+        "and v.\"hiddenOnUI\" = false " +
+        "order by a.total desc;"
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+        * print result

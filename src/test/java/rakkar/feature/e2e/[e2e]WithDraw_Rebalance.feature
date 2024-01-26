@@ -89,6 +89,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match getTransactionDetail.response.data.status == "COMPLETED"
 
    # 9.1.Get the balance of source
+    * eval java.lang.Thread.sleep(60000)
     * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
     * def getDetailTokenSource = call read(classpath +'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
@@ -160,6 +161,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match getTransactionDetail.response.data.status == "COMPLETED"
 
    # 9.1.Verify balance of source
+    * eval java.lang.Thread.sleep(60000)
     * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
@@ -231,6 +233,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match getTransactionDetail.response.data.status == "COMPLETED"
 
    # 9.1.Get the balance of source
+    * eval java.lang.Thread.sleep(60000)
     * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
@@ -303,6 +306,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match getTransactionDetail.response.data.status == "COMPLETED"
 
    # 9.1.Get the balance of source
+    * eval java.lang.Thread.sleep(60000)
     * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
@@ -381,6 +385,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * match getTransactionDetail.response.data.status == "COMPLETED"
 
    # 9.1.Get the balance of source
+    * eval java.lang.Thread.sleep(60000)
     * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)

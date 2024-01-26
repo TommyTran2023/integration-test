@@ -45,3 +45,19 @@ Feature: Get access token for user from cross workspace
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
     * def accessToken = 'Bearer ' + requesterAuthToken
     * configure headers = {Authorization: '#(accessToken)'}
+
+  #Authen for user in cross workspace - QA env
+  @RequesterAccessTokenQA
+  Scenario: Requester - Get token for login - QA env
+    * def data = 
+    """
+    {
+      customUrl: "#(testData.qa_workspace.url_qa)",
+      userName: "#(testData.qa_workspace.userInfo.requesterUsername)",
+      customAnswer: "#(testData.qa_workspace.userInfo.challengeAnswerAuth)"
+    }
+    """
+    * call read(svc + 'Auth.feature@GetUserAccessToken') data
+    * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
+    * def accessToken = 'Bearer ' + requesterAuthToken
+    * configure headers = {Authorization: '#(accessToken)'}

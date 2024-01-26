@@ -242,6 +242,20 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
+  @GetVaultFromSourceScreen
+  Scenario: Get Vault from Transfer Source screen 
+    Given path '/core/v2/vault/source'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
+  @GetVaultFromDestinationScreen
+  Scenario: Get Vault from Transfer Destination screen 
+    Given path '/core/v2/vault/destination'
+    * header Authorization = authorization
+    * params params
+    When method GET
+
 
   #----------Wallet-----------#
     @AddAssets
@@ -321,14 +335,14 @@ Feature: All api call to core services
 
     @GetListTokenStake
   Scenario: Get List Token Stake
-    Given path 'core/wallet/token-stake
+    Given path 'core/wallet/token-stake'
     * header Authorization = authorization
     * request body
     When method GET
 
     @GetListTokenStakeSubscription
   Scenario: Get List Token Stake Subscription
-    Given path 'core/wallet/stake-subscription/tokens
+    Given path 'core/wallet/stake-subscription/tokens'
     * header Authorization = authorization
     * params params
     When method GET

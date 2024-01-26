@@ -3,7 +3,7 @@ Feature: Transfer
   Background:
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('this:GetUserInfo.feature@GetUserInfo')
+    * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * call read('this:Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
     * def a = read('classpath:data/enum.json')
@@ -390,5 +390,159 @@ Feature: Transfer
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
     * def requestId = response.data.requestId
+
+  @RAKCON-24730 @GetVaultOnTransferSourceScreen @MOB-300 
+  Scenario: Get Vault On Transfer Source Screen
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen')
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.message == "OK"
+    * match response.status == "success"
+    * def expectedVaultSchema = 
+    """
+    {
+      status: '#string',
+      isArchived: '#boolean',
+      wallets: '#[]',
+      id: '#uuid',
+      totalUSD: '#number',
+      isMasked: '#boolean',
+      type: '#string',
+      totalUSDYesterday: '#number',
+      name: '#string',
+      createdAt: '#string',
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
+    * def expectedWalletSchema = 
+    """
+    {
+      externalAssetId:'#string',
+      id:'#uuid',
+      symbol:'#string',
+      totalUSD:'#number',
+      name:'#string',
+      total:'#number',
+    }
+    """
+    * match each response.data.list[*].wallets[*] == expectedWalletSchema
+
+  @RAKCON-24732 @TransferSourceScreenShowSelectedAsset @MOB-300
+  Scenario: Transfer source screen should show vault with selected asset
+    * def asset = 'ADA_TEST'
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId: #(asset)}
+    * match each response.data.list[*].wallets[*] contains {externalAssetId:"#(asset)"}
+    * match each response.data.list[*].wallets[*] != null
+
+  @RAKCON-24733 @TransferSourceScreenNotShowMaskedVault @MOB-300
+  Scenario: Transfer source screen should not show masked vault
+    * def data = 
+    """
+    {
+      userId: "#(userInfo.response.data.id)",
+      customerId: "#(userInfo.response.data.customerId)"
+    }
+    """ 
+    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * def maskedVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && x.isMasked && x.total > 1)
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(maskedVault.name)}
+    * assert response.data.list.length == 0
+
+  @RAKCON-24734 @TransferSourceScreenNotShowVaultHave0Amount @MOB-300
+  Scenario: Transfer Source Screen Not Show Vault Have 0 Amount
+    # Bug MOB-2384
+    * def data = 
+    """
+    {
+      userId: "#(userInfo.response.data.id)",
+      customerId: "#(userInfo.response.data.customerId)"
+    }
+    """ 
+    * call read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.total == 0)
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
+    * assert response.data.list.length == 0
+
+  @RAKCON-24735 @TransferSourceScreenPendingPolicyVault @MOB-300
+  Scenario: Transfer Source Screen Pending Policy Vault
+    * def data = 
+    """
+    {
+      userId: "#(userInfo.response.data.id)",
+      customerId: "#(userInfo.response.data.customerId)"
+    }
+    """ 
+    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total != null && x.total != 0)
+    * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
+    * match each response.data.list[*] contains {"status":"PENDING"}
+    
+@RAKCON-24736 @TransferSourceScreenSkipPolicyVault @MOB-300
+Scenario: Transfer Source Screen Skip Policy Vault
+  * def data = 
+  """
+  {
+    userId: "#(userInfo.response.data.id)",
+    customerId: "#(userInfo.response.data.customerId)"
+  }
+  """ 
+  * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+  * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total == null)
+  * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
+  * match each response.data.list[*] contains {"status":"PENDING"}
+
+  @RAKCON-24737 @GetVaultOnTransferDestinationScreen @MOB-300
+  Scenario: Get Vault On Transfer Destination Screen
+    * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(dataSet.sourceId_hot)}
+    * match responseStatus == 200
+    * match response.code == 200
+    * match response.message == "OK"
+    * match response.status == "success"
+    * def expectedVaultSchema = 
+    """
+    {
+      externalAssetId: '#string',
+      id: '#string',
+      totalUSD: '#number',
+      isMasked: '#boolean',
+      type: '#string',
+      total: '#number',
+      name: '#string',
+      symbol: '#string'
+    }
+    """
+    * match each response.data.list[*] == expectedVaultSchema
+
+  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300 @ignore
+  Scenario: Transfer Destination Screen show vault have asset with 0 amount
+    # Bug MOB-2385
+    * def data = 
+    """
+    {
+      userId: "#(userInfo.response.data.id)",
+      customerId: "#(userInfo.response.data.customerId)"
+    }
+    """ 
+    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0)
+    * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
+    * match each response.data.list[*].symbol == "XRP"
+    * match each response.data.list[*] == expectedVaultSchema
+
+  @RAKCON-24739 @TransferDestinationScreenShowVaultDontHaveSelectedAsset @MOB-300 @ignore
+  Scenario: Transfer Destination Screen show vault don't have selected asset
+    # Bug MOB-2385
+    * def data = 
+    """
+    {
+      userId: "#(userInfo.response.data.id)",
+      customerId: "#(userInfo.response.data.customerId)"
+    }
+    """ 
+    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * def searchVault = result.find(x => x.walletId == null )
+    * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
+    * assert response.data.list.length > 0
+    * match each response.data.list[*].symbol == "XRP"
 
 

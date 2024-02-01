@@ -1,7 +1,7 @@
 Feature: Authorization
 
     Background: Approval is logged in
-        * url baseURL
+        * url typeof customUrl != 'undefined' ? customUrl : baseURL
 
     @GetSession
     Scenario: Get session for login

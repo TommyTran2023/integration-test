@@ -12,4 +12,8 @@ Scenario: Read enum.json file
 Scenario: Read schema.json file
     * def schemaBody = read('classpath:data/schema.json')
 
+@ReadOldDataFile
+Scenario: Read schema.json file
+    * def oldDataFile = read('classpath:data/data_test.json')
+
 

@@ -9,6 +9,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def Const = read('classpath:data/enum.json')
     * call read(classpath + 'RequesterAuthenticator.feature@RequesterAccessToken')
     * call read(classpath + 'Common.feature@CACULATE_LIMIT_TRANSFER')
+    * def amount_low = 11
     * def BigDecimal = Java.type('java.math.BigDecimal')
     * def waitUntilTransactionCompleted = 
     """
@@ -66,8 +67,28 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
 
   # 6.Submit transfer
-    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(destinationId_warm)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * call read(classpath +'Transfer.feature@External_Transfer_Common')
+    * call read(svc + "Biometric.feature@RequesterDoBiometric")
+    * def body_transfer = 
+    """
+    { 
+      "operation":'#(Const.Transfer.Operation.TRANSFER)',
+      "tokenId":'#(tokenId_transfer)',
+      "feeType":'#(Const.TokenSymbolXRP)',
+      "fee":'#(fee)', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+      "destination":{
+        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
+        "id":'#(destinationId_warm)'
+      }, 
+      "source": {
+        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+        "id":'#(sourceId_warm)'
+      },
+      "amount":#(amount_low),
+      "totalEstimatedFee":'#(totalEstimatedFee)'}
+    """
+    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
     * match response.data.sourceName contains sourceName_warm
     * match destinationName_warm == response.data.destinationName
     * def transactionId = response.data.id
@@ -138,8 +159,29 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
 
   # 6.Submit transfer
-    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * call read(classpath + 'Transfer.feature@External_Transfer_Common')
+    * call read(svc + "Biometric.feature@RequesterDoBiometric")
+    * def body_transfer = 
+    """
+    { 
+      "operation":'#(Const.Transfer.Operation.TRANSFER)',
+      "tokenId":'#(tokenId_transfer)',
+      "feeType":'#(Const.TokenSymbol.XRP)',
+      "fee":'#(fee)', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+      "destination":{
+        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
+        "id":'#(destinationId_cold)'
+      }, 
+      "source": {
+        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+        "id":'#(sourceId_warm)'
+      },
+      "amount":#(amount_low),
+      "totalEstimatedFee":'#(totalEstimatedFee)'
+    }
+    """
+    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
     * match sourceName_warm == response.data.sourceName
     * match destinationName_cold == response.data.destinationName
     * def transactionId = response.data.id
@@ -210,8 +252,29 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
 
   # 6.Submit transfer
-    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(destinationId_warm)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * call read(classpath + 'Transfer.feature@External_Transfer_Common')
+    * call read(svc + "Biometric.feature@RequesterDoBiometric")
+    * def body_transfer = 
+    """
+    { 
+      "operation":'#(Const.Transfer.Operation.TRANSFER)',
+      "tokenId":'#(tokenId_transfer)',
+      "feeType":'#(Const.TokenSymbol.XRP)',
+      "fee":'#(fee)', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+      "destination":{
+        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
+        "id":'#(destinationId_warm)'
+      }, 
+      "source": {
+        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+        "id":'#(sourceId_warm)'
+      },
+      "amount":#(amount_low),
+      "totalEstimatedFee":'#(totalEstimatedFee)'
+    }
+    """
+    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
     * match sourceName_warm == response.data.sourceName
     * match destinationName_warm == response.data.destinationName
     * def transactionId = response.data.id
@@ -284,6 +347,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 6.Submit transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_warm)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def transferAmount = amount_low
     * call read(classpath + 'Transfer.feature@Internal_Transfer_Common')
     * match sourceName_warm == response.data.sourceName
     * match destinationName_warm == response.data.destinationName
@@ -311,14 +375,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
     # --- Verify the balance of source is updated correctly
-    * match total_source_afterTransfer == total - amount_low
+    * print "total_source_afterTransfer : ", total_source_afterTransfer,", total: ", total, ", amount_low: ",transferAmount,", total - amount_low : ", total - transferAmount
+    * match total_source_afterTransfer == total - transferAmount
 
    # 9.2.Get the balance of destination
     * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
     * def getDetailTokenDestination = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
     # --- Verify the balance of source is updated correctly
-    * def amount_recieve = parseFloat(amount_low) - parseFloat(testData.transfer.withdraw.fee)
+    * def amount_recieve = parseFloat(transferAmount) - parseFloat(testData.transfer.withdraw.fee)
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
     * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
@@ -363,6 +428,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
   # 6.Submit transfer
     * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
+    * def transferAmount = amount_low
     * call read(classpath + 'Transfer.feature@Internal_Transfer_Common')
     * match sourceName_warm == response.data.sourceName
     * match destinationName_cold == response.data.destinationName
@@ -390,14 +456,14 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
     # --- Verify the balance of source is updated correctly
-    * print "total(", total, ") - amount_low(", amount_low, ") = total_source_afterTransfer(", total_source_afterTransfer,")"
-    * match total_source_afterTransfer == total - amount_low
+    * print "total(", total, ") - amount_low(", transferAmount, ") = total_source_afterTransfer(", total_source_afterTransfer,")"
+    * match total_source_afterTransfer == total - transferAmount
 
    # 9.2.Get the balance of destination
     * def query_detail = { vaultId :'#(destinationId_cold)', walletId: '#(walletId_destination)'}
     * def getDetailTokenDestination = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
     * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
     # --- Verify the balance of source is updated correctly
-    * def amount_recieve = parseFloat(amount_low) - parseFloat(testData.transfer.withdraw.fee)
+    * def amount_recieve = parseFloat(transferAmount) - parseFloat(testData.transfer.withdraw.fee)
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
     * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)

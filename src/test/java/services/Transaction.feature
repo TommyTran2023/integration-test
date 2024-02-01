@@ -90,7 +90,7 @@ Feature: Tranaction Service
         {
             headers:{
                 authorization: #(accessToken),
-                challenge-answer: #(challengeAnswerRequest),
+                challenge-answer: #(typeof challengeAnswerRequest == 'undefined' ? null : challengeAnswerRequest),
                 passcode: #(typeof passcode == 'undefined' ? null : passcode)
             },
             body: 
@@ -104,7 +104,7 @@ Feature: Tranaction Service
                 feeType : #(feeType), 
                 totalEstimatedFee : #(totalEstimatedFee), 
                 feeLevel : #(feeLevel), 
-                note : #(note), 
+                note : #(typeof note == 'undefined' ? 'Transaction from IT' : note), 
                 treatAsGrossAmount : #(treatAsGrossAmount)
             }
         }

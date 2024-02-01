@@ -1007,6 +1007,7 @@ Feature: Vault
       status: "#string",
       type: "#string",
       totalUSD: "#number",
+      availableUSD: "#number",
       totalUSDYesterday: "#number",
       isMasked: "#boolean",
       isArchived: "#boolean",
@@ -1022,6 +1023,8 @@ Feature: Vault
       "total": "#number",
       "symbol": "#string",
       "totalUSD": "#number",
+      "availableUSD": "#number",
+      "available": "#number",
       "externalAssetId": "#string"
     }
     """

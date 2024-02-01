@@ -421,6 +421,7 @@ Feature: Transfer
       id:'#uuid',
       symbol:'#string',
       totalUSD:'#number',
+      availableUSD:'#number',
       name:'#string',
       total:'#number',
     }
@@ -504,9 +505,11 @@ Scenario: Transfer Source Screen Skip Policy Vault
       externalAssetId: '#string',
       id: '#string',
       totalUSD: '#number',
+      availableUSD: '#number',
       isMasked: '#boolean',
       type: '#string',
       total: '#number',
+      available: '#number',
       name: '#string',
       symbol: '#string'
     }

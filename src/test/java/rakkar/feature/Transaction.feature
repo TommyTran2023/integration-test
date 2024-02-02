@@ -213,7 +213,33 @@ Feature: Transaction
     """
     * match txnWithMaskVault.filter(x => checkSource(x, sourceIndex, "AT - Cold Standard Vault 1 100092")).length == 0
 
-
+    @GetVaultFromTransactionFilter
+    Scenario: Get Vault From Transaction Filter
+      # Will be removed on sprint 24.2.0
+      * def params = 
+      """
+      {
+        keyword:'',
+        limit: 40,
+        offset: 0,
+        searchType: 'VAULT_NAME',
+        sort: 'ASC',
+        sortBy: 'NAME'
+      }
+      """
+      Given path 'core/vault/v2/accounts'
+      And params params
+      When method GET
+      * def expectedSchema = 
+      """
+      {
+        totalUSD:'#number', 
+        totalBTC: '#number', 
+        availableUSD: '#number', 
+        availableBTC: '#number'
+      } 
+      """
+      Then match response.data contains expectedSchema
     
     
 

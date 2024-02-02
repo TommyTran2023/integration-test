@@ -73,7 +73,7 @@ Feature: Wallet
                 sort:'ASC', 
                 sortBy:'NAME',
                 groupBy: 'ASSET', 
-                isHideList: true,
+                isHideList: false,
                 keyword:'#(tokenSymbol)'
             }
         }

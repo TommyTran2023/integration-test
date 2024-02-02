@@ -14,7 +14,7 @@ Feature: HomePage
     When method GET
     Then status 200
     * def assetsSchema = schemaBody.homePage.assetAllocation
-    * def responseSchema = {"assets":"#[]assetsSchema", "totalUSD":#number}
+    * def responseSchema = {"assets":"#[]assetsSchema", "totalUSD":#number, "availableUSD":#number}
     * match response.data.assets == '#[]assetsSchema'
     * match response.data == responseSchema
 

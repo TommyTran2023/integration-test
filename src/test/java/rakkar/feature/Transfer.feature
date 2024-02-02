@@ -409,6 +409,7 @@ Feature: Transfer
       isMasked: '#boolean',
       type: '#string',
       totalUSDYesterday: '#number',
+      availableUSD: '#number',
       name: '#string',
       createdAt: '#string',
     }

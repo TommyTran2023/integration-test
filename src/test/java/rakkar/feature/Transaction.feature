@@ -126,9 +126,9 @@ Feature: Transaction
 
     @RAKCON-12428 @Filter_transaction_create_by
   Scenario: Filter transaction created by
-    * def query = { limit:'10', offset: '0',createdById: '#(userId)'}
+    * def query = { limit:'10', offset: '0',createdById: '#(userInfo.userId)'}
     * call read('this:Transaction.feature@Filter_transaction_common')
-    * match each $response.data.transactions[*].createdById == "#(userId)"
+    * match each $response.data.transactions[*].createdById == "#(userInfo.userId)"
 
     @RAKCON-10972 @View_transaction_detail
   Scenario: View transaction detail
@@ -160,7 +160,7 @@ Feature: Transaction
    Scenario: Export transaction With Filter
     * def vaults = call read(svc + 'Vault.feature@GetListVault_v2')
     * def networks = call read(svc + 'Network.feature@GetNetworkList')
-    * def whitelists = call read(svc + 'WhiteList.feature@GetWhitelistFolders')
+    * def whitelists = call read(svc + 'Whitelist.feature@GetWhitelistFolders')
     * def assetId = vaults.response.data.list.find(x => x.wallets != null && x.wallets.length > 0).wallets[0].id
     * def pools = call read(svc + 'Staking.feature@GetPools') {}
     * print userInfo

@@ -136,37 +136,53 @@ Feature: Tranaction Service
         
     @ExportTransactionFull
     Scenario: Export Transaction
+        * def body = 
+        """
+        {
+            limit : "#(typeof limit == 'undefined' ? 10 : limit)", 
+            offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
+            sort : "#(typeof sort == 'undefined' ? 'DESC' : sort)", 
+            sortBy : "#(typeof sortBy == 'undefined' ? 'CREATED_DATE' : sortBy)", 
+            dateFrom : "#(typeof dateFrom == 'undefined' ? null : dateFrom)", 
+            dateTo : "#(typeof dateTo == 'undefined' ? null : dateTo)", 
+            createdById : "#(typeof createdById == 'undefined' ? null : createdById)", 
+            priceFrom : "#(typeof priceFrom == 'undefined' ? null : priceFrom)",
+            priceTo : "#(typeof priceTo == 'undefined' ? null : priceTo)", 
+            keyword : "#(typeof keyword == 'undefined' ? null : keyword)", 
+            vaultId : "#(typeof vaultId == 'undefined' ? null : vaultId)", 
+            isAllRequest : "#(typeof isAllRequest == 'undefined' ? null : isAllRequest)", 
+            txnDateFrom : "#(typeof txnDateFrom == 'undefined' ? null : txnDateFrom)", 
+            txnDateTo : "#(typeof txnDateTo == 'undefined' ? null : txnDateTo)", 
+            assetId : "#(typeof assetId == 'undefined' ? null : assetId)", 
+            type : "#(typeof type == 'undefined' ? null : type)", 
+            status : "#(typeof status == 'undefined' ? null : status)", 
+            initiatedByIds : "#(typeof initiatedByIds == 'undefined' ? null : initiatedByIds)",
+            sourceData : "#(typeof sourceData == 'undefined' ? null : sourceData)", 
+            destinationData : "#(typeof destinationData == 'undefined' ? null : destinationData)", 
+            transactionType : "#(typeof transactionType == 'undefined' ? null : transactionType)", 
+        }
+        """
+        * def removeNullValue = 
+        """
+        function(obj){
+            Object.keys(obj).forEach(key => {
+                if (obj[key] === null) {
+                  delete obj[key];
+                }
+              });
+            return obj;
+        }
+        """
+        * print removeNullValue(body)
+
         * def data = 
         """
         {
             authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
-            body: 
-            {
-                limit : "#(typeof limit == 'undefined' ? 10 : limit)", 
-                offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
-                sort : "#(typeof sort == 'undefined' ? 'DESC' : sort)", 
-                sortBy : "#(typeof sortBy == 'undefined' ? 'CREATED_DATE' : sortBy)", 
-                dateFrom : "#(typeof dateFrom == 'undefined' ? null : dateFrom)", 
-                dateTo : "#(typeof dateTo == 'undefined' ? null : dateTo)", 
-                createdById : "#(typeof createdById == 'undefined' ? null : createdById)", 
-                priceFrom : "#(typeof priceFrom == 'undefined' ? null : priceFrom)",
-                priceTo : "#(typeof priceTo == 'undefined' ? null : priceTo)", 
-                keyword : "#(typeof keyword == 'undefined' ? null : keyword)", 
-                vaultId : "#(typeof vaultId == 'undefined' ? null : vaultId)", 
-                isAllRequest : "#(typeof isAllRequest == 'undefined' ? null : isAllRequest)", 
-                txnDateFrom : "#(typeof txnDateFrom == 'undefined' ? null : txnDateFrom)", 
-                txnDateTo : "#(typeof txnDateTo == 'undefined' ? null : txnDateTo)", 
-                assetId : "#(typeof assetId == 'undefined' ? null : assetId)", 
-                type : "#(typeof type == 'undefined' ? null : type)", 
-                status : "#(typeof status == 'undefined' ? null : status)", 
-                initiatedByIds : "#(typeof initiatedByIds == 'undefined' ? null : initiatedByIds)",
-                sourceData : "#(typeof sourceData == 'undefined' ? null : sourceData)", 
-                destinationData : "#(typeof destinationData == 'undefined' ? null : destinationData)", 
-                transactionType : "#(typeof transactionType == 'undefined' ? null : transactionType)", 
-            }
+            body: #(body)
         }
         """
-        * call read(svc + 'transactionSvc.feature@ExportTransaction') data
+        * call read(svc + 'transactionSvc.feature@ExportTransactionWeb') data
      
     @GetListTransactionTierSigner
     Scenario: Get List Transaction Tier Signer

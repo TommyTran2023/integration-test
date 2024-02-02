@@ -3,7 +3,7 @@ Feature: Transaction
   Background:
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read('this:GetUserInfo.feature@GetUserInfo')
+    * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def transactionSvc = 'classpath:services/Transaction.feature'
     * def Const = read('classpath:data/enum.json')
 
@@ -152,7 +152,83 @@ Feature: Transaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
+    * match exportResponse.responseStatus == 201
     * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
+    * print exportResponse.response
+
+    @ExportTransactionWithFilter
+   Scenario: Export transaction With Filter
+    * def vaults = call read(svc + 'Vault.feature@GetListVault_v2')
+    * def networks = call read(svc + 'Network.feature@GetNetworkList')
+    * def whitelists = call read(svc + 'WhiteList.feature@GetWhitelistFolders')
+    * def assetId = vaults.response.data.list.find(x => x.wallets != null && x.wallets.length > 0).wallets[0].id
+    * def pools = call read(svc + 'Staking.feature@GetPools') {}
+    * print userInfo
+
+    * def sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    * def today = sdf.format(new java.util.Date())
+    * def body = 
+    """
+    { 
+      keyword:'',
+      offset:0,
+      sort: 'DESC',
+      sortBy:'CREATED_DATE',
+      txnDateFrom: "#(today)",
+      txnDateTo: "#(today)",
+      priceFrom: 1,
+      priceTo: 1000,
+      dateFrom: "#(today)",
+      dateTo: "#(today)",
+      status: [
+        "PENDING"
+      ],
+      transactionType: [
+        "INCOMING"
+      ],
+      sourceData: [
+        {
+          sourceType: "internal",
+          sourceId: "#(vaults.response.data.list[0].id)"
+        },
+        {
+          sourceType: "connection",
+          sourceId: "#(networks.response.data.networks[0].id)"
+        },
+        {
+          sourceType: "staking",
+          sourceId: "#(pools.response.data.pools[0].bech32Id)"
+        }
+      ],  
+      destinationData:[{
+        destinationType: "internal",
+        destinationId: "#(vaults.response.data.list[1].id)"
+      },
+      {
+        destinationType: "whitelist",
+        destinationId: "#(whitelists.response.data.folders.list[0].id)"
+      },
+      {
+        destinationType: "connection",
+        destinationId: "#(networks.response.data.networks[0].id)"
+      },
+      {
+        destinationType: "staking",
+        destinationId: "#(pools.response.data.pools[0].bech32Id)"
+      }
+      ],
+      assetId:[
+        "#(assetId)"
+      ],
+      initiatedByIds: [
+        "#(userInfo.userId)"
+      ]
+    }
+    """
+    * def exportResponse = call read(transactionSvc + '@ExportTransactionFull') body
+    * match exportResponse.responseStatus == 201
+    * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
+    * print exportResponse.response
 
     @RAKCON-18275 @FilterTransactionFromWhitelistAddress
   Scenario: Filter transaction from whitelist address
@@ -213,7 +289,33 @@ Feature: Transaction
     """
     * match txnWithMaskVault.filter(x => checkSource(x, sourceIndex, "AT - Cold Standard Vault 1 100092")).length == 0
 
-
+    @GetVaultFromTransactionFilter
+    Scenario: Get Vault From Transaction Filter
+      # Will be removed on sprint 24.2.0
+      * def params = 
+      """
+      {
+        keyword:'',
+        limit: 40,
+        offset: 0,
+        searchType: 'VAULT_NAME',
+        sort: 'ASC',
+        sortBy: 'NAME'
+      }
+      """
+      Given path 'core/vault/v2/accounts'
+      And params params
+      When method GET
+      * def expectedSchema = 
+      """
+      {
+        totalUSD:'#number', 
+        totalBTC: '#number', 
+        availableUSD: '#number', 
+        availableBTC: '#number'
+      } 
+      """
+      Then match response.data contains expectedSchema
     
     
 

@@ -1006,13 +1006,13 @@ Feature: Vault
       name: "#string",
       status: "#string",
       type: "#string",
-      totalUSD: "#number",
-      availableUSD: "#number",
-      totalUSDYesterday: "#number",
+      totalUSD: "##number",
+      availableUSD: "##number",
+      totalUSDYesterday: "##number",
       isMasked: "#boolean",
       isArchived: "#boolean",
       createdAt: "#string",
-      wallets: "#[]"
+      wallets: "##[]"
     }
     """
     * def expectedWalletSchema = 

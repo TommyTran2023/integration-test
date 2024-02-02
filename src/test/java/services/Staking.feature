@@ -180,14 +180,12 @@ Feature: Staking
         {
             authorization: #(accessToken),
             params:{
-                sort : 'ASC', //string
-                sortBy : #(sortBy), //string
-                keyword : '', //string
-                page : #(page), //number
-                limit : #(limit), //number
-                tokenId : #(tokenId), //string
-                allPools : #(allPools), //boolean
-                fromScreen : #(fromScreen) //string
+                keyword : '', 
+                page : 1, 
+                limit : 10,
+                tokenId : "",
+                allPools : true,
+                fromScreen : "destination"
             }
         }
         """

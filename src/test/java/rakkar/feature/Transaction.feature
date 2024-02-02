@@ -152,6 +152,27 @@ Feature: Transaction
    Scenario: Export transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
+    * match responseStatus == 200
+    * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
+
+    @ExportTransactionFilterByDestination
+   Scenario: Export transaction by destination
+    * call read(svc + 'Vault.feature@GetListVault_v2')
+    * def body = 
+    """
+    { 
+      "keyword":'',
+      "offset":0,
+      "sort": 'DESC',
+      "sortBy":'CREATED_DATE',
+      "destinationData":{
+        "destinationType": "internal",
+        "destinationId": "#(response.data.list[0].id)"
+      }
+    }
+    """
+    * def exportResponse = call read(transactionSvc + '@ExportTransactionFull') { body: '#(body)' }
+    * match responseStatus == 200
     * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
 
     @RAKCON-18275 @FilterTransactionFromWhitelistAddress

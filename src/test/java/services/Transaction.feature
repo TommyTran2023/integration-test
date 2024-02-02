@@ -136,34 +136,33 @@ Feature: Tranaction Service
         
     @ExportTransactionFull
     Scenario: Export Transaction
-        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data = 
         """
         {
-            authorization: #(accessToken),
+            authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
             body: 
             {
-                limit : #(limit), 
-                offset : #(offset), 
-                sort : #(sort), 
-                sortBy : #(sortBy), 
-                dateFrom : #(dateFrom), 
-                dateTo : #(dateTo), 
-                createdById : #(createdById), 
-                priceFrom : #(priceFrom),
-                priceTo : #(priceTo), 
-                keyword : #(keyword), 
-                vaultId : #(vaultId), 
-                isAllRequest : #(isAllRequest), 
-                txnDateFrom : #(txnDateFrom), 
-                txnDateTo : #(txnDateTo), 
-                assetId : #(assetId), 
-                type : #(type), 
-                status : #(status), 
-                initiatedByIds : #(initiatedByIds),
-                sourceData : #(sourceData), 
-                destinationData : #(destinationData), 
-                transactionType : #(transactionType), 
+                limit : "#(typeof limit == 'undefined' ? 10 : limit)", 
+                offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
+                sort : "#(typeof sort == 'undefined' ? 'DESC' : sort)", 
+                sortBy : "#(typeof sortBy == 'undefined' ? 'CREATED_DATE' : sortBy)", 
+                dateFrom : "#(typeof dateFrom == 'undefined' ? null : dateFrom)", 
+                dateTo : "#(typeof dateTo == 'undefined' ? null : dateTo)", 
+                createdById : "#(typeof createdById == 'undefined' ? null : createdById)", 
+                priceFrom : "#(typeof priceFrom == 'undefined' ? null : priceFrom)",
+                priceTo : "#(typeof priceTo == 'undefined' ? null : priceTo)", 
+                keyword : "#(typeof keyword == 'undefined' ? null : keyword)", 
+                vaultId : "#(typeof vaultId == 'undefined' ? null : vaultId)", 
+                isAllRequest : "#(typeof isAllRequest == 'undefined' ? null : isAllRequest)", 
+                txnDateFrom : "#(typeof txnDateFrom == 'undefined' ? null : txnDateFrom)", 
+                txnDateTo : "#(typeof txnDateTo == 'undefined' ? null : txnDateTo)", 
+                assetId : "#(typeof assetId == 'undefined' ? null : assetId)", 
+                type : "#(typeof type == 'undefined' ? null : type)", 
+                status : "#(typeof status == 'undefined' ? null : status)", 
+                initiatedByIds : "#(typeof initiatedByIds == 'undefined' ? null : initiatedByIds)",
+                sourceData : "#(typeof sourceData == 'undefined' ? null : sourceData)", 
+                destinationData : "#(typeof destinationData == 'undefined' ? null : destinationData)", 
+                transactionType : "#(typeof transactionType == 'undefined' ? null : transactionType)", 
             }
         }
         """

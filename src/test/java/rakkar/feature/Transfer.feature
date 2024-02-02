@@ -423,6 +423,7 @@ Feature: Transfer
       symbol:'#string',
       totalUSD:'#number',
       availableUSD:'#number',
+      available:'#number',
       name:'#string',
       total:'#number',
     }

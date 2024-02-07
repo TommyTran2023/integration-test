@@ -14,3 +14,11 @@ Feature: Common Feature
     Scenario: Reject all request
         * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
         * requestHandle().rejectAllPendingRequest()
+
+    @Deposit
+    Scenario: Deposit to test vault
+        * call read(svc + 'testnet.feature@DepositXRP') {address:"#(dataSet.address)"}
+        * def vaults = call read(svc + 'Vault.feature@GetListVault_v2') {searchText: "#(testData.stdVaultE2E)"}
+        * def vaultWallet = vaults.response.data.list[0].wallets.find(x => x.symbol == 'XRP')
+        * def wallet = call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId:"#(vaults.response.data.list[0].id)",walletId:"#(vaultWallet.id)"}
+        * call read(svc + 'testnet.feature@DepositXRP') {address:"#(wallet.response.data.address[0].address)"}

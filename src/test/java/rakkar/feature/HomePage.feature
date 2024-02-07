@@ -59,7 +59,7 @@ Feature: HomePage
     * param dateTo = getDate(-1)
     When method GET
     Then status 200
-    * def chartDataSchema = {"date":#? getDate(_)", "value":#number}
+    * def chartDataSchema = {"date":#?getDate(_), "value":#number}
     * def responseSchema = {"chartData":"#[]chartDataSchema", "percentageDifference":#number}
 
   @RAKCON-10979 @AddShortcut

@@ -518,9 +518,8 @@ Scenario: Transfer Source Screen Skip Policy Vault
     """
     * match each response.data.list[*] == expectedVaultSchema
 
-  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300 @ignore
+  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300
   Scenario: Transfer Destination Screen show vault have asset with 0 amount
-    # Bug MOB-2385
     * def data = 
     """
     {
@@ -532,11 +531,10 @@ Scenario: Transfer Source Screen Skip Policy Vault
     * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0)
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * match each response.data.list[*].symbol == "XRP"
-    * match each response.data.list[*] == expectedVaultSchema
+    * match each response.data.list[*].assetExternalId == "XRP_TEST"
 
-  @RAKCON-24739 @TransferDestinationScreenShowVaultDontHaveSelectedAsset @MOB-300 @ignore
+  @RAKCON-24739 @TransferDestinationScreenShowVaultDontHaveSelectedAsset @MOB-300
   Scenario: Transfer Destination Screen show vault don't have selected asset
-    # Bug MOB-2385
     * def data = 
     """
     {
@@ -548,6 +546,6 @@ Scenario: Transfer Source Screen Skip Policy Vault
     * def searchVault = result.find(x => x.walletId == null )
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * assert response.data.list.length > 0
-    * match each response.data.list[*].symbol == "XRP"
-
+    * match each response.data.list[*].symbol == null
+    * match each response.data.list[*].assetExternalId == null
 

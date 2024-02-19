@@ -1,10 +1,10 @@
 {
   "qa": {
-    "baseURL": "https://qa-api.thailaksa.net",
-    "baseMobileURL": "https://mobile-qa-api.thailaksa.net",
+    "baseURL": "https://test-api.thailaksa.net",
+    "baseMobileURL": "https://test-mobile-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "crmUploadUrl": "https://qa-crm.thailaksa.net/api/v2/uploads.json",
+    "crmUploadUrl": "https://test-crm.thailaksa.net/api/v2/uploads.json",
     "requesterInfo": {
       "requesterUsername": "PASSPORT234567RE3SG",
       "requesterPasscode": "123123",

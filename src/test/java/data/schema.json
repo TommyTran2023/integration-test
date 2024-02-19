@@ -369,7 +369,8 @@
       "sourceAddress": "#string",
       "destinationAddress": "#string",
       "sourceType": "#string",
-      "sourceMapping": "#string"
+      "sourceMapping": "#string",
+      "repStatus": "#string"
     }
   },
   "quorumDetails":{

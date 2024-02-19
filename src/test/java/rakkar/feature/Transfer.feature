@@ -528,7 +528,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
     }
     """ 
     * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
-    * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0)
+    * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0 && x.isMasked == false)
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * match each response.data.list[*].symbol == "XRP"
     * match each response.data.list[*].assetExternalId == "XRP_TEST"

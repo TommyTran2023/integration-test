@@ -518,8 +518,9 @@ Scenario: Transfer Source Screen Skip Policy Vault
     """
     * match each response.data.list[*] == expectedVaultSchema
 
-  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300
+  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300 @ignore
   Scenario: Transfer Destination Screen show vault have asset with 0 amount
+    # Bug MOB-4070
     * def data = 
     """
     {

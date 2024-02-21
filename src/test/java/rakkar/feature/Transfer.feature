@@ -195,7 +195,7 @@ Feature: Transfer
   @RAKCON-11405 @Transfer_high_value
   Scenario: Transfer high - Submit transfer
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
-    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userInfo.userId)', type: 'VIDEO'}
     * call read('this:Common.feature@UPLOAD_LINK')
     * call read('this:UploadFile.feature@PUT_VIDEO')
     * def body = 

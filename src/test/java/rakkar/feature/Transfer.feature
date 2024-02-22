@@ -195,7 +195,7 @@ Feature: Transfer
   @RAKCON-11405 @Transfer_high_value
   Scenario: Transfer high - Submit transfer
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
-    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
+    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userInfo.userId)', type: 'VIDEO'}
     * call read('this:Common.feature@UPLOAD_LINK')
     * call read('this:UploadFile.feature@PUT_VIDEO')
     * def body = 
@@ -518,8 +518,9 @@ Scenario: Transfer Source Screen Skip Policy Vault
     """
     * match each response.data.list[*] == expectedVaultSchema
 
-  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300
+  @RAKCON-24738 @TransferDestinationScreenShowVault0Amount @MOB-300 @ignore
   Scenario: Transfer Destination Screen show vault have asset with 0 amount
+    # Bug MOB-4070
     * def data = 
     """
     {

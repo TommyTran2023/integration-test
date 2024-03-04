@@ -88,6 +88,10 @@ function fn(){
             }
         },
 
+        rejectPendingRequest: function(requestId){
+            rejectRequest(requestId)
+        },
+
         createEditAccountPolicyRequest: function(){
             var policy = karate.call(svc + 'Quorums.feature@GetAccountPolicy')
             var pendingRequestId = policy.response.data.pendingRequestId

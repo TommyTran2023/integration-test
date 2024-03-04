@@ -138,9 +138,9 @@ Feature: Advance Quorum Service
   @CreateGroupUsers
   Scenario: Create Group Users
     Given path 'advance-quorum/group-policies'
-    And header Authorization = authorization
+    And headers headers
     * request body
-    When method GET
+    When method POST
 
   @ValidateGroupPolicy
   Scenario: Validate group policy
@@ -159,9 +159,22 @@ Feature: Advance Quorum Service
   @EditGroupMember
   Scenario: Update group name or member
     Given path 'advance-quorum/group-policies/' + groupId
-    And header Authorization = authorization
+    And headers headers
     * request body
     When method PUT
+
+  @ValidateDeleteGroup
+  Scenario: Validate Delete Group
+    Given path `/core/groups/${groupId}/validate-delete-group`
+    * headers headers
+    When method GET
+
+  @DeleteGroup
+  Scenario: Delete Group
+    Given path `/core/groups/${groupId}`
+    * headers headers
+    When method DELETE
+
 
 
 

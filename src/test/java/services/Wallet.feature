@@ -188,3 +188,20 @@ Feature: Wallet
         """
         * call read(svc + 'coreSvc.feature@GetListTokenStakeSubscription') data
     
+    @GetCustomerWalletPrice
+    Scenario: Get Customer Wallet Price
+        * def data =
+        """
+        {
+            headers:{
+                Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+            },
+            params: {
+                limit: "#(typeof limit != 'undefined' ? limit : null)",
+                offset: "#(typeof offset != 'undefined' ? offset : null)",
+                where: "#(typeof where != 'undefined' ? where : null)"
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GetCustomerWalletPrice') data
+

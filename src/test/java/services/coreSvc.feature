@@ -347,6 +347,13 @@ Feature: All api call to core services
     * params params
     When method GET
 
+    @GetCustomerWalletPrice
+  Scenario: Get Customer Wallet Price
+    Given path '/core/v2/walletPrices'
+    * headers headers
+    And params params
+    When method GET
+  
 
 #----------Whitelist Folder-----------#
     @CreateWhitelistFolder
@@ -986,14 +993,14 @@ Feature: All api call to core services
 
     @GetListCustomer
   Scenario: Get List Customer
-    Given path '/core/customers
+    Given path '/core/customers'
     * header Authorization = authorization
     * params params
     When method GET
 
     @CreateNewCustomer
   Scenario: Create New Customer
-    Given path '/core/customers
+    Given path '/core/customers'
     * header Authorization = authorization
     * request body
     When method POST
@@ -1160,7 +1167,7 @@ Feature: All api call to core services
 
     @GetListAssetsStaking
   Scenario: Get List Assets Staking
-    Given path '/core/assets/assets-staking
+    Given path '/core/assets/assets-staking'
     * header Authorization = authorization
     When method GET
 

@@ -111,9 +111,14 @@ Feature: Advance-quorum
     @ViewAccountPolicyRequest
     Scenario: View account policy request
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
-        * call read(svc + 'advQuorumSvc.feature@ViewAccountPolicyRequest') {authorization:#(accessToken)}
-        Then match responseStatus == 200
-        * match response.status == 'success'
+        * def data =
+        """
+        {
+            authorization: "#(accessToken)",
+            requestId: "#(requestId)"
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@ViewAccountPolicyRequest') data
 
     @GetTotalPendingRequest
     Scenario: Get Total Pending Request

@@ -84,3 +84,16 @@ Feature: Settings
     * match response.status == 'success'
     # Restore to old passcode
     * call read('this:Settings.feature@RestoreToOldPasscode')
+
+  @GetAccountConfig
+  Scenario: Get Account Config
+    * call read(svc + 'Auth.feature@GetAccountConfig')
+    * def expectedSchema =
+    """
+    {
+      currency: "#string",
+      baseToken: "#string",
+      lang: "#string"
+    }
+    """
+    Then match response.data contains expectedSchema

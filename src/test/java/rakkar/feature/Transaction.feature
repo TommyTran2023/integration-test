@@ -163,7 +163,6 @@ Feature: Transaction
     * def whitelists = call read(svc + 'Whitelist.feature@GetWhitelistFolders')
     * def assetId = vaults.response.data.list.find(x => x.wallets != null && x.wallets.length > 0).wallets[0].id
     * def pools = call read(svc + 'Staking.feature@GetPools') {}
-    * print userInfo
 
     * def sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
     * def today = sdf.format(new java.util.Date())

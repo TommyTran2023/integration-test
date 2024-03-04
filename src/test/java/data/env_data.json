@@ -4,7 +4,7 @@
     "baseMobileURL": "https://test-mobile-api.thailaksa.net",
     "openApiURL": "https://sit-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "crmUploadUrl": "https://test-crm.thailaksa.net/api/v2/uploads.json",
+    "crmUploadUrl": "https://test-crm.thailaksa.net/api/v2/uploads",
     "requesterInfo": {
       "requesterUsername": "PASSPORT234567RE3SG",
       "requesterPasscode": "123123",
@@ -59,7 +59,7 @@
     "baseMobileURL": "https://mobile-uat-api.rakkardigital.com",
     "openApiURL": "https://uat-openapi.rakkardigital.com",
     "openAPI_doc": "https://developer.rakkardigital.com",
-    "crmUploadUrl": "https://uat-crm.thailaksa.net/api/v2/uploads.json",
+    "crmUploadUrl": "https://uat-crm.thailaksa.net/api/v2/uploads",
     "requesterInfo": {
       "requesterUsername": "ID_CARDAT0000101SG",
       "requesterPasscode": "123111",

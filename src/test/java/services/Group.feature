@@ -26,8 +26,8 @@ Feature: Group Policies
     * def data =
     """
     {
-        "authorization":#(accessToken),
-        "groupId":#(groupId)
+        "authorization": "#(accessToken)",
+        "groupId": "#(groupId)"
     }
     """
     * call read('this:advQuorumSvc.feature@GetGroupDetails') data
@@ -58,11 +58,14 @@ Feature: Group Policies
     * def data =
     """
     {
-        "authorization":#(accessToken),
-        body:{
-            name : #(name), //string
-            memberIds : #(memberIds) //array
-        }
+      headers:{
+        authorization:"#(accessToken)",
+        challenge-answer: "#(challengeAnswerRequest)",
+      },
+      body:{
+        name : "#(name)",
+        memberIds : "#(memberIds)"
+      }
     }
     """
     * call read('this:advQuorumSvc.feature@CreateGroupUsers') data
@@ -73,11 +76,11 @@ Feature: Group Policies
     * def data =
     """
     {
-        "authorization":#(accessToken),
+        authorization :"#(accessToken)",
         body:{
-            groupName : #(groupName), //string
-            userIds : #(userIds), //array
-            exceptGroupId : #(exceptGroupId) //string
+            groupName : "#(groupName)",
+            userIds : "#(typeof userIds == 'undefined' ? null : userIds)",
+            exceptGroupId : "#(typeof exceptGroupId == 'undefined' ? null : exceptGroupId )"
         }
     }
     """
@@ -91,23 +94,28 @@ Feature: Group Policies
     {
         "authorization":#(accessToken),
         body:{
-            name : #(name) //string
+            name : #(name)
         }
     }
     """
     * call read('this:advQuorumSvc.feature@EditGroupName') data
     
     @EditGroupMember
-  Scenario: Edit group policy name
+  Scenario: Edit group
     * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
     * def data =
     """
-    {
-        "authorization":#(accessToken),
-        body:{
-            name : #(name),
-            memberIds : #(memberIds)
-        }
+    { 
+      groupId: "#(groupId)",
+      headers:{
+        authorization: "#(accessToken)",
+        challenge-answer: "#(challengeAnswerRequest)",
+		    passcode: "#(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode)"
+      },
+      body:{
+          name : "#(name)",
+          memberIds : #(memberIds)
+      }
     }
     """
     * call read('this:advQuorumSvc.feature@EditGroupMember') data
@@ -129,6 +137,30 @@ Feature: Group Policies
     """
     * call read('this:coreSvc.feature@GetGroups') data
 
-    
+    @ValidateDeleteGroup
+  Scenario: Validate Delete Group
+    * def data =
+    """
+    {
+        headers:{
+            Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'advQuorumSvc.feature@ValidateDeleteGroup') data
+
+    @DeleteGroup
+  Scenario: Delete Group
+    * def data =
+    """
+    {
+      headers:{
+        Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+        challenge-answer: "#(challengeAnswerRequest)"
+      },
+      groupId: "#(groupId)"
+    }
+    """
+    * call read(svc + 'advQuorumSvc.feature@DeleteGroup') data
 
 

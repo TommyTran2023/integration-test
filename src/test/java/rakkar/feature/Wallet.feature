@@ -305,7 +305,18 @@ Feature: Wallet
     * def vaultId = response.data.id
     * call read('this:Wallet.feature@ADD_WALLET')
 
-
+  @GetCustomerWalletPrice
+  Scenario: Get Wallet Price when log in to web
+    * def data =
+    """
+    {
+      "limit": "1",
+      "offset": "0",
+      "where": "{\"AND\":[{\"externalAssetId\":{\"IS\":\"BTC_TEST\"}}]}"
+    }
+    """
+    * call read(svc + 'Wallet.feature@GetCustomerWalletPrice') data
+    Then match responseStatus == 200
 
 
 

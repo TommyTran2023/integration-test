@@ -73,6 +73,12 @@ Feature: Authorization
        * header Authorization = authorization
        When method GET
 
+   @GetAccountConfig
+   Scenario: Get Account Config
+      Given path '/auth/account/config'
+      * headers headers
+      When method GET
+
 #----------------------------------
     @GetMyPermissions
     Scenario: Get My Permissions
@@ -493,3 +499,5 @@ Scenario: Get List User
    * header authorization = authorization
    * params params
    When method GET
+
+

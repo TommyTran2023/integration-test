@@ -1005,5 +1005,16 @@ Feature: Common call from Auth services
         """
         * call read(svc + 'authSvc.feature@GetListUser') data
      
-
+    @GetAccountConfig
+    Scenario: Get Account Config
+        * def data =
+        """
+        {
+            headers:{
+                Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+            }
+        }
+        """
+        * call read(svc + 'authSvc.feature@GetAccountConfig') data
+        Then match responseStatus == 200
 

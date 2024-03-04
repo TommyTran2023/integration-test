@@ -6,11 +6,12 @@ Feature: Upload file
 
   @UPLOAD_IMAGE_ON_CRM
   Scenario: Upload image on CRM
-    And header Content-type = "image/png"
+    * configure headers = {Content-type: "image/png"}
     And param filename = 'image.png'
     And request karate.read("file:src/main/resources/uploadFile/image.png")
     When method POST
     Then status 201
+    * configure headers = {Authorization: '#(accessToken)'}
     * def token = response.upload.token
 
   @UPLOAD_VIDEO_ON_CRM
@@ -30,3 +31,11 @@ Feature: Upload file
     When method PUT
     Then status 200
     And response.status == "success"
+
+  @PUT_VIDEO_v2
+  Scenario: Put video
+    * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
+    * def handler = read('classpath:rakkar/common/UploadFileHandle.js')
+    * def vdo = handler().uploadFileForTransfer(requesterAccessToken, userInfo.userId)
+    * def uploadToken = vdo.uploadToken
+    * def vdoSentence = vdo.vdoSentence

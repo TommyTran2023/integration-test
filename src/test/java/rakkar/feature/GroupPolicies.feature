@@ -21,8 +21,6 @@ Feature: Group Policies
 
     @ignore @ValidateGroupPolicies
     Scenario: Validate Group Policies
-        * call read('this:Common.feature@FIDO-Requester')
-        * header challenge-answer = challengeAnswerRequest
         Given path '/advance-quorum/group-policies/validate-group-policy'
         * request requestBody
         When method POST
@@ -78,10 +76,9 @@ Feature: Group Policies
         * def compare = function(x){ return karate.lowerCase(x.name).contains(username) }
         * for(var i = 0; i < response.data.memberInfos.length; i++) karate.match(compare(response.data.memberInfos[i]), true)
 
-    @RAKCON-18248 @EditMembersInGroup @ignore
-    Scenario: Edit Members In Group
+    @RAKCON-18248 @CreateAndEditMembersInGroup @ignore
+    Scenario: Create and Edit Members In Group
         # Get another random user from list of users
-        * call read('this:Vault.feature@CHECK-LIST-USER')
         * def listUsers = call read('this:Vault.feature@CHECK-LIST-USER')
         * def JSONpath = "$..ADMIN[?(@.userId!='#(requesterUserID)' || @.userId!='#(approvalUserID)' || @.userId!='#(adminUserID)')]"
         * def userToAdd = karate.jsonPath(listUsers.response.data,JSONpath)
@@ -114,4 +111,118 @@ Feature: Group Policies
         * match response.status == 'success'
         * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')
         * match groupDetails.response.data contains { "editRequestId" : '#uuid'}
+
+    @RAKCON-18248 @CreateAndEditMembersInGroup 
+    Scenario: Edit group member
+        # Select an existing group
+        * def groups = call read(svc + 'Group.feature@GetGroupPolicies') {keyword: "AT-RAK-GR"}
+        * eval 
+        """
+        if (groups.response.data.groups.length == 0) 
+        {
+            var createdGroup = karate.call('@CreateGroup').response
+            var group = karate.call(svc + 'Group.feature@GetGroupPolicies', {keyword: createdGroup.name}).response.data.groups[0]
+        } else {
+            var group = groups.response.data.groups[0]
+
+            // Reject pending request if have
+            var groupDetails = karate.call(svc + 'Group.feature@GetGroupDetails', { groupId:group.id }).response
+            if (groupDetails.data.editRequestId != null){
+                var requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+                try{
+                    requestHandle().rejectPendingRequest(groupDetails.data.editRequestId)
+                }
+                catch (e) {
+                    requestHandle().cancelPendingRequest(groupDetails.data.editRequestId)
+                }
+            }
+        }
+        """
+        * def memberIds = karate.jsonPath(group.users, "$..['userId']")
+
+        # Select a user to add
+        * def listUsers = karate.call(svc + 'Auth.feature@GetListUsers').allUsers
+        * def newUser = listUsers.find(x => !memberIds.includes(x.userId))
+        * memberIds.push(newUser.userId)
+
+        # Edit group
+        * def data =
+        """
+        {
+            groupName: "#(group.name)",
+            userIds: "#(memberIds)",
+            exceptGroupId: "#(group.id)"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+
+        * def data = 
+        """
+        {
+            groupId: "#(group.id)",
+            name: "#(group.name)",
+            memberIds: "#(memberIds)"
+        }
+        """
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Group.feature@EditGroupMember') data
+        Then match responseStatus == 200
+
+        # View request and total check total members
+        * def groupDetails = call read(svc + 'Group.feature@GetGroupDetails') { groupId: #(group.id) }
+        * def requestDetails = call read(svc + 'Quorums.feature@ViewAccountPolicyRequest') {requestId: #(groupDetails.response.data.editRequestId)}
+        * print requestDetails.response
+        * assert (requestDetails.response.data.currentMember.length + requestDetails.response.data.newMember.length + requestDetails.response.data.removeMember.length) == memberIds.length
+        
+        # Delete group
+        * call read('@DeleteGroup') {groupId: #(group.id)}
+
+    @CreateAndDeleteGroup
+    Scenario: Create and Delete Group
+        * def createdGroup = call read('@CreateGroup')
+        # Search for created group
+        * def groups = call read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(createdGroup.response.data.name)}
+        * assert groups.response.data.groups.length > 0
+        * call read('@DeleteGroup') {groupId: #(createdGroup.response.data.id)}
+
+    @CreateGroup @ignore
+    Scenario: Create Group
+        * call read('@GenerateGroupName')
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') { groupName: "#(groupName)" }
+        Then match responseStatus == 201
+
+        * def listUsers = call read(svc + 'Auth.feature@GetListUsers')
+        * def data =
+        """
+        {
+            groupName: "#(groupName)",
+            userId: #(listUsers.vaultMemberList)
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * def data =
+        """
+        {
+            name: "#(groupName)",
+            memberIds: #(listUsers.vaultMemberList)
+        }
+        """
+        * call read(svc + 'Group.feature@CreateGroupUsers') data
+        Then match responseStatus == 201
+
+
+    @DeleteGroup @ignore
+    Scenario: Delete Group
+        * call read(svc + 'Group.feature@ValidateDeleteGroup') {groupId: #(groupId)}
+        Then match responseStatus == 200
+
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Group.feature@DeleteGroup') {groupId: #(groupId)}
+        Then match responseStatus == 200
+
+
 

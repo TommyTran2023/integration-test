@@ -21,7 +21,7 @@ Feature:Help Center
 
   @RAKCON-20018 @CreateTicketIssueWithUploadVideo
   Scenario: Create Ticket Issue With Upload Video
-    * karate.callSingle('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
+    * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
     * call read('this:HelpCenter.feature@CreateTicketIssue')
 
   @RAKCON-11378 @CreateTicketQuestion

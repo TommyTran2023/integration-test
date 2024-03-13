@@ -90,3 +90,23 @@ Usage: ```dataSet.advanceHotVaultId```
 ### Run script for scenarios require db connect
 1. Add `-D userName='{username}' -D pass='{password}' -D dbName='{dbName}'` in cli
 Ex: `mvn clean test -Dkarate.env=qa -D userName='{username}' -D pass='{password}' -D dbName='{dbName}'`
+
+### OPTIONAL Run locally with Docker
+1. Install Docker Desktop
+2. Build local Docker image
+```
+docker build \
+  -t integration-test:latest .
+```
+3. Execute command locally with Docker container
+- edit command after `/bin/sh -c` before execute e.g. `/bin/sh -c "mvn clean compile test -e"`
+- use `\` to escape double quote e.g. `/bin/sh -c "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""`
+
+Example:
+```
+docker run  \
+--name integration-test -it --rm \
+-v $(pwd):/usr/src/ \
+integration-test:latest \
+/bin/sh -c "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
+```

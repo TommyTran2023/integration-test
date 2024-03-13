@@ -9,17 +9,43 @@ Feature: WhiteList Folder
 #    * def userId = user.response.data.id
     * def testData = read('classpath:data/data_test.json')
     * def schemaJson = read('classpath:data/schema.json')
+    * def Const = read('classpath:data/enum.json')
 
   #TCs: CREATE NEW FOLDER - INTERNAL
-  @RAKCON-10226 @Create_folder
+  @RAKCON-10226 @Create_folder_internal
   Scenario: Check create a new folder - internal
+    * def customerId = response.data.customerId
+    * call read(svc + 'Customers.feature@Customer_GetCustomerDetail') {customerId:'#(customerId)'}
+    * print response 
+    * def oragnization = response.data.customerName
+    * def countryCode = response.data.registrationAddress.country
+    * def organization_addr = response.data.registrationAddress.address
+    * def transferOption = Const.TransactionOptions.COMPANY_EXPENSE
+    * def relationOptions = "Self"
+    * def sourceFundsOptions = Const.SourceOfFund.BUSINESS_OPERATIONS
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def folderName = 'Folder-' + now()
-    * def body = {"name" : '#(folderName)',"type": '#(testData.whitelist.type_internal)' }
-    Given path 'core/folders'
-    And request body
-    When method POST
-    Then status 201
+    * def data = 
+    """
+    {
+        "businessName" : '#(oragnization)',
+        "countryCode" : '#(countryCode)',
+        "purposeTransfer" : '#(transferOption)',
+        "businessAddress" : '#(organization_addr)',
+        "relationship" : '#(relationOptions)',
+        "sourceFunds" : '#(sourceFundsOptions)',
+        "name" : '#(folderName)',
+        "type": '#(testData.whitelist.type_internal)' 
+    }
+    """
+    * call read(svc + 'Whitelist.feature@CreateWhitelistFolder') data
+    Then match responseStatus == 201
+    And match response.data.businessName == "#(oragnization)"
+    And match response.data.countryCode == "#(countryCode)"
+    And match response.data.purposeTransfer == "#(transferOption)"
+    And match response.data.businessAddress == "#(organization_addr)"
+    And match response.data.relationship == "#(relationOptions)"
+    And match response.data.sourceFunds == "#(sourceFundsOptions)"
     And match response.status == "success"
     And match response.data.name == "#(folderName)"
     And match response.data.type == "#(testData.whitelist.type_internal)"
@@ -59,7 +85,7 @@ Feature: WhiteList Folder
   #TCs: SEARCH FOLDER
   @RAKCON-11163 @Search_folder_by_keyword
   Scenario: Check search folder by keyword
-    * call read('this:WhiteListFolder.feature@Create_folder')
+    * call read('this:WhiteListFolder.feature@Create_folder_internal')
     * call read('this:WhiteListFolder.feature@Search_folder_by_keyword_common')
     And match response.data.folders[0].name == "#(folderName)"
     And match response.data.folders[0].type == "#(type)"
@@ -151,29 +177,39 @@ Feature: WhiteList Folder
 
   #Tcs: CREATE WHITELIST ADDRESS
   @ignore @Create_address_common
-  Scenario:Create whitelisted address common
-    #Submit add new address
-    * call read('this:Common.feature@FIDO-Requester')
-    * def body_submit = {"tag" : '',"isRequiredTag": true,"tokenId" : '#(dataSet.tokenId)', "note": 'Note test', "address": '#(dataSet.address)'}
-    Given path 'core/folders/'+ folderId +'/tokens'
-    * header challenge-answer = challengeAnswerRequest
-    And request body_submit
-    When method POST
-    Then status 201
-    And match response.status == "success"
-    And match response.data.address == "#(dataSet.address)"
-    And match response.data.folderId == "#(folderId)"
-    * def addressId = response.data.id
-    * def folderId = response.data.folderId
-    * def address = response.data.address
-    * def name = response.data.name
-    * def symbol = response.data.symbol
-    * def tokenID = response.data.id
+Scenario:Create whitelisted address common - Internal
+  * def hostOptions = Const.WalletHostOptions.SELF_HOSTED
+  * def methodOptions = Const.WalletMethodOptions.SELF_ATTESTATION
+  * def body_submit = 
+  """
+  {
+    "tag" : '',
+    "isRequiredTag": true,
+    "tokenId" : '#(dataSet.tokenId)',
+    "note" : 'Note test',
+    "address" : '#(dataSet.address)',
+    "walletHost" : '#(hostOptions)',
+    "walletMethod" : '#(methodOptions)'
+  }
+  """
+  * call read(svc + 'Whitelist.feature@ViewDetailFolder') { folderId: '#(folderId)'}
+  * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+  * call read(svc + 'Whitelist.feature@AddWhitelistAddress') body_submit
+  Then match responseStatus == 201
+  And match response.status == "success"
+  And match response.data.address == "#(dataSet.address)"
+  And match response.data.folderId == "#(folderId)"
+  * def addressId = response.data.id
+  * def folderId = response.data.folderId
+  * def address = response.data.address
+  * def name = response.data.name
+  * def symbol = response.data.symbol
+  * def tokenID = response.data.id
 
 
   @RAKCON-10969 @Create_address_internal
   Scenario:Create internal whitelisted address
-    * call read('this:WhiteListFolder.feature@Create_folder')
+    * call read('this:WhiteListFolder.feature@Create_folder_internal')
     * call read('this:WhiteListFolder.feature@Create_address_common')
     * call read('this:WhiteListFolder.feature@View_My_Request_Whitelist')
 
@@ -236,7 +272,7 @@ Feature: WhiteList Folder
   @RAKCON-10227 @Delete_folder
   Scenario: Check delete a folder
     #Create new folder
-     * call read('this:WhiteListFolder.feature@Create_folder')
+     * call read('this:WhiteListFolder.feature@Create_folder_internal')
     #delete folder
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest

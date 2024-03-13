@@ -2,14 +2,20 @@ Feature: Whitelist
 Background:
     * def svc = 'classpath:services/'
 
-    @CreateWhitelist
+    @CreateWhitelistFolder
     Scenario: Create White list
         * def data = 
         """
             {
                 authorization: #(requesterAccessToken),
                 name: '#(name)',
-                type: '#(type)'
+                type: '#(type)',
+                "businessName" : '#(businessName)',
+                "countryCode" : '#(countryCode)',
+                "purposeTransfer" : '#(purposeTransfer)',
+                "businessAddress" : '#(businessAddress)',
+                "relationship" : '#(relationship)',
+                "sourceFunds" : '#(sourceFunds)'
             }
         """
         * call read(svc + 'coreSvc.feature@CreateWhitelistFolder') data
@@ -27,7 +33,9 @@ Background:
                     "isRequiredTag": true,
                     "tokenId" : '#(tokenId)', 
                     "note": '#(note)', 
-                    "address": '#(address)'
+                    "address": '#(address)',
+                    "walletHost" : '#(walletHost)',
+                    "walletMethod" : '#(walletMethod)'
                 }
             }
         """

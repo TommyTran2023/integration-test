@@ -231,7 +231,7 @@ Feature: Transaction
 
     @RAKCON-18275 @FilterTransactionFromWhitelistAddress
   Scenario: Filter transaction from whitelist address
-    * def listFolders = call read('WhiteListFolder.feature@List_folder')
+    * def listFolders = call read(svc + 'Whitelist.feature@GetWhitelistFolders')
     * def query = { limit:'10', offset: '0', destinationData: [ { "destinationType": "whitelist", "destinationId": "#(listFolders.response.data.folders[0].id)" } ]}
     * call read('this:Transaction.feature@Filter_transaction_common')
 

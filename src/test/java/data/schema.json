@@ -6,7 +6,13 @@
       "createdAt": "#string",
       "tokens": "#[]",
       "name": "#string",
-      "type": "#string"
+      "type": "#string",
+      "businessName":"#string",
+      "businessAddress":"#string",
+      "countryCode":"#string",
+      "relationship":"#string",
+      "purposeTransfer":"#string",
+      "sourceFunds":"#string"
     }
   },
   "helpCenter": {

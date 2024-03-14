@@ -73,14 +73,22 @@ Feature: WhiteList Folder
   #TCs: FOLDER LISTING
   @RAKCON-10587 @List_folder
   Scenario: Check view folder listing
-     * def query = { limit:'10', offset: '0', sort:'ASC', sortBy: 'NAME'}
-     Given path 'core/folders'
-     And params query
-     When method GET
-     Then status 200
-     And match response.status == "success"
+    * call read(svc + 'Whitelist.feature@GetWhitelistFolders')
+    Then match responseStatus == 200
+    And match response.status == "success"
     * def schema = schemaJson.whitelist.schema_list
-     And match response.data.folders contains schema
+    * def tokenSchema = 
+    """
+    {
+      "name": "#string",
+      "symbol": "#string",
+      "address": "#string",
+      "network": "#string",
+      "isSanctioned": "#boolean",
+      "externalAssetId": "#string"
+    }
+    """
+    And match response.data.folders contains schema
 
   #TCs: SEARCH FOLDER
   @RAKCON-11163 @Search_folder_by_keyword

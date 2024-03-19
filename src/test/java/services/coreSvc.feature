@@ -190,9 +190,8 @@ Feature: All api call to core services
     @SubmitRequestEditVaultPolicyByRequestDraftId
   Scenario: Submit Request Edit Vault Policy By Request Draft Id
     Given path 'core/vault/'+ vaultId + '/policy/request-update/' + requestDraftId + '/submit'
-    * header Authorization = authorization
+    * headers headers
     When method PATCH
-    When method GET
 
     @DiscardRequestEditVaultPolicyByRequestDraftId
   Scenario: Discard Request Edit Vault Policy By Request Draft Id
@@ -1442,3 +1441,24 @@ Scenario: Delete Daily Journal Customers by id
     * header Authorization = authorization
     * params params
     When method GET
+
+
+  @ValidateDeleteGroup
+  Scenario: Validate Delete Group
+    Given path `/core/groups/${groupId}/validate-delete-group`
+    * headers headers
+    When method GET
+
+  @DeleteGroup
+  Scenario: Delete Group
+    Given path `/core/groups/${groupId}`
+    * headers headers
+    When method DELETE
+
+  @AdvVaultByGroup
+  Scenario: Advance Vault By Group
+    Given path 'core/groups/adv-vault-by-group'
+    * headers headers
+    * params params
+    When method GET
+

@@ -147,7 +147,7 @@ Feature: Group Policies
         }
     }
     """
-    * call read(svc + 'advQuorumSvc.feature@ValidateDeleteGroup') data
+    * call read(svc + 'coreSvc.feature@ValidateDeleteGroup') data
 
     @DeleteGroup
   Scenario: Delete Group
@@ -161,6 +161,40 @@ Feature: Group Policies
       groupId: "#(groupId)"
     }
     """
-    * call read(svc + 'advQuorumSvc.feature@DeleteGroup') data
+    * call read(svc + 'coreSvc.feature@DeleteGroup') data
 
+    @ValidatePrerequisitesGroup
+  Scenario: Validate Prerequisites Group Policy
+    * def data =
+    """
+    {
+      headers:{
+        Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+      },
+      body:{
+        groupId: "#(groupId)"
+      }
+    }
+    """
+    * call read(svc + 'advQuorumSvc.feature@ValidatePrerequisitesGroup') data
+
+    @AdvVaultByGroup
+  Scenario: Advance Vault By Group
+    * def data =
+    """
+    {
+      headers:{
+        Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+      },
+      params:{
+        countAdded: "#(typeof countAdded == 'undefined' ? 0 : countAdded)",
+        countRemoved: "#(typeof countRemoved == 'undefined' ? 0 : countRemoved)",
+        groupId: "#(groupId)",
+        keyword: "#(typeof keyword == 'undefined' ? 0 : keyword)",
+        limit: "#(typeof limit == 'undefined' ? 10 : limit)",
+        offset: "#(typeof offset == 'undefined' ? 0 : offset)"
+      }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@AdvVaultByGroup') data
 

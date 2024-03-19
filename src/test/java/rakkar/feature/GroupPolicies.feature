@@ -4,6 +4,8 @@ Feature: Group Policies
     Background:
         * url baseURL
         * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+        * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
+        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
 
     @ignore @GetGroupPolicies
     Scenario: Get Group Policies
@@ -112,33 +114,10 @@ Feature: Group Policies
         * def groupDetails = call read('this:GroupPolicies.feature@ViewGroupDetails')
         * match groupDetails.response.data contains { "editRequestId" : '#uuid'}
 
-    @RAKCON-18248 @CreateAndEditMembersInGroup 
+    @RAKCON-18248 @CreateAndEditMembersInGroup @MOB-77
     Scenario: Edit group member
         # Select an existing group
-        * def groups = call read(svc + 'Group.feature@GetGroupPolicies') {keyword: "AT-RAK-GR"}
-        * eval 
-        """
-        if (groups.response.data.groups.length == 0) 
-        {
-            var createdGroup = karate.call('@CreateGroup').response
-            var group = karate.call(svc + 'Group.feature@GetGroupPolicies', {keyword: createdGroup.name}).response.data.groups[0]
-        } else {
-            var group = groups.response.data.groups[0]
-
-            // Reject pending request if have
-            var groupDetails = karate.call(svc + 'Group.feature@GetGroupDetails', { groupId:group.id }).response
-            if (groupDetails.data.editRequestId != null){
-                var requestHandle = read('classpath:rakkar/common/RequestHandle.js')
-                try{
-                    requestHandle().rejectPendingRequest(groupDetails.data.editRequestId)
-                }
-                catch (e) {
-                    requestHandle().cancelPendingRequest(groupDetails.data.editRequestId)
-                }
-            }
-        }
-        """
-        * def memberIds = karate.jsonPath(group.users, "$..['userId']")
+        * call read('@GetGroupForEdit')
 
         # Select a user to add
         * def listUsers = karate.call(svc + 'Auth.feature@GetListUsers').allUsers
@@ -177,6 +156,12 @@ Feature: Group Policies
         
         # Delete group
         * call read('@DeleteGroup') {groupId: #(group.id)}
+
+    @ignore @GetGroupForEdit
+    Scenario: Get Group for Edit
+        * def group = groupHandle().selectGroupForEdit()
+        * requestHandle().cancelPendingRequest(group.editRequestId)
+        * def memberIds = group.memberInfos.map(x => x.userId)
 
     @CreateAndDeleteGroup
     Scenario: Create and Delete Group
@@ -224,5 +209,145 @@ Feature: Group Policies
         * call read(svc + 'Group.feature@DeleteGroup') {groupId: #(groupId)}
         Then match responseStatus == 200
 
+    @ignore @GetNormalGroup
+    Scenario: Get Normal Group
+        * def group = groupHandle().selectNormalGroup()
+        * requestHandle().cancelPendingRequest(group.editRequestId)
+        * def memberIds = group.memberInfos.map(x => x.userId)
 
+    @MOB-77 @ValidateEditGroupWith1User
+    Scenario: Validate edit group with 1 user
+        * call read('@GetNormalGroup')
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(memberIds.slice(0,1))"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 400
+        And match response == {"status":"error","errorCode":"Bad Request","message":"userIds must contain at least 2 elements","code":400}
+    
+    @MOB-77 @ValidateEditGroupWith2User
+    Scenario: Validate edit group with 1 user
+        * call read('@GetNormalGroup')
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(memberIds.slice(0,2))"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        And match response == {"status":"success","code":200,"data":{"isValid":true}}
+
+    @MOB-77 @EditGroupWith1User
+    Scenario: Edit Group With 1 User
+        * call read('@GetNormalGroup')
+        
+        # Edit group
+        * def data = 
+        """
+        {
+            groupId: "#(group.id)",
+            name: "#(group.name)",
+            memberIds: "#(memberIds.slice(0,1))"
+        }
+        """
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Group.feature@EditGroupMember') data
+        Then match responseStatus == 400
+        And match response == {"status":"error","errorCode":"THERE_CANNOT_BE_FEWER_THAN_TWO_MEMBERS","message":"THERE_CANNOT_BE_FEWER_THAN_TWO_MEMBERS","code":400}
+    
+    @MOB-77 @ValidateEditGroupWithSameSetUser
+    Scenario: Validate Edit Group With Same Set Of Users
+        * def groups = karate.call(svc + 'Group.feature@GetGroupPolicies').response.data.groups
+        * def group1 = groups.reverse()[1]
+        * def group2 = groups.reverse()[2]
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group1.id)",
+            groupName: "#(group1.name)",
+            userIds: "#(group2.users.map(x => x.userId))"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_MEMBER_REMOVE_USER_FROM_THE_GROUP"}}
+
+    @MOB-77 @EditGroupHavePendingVaultPolicy
+    Scenario: Edit Group Have Pending Vault Policy
+        * def group = groupHandle().selectGroupHavePendingPolicyRequest()
+        * call read(svc + 'Group.feature@ValidatePrerequisitesGroup') {groupId: #(group.id)}
+        Then match responseStatus == 400
+        And match response == {"status":"error","errorCode":"msg-edit-group:GROUP_HAS_PENDING_VAULT_POLICY_REQUEST","message":"msg-edit-group:GROUP_HAS_PENDING_VAULT_POLICY_REQUEST","code":400}
+
+    @MOB-77 @EditGroupMemberInMultipleVaultPolicies
+    Scenario: Edit Group Member In Multiple Vault Policies
+        * def group = groupHandle().selectGroupHaveMultiplesPolicy()
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(group.memberInfos.map(x => x.userId).slice(1))"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_MEMBER_REMOVE_USER_FROM_THE_GROUP"}}
+
+        * def data =
+        """
+        {
+            countAdded: 0,
+            countRemoved: 1,
+            groupId: "#(group.id)"
+        }
+        """
+        * call read(svc + 'Group.feature@AdvVaultByGroup') data
+        Then match responseStatus == 200
+        * assert response.data.total > 0
+        * assert response.data.data.length > 0
+        * def expectedVaultDetail = 
+        """
+        {
+            "id":"##uuid",
+            "vaultExternalId":"#string",
+            "name":"#string",
+            "hiddenOnUI":"#boolean",
+            "customerRefId":"##string",
+            "autoFuel":"#boolean",
+            "status":"#string",
+            "customerId":"#string",
+            "type":"#string",
+            "createdAt":"#string",
+            "updatedAt":"#string"
+        }
+        """
+        * match each response.data.data == expectedVaultDetail
+
+    @MOB-77 @EditGroupHavePendingRequest
+    Scenario: Edit Group have pending request
+        * def group = groupHandle().selectGroupHavePendingRequest()
+        * match group.editRequestId == "#uuid"
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(group.memberInfos.map(x => x.userId).slice(1))"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_PENDING_REQUEST"}}
+
+
+    
 

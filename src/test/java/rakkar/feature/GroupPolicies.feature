@@ -163,7 +163,7 @@ Feature: Group Policies
         * requestHandle().cancelPendingRequest(group.editRequestId)
         * def memberIds = group.memberInfos.map(x => x.userId)
 
-    @CreateAndDeleteGroup
+    @RAKCON-25631 @CreateAndDeleteGroup
     Scenario: Create and Delete Group
         * def createdGroup = call read('@CreateGroup')
         # Search for created group
@@ -215,7 +215,7 @@ Feature: Group Policies
         * requestHandle().cancelPendingRequest(group.editRequestId)
         * def memberIds = group.memberInfos.map(x => x.userId)
 
-    @MOB-77 @ValidateEditGroupWith1User
+    @RAKCON-25916 @MOB-77 @ValidateEditGroupWith1User
     Scenario: Validate edit group with 1 user
         * call read('@GetNormalGroup')
         * def data =
@@ -230,8 +230,8 @@ Feature: Group Policies
         Then match responseStatus == 400
         And match response == {"status":"error","errorCode":"Bad Request","message":"userIds must contain at least 2 elements","code":400}
     
-    @MOB-77 @ValidateEditGroupWith2User
-    Scenario: Validate edit group with 1 user
+    @RAKCON-25917 @MOB-77 @ValidateEditGroupWith2User
+    Scenario: Validate edit group with 2 user
         * call read('@GetNormalGroup')
         * def data =
         """
@@ -245,7 +245,7 @@ Feature: Group Policies
         Then match responseStatus == 201
         And match response == {"status":"success","code":200,"data":{"isValid":true}}
 
-    @MOB-77 @EditGroupWith1User
+    @RAKCON-25632 @MOB-77 @EditGroupWith1User
     Scenario: Edit Group With 1 User
         * call read('@GetNormalGroup')
         
@@ -263,7 +263,7 @@ Feature: Group Policies
         Then match responseStatus == 400
         And match response == {"status":"error","errorCode":"THERE_CANNOT_BE_FEWER_THAN_TWO_MEMBERS","message":"THERE_CANNOT_BE_FEWER_THAN_TWO_MEMBERS","code":400}
     
-    @MOB-77 @ValidateEditGroupWithSameSetUser
+    @RAKCON-25658 @MOB-77 @ValidateEditGroupWithSameSetUser
     Scenario: Validate Edit Group With Same Set Of Users
         * def groups = karate.call(svc + 'Group.feature@GetGroupPolicies').response.data.groups
         * def group1 = groups.reverse()[1]
@@ -278,16 +278,16 @@ Feature: Group Policies
         """
         * call read(svc + 'Group.feature@ValidateGroupPolicy') data
         Then match responseStatus == 201
-        And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_MEMBER_REMOVE_USER_FROM_THE_GROUP"}}
+        And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_MEMBER_PART_OF_ANOTHER"}}
 
-    @MOB-77 @EditGroupHavePendingVaultPolicy
+    @RAKCON-25918 @MOB-77 @EditGroupHavePendingVaultPolicy
     Scenario: Edit Group Have Pending Vault Policy
         * def group = groupHandle().selectGroupHavePendingPolicyRequest()
         * call read(svc + 'Group.feature@ValidatePrerequisitesGroup') {groupId: #(group.id)}
         Then match responseStatus == 400
         And match response == {"status":"error","errorCode":"msg-edit-group:GROUP_HAS_PENDING_VAULT_POLICY_REQUEST","message":"msg-edit-group:GROUP_HAS_PENDING_VAULT_POLICY_REQUEST","code":400}
 
-    @MOB-77 @EditGroupMemberInMultipleVaultPolicies
+    @RAKCON-25919 @MOB-77 @EditGroupMemberInMultipleVaultPolicies
     Scenario: Edit Group Member In Multiple Vault Policies
         * def group = groupHandle().selectGroupHaveMultiplesPolicy()
         * def data =
@@ -332,7 +332,7 @@ Feature: Group Policies
         """
         * match each response.data.data == expectedVaultDetail
 
-    @MOB-77 @EditGroupHavePendingRequest
+    @RAKCON-25920 @MOB-77 @EditGroupHavePendingRequest
     Scenario: Edit Group have pending request
         * def group = groupHandle().selectGroupHavePendingRequest()
         * match group.editRequestId == "#uuid"

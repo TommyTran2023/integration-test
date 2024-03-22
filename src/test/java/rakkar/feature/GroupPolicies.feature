@@ -348,6 +348,67 @@ Feature: Group Policies
         Then match responseStatus == 201
         And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_PENDING_REQUEST"}}
 
+    @RAKCON-25996 @MOB-154 @EditViewerGroup
+    Scenario: Edit Group - Select all Viewers
+        * def group = groupHandle().selectViewerGroup()
+        * def viewers = group.memberInfos.filter(x => x.role == "VIEWER").map(x => x.userId)
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(viewers)"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        Then match response.data.isValid == true
+
+        * def data = 
+        """
+        {
+            groupId: "#(group.id)",
+            name: "#(group.name)",
+            memberIds: "#(viewers)"
+        }
+        """
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Group.feature@EditGroupMember') data
+        Then match responseStatus == 200
+
+    @RAKCON-25997 @MOB-154 @EditAndAddViewerToGroup
+    Scenario: Edit groups and add viewer to group
+        * def selectAdminOnlyGroup = groupHandle().selectAdminOnlyGroup()
+        * print selectAdminOnlyGroup
+        * def group = selectAdminOnlyGroup.group
+        * def viewerId = selectAdminOnlyGroup.viewers.userId
+        * def memberIds = group.memberInfos.map(x => x.userId)
+        * memberIds.push(viewerId)
+        * def data =
+        """
+        {
+            exceptGroupId: "#(group.id)",
+            groupName: "#(group.name)",
+            userIds: "#(memberIds)"
+        }
+        """
+        * call read(svc + 'Group.feature@ValidateGroupPolicy') data
+        Then match responseStatus == 201
+        Then match response.data.isValid == true
+
+        * def data = 
+        """
+        {
+            groupId: "#(group.id)",
+            name: "#(group.name)",
+            memberIds: "#(memberIds)"
+        }
+        """
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'Group.feature@EditGroupMember') data
+        Then match responseStatus == 200
+
+
 
     
 

@@ -1,4 +1,9 @@
 function fn(){
+    var requestHandler = karate.call('classpath:rakkar/common/RequestHandle.js')
+    var vaultHandle = karate.call('classpath:rakkar/common/VaultHandle.js')
+    var commonHandle = karate.call('classpath:rakkar/common/CommonHandle.js')
+    var userHandle = karate.call('classpath:rakkar/common/UserHandle.js')
+
     function generateGroupName(){
         var now = function(){ return java.lang.System.currentTimeMillis() }
         return 'AT-' + now()
@@ -9,10 +14,9 @@ function fn(){
         var allUsers = karate.call(svc + 'Auth.feature@GetListUsers').response.data.users
         var my = allUsers.find(u => u.username == requesterUsername)
         allUsers = allUsers.filter(u => u.username != requesterUsername)
-        var handler = karate.call('classpath:rakkar/common/CommonHandle.js')
         var newMemberList
 
-        allUsers = handler.shuffleArr(allUsers)
+        allUsers = commonHandle.shuffleArr(allUsers)
 
         if (existingMembers != null && existingMembers.length > 0) {
             var existingIds = existingMembers.map(x => x.userId)
@@ -33,7 +37,7 @@ function fn(){
             groupId = groups[0].id
         }
         else {
-            if (expectedMembers)
+            if (!expectedMembers)
                 expectedMembers = 4
 
             if (typeof expectedMembers == "number")
@@ -70,7 +74,6 @@ function fn(){
             var groupName = "Pending User "
             var group = selectGroupByName(groupName, 4)
             members = group.memberInfos
-            var userHandle = karate.call('classpath:rakkar/common/UserHandle.js')
             var editUserId = members.find(u => u.userName != requesterInfo.requesterUsername).userId
 
             var editUserRequest = userHandle.createChangeRoleRequest(editUserId)
@@ -85,8 +88,6 @@ function fn(){
             
             if (group.vaultInfos.length == 0) {
                 members = group.memberInfos
-
-                var vaultHandle = karate.call('classpath:rakkar/common/VaultHandle.js')
                 
                 var memberList = [
                     { groups: [group] },
@@ -104,7 +105,6 @@ function fn(){
                     { groups: [group] },
                     { users: getGroupNewMembers(null, 4) }
                 ]
-                var vaultHandle = karate.call('classpath:rakkar/common/VaultHandle.js')
                 vaultHandle.createEditAdvPolicyRequest(memberList, vault.id)
 
                 group = selectGroupByName(groupName, members)
@@ -119,8 +119,6 @@ function fn(){
             
             if (group.vaultInfos.length < 2) {
                 members = group.memberInfos
-
-                var vaultHandle = karate.call('classpath:rakkar/common/VaultHandle.js')
                 
                 var memberList = [
                     { groups: [group], quorumApprovals: members.length },
@@ -153,6 +151,34 @@ function fn(){
             }
             else
                 return group
+        },
+
+        selectViewerGroup: function() {
+            var groupName = "Viewers Group "
+            var allUsers = karate.call(svc + 'Auth.feature@GetListUsers').allUsers
+            
+            var someAdmin = allUsers.filter(x => x.role != "VIEWER").slice(0,2)
+            var viewers =  allUsers.filter(x => x.role == "VIEWER")
+            
+            var group = selectGroupByName(groupName, someAdmin.concat(viewers))
+            
+            requestHandler.cancelPendingRequest(group.editRequestId)
+            
+            return group
+        },
+
+        selectAdminOnlyGroup: function() {
+            var groupName = "Admin Group "
+            var allUsers = karate.call(svc + 'Auth.feature@GetListUsers').allUsers
+            
+            var someAdmin = commonHandle.shuffleArr(allUsers).filter(x => x.role == "ADMIN").slice(0,2)
+            var viewers =  allUsers.find(x => x.role == "VIEWER")
+            
+            var group = selectGroupByName(groupName, someAdmin)
+            
+            requestHandler.cancelPendingRequest(group.editRequestId)
+
+            return {group: group, viewers: viewers}
         }
     }
 }

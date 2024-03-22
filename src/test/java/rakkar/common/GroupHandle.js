@@ -84,10 +84,10 @@ function fn(){
         selectGroupHavePendingPolicyRequest: function() {
             var groupName = "Pending Vault Policy "
             var group = selectGroupByName(groupName, 4)
+            members = group.memberInfos
             var vault
             
             if (group.vaultInfos.length == 0) {
-                members = group.memberInfos
                 
                 var memberList = [
                     { groups: [group] },
@@ -135,7 +135,7 @@ function fn(){
         selectGroupHavePendingRequest: function() {
             var groupName = "Pending Request "
             var group = selectGroupByName(groupName, 5)
-            
+
             if (!group.editRequestId) {
                 var bio = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
                 var data = {
@@ -179,6 +179,13 @@ function fn(){
             requestHandler.cancelPendingRequest(group.editRequestId)
 
             return {group: group, viewers: viewers}
+        },
+
+        selectGroupsForSameSet: function() {
+            var group1 = selectGroupByName("Group Set 1", null)
+            var group2 = selectGroupByName("Group Set 2", null)
+
+            return [group1, group2]
         }
     }
 }

@@ -154,8 +154,6 @@ Feature: Group Policies
         * print requestDetails.response
         * assert (requestDetails.response.data.currentMember.length + requestDetails.response.data.newMember.length + requestDetails.response.data.removeMember.length) == memberIds.length
         
-        # Delete group
-        * call read('@DeleteGroup') {groupId: #(group.id)}
 
     @ignore @GetGroupForEdit
     Scenario: Get Group for Edit
@@ -265,15 +263,16 @@ Feature: Group Policies
     
     @RAKCON-25658 @MOB-77 @ValidateEditGroupWithSameSetUser
     Scenario: Validate Edit Group With Same Set Of Users
-        * def groups = karate.call(svc + 'Group.feature@GetGroupPolicies').response.data.groups
-        * def group1 = groups.reverse()[1]
-        * def group2 = groups.reverse()[2]
+        * def groups = groupHandle().selectGroupsForSameSet()
+        * print groups
+        * def group1 = groups[0]
+        * def group2 = groups[1]
         * def data =
         """
         {
             exceptGroupId: "#(group1.id)",
             groupName: "#(group1.name)",
-            userIds: "#(group2.users.map(x => x.userId))"
+            userIds: "#(group2.memberInfos.map(x => x.userId))"
         }
         """
         * call read(svc + 'Group.feature@ValidateGroupPolicy') data

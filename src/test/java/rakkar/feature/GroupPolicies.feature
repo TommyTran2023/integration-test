@@ -161,7 +161,7 @@ Feature: Group Policies
         * requestHandle().cancelPendingRequest(group.editRequestId)
         * def memberIds = group.memberInfos.map(x => x.userId)
 
-    @RAKCON-25631 @CreateAndDeleteGroup
+    @RAKCON-25631 @CreateAndDeleteGroup @MOB-153
     Scenario: Create and Delete Group
         * def createdGroup = call read('@CreateGroup')
         # Search for created group
@@ -202,6 +202,7 @@ Feature: Group Policies
     Scenario: Delete Group
         * call read(svc + 'Group.feature@ValidateDeleteGroup') {groupId: #(groupId)}
         Then match responseStatus == 200
+        And match response == {"status":"success","code":200}
 
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
         * call read(svc + 'Group.feature@DeleteGroup') {groupId: #(groupId)}
@@ -407,7 +408,12 @@ Feature: Group Policies
         * call read(svc + 'Group.feature@EditGroupMember') data
         Then match responseStatus == 200
 
+    @MOB-153 @CannotDeleteGroupUsingOnQuorum
+    Scenario: Cannot Delete Group Using On Quorum
+        * def group = groupHandle().selectGroupHaveMultiplesPolicy()
+        * call read(svc + 'Group.feature@ValidateDeleteGroup') {groupId: "#(group.id)"}
+        Then match responseStatus == 400
+        And match response == {"status":"error","errorCode":"msg-delete-group:REMOVE_GROUP_IS_EXISTS_VAULT","message":"msg-delete-group:REMOVE_GROUP_IS_EXISTS_VAULT","code":400}
 
 
-    
 

@@ -144,7 +144,8 @@ Feature: Group Policies
     {
         headers:{
             Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
-        }
+        },
+        groupId: "#(groupId)"
     }
     """
     * call read(svc + 'coreSvc.feature@ValidateDeleteGroup') data

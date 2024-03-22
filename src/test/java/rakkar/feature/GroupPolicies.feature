@@ -175,12 +175,12 @@ Feature: Group Policies
         * call read(svc + 'Group.feature@ValidateGroupPolicy') { groupName: "#(groupName)" }
         Then match responseStatus == 201
 
-        * def listUsers = call read(svc + 'Auth.feature@GetListUsers')
+        * def listUsers = groupHandle().getGroupNewMembers(null, 3).map(x => x.userId)
         * def data =
         """
         {
             groupName: "#(groupName)",
-            userId: #(listUsers.vaultMemberList)
+            userId: #(listUsers)
         }
         """
         * call read(svc + 'Group.feature@ValidateGroupPolicy') data
@@ -191,7 +191,7 @@ Feature: Group Policies
         """
         {
             name: "#(groupName)",
-            memberIds: #(listUsers.vaultMemberList)
+            memberIds: #(listUsers)
         }
         """
         * call read(svc + 'Group.feature@CreateGroupUsers') data

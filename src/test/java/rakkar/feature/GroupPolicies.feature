@@ -408,12 +408,11 @@ Feature: Group Policies
         * call read(svc + 'Group.feature@EditGroupMember') data
         Then match responseStatus == 200
 
-    @MOB-153 @CannotDeleteGroupUsingOnQuorum
+    @RAKCON-26025 @MOB-153 @CannotDeleteGroupUsingOnQuorum
     Scenario: Cannot Delete Group Using On Quorum
         * def group = groupHandle().selectGroupHaveMultiplesPolicy()
         * call read(svc + 'Group.feature@ValidateDeleteGroup') {groupId: "#(group.id)"}
         Then match responseStatus == 400
         And match response == {"status":"error","errorCode":"msg-delete-group:REMOVE_GROUP_IS_EXISTS_VAULT","message":"msg-delete-group:REMOVE_GROUP_IS_EXISTS_VAULT","code":400}
-
 
 

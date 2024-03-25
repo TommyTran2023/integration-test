@@ -13,7 +13,7 @@ function fn(){
         var requesterUsername = requesterInfo.requesterUsername
         var allUsers = karate.call(svc + 'Auth.feature@GetListUsers').response.data.users
         var my = allUsers.find(u => u.username == requesterUsername)
-        allUsers = allUsers.filter(u => u.username != requesterUsername)
+        allUsers = allUsers.filter(u => u.username != requesterUsername && !u.username.contains('clean'))
         var newMemberList
 
         allUsers = commonHandle.shuffleArr(allUsers)
@@ -73,7 +73,7 @@ function fn(){
         selectGroupHaveUserPendingRequest: function() {
             var groupName = "Pending User "
             var group = selectGroupByName(groupName, 4)
-            members = group.memberInfos
+            var members = group.memberInfos
             var editUserId = members.find(u => u.userName != requesterInfo.requesterUsername).userId
 
             var editUserRequest = userHandle.createChangeRoleRequest(editUserId)
@@ -84,7 +84,7 @@ function fn(){
         selectGroupHavePendingPolicyRequest: function() {
             var groupName = "Pending Vault Policy "
             var group = selectGroupByName(groupName, 4)
-            members = group.memberInfos
+            var members = group.memberInfos
             var vault
             
             if (group.vaultInfos.length == 0) {
@@ -118,7 +118,7 @@ function fn(){
             var group = selectGroupByName(groupName, 4)
             
             if (group.vaultInfos.length < 2) {
-                members = group.memberInfos
+                var members = group.memberInfos
                 
                 var memberList = [
                     { groups: [group], quorumApprovals: members.length },
@@ -186,6 +186,28 @@ function fn(){
             var group2 = selectGroupByName("Group Set 2", null)
 
             return [group1, group2]
+        },
+
+        selectGroupForChangePolicy: function() {
+            var allUsers = karate.call(svc + 'Auth.feature@GetListUsers').response.data.users
+            var admin = allUsers.find(x => x.role == "ADMIN" && x.username.contains("clean"))
+            var member = allUsers.find(x => x.role == "MEMBER")
+            var viewer = allUsers.find(x => x.role == "VIEWER")
+
+            karate.log(allUsers)
+            var group = selectGroupByName("Full Role ", [admin, member, viewer])
+
+            if (group.vaultInfos.length == 0){
+                var members = group.memberInfos
+                
+                var memberList = [
+                    { groups: [group], quorumApprovals: members.length },
+                    { users: getGroupNewMembers(null, 3) }
+                ]
+                vaultHandle.createAdvanceVault(memberList, "COLD_WALLET")
+            }
+
+            return group
         }
     }
 }

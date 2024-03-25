@@ -5,6 +5,7 @@
       * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
       * def Collections = Java.type('java.util.Collections')
       * def schemaJson = read('classpath:data/schema.json')
+      * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
       * configure afterScenario =
         """
         function(){
@@ -120,6 +121,7 @@
       Then status 200
       * def userId = response.data.userId
       * def isPendingRequest = response.data.isPendingRequest
+      * def pendingRequest = response.data.pendingRequestId
 
     # EDIT OWN PROFILE
     @RAKCON-11020 @Edit_own_profile
@@ -148,7 +150,7 @@
        Scenario: Change Role - Check submit change
       * call read('this:UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": []}
-      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * requestHandle().cancelPendingRequest(pendingRequest)
       * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # ADD VAULT ACCESS
@@ -177,7 +179,7 @@
       * call read('this:UserManagement.feature@View_user_detail')
       * call read('this:UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":[], "vaultsWillAddAccess": ['#(vaultId)']}
-      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * requestHandle().cancelPendingRequest(pendingRequest)
       * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # REMOVE VAULT ACCESS
@@ -195,7 +197,7 @@
       * call read('this:UserManagement.feature@View_user_detail')
       * call read('this:UserManagement.feature@List_vault_unassign')
       * def body = { "reason":'Note',"roleWillUpdate":'ADMIN',"vaultsWillRemoveAccess":['#(vaultId)'], "vaultsWillAddAccess": []}
-      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * requestHandle().cancelPendingRequest(pendingRequest)
       * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # REMOVE ACCOUNT ACCESS
@@ -212,7 +214,7 @@
     Scenario: Check remove account access - Submit
       * call read('this:UserManagement.feature@View_user_detail')
       * def body = { "reason":'Note',"isRemoveAccountAccess":true}
-      * if (isPendingRequest == true) karate.call('this:UserManagement.feature@Handle_existing_pending_request')
+      * requestHandle().cancelPendingRequest(pendingRequest)
       * call read('this:UserManagement.feature@Submit_edit_user_common')
 
     # COMMON
@@ -247,7 +249,7 @@
     @ignore @Handle_existing_pending_request
     Scenario: Handle existing pending request for change role
       * call read('this:UserManagement.feature@View_My_Request_Edit_User')
-      * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@@CancelRequestEditUserCommon')
+      * def toTal = total == 0 ? karate.call('RejectRequest.feature@RejectRequestCommon') : karate.call('CancelRequest.feature@CancelRequestEditUserCommon')
 
     
     @ignore @ListUsers

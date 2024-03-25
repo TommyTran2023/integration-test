@@ -56,7 +56,12 @@ function fn(){
         },
 
         cancelPendingRequest: function(requestId){
-            cancelRequest(requestId)
+            try {
+                cancelRequest(requestId)
+            }
+            catch(e){
+                rejectRequest(requestId)
+            }
         },
 
         cancelAllMyPendingRequest: function(userId){

@@ -239,11 +239,20 @@
     @ignore @View_My_Request_Edit_User
     Scenario: View my request for type edit user
       * call read('this:GetUserInfo.feature@GetUserInfo')
-      Given path 'core/quorums'
-      * def body = { offset : '0',limit : '10',keyword : '',requestCategories:["USER"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-      And request body
-      When method POST
-      Then status 201
+      * def body = 
+      """
+      { 
+      "offset" : '0',
+      "limit" : '10',
+      "keyword" : '',
+      "requestCategories":["USER"],
+      "createdBy": '#(userId)',
+      "status" : ["PENDING"],
+      "isHistory" : true 
+      }
+      """
+      * call read(svc + 'Quorums.feature@GetMyRequests') body
+      Then match responseStatus == 201
       * def total = response.data.total
 
     @ignore @Handle_existing_pending_request

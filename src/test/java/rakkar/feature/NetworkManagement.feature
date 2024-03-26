@@ -106,11 +106,20 @@ Feature: Network Management
 
   @ignore @View_My_Request_Network
   Scenario: View my request for type network
-    Given path 'core/quorums'
-    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["NETWORK"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-    And request body
-    When method POST
-    Then status 201
+    * def body = 
+    """
+    { 
+    "offset" :'0',
+    "limit" : '10',
+    "keyword" : '',
+    "requestCategories" : ["NETWORK"],
+    "createdBy" : '#(userId)',
+    "status" : ["PENDING"],
+    "isHistory" : true 
+    }
+    """
+    * call read(svc + 'Quorums.feature@GetMyRequests') body
+    Then match responseStatus == 201
     And match response.data.records[0].type.value == '#(value)'
     And match response.data.records[0].type.nameDisplay == '#(nameDisplay)'
     * def requestId = response.data.records[0].id

@@ -1018,3 +1018,18 @@ Feature: Common call from Auth services
         * call read(svc + 'authSvc.feature@GetAccountConfig') data
         Then match responseStatus == 200
 
+    @ValidatePrerequisitesEditUser
+    Scenario: Validate Prerequisites Edit User
+        * def data =
+        """
+        {
+            headers:{
+                Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+            },
+            body: {
+                userId: "#(userId)"
+            }
+        }
+        """
+        * call read(svc + 'authSvc.feature@ValidatePrerequisitesEditUser') data
+

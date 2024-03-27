@@ -1,4 +1,3 @@
-@ignore
 Feature: Get Data From data.json
   Background:
     * callonce read(svc + 'ReadData.feature@ReadDataFile')
@@ -385,7 +384,7 @@ Feature: Get Data From data.json
 
     @Get_standardVaultForEditPolicyAndApprove
     Scenario: Get Advance Vault With Groups and Users
-    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardVaultForEditPolicy2)'}
+    * call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(testData.standardForEditPolicy2)'}
     * def getVal = 
     """
     function(){
@@ -401,3 +400,9 @@ Feature: Get Data From data.json
     """
     * def vaultId =  getVal()
     * fileUtils.addData('standardVaultForEditPolicy2',vaultId)
+
+    @GetNormalGroup
+    Scenario: Get Normal Group
+        * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
+        * def group = groupHandle().selectNormalGroup()
+        * fileUtils.addData('normalGroup',group.id)

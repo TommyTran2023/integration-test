@@ -2,7 +2,7 @@
   "qa": {
     "baseURL": "https://test-api.thailaksa.net",
     "baseMobileURL": "https://test-mobile-api.thailaksa.net",
-    "openApiURL": "https://sit-openapi.thailaksa.net",
+    "openApiURL": "https://test-openapi.thailaksa.net",
     "openAPI_doc": "https://developer.rakkardigital.com",
     "crmUploadUrl": "https://test-crm.thailaksa.net/api/v2/uploads",
     "requesterInfo": {

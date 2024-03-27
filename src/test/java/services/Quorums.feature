@@ -9,8 +9,7 @@ Feature: Advance-quorum
             "requestId": "#(requestId)",
             "authorization": "#(approvalAccessToken)",
             "challengeAnswer": "#(challengeAnswerApprover)",
-            "passcode": "#(approverInfo.approverPasscode)",
-            "body": #(body)
+            "passcode": "#(approverInfo.approverPasscode)"
         }
         """
         * call read(svc + 'advQuorumSvc.feature@ApproveRequest') data

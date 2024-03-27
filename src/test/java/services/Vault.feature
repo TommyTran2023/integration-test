@@ -313,8 +313,7 @@ Feature: Vault
                 quorums : #(quorums),
                 viewers : #(viewers),
                 clientId : #(clientId),
-                note : #(note),
-                vaultId : #(vaultId)
+                note : #(note)
             }
         }
         """
@@ -337,11 +336,14 @@ Feature: Vault
     
     @SubmitRequestEditVaultPolicyByRequestDraftId
     Scenario: Submit Request Edit Vault Policy By Request Draft Id
-        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data =
         """
         {
-            authorization: #(accessToken),
+            headers:{
+                authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+                challenge-answer: "#(challengeAnswerRequest)",
+                passcode: "#(typeof passcode == 'undefined' ? requesterInfo.requesterPasscode : passcode)"
+            },
             vaultId: #(vaultId),
             requestDraftId: #(requestDraftId)
         }
@@ -364,7 +366,7 @@ Feature: Vault
             }
         }
         """
-        * call read(svc + 'coreSvc.feature@SubmitRequestEditVaultPolicyByRequestDraftId') data
+        * call read(svc + 'coreSvc.feature@DiscardRequestEditVaultPolicyByRequestDraftId') data
            
 
     @ReadUpdateVaultRequest

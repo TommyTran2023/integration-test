@@ -79,6 +79,13 @@ Feature: Authorization
       * headers headers
       When method GET
 
+   @ValidatePrerequisitesEditUser
+   Scenario: Validate Prerequisites Edit User
+      Given path '/auth/account/validate-prerequisites-edit-user'
+      * headers headers
+      * request body
+      When method POST
+
 #----------------------------------
     @GetMyPermissions
     Scenario: Get My Permissions

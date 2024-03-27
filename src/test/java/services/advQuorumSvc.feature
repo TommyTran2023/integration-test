@@ -5,11 +5,11 @@ Feature: Advance Quorum Service
 #----------------Quorums----------------#
     @ApproveRequest
   Scenario: Approve request
+    * configure headers = null
     Given path 'advance-quorum/quorums/approval/' + requestId
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
     * header passcode = passcode
-    * request body
     When method POST
 
     @RejectRequest
@@ -163,17 +163,12 @@ Feature: Advance Quorum Service
     * request body
     When method PUT
 
-  @ValidateDeleteGroup
-  Scenario: Validate Delete Group
-    Given path `/core/groups/${groupId}/validate-delete-group`
+  @ValidatePrerequisitesGroup
+  Scenario: Validate Prerequisites Group Policy
+    Given path 'advance-quorum/group-policies/validate-prerequisites-group-policy'
     * headers headers
-    When method GET
-
-  @DeleteGroup
-  Scenario: Delete Group
-    Given path `/core/groups/${groupId}`
-    * headers headers
-    When method DELETE
+    * request body
+    When method POST
 
 
 

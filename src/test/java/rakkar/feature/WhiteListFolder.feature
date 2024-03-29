@@ -58,14 +58,37 @@ Feature: WhiteList Folder
     Scenario: Check create new folder - external
       * def now = function(){ return java.lang.System.currentTimeMillis() }
       * def folderName = 'External_Folder-' + now()
-      * def body = {"name" : '#(folderName)',"type": '#(testData.whitelist.type_external)' }
-      Given path 'core/folders'
-      And request body
-      When method POST
-      Then status 201
+      * def buinessAddress = now() + ' - Building, ' + now() +  ' street'
+      * def businessName = 'Company' + now()
+      * def sourceFunds = Const.SourceOfFund.BUSINESS_OPERATIONS
+      * def relationship = "Service Provider"
+      * def countryCode = "Hong Kong S.A.R."
+      * def purposeTransfer = Const.TransactionOptions.COMPANY_EXPENSE
+      * def data = 
+      """
+      {
+        "businessAddress" : '#(buinessAddress)',
+        "businessName" : '#(businessName)',
+        "sourceFunds" : '#(sourceFunds)',
+        "relationship" : '#(relationship)',
+        "countryCode" : '#(countryCode)',
+        "purposeTransfer" : '#(purposeTransfer)',
+        "name" : '#(folderName)',
+        "type": '#(testData.whitelist.type_external)'
+        
+      }
+      """
+      * call read(svc + 'Whitelist.feature@CreateWhitelistFolder') data
+      Then match responseStatus == 201
       And match response.status == "success"
       And match response.data.name == "#(folderName)"
       And match response.data.type == "#(testData.whitelist.type_external)"
+      And match response.data.businessAddress == "#(buinessAddress)"
+      And match response.data.businessName == "#(businessName)"
+      And match response.data.sourceFunds == "#(sourceFunds)"
+      And match response.data.relationship == '#(relationship)'
+      And match response.data.countryCode == '#(countryCode)'
+      And match response.data.purposeTransfer == '#(purposeTransfer)'
       * def folderId = response.data.id
       * def folderName = response.data.name
       * def type = response.data.type

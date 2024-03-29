@@ -148,10 +148,19 @@ Feature: Staking
 
   @ignore @View_My_Request_Stake
   Scenario: View my request for type staking
-    Given path 'core/quorums'
-    * def body = { offset:'0',limit: '10',keyword:'',requestCategories:["STAKE"],createdBy: '#(userId)',status : ["PENDING"],isHistory : true }
-    And request body
-    When method POST
+    * def body = 
+    """
+    { 
+    "offset":'0',
+    "limit": '10',
+    "keyword":'',
+    "requestCategories":["STAKE"],
+    "createdBy": '#(userId)',
+    "status" : ["PENDING"],
+    "isHistory" : true 
+    }
+    """
+    * call read(svc + 'Quorums.feature@GetMyRequests') body
     Then status 201
     * def requestId = response.data.records[0].id
 

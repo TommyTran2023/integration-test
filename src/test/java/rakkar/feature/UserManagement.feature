@@ -259,3 +259,26 @@
       When method POST
       Then status 201
       * def listUsers = response.data.users
+
+    @RAKCON-26024 @MOB-130 @EditAdminInvolvingPendingPolicyRequest
+    Scenario: Edit user - Vault have pending request
+      * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
+      * def group = groupHandle().selectGroupForChangePolicy()
+      * def admin = group.memberInfos.find(x => x.role == "ADMIN").userId
+      * call read(svc + 'Auth.feature@ValidatePrerequisitesEditUser') {userId: "#(admin)"}
+      Then match responseStatus == 400
+      * def expectedError = 
+      """
+      {
+          "status":"error",
+          "errorCode":"msg-edit-user:EDIT_USER_VAULT_POLICY_ADVANCED",
+          "message":"msg-edit-user:EDIT_USER_VAULT_POLICY_ADVANCED",
+          "code":400,
+          "params":{
+              "VAULTS_NAME":"#string"
+          }
+      }
+      """
+      And match response == expectedError
+
+    

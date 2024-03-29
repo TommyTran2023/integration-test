@@ -1,10 +1,11 @@
 {
   "address" : "rpVYZuDkX51ogcPVT12bhYM2ypE3hmbtNv",
   "tokenId" : "8053beee-fedd-4408-9337-987774e105ae",
+  "normalGroup" : "881c8c59-0c1c-40ea-af3b-87da706b3c50",
   "stakeToken" : "d757f635-15b6-413e-8f6d-ca8e7782278f",
   "advVaultWithAllUsers" : "5ede098a-4af3-4693-afc4-1294e9cc66fb",
   "advanceHotVaultForStakeId" : "0c8c4167-627c-40af-a4a4-8b7932adaa72",
-  "skipColdVaultId" : "a9226861-4f18-4cc6-8ec0-972c36d46960",
+  "skipColdVaultId" : "e13f0e8b-a7ef-4e84-869a-09f81706e559",
   "externalId" : "981cb084-3900-4ecb-889e-bf0025022b56",
   "vaultUpdateStake" : "d7817b02-a427-4abb-883f-c6829e98b115",
   "destinationId_hot" : "caf44eda-4004-42f7-bc85-affe933c9fee",
@@ -13,13 +14,13 @@
   "destinationId_cold" : "ec5a091e-312e-4000-abd5-f7c072959079",
   "skipHotVaultId" : "e96743ad-c774-4eb1-95fb-e8b1a98ae580",
   "sourceId_cold" : "8fb59a05-c360-4729-9abc-82a8f371cf24",
+  "standardVaultForEditPolicy2" : "b1146834-4c9e-4eaf-8e26-85c43e19dc07",
   "skipVaultForAddPolicy" : "89ef7eab-69be-4aec-b7be-36a279ff0ea3",
-  "connectionID" : "3d5f8a5b-a4e3-4198-8844-52e20892b7d8",
+  "connectionID" : "b148c4c1-bd0b-41f1-ad18-e285defa4438",
   "networkID" : "7fc043a0-1283-4bc0-a275-4c31089ffba8",
   "vaultCreateStake" : "6bc29d59-71ef-4f47-be1c-24b2b0080d82",
   "advVaultWithAllGroups" : "81d4e41d-d441-4f88-87ae-2c8d2b2b07f5",
   "advanceHotVaultId" : "a29f77f9-428a-4b1f-8718-856e80a00de0",
   "advanceColdVaultId" : "ee541ab2-236a-49d3-bda4-2d59e29633b6",
-  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe",
-  "standardVaultForEditPolicy2" : "b1146834-4c9e-4eaf-8e26-85c43e19dc07"
+  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe"
 }

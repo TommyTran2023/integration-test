@@ -112,5 +112,27 @@
     "RequestFrom":{
         "WEB": "WEB",
         "MOBILE": "MOBILE"
+    },
+    "TransactionOptions":{
+        "COMPANY_EXPENSE" : "Company Expense",
+        "TAX_PAYMENT" : "Tax Payment",
+        "INVESTMENT" : "Investment",
+        "SALARY" : "Salary",
+        "OTHERS" : "Other (please spacify)"
+    },
+    "SourceOfFund":{
+        "CUSTOMER_FUNDS" : "Customer funds",
+        "INVESTMENT_FROM_PARENT_COMPANY" : "Investment from parent company",
+        "INVESTMENT_FROM_THIRD_PARTY" : "Investment from third party",
+        "OTHER" : "Other (please spacify)",
+        "BUSINESS_OPERATIONS" : "Capital for business operations"
+    },
+    "WalletHostOptions":{
+        "SELF_HOSTED" : "SELF_HOSTED",
+        "THIRD_PARTY_HOSTED" : "EXCHANGES_OR_WALLET_PLATFORM"
+    },
+    "WalletMethodOptions":{
+        "SATOSHI_TEST" : "SATOSHI_TEST",
+        "SELF_ATTESTATION" : "SELF_ATTESTATION"
     }
 }

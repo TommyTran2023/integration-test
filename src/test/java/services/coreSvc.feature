@@ -360,7 +360,7 @@ Feature: All api call to core services
   Scenario: Create whitelist folder
     Given path 'core/folders'
     * header Authorization = authorization
-    And request {"name" : '#(name)',"type": '#(type)' }
+    And request data
     When method POST
 
     @AddWhitelistAddress
@@ -460,7 +460,7 @@ Feature: All api call to core services
     Given path '/core/customers/' + customerId
     * header Authorization = authorization
     * param includeAdditionalContacts = includeAdditionalContacts
-    When method PUT
+    When method GET
 
     @Customer_DeleteCustomerProfile
   Scenario: Customer - Delete Customer Profile

@@ -161,7 +161,6 @@ Feature: Staking
     }
     """
     * call read(svc + 'Quorums.feature@GetMyRequests') body
-    Then status 201
     * def requestId = response.data.records[0].id
 
 

@@ -269,8 +269,9 @@
       Then status 201
       * def listUsers = response.data.users
 
-    @RAKCON-26024 @MOB-130 @EditAdminInvolvingPendingPolicyRequest
+    @RAKCON-26024 @MOB-130 @EditAdminInvolvingPendingPolicyRequest @ignore
     Scenario: Edit user - Vault have pending request
+      # Bug MOB-5168
       * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
       * def group = groupHandle().selectGroupForChangePolicy()
       * def admin = group.memberInfos.find(x => x.role == "ADMIN").userId

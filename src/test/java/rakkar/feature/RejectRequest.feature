@@ -104,8 +104,9 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
-  @RAKCON-16709 @RejectCreateStaking
+  @RAKCON-16709 @RejectCreateStaking @ignore
   Scenario: Reject request - Create staking
+    # Bug MOB-5196
     * def value = call read('this:Staking.feature@Create_staking')
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')

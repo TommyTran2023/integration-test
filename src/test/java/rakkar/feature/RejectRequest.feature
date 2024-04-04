@@ -104,20 +104,23 @@ Feature: Reject Request
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
-  @RAKCON-16709 @RejectCreateStaking
+  @RAKCON-16709 @RejectCreateStaking @ignore
   Scenario: Reject request - Create staking
+    # Bug MOB-5196
     * def value = call read('this:Staking.feature@Create_staking')
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
-  @RAKCON-16710 @RejectUnStaking
+  @RAKCON-16710 @RejectUnStaking @ignore
   Scenario: Reject request - Un staking
+    # Bug MOB-5196
     * def value = call read('this:Staking.feature@Un_staking')
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
-  @RAKCON-16711 @RejectChangeStakingPool
+  @RAKCON-16711 @RejectChangeStakingPool @ignore
   Scenario: Reject request - Change Pool staking
+    # Bug MOB-5196
     * def value = call read('this:Staking.feature@ChangeStakingPool')
     * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')

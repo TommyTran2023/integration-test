@@ -11,59 +11,55 @@ Feature: Wallet
 
   @RAKCON-13403 @VIEW-LIST-ASSET
   Scenario: View list asset to add into vault
-    Given path 'core/wallet/tokens/' + vaultId
-    When method GET
-    And params {limit: '10', offset: '0'}
-    Then status 200
+    * def data = {vaultId: '#(vaultId)'}
+    * call read(svc + 'Wallet.feature@GetTokens') data
+    Then match responseStatus == 200
     And match response.data.tokens contains schemaJson.wallet.tokenList
-    * def assetId = response.data.tokens[0].id
-    * def symbolView = response.data.tokens[0].symbol
-    * def networkView = response.data.tokens[0].network
+    * def assetId = response.data.tokens[1].id
+    * def symbolView = response.data.tokens[1].symbol
+    * def networkView = response.data.tokens[1].network
 
   @RAKCON-10944 @ADD_WALLET
   Scenario: Add asset to the vault
     * call read('this:Wallet.feature@VIEW-LIST-ASSET')
-    Given path 'core/wallet/' + vaultId
-    * request {"tokenIds": ["#(assetId)"]}
-    When method POST
-    Then status 201
+    * def data = { vaultId: '#(vaultId)', tokenIds: '#(assetId)' }
+    * call read(svc + 'Wallet.feature@AddAssets') data
+    Then match responseStatus == 201
     * def symbolAdd = response.data.success[0].symbol
     * def networkAdd = response.data.success[0].network
     And match symbolAdd == symbolView
     And match networkAdd == networkView
+    * karate.call(svc + 'Wallet.feature@HideAsset', {walletId: '#(walletId)'});
 
   @RAKCON-10952 @SORT_WALLETS_FROM_A_Z
   Scenario: Sort wallets from A >Z
-  # Add new asset
-    * call read('this:Wallet.feature@ADD_WALLET')
-  # View asset listing
-    Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
-    When method GET
-    Then status 200
-  #Sorting the response in ascending order by name
+    # Add new asset
+    * callonce read('this:Wallet.feature@ADD_WALLET')
+    # View asset listing
+    * def data = {vaultId: '#(vaultId)'}
+    * call read(svc + 'Wallet.feature@GetWallets') data
+    Then match responseStatus == 200
+    # Sorting the response in ascending order by name
     * def listAssetActual = response.data.wallets
     * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return a.symbol.localeCompare(b.symbol) })
     * match listAssetActual == listAssetActual
 
   @RAKCON-11371 @SORT_WALLETS_FROM_Z_A
   Scenario: Sort wallets from Z > A
-    Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'NAME', isHiddenList: false}
-    When method GET
-    Then status 200
-  #Sorting the response in descending order by name
+    * def data = {vaultId: '#(vaultId)', sort: 'ASC'}
+    * call read(svc + 'Wallet.feature@GetWallets') data
+    Then match responseStatus == 200
+    # Sorting the response in descending order by name
     * def listAssetActual = response.data.wallets
     * def listAssetExpected = karate.jsonPath(listAssetActual, "$[*]").sort(function(a, b) { return b.symbol.localeCompare(a.symbol) })
     * match listAssetActual == listAssetActual
 
   @RAKCON-11373 @SORT_WALLETS_FROM_LOWEST_VALUE
   Scenario: Sort wallets from lowest value
-    Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'TOTAL_USD', isHiddenList: false}
-    When method GET
-    Then status 200
-  #Sorting the response in ascending order by price
+    * def data = {vaultId: '#(vaultId)', sort: 'ASC', sortBy: 'TOTAL_USD'}
+    * call read(svc + 'Wallet.feature@GetWallets') data
+    Then match responseStatus == 200
+    # Sorting the response in ascending order by price
     * def listAssetActual = response.data.wallets
     * def valueUSD = 0
     * def sortByValueUSD = function(arr, valueUSD) {var result = arr.filter(function(item) {return item.totalUSD >= valueUSD;});result.sort(function(a, b) {return a.totalUSD - b.totalUSD;});return result;}
@@ -72,16 +68,15 @@ Feature: Wallet
 
   @RAKCON-10953 @SEARCH_WALLETS
   Scenario: Search wallets
-  # Add new asset
-    * call read('this:Wallet.feature@ADD_WALLET')
-  #View asset listing with keyword
+    # Add new asset
+    * callonce read('this:Wallet.feature@ADD_WALLET')
+    # View asset listing with keyword
     * def keyword = "a"
     * def pattern = '#regex ^.*['+ keyword.toUpperCase() + keyword.toLowerCase() +'].*$'
-    Given path 'core/vault/account/' + vaultId + '/wallets'
-    And params {limit: '10', offset: '0', sort: 'ASC', sortBy: 'TOTAL_USD', isHiddenList: false, keyword: '#(keyword)'}
-    When method GET
-    Then status 200
-  #Validate the response with keyword
+    * def data = {vaultId: '#(vaultId)', sort: 'ASC', sortBy: 'TOTAL_USD', tokenSymbol: '#(keyword)'}
+    * call read(svc + 'Wallet.feature@GetWallets') data
+    Then match responseStatus == 200
+    # Validate the response with keyword
     * def listAssetActual = response.data.wallets
     * def size = listAssetActual.length
     * def checkListAsset = karate.filter(listAssetActual, function(item){ return karate.match(item.name, pattern).pass || karate.match(item.symbol, pattern).pass }).length == size
@@ -89,8 +84,8 @@ Feature: Wallet
 
   @RAKCON-10958 @VIEW_WALLET_ADDRESS_LISTING
   Scenario: View wallet address listing
-  # Add new asset can
-    * call read('this:Wallet.feature@ADD_WALLET')
+  # Add new asset
+    * callonce read('this:Wallet.feature@ADD_WALLET')
   # View asset listing
     Given path 'core/vault/account/' + vaultId + '/wallets'
     And params {limit: '10', offset: '0', sort: 'DESC', sortBy: 'TOTAL_USD', isHideList: false}

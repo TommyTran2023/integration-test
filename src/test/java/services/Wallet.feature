@@ -70,11 +70,11 @@ Feature: Wallet
             params: { 
                 limit:'10', 
                 offset: '0', 
-                sort:'ASC', 
-                sortBy:'NAME',
-                groupBy: 'ASSET', 
-                isHideList: false,
-                keyword:'#(tokenSymbol)'
+                sort:"#(typeof sort == 'undefined' ? 'DESC' : sort)", 
+                sortBy:"#(typeof sortBy == 'undefined' ? 'NAME' : sortBy)",
+                groupBy: "#(typeof groupBy == 'undefined' ? 'ASSET' : groupBy)", 
+                isHideList: "#(typeof isHideList == 'undefined' ? false : isHideList)",
+                keyword:"#(typeof tokenSymbol == 'undefined' ? '' : tokenSymbol)"
             }
         }
         """

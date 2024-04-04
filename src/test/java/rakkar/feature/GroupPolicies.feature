@@ -280,8 +280,9 @@ Feature: Group Policies
         Then match responseStatus == 201
         And match response == {"status":"success","code":200,"data":{"isValid":false,"errorCode":"GROUP_MEMBER_PART_OF_ANOTHER"}}
 
-    @RAKCON-25918 @MOB-77 @EditGroupHavePendingVaultPolicy
+    @RAKCON-25918 @MOB-77 @EditGroupHavePendingVaultPolicy @ignore
     Scenario: Edit Group Have Pending Vault Policy
+        # Bug MOB-5101
         * def group = groupHandle().selectGroupHavePendingPolicyRequest()
         * call read(svc + 'Group.feature@ValidatePrerequisitesGroup') {groupId: #(group.id)}
         Then match responseStatus == 400

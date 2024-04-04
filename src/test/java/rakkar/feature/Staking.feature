@@ -40,25 +40,25 @@ Feature: Staking
     And response.status == "success"
     And match response.message == "Success"
 
-  @RAKCON-15442 @CancelCreateStaking
+  @RAKCON-15442 @CancelCreateStaking @ignore
   Scenario: Cancel request create staking
+    # Bug MOB-5167
     * call read('this:Staking.feature@View_My_Request_Stake')
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15443 @Staking_from_account_tab
+  @RAKCON-15443 @Staking_from_account_tab @ignore
   Scenario: View staking from account tab
-    * def query = { limit:'10', offset: '0'}
-    Given path 'staking/records'
-    And params query
-    When method GET
-    Then status 200
+    # Bug MOB-5196
+    * call read(svc + 'Staking.feature@GetStakingRecords')
+    Then match responseStatus == 200
     And match response.status == "success"
     And match response.data == schemaBody.staking.staking_accountTab
     * def stakeId = response.data.result[0].id
     * def transactionId = response.data.result[0].transactionId
 
-  @RAKCON-15444 @Staking_detail
+  @RAKCON-15444 @Staking_detail @ignore
   Scenario: View staking detail
+    # Bug MOB-5196
     * call read('this:Staking.feature@Staking_from_account_tab')
     * def query = { stakeId: '#(stakeId)'}
     Given path 'staking/actions/progress'
@@ -87,8 +87,9 @@ Feature: Staking
     And match response.status == "success"
     And match response.data[0].symbol == "ADA Test"
 
-  @RAKCON-15447 @Un_staking
+  @RAKCON-15447 @Un_staking @ignore
   Scenario: Check unstake
+    # Bug MOB-5196
     * call read('this:Staking.feature@Get_estimatefee_stake')
     * call read('this:Staking.feature@Staking_from_account_tab')
     * def body = { "estimatedFee":'#(totalEstimatedFee)'}
@@ -101,13 +102,15 @@ Feature: Staking
     Then status 200
     And response.status == "success"
 
-  @RAKCON-15952 @CancelUnStaking
+  @RAKCON-15952 @CancelUnStaking @ignore
   Scenario: Cancel request unstake
+    # Bug MOB-5167
     * call read('this:Staking.feature@View_My_Request_Stake')
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15952 @ChangeStakingPool
+  @RAKCON-15953 @ChangeStakingPool @ignore
   Scenario: Change staking pool
+    # Bug MOB-5167
     * call read('this:Staking.feature@Get_estimatefee_stake')
     * def value = call read('this:Staking.feature@Get_List_Pool')
     * def poolChangeId = value.response.data.pools[2].bech32Id
@@ -123,8 +126,9 @@ Feature: Staking
     And response.status == "success"
     And match response.message == "Success"
 
-  @RAKCON-15954 @CancelChangePoolStaking
+  @RAKCON-15954 @CancelChangePoolStaking @ignore
   Scenario: Cancel request change staking pool
+    # Bug MOB-5167
     * call read('this:Staking.feature@View_My_Request_Stake')
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 

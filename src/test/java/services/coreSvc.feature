@@ -1,9 +1,9 @@
-@ignore
+    @ignore
 Feature: All api call to core services
   Background:
     * url baseURL
 
-#----------Biometric---------#
+    #----------Biometric---------#
     @RequestChallenge
   Scenario: Biometric Request Challenge
     Given path 'core/biometric/request-challenge'
@@ -16,7 +16,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method POST
 
-#----------Vault-----------#
+    #----------Vault-----------#
     @CreateVault
   Scenario: Create vault 
     Given path '/core/vault'
@@ -221,34 +221,34 @@ Feature: All api call to core services
     * header passcode = passcode
     When method PATCH
 
-  @GetListVault_v2
+    @GetListVault_v2
   Scenario: Get List Vault v2
     Given path '/core/v2/vault'
     * header Authorization = authorization
     * params params
     When method GET
 
-  @CreateVault_v2
+    @CreateVault_v2
   Scenario: Create Vault v2
     Given path '/core/v2/vault'
     * header Authorization = authorization
     * request body
     When method POST
 
-  @GetVaultsSummary
+    @GetVaultsSummary
   Scenario: Get Vaults Summary
     Given path '/core/v2/vault/summary'
     * header Authorization = authorization
     When method GET
 
-  @GetVaultFromSourceScreen
+    @GetVaultFromSourceScreen
   Scenario: Get Vault from Transfer Source screen 
     Given path '/core/v2/vault/source'
     * header Authorization = authorization
     * params params
     When method GET
 
-  @GetVaultFromDestinationScreen
+    @GetVaultFromDestinationScreen
   Scenario: Get Vault from Transfer Destination screen 
     Given path '/core/v2/vault/destination'
     * header Authorization = authorization
@@ -256,7 +256,7 @@ Feature: All api call to core services
     When method GET
 
 
-  #----------Wallet-----------#
+    #----------Wallet-----------#
     @AddAssets
   Scenario: Add asset to vault / Create wallet on vault
     Given path 'core/wallet/' + vaultId
@@ -354,7 +354,7 @@ Feature: All api call to core services
     When method GET
   
 
-#----------Whitelist Folder-----------#
+    #----------Whitelist Folder-----------#
     @CreateWhitelistFolder
   Scenario: Create whitelist folder
     Given path 'core/folders'
@@ -443,7 +443,7 @@ Feature: All api call to core services
     * param address = address
     When method GET
 
-#----------Customer-----------#  
+    #----------Customer-----------#  
 
     @EditAccountPolicy
   Scenario: Edit Account Policy
@@ -661,14 +661,14 @@ Feature: All api call to core services
     * params params
     When method PATCH
 
-#----------Country-----------#  
+    #----------Country-----------#  
     @CheckRestrictedCountries
   Scenario: Check Restricted Countries
     Given path '/core/restricted/check-country'
     * header Authorization = authorization
     When method GET
 
-#----------Assets-----------#  
+    #----------Assets-----------#  
     @GetAssetsInAllAccountVaults
   Scenario: Get Assets In All Account Vaults
     Given path '/core/assets/chart'
@@ -777,7 +777,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
-#----------Comments-----------#  
+    #----------Comments-----------#  
     @GetComments
   Scenario: Get Comments
     Given path entityType + '/' + entityId + '/comments'
@@ -804,7 +804,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------Address-----------#  
+    #----------Address-----------#  
     @CreateAddress
   Scenario: Create Deposit Address
     Given path 'core/address' 
@@ -819,7 +819,7 @@ Feature: All api call to core services
     * request body
     When method PUT
 
-#----------REP Currency Convert-----------#  
+    #----------REP Currency Convert-----------#  
     @CurrencyConvert_GetListEntity
   Scenario: Get List Entity Currency Convert
     Given path 'core/v2/rep/currencyConvert'
@@ -859,7 +859,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Currency-----------#  
+    #----------REP Currency-----------#  
     @Currency_GetListEntity
   Scenario: Get List Entity Currency
     Given path 'core/v2/rep/currency'
@@ -899,7 +899,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Wallet Info-----------#  
+    #----------REP Wallet Info-----------#  
     @WalletInfo_GetListEntity
   Scenario: Get List Entity WalletInfo
     Given path 'core/v2/rep/walletInfo'
@@ -1054,14 +1054,14 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
-#----------Country-----------#  
+    #----------Country-----------#  
     @CheckRestrictedCountries
   Scenario: Check Restricted Countries
     Given path '/core/restricted/check-country'
     * header Authorization = authorization
     When method GET
 
-#----------Assets-----------#  
+    #----------Assets-----------#  
     @GetAssetsInAllAccountVaults
   Scenario: Get Assets In All Account Vaults
     Given path '/core/assets/chart'
@@ -1170,7 +1170,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method GET
 
-#----------Comments-----------#  
+    #----------Comments-----------#  
     @GetComments
   Scenario: Get Comments
     Given path entityType + '/' + entityId + '/comments'
@@ -1197,7 +1197,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------Address-----------#  
+    #----------Address-----------#  
     @CreateAddress
   Scenario: Create Deposit Address
     Given path 'core/address' 
@@ -1212,7 +1212,7 @@ Feature: All api call to core services
     * request body
     When method PUT
 
-#----------REP Currency Convert-----------#  
+    #----------REP Currency Convert-----------#  
     @CurrencyConvert_GetListEntity
   Scenario: Get List Entity Currency Convert
     Given path 'core/v2/rep/currencyConvert'
@@ -1252,7 +1252,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Currency-----------#  
+    #----------REP Currency-----------#  
     @Currency_GetListEntity
   Scenario: Get List Entity Currency
     Given path 'core/v2/rep/currency'
@@ -1292,7 +1292,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Wallet Info-----------#  
+    #----------REP Wallet Info-----------#  
     @WalletInfo_GetListEntity
   Scenario: Get List Entity WalletInfo
     Given path 'core/v2/rep/walletInfo'
@@ -1325,7 +1325,7 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Vault-----------#  
+    #----------REP Vault-----------#  
     @REP_GetVaults
   Scenario: REP - Get Vaults
     Given path 'core/v2/rep/vault'
@@ -1359,83 +1359,83 @@ Feature: All api call to core services
     * header Authorization = authorization
     When method DELETE
 
-#----------REP Snapshot Token Price-----------#  
-@REP_GetSnapshotTokenPrice
-Scenario: REP - Get Snapshot Token Price
-  Given path 'core/v2/rep/snapshotTokenPrice'
-  * header Authorization = authorization
-  * params params
-  When method GET
+    #----------REP Snapshot Token Price-----------#  
+    @REP_GetSnapshotTokenPrice
+  Scenario: REP - Get Snapshot Token Price
+    Given path 'core/v2/rep/snapshotTokenPrice'
+    * header Authorization = authorization
+    * params params
+    When method GET
 
-  @REP_CreateSnapshotTokenPrice
-Scenario: REP - Create Snapshot Token Price
-  Given path 'core/v2/rep/snapshotTokenPrice'
-  * header Authorization = authorization
-  * request body
-  When method POST
+    @REP_CreateSnapshotTokenPrice
+  Scenario: REP - Create Snapshot Token Price
+    Given path 'core/v2/rep/snapshotTokenPrice'
+    * header Authorization = authorization
+    * request body
+    When method POST
 
-  @REP_GetSnapshotTokenPriceById
-Scenario: REP - Get Snapshot Token Price By Id
-  Given path 'core/v2/rep/snapshotTokenPrice/' + id
-  * header Authorization = authorization
-  When method GET
+    @REP_GetSnapshotTokenPriceById
+  Scenario: REP - Get Snapshot Token Price By Id
+    Given path 'core/v2/rep/snapshotTokenPrice/' + id
+    * header Authorization = authorization
+    When method GET
 
-  @REP_UpdateSnapshotTokenPrice
-Scenario: Update Snapshot Token Price by id 
-  Given path 'core/v2/rep/snapshotTokenPrice/' + id
-  * header Authorization = authorization
-  * request body
-  When method PUT
+    @REP_UpdateSnapshotTokenPrice
+  Scenario: Update Snapshot Token Price by id 
+    Given path 'core/v2/rep/snapshotTokenPrice/' + id
+    * header Authorization = authorization
+    * request body
+    When method PUT
 
-  @REP_DeleteSnapshotTokenPrice
-Scenario: Delete Snapshot Token Price by id 
-  Given path 'core/v2/rep/snapshotTokenPrice/' + id
-  * header Authorization = authorization
-  When method DELETE
+    @REP_DeleteSnapshotTokenPrice
+  Scenario: Delete Snapshot Token Price by id 
+    Given path 'core/v2/rep/snapshotTokenPrice/' + id
+    * header Authorization = authorization
+    When method DELETE
 
-  #----------REP Daily Journal Customers-----------#  
-@REP_GetDailyJournalCustomers
-Scenario: REP - Get Daily Journal Customers
-  Given path 'core/v2/rep/dailyJournalCustomers'
-  * header Authorization = authorization
-  * params params
-  When method GET
+    #----------REP Daily Journal Customers-----------#  
+    @REP_GetDailyJournalCustomers
+  Scenario: REP - Get Daily Journal Customers
+    Given path 'core/v2/rep/dailyJournalCustomers'
+    * header Authorization = authorization
+    * params params
+    When method GET
 
-  @REP_CreateDailyJournalCustomers
-Scenario: REP - Create Daily Journal Customers
-  Given path 'core/v2/rep/dailyJournalCustomers'
-  * header Authorization = authorization
-  * request body
-  When method POST
+    @REP_CreateDailyJournalCustomers
+  Scenario: REP - Create Daily Journal Customers
+    Given path 'core/v2/rep/dailyJournalCustomers'
+    * header Authorization = authorization
+    * request body
+    When method POST
 
-  @REP_GetDailyJournalCustomersById
-Scenario: REP - Get Daily Journal Customers By Id
-  Given path 'core/v2/rep/dailyJournalCustomers/' + id
-  * header Authorization = authorization
-  When method GET
+    @REP_GetDailyJournalCustomersById
+  Scenario: REP - Get Daily Journal Customers By Id
+    Given path 'core/v2/rep/dailyJournalCustomers/' + id
+    * header Authorization = authorization
+    When method GET
 
-  @REP_UpdateDailyJournalCustomers
-Scenario: Update Daily Journal Customers by id 
-  Given path 'core/v2/rep/dailyJournalCustomers/' + id
-  * header Authorization = authorization
-  * request body
-  When method PUT
+    @REP_UpdateDailyJournalCustomers
+  Scenario: Update Daily Journal Customers by id 
+    Given path 'core/v2/rep/dailyJournalCustomers/' + id
+    * header Authorization = authorization
+    * request body
+    When method PUT
 
-  @REP_DeleteDailyJournalCustomers
-Scenario: Delete Daily Journal Customers by id 
-  Given path 'core/v2/rep/dailyJournalCustomers/' + id
-  * header Authorization = authorization
-  When method DELETE
+    @REP_DeleteDailyJournalCustomers
+  Scenario: Delete Daily Journal Customers by id 
+    Given path 'core/v2/rep/dailyJournalCustomers/' + id
+    * header Authorization = authorization
+    When method DELETE
 
-#----------Groups-----------#  
-  @GetGroupsWithDetailsByIds
+    #----------Groups-----------#  
+    @GetGroupsWithDetailsByIds
   Scenario: Get Groups With Details By Ids
     Given path 'core/groups/with-detail'
     * header Authorization = authorization
     * params params
     When method GET
 
-  @GetGroups
+    @GetGroups
   Scenario: Get Groups
     Given path 'core/groups'
     * header Authorization = authorization
@@ -1443,22 +1443,454 @@ Scenario: Delete Daily Journal Customers by id
     When method GET
 
 
-  @ValidateDeleteGroup
+    @ValidateDeleteGroup
   Scenario: Validate Delete Group
     Given path `/core/groups/${groupId}/validate-delete-group`
     * headers headers
     When method GET
 
-  @DeleteGroup
+    @DeleteGroup
   Scenario: Delete Group
     Given path `/core/groups/${groupId}`
     * headers headers
     When method DELETE
 
-  @AdvVaultByGroup
+    @AdvVaultByGroup
   Scenario: Advance Vault By Group
     Given path 'core/groups/adv-vault-by-group'
     * headers headers
     * params params
     When method GET
 
+  
+    #----------------------------------
+   	@VaultWcREPController_getPaginationConfig
+  Scenario: Vault Wc REPController get Pagination Config
+    Given path 'core/v2/rep/vaultWc/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @VaultWcREPController_getListEntity
+  Scenario: Vault Wc REPController get List Entity
+    Given path 'core/v2/rep/vaultWc'
+    * headers headers
+    When method GET
+
+    @VaultWcREPController_saveEntity
+  Scenario: Vault Wc REPController save Entity
+    Given path 'core/v2/rep/vaultWc'
+    * headers headers
+    When method POST
+
+    #----------------------------------
+    @VaultWcREPController_findOneByUId
+  Scenario: Vault Wc REPController find One By UId
+    Given path `core/v2/rep/vaultWc/${id}`
+    * headers headers
+    When method GET
+
+    @VaultWcREPController_updateOneById
+  Scenario: Vault Wc REPController update One By Id
+    Given path `core/v2/rep/vaultWc/${id}`
+    * headers headers
+    When method PUT
+
+    @VaultWcREPController_delete
+  Scenario: Vault Wc REPController delete
+    Given path `core/v2/rep/vaultWc/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @VaultWcREPController_hardDelete
+  Scenario: Vault Wc REPController hard Delete
+    Given path `core/v2/rep/vaultWc/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+   	@VaultWcController_getPaginationConfig
+  Scenario: Vault Wc Controller get Pagination Config
+    Given path 'core/v2/vault/wc/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @VaultWcController_getListEntity
+  Scenario: Vault Wc Controller get List Entity
+    Given path 'core/v2/vault/wc'
+    * headers headers
+    When method GET
+
+    @VaultWcController_saveEntity
+  Scenario: Vault Wc Controller save Entity
+    Given path 'core/v2/vault/wc'
+    * headers headers
+    When method POST
+
+    #----------------------------------
+    @VaultWcController_getListVaultSelection
+  Scenario: Vault Wc Controller get List Vault Selection
+    Given path 'core/v2/vault/wc/selection'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @VaultWcController_findOneByUId
+  Scenario: Vault Wc Controller find One By UId
+    Given path `core/v2/vault/wc/${id}`
+    * headers headers
+    When method GET
+
+    @VaultWcController_updateOneById
+  Scenario: Vault Wc Controller update One By Id
+    Given path `core/v2/vault/wc/${id}`
+    * headers headers
+    When method PUT
+
+    @VaultWcController_delete
+  Scenario: Vault Wc Controller delete
+    Given path `core/v2/vault/wc/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @VaultWcController_hardDelete
+  Scenario: Vault Wc Controller hard Delete
+    Given path `core/v2/vault/wc/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CusSubscribeREPController_findOneByUId
+  Scenario: Cus Subscribe REPController find One By UId
+    Given path `core/v2/rep/cusSubscribe/${id}`
+    * headers headers
+    When method GET
+
+    @CusSubscribeREPController_updateOneById
+  Scenario: Cus Subscribe REPController update One By Id
+    Given path `core/v2/rep/cusSubscribe/${id}`
+    * headers headers
+    * request body
+    When method PUT
+
+    @CusSubscribeREPController_delete
+  Scenario: Cus Subscribe REPController delete
+    Given path `core/v2/rep/cusSubscribe/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CusSubscribeREPController_hardDelete
+  Scenario: Cus Subscribe REPController hard Delete
+    Given path `core/v2/rep/cusSubscribe/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CusSubscribeREPController_getPaginationConfig
+  Scenario: Cus Subscribe REPController get Pagination Config
+    Given path 'core/v2/rep/cusSubscribe/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @CusSubscribeREPController_getListEntity
+  Scenario: Cus Subscribe REPController get List Entity
+    Given path 'core/v2/rep/cusSubscribe'
+    * headers headers
+    When method GET
+
+    @CusSubscribeREPController_saveEntity
+  Scenario: Cus Subscribe REPController save Entity
+    Given path 'core/v2/rep/cusSubscribe'
+    * headers headers
+    * request body
+    When method POST
+
+    #----------------------------------
+    @CustomerEntityRelationsController_getPaginationConfig
+  Scenario: Customer Entity Relations Controller get Pagination Config
+    Given path 'core/v2/customerEntityRelations/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @CustomerEntityRelationsController_getListEntity
+  Scenario: Customer Entity Relations Controller get List Entity
+    Given path 'core/v2/customerEntityRelations'
+    * headers headers
+    When method GET
+
+    @CustomerEntityRelationsController_saveEntity
+  Scenario: Customer Entity Relations Controller save Entity
+    Given path 'core/v2/customerEntityRelations'
+    * headers headers
+    * request body
+    When method POST
+
+    #----------------------------------
+    @CustomerEntityRelationsController_findOneByUId
+  Scenario: Customer Entity Relations Controller find One By UId
+    Given path `core/v2/customerEntityRelations/${id}`
+    * headers headers
+    When method GET
+
+    @CustomerEntityRelationsController_updateOneById
+  Scenario: Customer Entity Relations Controller update One By Id
+    Given path `core/v2/customerEntityRelations/${id}`
+    * headers headers
+    * request body
+    When method PUT
+
+    @CustomerEntityRelationsController_delete
+  Scenario: Customer Entity Relations Controller delete
+    Given path `core/v2/customerEntityRelations/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CustomerEntityRelationsController_hardDelete
+  Scenario: Customer Entity Relations Controller hard Delete
+    Given path `core/v2/customerEntityRelations/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CustomerEntityRelationsREPController_getListEntity
+  Scenario: Customer Entity Relations REPController get List Entity
+    Given path 'core/v2/rep/customerEntityRelations'
+    * headers headers
+    When method GET
+
+    @CustomerEntityRelationsREPController_saveEntity
+  Scenario: Customer Entity Relations REPController save Entity
+    Given path 'core/v2/rep/customerEntityRelations'
+    * headers headers
+    * request body
+    When method POST
+
+    #----------------------------------
+    @CustomerEntityRelationsREPController_getPaginationConfig
+  Scenario: Customer Entity Relations REPController get Pagination Config
+    Given path 'core/v2/rep/customerEntityRelations/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @CustomerEntityRelationsREPController_findOneByUId
+  Scenario: Customer Entity Relations REPController find One By UId
+    Given path `core/v2/rep/customerEntityRelations/${id}`
+    * headers headers
+    When method GET
+
+    @CustomerEntityRelationsREPController_updateOneById
+  Scenario: Customer Entity Relations REPController update One By Id
+    Given path `core/v2/rep/customerEntityRelations/${id}`
+    * headers headers
+    * request body
+    When method PUT
+
+    @CustomerEntityRelationsREPController_delete
+  Scenario: Customer Entity Relations REPController delete
+    Given path `core/v2/rep/customerEntityRelations/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @CustomerEntityRelationsREPController_hardDelete
+  Scenario: Customer Entity Relations REPController hard Delete
+    Given path `core/v2/rep/customerEntityRelations/${id}/hard`
+    * headers headers
+    When method DELETE
+
+
+    #----------------------------------
+   	@Cfg_purposesREPController_getPaginationConfig
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_purposes/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @Cfg_purposesREPController_getListEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_purposes'
+    * headers headers
+    When method GET
+
+    @Cfg_purposesREPController_saveEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_purposes'
+    * headers headers
+    * request body
+    When method POST
+
+    #----------------------------------
+    @Cfg_purposesREPController_findOneByUId
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_purposes/${id}`
+    * headers headers
+    When method GET
+
+    @Cfg_purposesREPController_updateOneById
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_purposes/${id}`
+    * headers headers
+    * request body
+    When method PUT
+
+    @Cfg_purposesREPController_delete
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_purposes/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_purposesREPController_hardDelete
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_purposes/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_purposesController_getListEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_purposes'
+    * headers headers
+    When method GET
+
+    @Cfg_purposesController_saveEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_purposes'
+    * headers headers
+    When method POST
+
+    #----------------------------------
+    @Cfg_purposesController_findOneByUId
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_purposes/${id}`
+    * headers headers
+    When method GET
+
+    @Cfg_purposesController_updateOneById
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_purposes/${id}`
+    * headers headers
+    When method PUT
+
+    @Cfg_purposesController_delete
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_purposes/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_purposesController_hardDelete
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_purposes/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_purposesController_getPaginationConfig
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_purposes/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @Cfg_relationshipsController_getListEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_relationships'
+    * headers headers
+    When method GET
+
+    @Cfg_relationshipsController_saveEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_relationships'
+    * headers headers
+    When method POST
+
+    #----------------------------------
+    @Cfg_relationshipsController_findOneByUId
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_relationships/${id}`
+    * headers headers
+    When method GET
+
+    @Cfg_relationshipsController_updateOneById
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_relationships/${id}`
+    * headers headers
+    When method PUT
+
+    @Cfg_relationshipsController_delete
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_relationships/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_relationshipsController_hardDelete
+  Scenario: Invalid Input Format
+    Given path `core/v2/cfg_relationships/${id}/hard`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_relationshipsController_getPaginationConfig
+  Scenario: Invalid Input Format
+    Given path 'core/v2/cfg_relationships/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @Cfg_relationshipsREPController_getPaginationConfig
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_relationships/pagination-config'
+    * headers headers
+    When method GET
+
+    #----------------------------------
+    @Cfg_relationshipsREPController_getListEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_relationships'
+    * headers headers
+    When method GET
+
+    @Cfg_relationshipsREPController_saveEntity
+  Scenario: Invalid Input Format
+    Given path 'core/v2/rep/cfg_relationships'
+    * headers headers
+    * request body
+    When method POST
+
+    #----------------------------------
+    @Cfg_relationshipsREPController_findOneByUId
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_relationships/${id}`
+    * headers headers
+    When method GET
+
+    @Cfg_relationshipsREPController_updateOneById
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_relationships/${id}`
+    * headers headers
+    * request body
+    When method PUT
+
+    @Cfg_relationshipsREPController_delete
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_relationships/${id}`
+    * headers headers
+    When method DELETE
+
+    #----------------------------------
+    @Cfg_relationshipsREPController_hardDelete
+  Scenario: Invalid Input Format
+    Given path `core/v2/rep/cfg_relationships/${id}/hard`
+    * headers headers
+    When method DELETE

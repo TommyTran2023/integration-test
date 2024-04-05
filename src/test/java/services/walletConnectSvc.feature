@@ -1,7 +1,7 @@
 Feature: walletConnect
 	Background: 
 		Given url baseURL
-		
+}
 #----------------------------------
 	@AppController_getIndex
 	Scenario: App Controller get Index
@@ -110,6 +110,7 @@ Feature: walletConnect
 	Scenario: Wc Application Controller get List Entity
 		Given path 'walletConnect/v2/wcApplication'
 		* headers headers
+		* params params
 		When method GET
 
 	@WcApplicationController_saveEntity

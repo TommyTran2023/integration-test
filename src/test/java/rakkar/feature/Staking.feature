@@ -28,7 +28,7 @@ Feature: Staking
 
   @RAKCON-15441 @Create_staking @ignore
   Scenario: Create staking
-    # Bug MOB-5196
+    # Bug MOB-5167
     * call read('this:Staking.feature@Get_estimatefee_stake')
     * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(dataSet.stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('this:Common.feature@FIDO-Requester')

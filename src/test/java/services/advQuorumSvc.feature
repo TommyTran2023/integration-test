@@ -170,6 +170,13 @@ Feature: Advance Quorum Service
     * request body
     When method POST
 
+  @SearchUsersInGroup
+  Scenario: Search Users in Group
+    Given path `advance-quorum/group-policies/${groupId}`
+    * headers headers
+    * params params
+    When method GET
+
 
 
 

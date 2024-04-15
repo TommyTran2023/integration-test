@@ -416,3 +416,17 @@ Feature: Tranaction Service
         }
         """
         * call read(svc + 'transactionSvc.feature@CancelReqTransactionCreateFromWeb') data
+    
+    @SyncTransaction
+    Scenario: Sync Transaction
+        * def data = 
+        """
+        {
+            authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+            transactionId: "#(transactionId)"
+        }
+        """
+        * call read(svc + 'transactionSvc.feature@SyncTransaction') data
+    
+
+

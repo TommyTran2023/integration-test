@@ -126,3 +126,19 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
         * print result
+
+    @SelectUnsupportedToken
+    Scenario: Select assign vault 
+        * def query =
+        """
+        "select * from \"unSupportTokens\" ust " + 
+        "where \"countryCode\" in ( " +
+        "    select ccer.\"countryCode\"  " +
+        "    from cus_customers cc  " +
+        "    left join \"cus_customerEntityRelations\" ccer  " +
+        "        on cc.\"entityRelationId\" = ccer.id " +
+        "    where cc.id = '" + customerId + "'); "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+        * print result

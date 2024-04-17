@@ -14,12 +14,14 @@ def USERNAME
 def DBNAME
 
 pipeline {
-    agent any
+    agent {
+        label "gcp-slave-agent-jmeter"
+    }
 
     environment {
         SECRET_FILE_CONTENT_SIT = credentials('rakkar-db-credentials-sit')
         SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
-        // SECRET_FILE_CONTENT_DEV = credentials('rakkar-db-credentials-dev')
+        SECRET_FILE_CONTENT_DEV = credentials('rakkar-db-credentials-dev')
     }
 
     parameters {
@@ -56,7 +58,7 @@ pipeline {
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
-                            // credentials = readJSON file: SECRET_FILE_CONTENT_DEV
+                            credentials = readJSON file: SECRET_FILE_CONTENT_DEV
                             DBNAME = 'rak_dev_svc_core'
                     }
                     else {

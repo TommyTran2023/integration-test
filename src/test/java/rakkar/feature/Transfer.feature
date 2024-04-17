@@ -264,7 +264,27 @@ Feature: Transfer
 
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
-    * def body_transfer = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.destinationType)',"id":'#(dataSet.externalId)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body_transfer = 
+    """
+    { 
+      "operation":'#(testData.transfer.operation)',
+      "tokenId":'#(dataSet.tokenId)',
+      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "fee":'#(Number(testData.transfer.withdraw.fee))', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(testData.transfer.feeLevel)', 
+      "destination":{
+        "type":'#(testData.transfer.destinationType)',
+        "id":'#(dataSet.externalId)'
+      }, 
+      "source": {
+        "type":'#(testData.transfer.source_type)',
+        "id":'#(dataSet.sourceId_hot)'
+      },
+      "amount":'#(amount_low)',
+      "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
+    }
+    """
     * call read('this:Transfer.feature@External_Transfer_Common')
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"

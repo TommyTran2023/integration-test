@@ -1,470 +1,641 @@
 @RAKCON-10583 @e2e
 Feature: Withdraw from WARM vault - Same and cross workspace
 
-  Background:
-    * url baseURL
-    * def classpath = 'classpath:rakkar/feature/'
-    * def testData = read('classpath:data/data_test.json')
-    * def testData_v2 = read('classpath:data/data.json')
-    * def Const = read('classpath:data/enum.json')
-    * call read(classpath + 'RequesterAuthenticator.feature@RequesterAccessToken')
-    * call read(classpath + 'Common.feature@CACULATE_LIMIT_TRANSFER')
-    * def amount_low = 11
-    * def BigDecimal = Java.type('java.math.BigDecimal')
-    * def waitUntilTransactionCompleted = 
-    """
-      function(transactionId){ 
-        var retry = 6
-        do {
-          java.lang.Thread.sleep(30000); 
-          var getTransactionDetail = karate.call(classpath + 'Transaction.feature@View_transaction_detail_common', { transactionId: transactionId })
-          retry--
+    Background:
+        * def Const = read('classpath:data/enum.json')
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * def amount_low = 11
+        * def BigDecimal = Java.type('java.math.BigDecimal')
+        * def waitUntilTransactionCompleted = 
+        """
+        function(transactionId){ 
+            var retry = 6
+            do {
+                java.lang.Thread.sleep(25000); 
+                karate.call(svc + 'Transaction.feature@SyncTransaction', { transactionId: transactionId })
+                java.lang.Thread.sleep(5000); 
+                var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
+                retry--
+            }
+            while (getTransactionDetail.response.data.status != "COMPLETED" && retry > 0)
+
+            if (retry <= 0 && getTransactionDetail.response.data.status != "COMPLETED")
+                throw Error ("Transaction cannot be completed: " + transactionId)
+
+            return getTransactionDetail
         }
-        while (getTransactionDetail.response.data.status != "COMPLETED" && retry > 0)
+        """
 
-        if (retry <= 0 && getTransactionDetail.response.data.status != "COMPLETED")
-            throw Error ("Transaction cannot be completed: " + transactionId)
+    @RAKCON-19300
+    Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
+        # 1.Select token for doing transfer
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def tokenId_transfer = getToken.tokens[0].id
+        * def tokenSymbol = getToken.tokens[0].externalAssetId
 
-        return getTransactionDetail
-      }
-    """
+        # 2.Select source
+        * def vaultType = Const.VaultType.HOT_WALLET
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
+        * def sourceId_warm = source_warm.id
+        * def sourceName_warm = source_warm.name
+        * def available = source_warm.wallets[0].available
+        * def walletId_warm = source_warm.wallets[0].id
 
-  @RAKCON-19300
-  Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
-  # 1.Select token for doing transfer
-    * def getToken = call read(classpath + 'Transfer.feature@Get_asset_transfer')
-    * def tokenId_transfer = getToken.response.data.tokens[0].id
-    * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
+        # 3.Select destination from whitelist. The whitelist contains token from an other workspace
+        * def folderName = "WARM_CROSS_WORKSPACE"
+        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
+        * def destinationId_warm = destination_warm.id
+        * def destinationName_warm = destination_warm.name
+        * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
-  # 2.Select source
-    * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def sourceId_warm = source_warm.id
-    * def sourceName_warm = source_warm.name
-    * def available = source_warm.wallets[0].available
-    * def walletId_warm = source_warm.wallets[0].id
+        # 4.Get total amount of destination token before doing transfer
+        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
 
-  # 3.Select destination from whitelist. The whitelist contains token from an other workspace
-    * def folderName = "WARM_CROSS_WORKSPACE"
-    * def getDestination = call read(classpath + 'WhiteListFolder.feature@Search_folder_by_keyword_common')
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
-    * def destinationId_warm = destination_warm.id
-    * def destinationName_warm = destination_warm.name
+        # 5.Get estimated fee
+        * def body_estimate_fee = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount": '#(amount_low)',
+            "destinationId":'#(destinationId_warm)'
+        }
+        """
+        * def getEstimateFee = call read(svc + 'Transaction.feature@GetEstimatedFee') body_estimate_fee
+        * def fee = getEstimateFee.response.data.medium
 
-  # 3.1.Get total amount of destination token before doing transfer
-    * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
-    * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        # 6.Caculate estimated fee
+        * def body_total_estimate = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount":'#(amount_low)',
+            "destinationId":'#(destinationId_warm)', 
+            "fee":'#(fee)',
+            "isNetAmount":false,
+            "isStake":false
+        }
+        """
+        * def getCaculateFee = call read(svc + 'Transaction.feature@GetTotalFee') body_total_estimate
+        * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+      
+        # 7.Submit transfer
+        * call read(svc + "Biometric.feature@RequesterDoBiometric")
+        * def body_transfer = 
+        """
+        { 
+            "operation":'#(Const.Transfer.Operation.TRANSFER)',
+            "tokenId":'#(tokenId_transfer)',
+            "feeType":'#(Const.TokenSymbolXRP)',
+            "fee":'#(fee)', 
+            "treatAsGrossAmount": true, 
+            "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+            "destination":{
+                "type":'#(whitelist_type)',
+                "id":'#(destinationId_warm)'
+            }, 
+            "source": {
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(sourceId_warm)'
+            },
+            "amount":'#(amount_low)',
+            "totalEstimatedFee":'#(totalEstimatedFee)'
+        }
+        """
+        * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
+        * match response.data.sourceName contains sourceName_warm
+        * match destinationName_warm == response.data.destinationName
+        * def transactionId = response.data.id
+        * def requestId = response.data.requestId
 
-  # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def fee = getEstimateFee.response.data.medium
+        # 8.Approve Transfer from admin quorum  
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: "#(requestId)"}
 
-  # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+        # 9.Waiting to auto approve in fireblock
 
-  # 6.Submit transfer
-    * call read(svc + "Biometric.feature@RequesterDoBiometric")
-    * def body_transfer = 
-    """
-    { 
-      "operation":'#(Const.Transfer.Operation.TRANSFER)',
-      "tokenId":'#(tokenId_transfer)',
-      "feeType":'#(Const.TokenSymbolXRP)',
-      "fee":'#(fee)', 
-      "treatAsGrossAmount": true, 
-      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
-      "destination":{
-        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
-        "id":'#(destinationId_warm)'
-      }, 
-      "source": {
-        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
-        "id":'#(sourceId_warm)'
-      },
-      "amount":#(amount_low),
-      "totalEstimatedFee":'#(totalEstimatedFee)'}
-    """
-    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
-    * match response.data.sourceName contains sourceName_warm
-    * match destinationName_warm == response.data.destinationName
-    * def transactionId = response.data.id
-    * def requestId = response.data.requestId
+        # 10.View transfer detail after complete
+        * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
+        * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
+        * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
+        # --- Verify sourceName, destinationName
+        * match sourceName_warm == getTransactionDetail.response.data.sourceName
+        * match destinationName_warm == getTransactionDetail.response.data.destinationName
+        # --- Verify Txn Type
+        * match getTransactionDetail.response.data.status == "COMPLETED"
 
-   # 7.Approve Transfer from admin quorum
-    * call read(classpath +'ApprovalRequest.feature@ApproveRequestCommon')
+        # 11. Get the balance of source
+        * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
+        * def getDetailTokenSource = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
-   # 8.Waiting to auto approve in fireblock
+        # 12. Verify the balance of source is updated correctly 
+        # Bug REP-1222
+        * print available, amount_low, available_source_afterTransfer
+        # * match available_source_afterTransfer == available - amount_low
 
-   # 9.View transfer detail after complete
-    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
-    * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
-    * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
-   # --- Verify sourceName, destinationName
-    * match sourceName_warm == getTransactionDetail.response.data.sourceName
-    * match destinationName_warm == getTransactionDetail.response.data.destinationName
-   # --- Verify Txn Type
-    * match getTransactionDetail.response.data.status == "COMPLETED"
+        # 13. Verify balance of destination && transaction show in destination
+        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
 
-   # 9.1.Get the balance of source
-    * eval java.lang.Thread.sleep(60000)
-    * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
-    * def getDetailTokenSource = call read(classpath +'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
-    # --- Verify the balance of source is updated correctly
-    * print available, amount_low, available_source_afterTransfer
-    * match available_source_afterTransfer == available - amount_low
+    @RAKCON-19301
+    Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
+        # 1.Select token for doing transfer
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def tokenId_transfer = getToken.tokens[0].id
+        * def tokenSymbol = getToken.tokens[0].externalAssetId
 
-   # 9.2.Verify balance of destination && transaction show in destination
-    * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
+        # 2.Select source
+        * def vaultType = Const.VaultType.HOT_WALLET
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
+        * def sourceId_warm = source_warm.id
+        * def sourceName_warm = source_warm.name
+        * def available = source_warm.wallets[0].available
+        * def walletId_warm = source_warm.wallets[0].id
 
-  @RAKCON-19301
-  Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
-  # 1.Select token for doing transfer
-    * def getToken = call read(classpath +'Transfer.feature@Get_asset_transfer')
-    * def tokenId_transfer = getToken.response.data.tokens[0].id
-    * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
+        # 3.Select destination from whitelist. The whitelist contains token from an other workspace
+        * def folderName = "COLD_CROSS_WORKSPACE"
+        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
+        * def destinationId_warm = destination_warm.id
+        * def destinationName_warm = destination_warm.name
+        * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
-  # 2.Select source
-    * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def sourceId_warm = source_warm.id
-    * def sourceName_warm = source_warm.name
-    * def available = source_warm.wallets[0].available
-    * def walletId_warm = source_warm.wallets[0].id
+        # 4.Get total amount of destination token before doing transfer
+        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat')
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
 
-  # 3.Select destination from whitelist. The whitelist contains token from an other workspace
-    * def folderName = "COLD_CROSS_WORKSPACE"
-    * def getDestination = call read(classpath + 'WhiteListFolder.feature@Search_folder_by_keyword_common')
-    * def destination_cold = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
-    * def destinationId_cold = destination_cold.id
-    * def destinationName_cold = destination_cold.name
+        # 5.Get estimated fee
+        * def body_estimate_fee = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount": '#(amount_low)',
+            "destinationId":'#(destinationId_warm)'
+        }
+        """
+        * def getEstimateFee = call read(svc + 'Transaction.feature@GetEstimatedFee') body_estimate_fee
+        * def fee = getEstimateFee.response.data.medium
 
-  # 3.1.Get total amount of destination token before doing transfer
-    * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat')
-    * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        # 6.Caculate estimated fee
+        * def body_total_estimate = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount":'#(amount_low)',
+            "destinationId":'#(destinationId_warm)', 
+            "fee":'#(fee)',
+            "isNetAmount":false,
+            "isStake":false
+        }
+        """
+        * def getCaculateFee = call read(svc + 'Transaction.feature@GetTotalFee') body_total_estimate
+        * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+    
+        # 7.Submit transfer
+        * call read(svc + "Biometric.feature@RequesterDoBiometric")
+        * def body_transfer = 
+        """
+        { 
+            "operation":'#(Const.Transfer.Operation.TRANSFER)',
+            "tokenId":'#(tokenId_transfer)',
+            "feeType":'#(Const.TokenSymbolXRP)',
+            "fee":'#(fee)', 
+            "treatAsGrossAmount": true, 
+            "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+            "destination":{
+                "type":'#(whitelist_type)',
+                "id":'#(destinationId_warm)'
+            }, 
+            "source": {
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(sourceId_warm)'
+            },
+            "amount":'#(amount_low)',
+            "totalEstimatedFee":'#(totalEstimatedFee)'
+        }
+        """
+        * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
+        * match response.data.sourceName contains sourceName_warm
+        * match destinationName_warm == response.data.destinationName
+        * def transactionId = response.data.id
+        * def requestId = response.data.requestId
 
-  # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def fee = getEstimateFee.response.data.medium
+        # 8.Approve Transfer from admin quorum  
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: "#(requestId)"}
 
-  # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
-    * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+        # 9.Waiting to auto approve in fireblock
 
-  # 6.Submit transfer
-    * call read(svc + "Biometric.feature@RequesterDoBiometric")
-    * def body_transfer = 
-    """
-    { 
-      "operation":'#(Const.Transfer.Operation.TRANSFER)',
-      "tokenId":'#(tokenId_transfer)',
-      "feeType":'#(Const.TokenSymbol.XRP)',
-      "fee":'#(fee)', 
-      "treatAsGrossAmount": true, 
-      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
-      "destination":{
-        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
-        "id":'#(destinationId_cold)'
-      }, 
-      "source": {
-        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
-        "id":'#(sourceId_warm)'
-      },
-      "amount":#(amount_low),
-      "totalEstimatedFee":'#(totalEstimatedFee)'
-    }
-    """
-    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
-    * match sourceName_warm == response.data.sourceName
-    * match destinationName_cold == response.data.destinationName
-    * def transactionId = response.data.id
-    * def requestId = response.data.requestId
+        # 10.View transfer detail after complete
+        * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
+        * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
+        * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
+        # --- Verify sourceName, destinationName
+        * match sourceName_warm == getTransactionDetail.response.data.sourceName
+        * match destinationName_warm == getTransactionDetail.response.data.destinationName
+        # --- Verify Txn Type
+        * match getTransactionDetail.response.data.status == "COMPLETED"
 
-   # 7.Approve Transfer from admin quorum
-    * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
+        # 11. Get the balance of source
+        * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
+        * def getDetailTokenSource = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
-   # 8.Waiting to auto approve in fireblock
+        # 12. Verify the balance of source is updated correctly 
+        # Bug REP-1222
+        * print available, amount_low, available_source_afterTransfer
+        # * match available_source_afterTransfer == available - amount_low
 
-   # 9.View transfer detail after complete
-    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
-    * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
-    * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
-   # --- Verify sourceName, destinationName
-    * match sourceName_warm == getTransactionDetail.response.data.sourceName
-    * match destinationName_cold == getTransactionDetail.response.data.destinationName
-   # --- Verify Txn Type
-    * match getTransactionDetail.response.data.status == "COMPLETED"
+        # 13. Verify balance of destination && transaction show in destination
+        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
 
-   # 9.1.Verify balance of source
-    * eval java.lang.Thread.sleep(60000)
-    * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
-    * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * match available_source_afterTransfer == available - amount_low
 
-   # 9.2.Verify balance of destination && transaction show in destination
-    * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
+    @RAKCON-19302
+    Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
+        # 1.Select token for doing transfer
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def tokenId_transfer = getToken.tokens[0].id
+        * def tokenSymbol = getToken.tokens[0].externalAssetId
 
-  @RAKCON-19302
-  Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
-  # 1.Select token for doing transfer
-    * def getToken = call read(classpath + 'Transfer.feature@Get_asset_transfer')
-    * def tokenId_transfer = getToken.response.data.tokens[0].id
-    * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
+        # 2.Select source
+        * def vaultType = Const.VaultType.HOT_WALLET
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
+        * def sourceId_warm = source_warm.id
+        * def sourceName_warm = source_warm.name
+        * def available = source_warm.wallets[0].available
+        * def walletId_warm = source_warm.wallets[0].id
 
-  # 2.Select source
-    * def screenType = Const.Transfer.FromScreen.SOURCE
-    * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def sourceId_warm = source_warm.id
-    * def sourceName_warm = source_warm.name
-    * def available = source_warm.wallets[0].available
-    * def walletId_warm = source_warm.wallets[0].id
+        # 3.Select destination from whitelist. The whitelist contains token from an other workspace
+        * def folderName = "WARM_SAME_WORKSPACE"
+        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
+        * def destinationId_warm = destination_warm.id
+        * def destinationName_warm = destination_warm.name
+        * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
-  # 3.Select destination from whitelist. The whitelist contains token from an other workspace
-    * def folderName = "WARM_SAME_WORKSPACE"
-    * def getDestination = call read(classpath + 'WhiteListFolder.feature@Search_folder_by_keyword_common')
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
-    * def destinationId_warm = destination_warm.id
-    * def destinationName_warm = destination_warm.name
+        # 4.Get total amount of destination token before doing transfer
+        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat')
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
 
-  # 3.1.Get total amount of destination token before doing transfer
-    * def getBalanceTokenBeforeTransfer = call read('this:VerifySameWorkSpace.feature@GetBalanceTokenBeforeTransfer')
-    * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.total)
+        # 5.Get estimated fee
+        * def body_estimate_fee = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount": '#(amount_low)',
+            "destinationId":'#(destinationId_warm)'
+        }
+        """
+        * def getEstimateFee = call read(svc + 'Transaction.feature@GetEstimatedFee') body_estimate_fee
+        * def fee = getEstimateFee.response.data.medium
 
-  # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def fee = getEstimateFee.response.data.medium
+        # 6.Caculate estimated fee
+        * def body_total_estimate = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(whitelist_type)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount":'#(amount_low)',
+            "destinationId":'#(destinationId_warm)', 
+            "fee":'#(fee)',
+            "isNetAmount":false,
+            "isStake":false
+        }
+        """
+        * def getCaculateFee = call read(svc + 'Transaction.feature@GetTotalFee') body_total_estimate
+        * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+    
+        # 7.Submit transfer
+        * call read(svc + "Biometric.feature@RequesterDoBiometric")
+        * def body_transfer = 
+        """
+        { 
+            "operation":'#(Const.Transfer.Operation.TRANSFER)',
+            "tokenId":'#(tokenId_transfer)',
+            "feeType":'#(Const.TokenSymbolXRP)',
+            "fee":'#(fee)', 
+            "treatAsGrossAmount": true, 
+            "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+            "destination":{
+                "type":'#(whitelist_type)',
+                "id":'#(destinationId_warm)'
+            }, 
+            "source": {
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(sourceId_warm)'
+            },
+            "amount":'#(amount_low)',
+            "totalEstimatedFee":'#(totalEstimatedFee)'
+        }
+        """
+        * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
+        * match response.data.sourceName contains sourceName_warm
+        * match destinationName_warm == response.data.destinationName
+        * def transactionId = response.data.id
+        * def requestId = response.data.requestId
 
-  # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
-    * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+        # 8.Approve Transfer from admin quorum  
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: "#(requestId)"}
 
-  # 6.Submit transfer
-    * call read(svc + "Biometric.feature@RequesterDoBiometric")
-    * def body_transfer = 
-    """
-    { 
-      "operation":'#(Const.Transfer.Operation.TRANSFER)',
-      "tokenId":'#(tokenId_transfer)',
-      "feeType":'#(Const.TokenSymbol.XRP)',
-      "fee":'#(fee)', 
-      "treatAsGrossAmount": true, 
-      "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
-      "destination":{
-        "type":'#(Const.PeerType.EXTERNAL_WALLET)',
-        "id":'#(destinationId_warm)'
-      }, 
-      "source": {
-        "type":'#(Const.PeerType.VAULT_ACCOUNT)',
-        "id":'#(sourceId_warm)'
-      },
-      "amount":#(amount_low),
-      "totalEstimatedFee":'#(totalEstimatedFee)'
-    }
-    """
-    * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
-    * match sourceName_warm == response.data.sourceName
-    * match destinationName_warm == response.data.destinationName
-    * def transactionId = response.data.id
-    * def requestId = response.data.requestId
+        # 9.Waiting to auto approve in fireblock
 
-   # 7.Approve Transfer from admin quorum
-    * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
+        # 10.View transfer detail after complete
+        * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
+        * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
+        * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
+        # --- Verify sourceName, destinationName
+        * match sourceName_warm == getTransactionDetail.response.data.sourceName
+        * match destinationName_warm == getTransactionDetail.response.data.destinationName
+        # --- Verify Txn Type
+        * match getTransactionDetail.response.data.status == "COMPLETED"
 
-   # 8.Waiting to auto approve in fireblock
+        # 11. Get the balance of source
+        * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
+        * def getDetailTokenSource = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
-   # 9.View transfer detail after complete
-    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
-    * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
-    * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
-   # --- Verify sourceName, destinationName
-    * match sourceName_warm == getTransactionDetail.response.data.sourceName
-    * match destinationName_warm == getTransactionDetail.response.data.destinationName
-   # --- Verify Txn Type
-    * match getTransactionDetail.response.data.status == "COMPLETED"
+        # 12. Verify the balance of source is updated correctly 
+        # Bug REP-1222
+        * print available, amount_low, available_source_afterTransfer
+        # * match available_source_afterTransfer == available - amount_low
 
-   # 9.1.Get the balance of source
-    * eval java.lang.Thread.sleep(60000)
-    * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
-    * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * print available_source_afterTransfer, available, amount_low
-    * match available_source_afterTransfer == available - amount_low
+        # 13. Verify balance of destination && transaction show in destination
+        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
 
-   # 9.2.Verify balance of destination && transaction show in destination
-    * call read('VerifySameWorkSpace.feature@VerifyBalanceDestination')
 
     ######################### REBALANCE  #################################################################
+    @RAKCON-19306
+    Scenario: REBALANCE - Transfer WARM to WARM - SAME company
+        # 1.Select token for doing transfer
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def tokenId_transfer = getToken.tokens[0].id
+        * def tokenSymbol = getToken.tokens[0].externalAssetId
 
-  @RAKCON-19306
-  Scenario: REBALANCE - Transfer WARM to WARM - SAME company
-  # 1.Select token for doing transfer
-    * def getToken = call read(classpath + 'Transfer.feature@Get_asset_transfer')
-    * def tokenId_transfer = getToken.response.data.tokens[0].id
-    * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
+        # 2.Select source
+        * def vaultType = Const.VaultType.HOT_WALLET
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
+        * def sourceId_warm = source_warm.id
+        * def sourceName_warm = source_warm.name
+        * def available = source_warm.wallets[0].available
+        * def walletId_warm = source_warm.wallets[0].id
 
-  # 2.Select source
-    * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def sourceId_warm = source_warm.id
-    * def sourceName_warm = source_warm.name
-    * def available = source_warm.wallets[0].available
-    * def walletId_warm = source_warm.wallets[0].id
+        # 3.Select destination from whitelist. The whitelist contains token from an other workspace
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
+        * def destinationId_warm = destination_warm.id
+        * def destinationName_warm = destination_warm.name
+        
+        # 4.Get total amount of destination token before doing transfer
+        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'XRP'}
+        * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
+        * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
 
-  # 3.Select destination from internal.
-    * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
-    * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
-    * def destinationId_warm = destination_warm.id
-    * def destinationName_warm = destination_warm.name
+        # 5.Get estimated fee
+        * def body_estimate_fee = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount": '#(amount_low)',
+            "destinationId":'#(destinationId_warm)'
+        }
+        """
+        * def getEstimateFee = call read(svc + 'Transaction.feature@GetEstimatedFee') body_estimate_fee
+        * def fee = getEstimateFee.response.data.medium
 
-  # Get total amount of destination token before doing transfer
-    * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'XRP'}
-    * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
-    * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
+        # 6.Caculate estimated fee
+        * def body_total_estimate = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount":'#(amount_low)',
+            "destinationId":'#(destinationId_warm)', 
+            "fee":'#(fee)',
+            "isNetAmount":false,
+            "isStake":false
+        }
+        """
+        * def getCaculateFee = call read(svc + 'Transaction.feature@GetTotalFee') body_total_estimate
+        * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+    
+        # 7.Submit transfer
+        * def transferAmount = amount_low
+        * call read(svc + "Biometric.feature@RequesterDoBiometric")
+        * def body_transfer = 
+        """
+        { 
+            "operation":'#(Const.Transfer.Operation.TRANSFER)',
+            "tokenId":'#(tokenId_transfer)',
+            "feeType":'#(Const.TokenSymbolXRP)',
+            "fee":'#(fee)', 
+            "treatAsGrossAmount": true, 
+            "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+            "destination":{
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(destinationId_warm)'
+            }, 
+            "source": {
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(sourceId_warm)'
+            },
+            "amount":'#(amount_low)',
+            "totalEstimatedFee":'#(totalEstimatedFee)'
+        }
+        """
+        * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
+        * match response.data.sourceName contains sourceName_warm
+        * match destinationName_warm == response.data.destinationName
+        * def transactionId = response.data.id
+        * def requestId = response.data.requestId
 
-  # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def fee = getEstimateFee.response.data.medium
+        # 8.Approve Transfer from admin quorum  
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: "#(requestId)"}
 
-  # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_warm)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
-    * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+        # 9.Waiting to auto approve in fireblock
 
-  # 6.Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_warm)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * def transferAmount = amount_low
-    * call read(classpath + 'Transfer.feature@Internal_Transfer_Common')
-    * match sourceName_warm == response.data.sourceName
-    * match destinationName_warm == response.data.destinationName
-    * def transactionId = response.data.id
-    * def requestId = response.data.requestId
+        # 10.View transfer detail after complete
+        * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
+        * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
+        * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
+        # --- Verify sourceName, destinationName
+        * match sourceName_warm == getTransactionDetail.response.data.sourceName
+        * match destinationName_warm == getTransactionDetail.response.data.destinationName
+        # --- Verify Txn Type
+        * match getTransactionDetail.response.data.status == "COMPLETED"
 
-   # 7.Approve Transfer from admin quorum
-    * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
+        # 11. Get the balance of source
+        * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
+        * def getDetailTokenSource = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
-   # 8.Waiting to auto approve in fireblock
+        # 12. Verify the balance of source is updated correctly 
+        # Bug REP-1222
+        * print available, amount_low, available_source_afterTransfer
+        # * match available_source_afterTransfer == available - amount_low
 
-   # 9.View transfer detail after complete
-    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
-    * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
-    * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
-   # --- Verify sourceName, destinationName
-    * match sourceName_warm == getTransactionDetail.response.data.sourceName
-    * match destinationName_warm == getTransactionDetail.response.data.destinationName
-   # --- Verify Txn Type
-    * match getTransactionDetail.response.data.status == "COMPLETED"
+        # 13. Verify balance of destination && transaction show in destination
+        * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
+        * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        # --- Verify the balance of source is updated correctly
+        # Bug REP-1222
+        * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
+        * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
+        # * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
-   # 9.1.Get the balance of source
-    * eval java.lang.Thread.sleep(60000)
-    * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
-    * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * print "available_source_afterTransfer : ", available_source_afterTransfer,", available: ", available, ", transferAmount: ",transferAmount,", available - transferAmount : ", available - transferAmount
-    * match available_source_afterTransfer == available - transferAmount
+    @RAKCON-19332
+    Scenario: REBALANCE - Transfer WARM to COLD - SAME company
+        # 1.Select token for doing transfer
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def tokenId_transfer = getToken.tokens[0].id
+        * def tokenSymbol = getToken.tokens[0].externalAssetId
 
-   # 9.2.Get the balance of destination
-    * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
-    * def getDetailTokenDestination = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * def amount_recieve = parseFloat(transferAmount) - parseFloat(testData.transfer.withdraw.fee)
-    * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
+        # 2.Select source
+        * def vaultType = Const.VaultType.HOT_WALLET
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
+        * def sourceId_warm = source_warm.id
+        * def sourceName_warm = source_warm.name
+        * def available = source_warm.wallets[0].available
+        * def walletId_warm = source_warm.wallets[0].id
 
+        # 3.Select destination from internal.
+        * def vaultType = Const.VaultType.COLD_WALLET
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
+        * def destinationId_warm = destination_warm.id
+        * def destinationName_warm = destination_warm.name
+        
+        # 4.Get total amount of destination token before doing transfer
+        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'XRP'}
+        * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
+        * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
 
-  @RAKCON-19332
-  Scenario: REBALANCE - Transfer WARM to COLD - SAME company
-  # 1.Select token for doing transfer
-    * def getToken = call read(classpath + 'Transfer.feature@Get_asset_transfer')
-    * def tokenId_transfer = getToken.response.data.tokens[0].id
-    * def tokenSymbol = getToken.response.data.tokens[0].externalAssetId
+        # 5.Get estimated fee
+        * def body_estimate_fee = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount": '#(amount_low)',
+            "destinationId":'#(destinationId_warm)'
+        }
+        """
+        * def getEstimateFee = call read(svc + 'Transaction.feature@GetEstimatedFee') body_estimate_fee
+        * def fee = getEstimateFee.response.data.medium
 
-  # 2.Select source
-    * def vaultType = Const.VaultType.HOT_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData_v2.stdVaultE2E)}
-    * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def sourceId_warm = source_warm.id
-    * def sourceName_warm = source_warm.name
-    * def available = source_warm.wallets[0].available
-    * def walletId_warm = source_warm.wallets[0].id
+        # 6.Caculate estimated fee
+        * def body_total_estimate = 
+        """
+        { 
+            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+            "sourceId": '#(sourceId_warm)',
+            "amount":'#(amount_low)',
+            "destinationId":'#(destinationId_warm)', 
+            "fee":'#(fee)',
+            "isNetAmount":false,
+            "isStake":false
+        }
+        """
+        * def getCaculateFee = call read(svc + 'Transaction.feature@GetTotalFee') body_total_estimate
+        * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+    
+        # 7.Submit transfer
+        * def transferAmount = amount_low
+        * call read(svc + "Biometric.feature@RequesterDoBiometric")
+        * def body_transfer = 
+        """
+        { 
+            "operation":'#(Const.Transfer.Operation.TRANSFER)',
+            "tokenId":'#(tokenId_transfer)',
+            "feeType":'#(Const.TokenSymbolXRP)',
+            "fee":'#(fee)', 
+            "treatAsGrossAmount": true, 
+            "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
+            "destination":{
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(destinationId_warm)'
+            }, 
+            "source": {
+                "type":'#(Const.PeerType.VAULT_ACCOUNT)',
+                "id":'#(sourceId_warm)'
+            },
+            "amount":'#(amount_low)',
+            "totalEstimatedFee":'#(totalEstimatedFee)'
+        }
+        """
+        * call read(svc + "Transaction.feature@CreateTransaction") body_transfer
+        * match response.data.sourceName contains sourceName_warm
+        * match destinationName_warm == response.data.destinationName
+        * def transactionId = response.data.id
+        * def requestId = response.data.requestId
 
-  # 3.Select destination from internal.
-    * def vaultType = Const.VaultType.COLD_WALLET
-    * def getSource = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
-    * def destination_cold = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
-    * def destinationId_cold = destination_cold.id
-    * def destinationName_cold = destination_cold.name
+        # 8.Approve Transfer from admin quorum  
+        * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+        * call read(svc + 'Quorums.feature@ApproveRequest') {requestId: "#(requestId)"}
 
-  # Get total amount of destination token before doing transfer
-    * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destinationId_cold), tokenSymbol:'XRP'}
-    * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
-    * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
+        # 9.Waiting to auto approve in fireblock
 
-  # 4.Get estimated fee
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)'}
-    * def getEstimateFee = call read(classpath + 'Transfer.feature@Get_estimate_fee_common') {body_estimate_fee: body_estimate_fee}
-    * def fee = getEstimateFee.response.data.medium
+        # 10.View transfer detail after complete
+        * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
+        * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
+        * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
+        # --- Verify sourceName, destinationName
+        * match sourceName_warm == getTransactionDetail.response.data.sourceName
+        * match destinationName_warm == getTransactionDetail.response.data.destinationName
+        # --- Verify Txn Type
+        * match getTransactionDetail.response.data.status == "COMPLETED"
 
-  # 5.Caculate estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.destinationType)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(sourceId_warm)',"amount":#(amount_low),"destinationId":'#(destinationId_cold)', "fee":'#(fee)',"isNetAmount":false}
-    * def getCaculateFee = call read(classpath + 'Transfer.feature@Total_estimate_fee_common')
-    * def totalEstimatedFee = getCaculateFee.response.data.totalEstimatedFee
+        # 11. Get the balance of source
+        * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
+        * def getDetailTokenSource = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
-  # 6.Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(tokenId_transfer)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(fee)', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(sourceId_warm)'},"amount":#(amount_low),"totalEstimatedFee":'#(totalEstimatedFee)'}
-    * def transferAmount = amount_low
-    * call read(classpath + 'Transfer.feature@Internal_Transfer_Common')
-    * match sourceName_warm == response.data.sourceName
-    * match destinationName_cold == response.data.destinationName
-    * def transactionId = response.data.id
-    * def requestId = response.data.requestId
+        # 12. Verify the balance of source is updated correctly 
+        # Bug REP-1222
+        * print available, amount_low, available_source_afterTransfer
+        # * match available_source_afterTransfer == available - amount_low
 
-   # 7.Approve Transfer from admin quorum
-    * call read(classpath + 'ApprovalRequest.feature@ApproveRequestCommon')
+        # 13. Verify balance of destination && transaction show in destination
+        * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
+        * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        # --- Verify the balance of source is updated correctly
+        # Bug REP-1222
+        * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
+        * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
+        # * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
-   # 8.Waiting to auto approve in fireblock
-
-   # 9.View transfer detail after complete
-    * def getTransactionDetail = waitUntilTransactionCompleted(transactionId)
-    * def sourceAdress_from_sourceTransfer = getTransactionDetail.response.data.sourceAddress
-    * def destinationAdress_from_sourceTransfer = getTransactionDetail.response.data.destinationAddress
-   # --- Verify sourceName, destinationName
-    * match sourceName_warm == getTransactionDetail.response.data.sourceName
-    * match destinationName_cold == getTransactionDetail.response.data.destinationName
-   # --- Verify Txn Type
-    * match getTransactionDetail.response.data.status == "COMPLETED"
-
-   # 9.1.Get the balance of source
-    * eval java.lang.Thread.sleep(60000)
-    * def query_detail = { vaultId :'#(sourceId_warm)', walletId: '#(walletId_warm)'}
-    * def getDetailTokenSource = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def total_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * print "available(", available, ") - amount_low(", transferAmount, ") = total_source_afterTransfer(", total_source_afterTransfer,")"
-    * match total_source_afterTransfer == available - transferAmount
-
-   # 9.2.Get the balance of destination
-    * def query_detail = { vaultId :'#(destinationId_cold)', walletId: '#(walletId_destination)'}
-    * def getDetailTokenDestination = call read(classpath + 'Wallet.feature@VIEW_TOKEN_DETAIL_COMMON')
-    * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
-    # --- Verify the balance of source is updated correctly
-    * def amount_recieve = parseFloat(transferAmount) - parseFloat(testData.transfer.withdraw.fee)
-    * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-    * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)

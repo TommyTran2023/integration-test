@@ -44,7 +44,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 3.Select destination from whitelist. The whitelist contains token from an other workspace
         * def folderName = "WARM_CROSS_WORKSPACE"
-        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def getDestination = karate.call(svc + 'Whitelist.feature@GetWhitelistFolders', {keyword: folderName})
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
@@ -163,7 +163,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 3.Select destination from whitelist. The whitelist contains token from an other workspace
         * def folderName = "COLD_CROSS_WORKSPACE"
-        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def getDestination = karate.call(svc + 'Whitelist.feature@GetWhitelistFolders', {keyword: folderName})
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
@@ -283,7 +283,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 3.Select destination from whitelist. The whitelist contains token from an other workspace
         * def folderName = "WARM_SAME_WORKSPACE"
-        * def getDestination = karate.call(svc + 'WhiteList.feature@GetWhitelistFolders', {keyword: folderName})
+        * def getDestination = karate.call(svc + 'Whitelist.feature@GetWhitelistFolders', {keyword: folderName})
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.folders[?(@.name=='"+ folderName +"')]")[0]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name

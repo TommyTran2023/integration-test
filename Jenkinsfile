@@ -31,7 +31,7 @@ pipeline {
     }
 
     triggers {
-        cron(env.BRANCH_NAME == 'sit' ? '00 8 * * 1-5' : '')
+        cron(env.BRANCH_NAME == 'sit' ? '00 19 * * 1-5' : '')
     }
 
     stages {

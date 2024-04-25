@@ -28,7 +28,7 @@ function fn(){
                     "numMemberInGroup": x.totalMember,
                     "users": x.memberInfos,
                     "members": x.memberInfos,
-                    "type": "group",
+                    "type": "GROUP",
                     "groupName": x.name,
                     "groupId": x.id
                 }})

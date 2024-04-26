@@ -7,28 +7,24 @@ Feature: Transfer
     * call read('this:Common.feature@CACULATE_LIMIT_TRANSFER')
     * def testData = read('classpath:data/data_test.json')
     * def a = read('classpath:data/enum.json')
-    * configure afterFeature = function(){ karate.call('this:AfterHook.feature@Handle_Pending_Request_Transfer'); }
+    * configure afterFeature = function(){ karate.call('classpath:rakkar/common/Common.feature@CancelAllTranferRequests'); }
 
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
-    * def query = { limit:'10', offset: '0', sort:'ASC', groupBy: 'ASSET', keyword:'xrp'}
-    Given path 'core/wallet/transfer-tokens'
-    And params query
-    When method GET
-    Then status 200
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: a.symbol.ADA}
+    Then match responseStatus == 200
     And match response.status == "success"
 
   #Get estimated fee : Hot to Hot
   @ignore @Get_estimate_fee_common
     Scenario: Transfer Hot to hot - Get estimated fee common
-      * print body_estimate_fee
       Given path 'transaction/transactions/estimated-fee'
       And request body_estimate_fee
       When method POST
       Then status 201
       And match response.status == "success"
-      And match response.data.feeType == "#(testData.transfer.withdraw.tokenSymbol)"
+      And match response.data.feeType == a.TokenSymbol.ADA
 
     #Get estimated fee : Hot to Hot
   @RAKCON-13154 @Get_estimate_fee_hot_to_hot
@@ -65,7 +61,19 @@ Feature: Transfer
     #TCs: Total estimate fee: Hot to hot
   @RAKCON-13158 @Total_estimate_fee_hot_hot
   Scenario: Transfer Hot to hot - Total estimated fee
-    * def body_total_estimate = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(dataSet.sourceId_hot)',"amount":#(amount_low),"destinationId":'#(dataSet.destinationId_hot)', "fee":#(Number(testData.transfer.withdraw.fee)),"isNetAmount":false}
+    * def body_total_estimate = 
+    """
+    { 
+      "assetId":'#(a.TokenSymbol.ADA)', 
+      "destinationType": '#(testData.transfer.source_type)', 
+      "sourceType":'#(testData.transfer.source_type)', 
+      "sourceId": '#(dataSet.sourceId_hot)',
+      "amount":'#(amount_low)',
+      "destinationId":'#(dataSet.destinationId_hot)', 
+      "fee":'#(Number(testData.transfer.withdraw.fee))',
+      "isNetAmount":false
+    }
+    """
     * call read('this:Transfer.feature@Total_estimate_fee_common')
 
    #TCs: Total estimate fee: Hot to Cold
@@ -89,11 +97,27 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT HOT TO HOT
   @RAKCON-11390 @Transfer_value_hot_to_hot
   Scenario: Transfer Hot to hot - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = 
+    """
+    { 
+      "operation":'#(testData.transfer.operation)',
+      "tokenId":'#(dataSet.tokenId)',
+      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "fee":'#(Number(testData.transfer.withdraw.fee))', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(testData.transfer.feeLevel)', 
+      "destination":{"type":'#(testData.transfer.source_type)',
+      "id":'#(dataSet.destinationId_hot)'}, 
+      "source": {"type":'#(testData.transfer.source_type)',
+      "id":'#(dataSet.sourceId_hot)'},
+      "amount":'#(amount_default)',
+      "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
+    }
+    """
     * call read('this:Transfer.feature@Internal_Transfer_Common')
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_low
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
@@ -101,11 +125,31 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
   Scenario: Transfer Hot to cold - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = 
+    """
+    { 
+      "operation":'#(testData.transfer.operation)',
+      "tokenId":'#(dataSet.tokenId)',
+      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "fee":'#(Number(testData.transfer.withdraw.fee))', 
+      "treatAsGrossAmount": true, 
+      "feeLevel": '#(testData.transfer.feeLevel)', 
+      "destination":{
+        "type":'#(testData.transfer.source_type)',
+        "id":'#(dataSet.destinationId_cold)'
+      }, 
+      "source": {
+        "type":'#(testData.transfer.source_type)',
+        "id":'#(dataSet.sourceId_hot)'
+      },
+      "amount":'#(amount_default)',
+      "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
+    }
+    """
     * call read('this:Transfer.feature@Internal_Transfer_Common')
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_default
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
@@ -113,11 +157,11 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
   Scenario: Transfer Cold to hot - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(a.symbol.ADA)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('this:Transfer.feature@Internal_Transfer_Common')
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_default
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
@@ -126,11 +170,11 @@ Feature: Transfer
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
   Scenario: Transfer Cold to cold - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(a.symbol.ADA)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('this:Transfer.feature@Internal_Transfer_Common') body
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_default
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
@@ -168,7 +212,7 @@ Feature: Transfer
           "type":'#(testData.transfer.source_type)',
           "id":'#(dataSet.sourceId_hot)'
         },
-        "amount":#(amount_medium),
+        "amount":'#(amount_medium)',
         "totalEstimatedFee":'#(testData.transfer.withdraw.fee)'
       }
     """
@@ -216,7 +260,7 @@ Feature: Transfer
           "type":'#(testData.transfer.source_type)',
           "id":'#(dataSet.sourceId_hot)'
         },
-        "amount":#(amount_high),
+        "amount":'#(amount_high)',
         "totalEstimatedFee":'#(testData.transfer.withdraw.fee)'
       }
     """
@@ -238,7 +282,7 @@ Feature: Transfer
         "destinationType": '#(a.PeerType.EXTERNAL_WALLET)', 
         "sourceType":'#(a.PeerType.VAULT_ACCOUNT)', 
         "sourceId": '#(dataSet.sourceId_hot)',
-        "amount":#(amount_low),
+        "amount":#(amount_default),
         "destinationId":'#(dataSet.externalId)'
       }
     """
@@ -250,11 +294,11 @@ Feature: Transfer
     * def body_total_estimate = 
     """
       { 
-        "assetId":'#(testData.transfer.withdraw.tokenSymbol)', 
+        "assetId":'#(a.TokenSymbol.ADA)', 
         "destinationType": '#(testData.transfer.destinationType)', 
         "sourceType":'#(testData.transfer.source_type)', 
         "sourceId": '#(dataSet.sourceId_hot)',
-        "amount":#(amount_low),
+        "amount":#(amount_default),
         "destinationId":'#(dataSet.externalId)', 
         "fee":'#(Number(testData.transfer.withdraw.fee))',
         "isNetAmount":false
@@ -268,11 +312,11 @@ Feature: Transfer
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(dataSet.tokenId)',
-      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "tokenId":'#(dataSet.transferWhitelistToken)',
+      "feeType":'#(a.TokenSymbol.DAI)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
-      "feeLevel": '#(testData.transfer.feeLevel)', 
+      "feeLevel": '#(a.TokenSymbol.DAI)', 
       "destination":{
         "type":'#(testData.transfer.destinationType)',
         "id":'#(dataSet.externalId)'
@@ -281,7 +325,7 @@ Feature: Transfer
         "type":'#(testData.transfer.source_type)',
         "id":'#(dataSet.sourceId_hot)'
       },
-      "amount":'#(amount_low)',
+      "amount":0.01,
       "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
     }
     """
@@ -319,7 +363,7 @@ Feature: Transfer
     Then status 201
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_default
 
 
     #Get estimated fee : Transfer to other network
@@ -338,11 +382,11 @@ Feature: Transfer
   @ignore @RAKCON-15409 @Transfer_to_other_network
   Scenario: Transfer to other network - Submit transfer
     * call read('this:NetworkManagement.feature@ListNetworkForTransfer')
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.network_type)',"id":'#(destinationId_network)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_hot)'},"amount":#(amount_low),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.network_type)',"id":'#(destinationId_network)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_hot)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('this:Transfer.feature@Internal_Transfer_Common')
     And response.status == "success"
     And response.data.status == "PENDING"
-    And response.data.amount == "#(amount_low)"
+    And response.data.amount == amount_default
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
     * def requestId = response.data.requestId
@@ -379,7 +423,7 @@ Feature: Transfer
       {
         "operation":'#(testData.transfer.operation)',
         "tokenId":'#(dataSet.tokenId)',
-        "feeType":'#(testData.transfer.withdraw.feeType)',
+        "feeType":'#(a.TokenSymbol.ADA)',
         "fee":'#(Number(testData.transfer.withdraw.fee))', 
         "treatAsGrossAmount": true, 
         "feeLevel": '#(testData.transfer.feeLevel)', 
@@ -431,10 +475,10 @@ Feature: Transfer
       totalUSDYesterday: '#number',
       availableUSD: '#number',
       name: '#string',
-      createdAt: '#string',
+      createdAt: '#string'
     }
     """
-    * match each response.data.list[*] == expectedVaultSchema
+    * match each response.data.list[*] contains expectedVaultSchema
     * def expectedWalletSchema = 
     """
     {

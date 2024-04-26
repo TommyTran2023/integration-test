@@ -197,7 +197,7 @@ Feature: WhiteList Folder
     #Pre-5.Validate to add new address
   @RAKCON-13207 @Validate_add_address
   Scenario:Validate to add new address
-    * def body_validate = {"address" : '#(dataSet.address)',"nativeAsset": '#(testData.transfer.withdraw.tokenSymbol)' }
+    * def body_validate = {"address" : '#(dataSet.whitelistAddress)',"nativeAsset": '#(Const.TokenSymbol.BTC)' }
     Given path 'core/folders/addresses/validate'
     And request body_validate
     When method POST
@@ -216,9 +216,9 @@ Scenario:Create whitelisted address common - Internal
   {
     "tag" : '',
     "isRequiredTag": true,
-    "tokenId" : '#(dataSet.tokenId)',
+    "tokenId" : '#(dataSet.whitelistTokenId)',
     "note" : 'Note test',
-    "address" : '#(dataSet.address)',
+    "address" : '#(dataSet.whitelistAddress)',
     "walletHost" : '#(hostOptions)',
     "walletMethod" : '#(methodOptions)'
   }
@@ -228,7 +228,7 @@ Scenario:Create whitelisted address common - Internal
   * call read(svc + 'Whitelist.feature@AddWhitelistAddress') body_submit
   Then match responseStatus == 201
   And match response.status == "success"
-  And match response.data.address == "#(dataSet.address)"
+  And match response.data.address == "#(dataSet.whitelistAddress)"
   And match response.data.folderId == "#(folderId)"
   * def addressId = response.data.id
   * def folderId = response.data.folderId

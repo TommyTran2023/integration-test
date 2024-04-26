@@ -12,7 +12,7 @@ Feature: Transfer
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
-    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: a.symbol.ADA}
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: a.Symbol.ADA}
     Then match responseStatus == 200
     And match response.status == "success"
 

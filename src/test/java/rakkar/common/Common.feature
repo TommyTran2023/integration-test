@@ -22,3 +22,8 @@ Feature: Common Feature
         * def vaultWallet = vaults.response.data.list[0].wallets.find(x => x.symbol == 'XRP')
         * def wallet = call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId:"#(vaults.response.data.list[0].id)",walletId:"#(vaultWallet.id)"}
         * call read(svc + 'testnet.feature@DepositXRP') {address:"#(wallet.response.data.address[0].address)"}
+
+    @CancelAllTranferRequests
+    Scenario: Cancel all request
+        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+        * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)

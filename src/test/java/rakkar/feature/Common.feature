@@ -4,6 +4,7 @@ Feature: Generate Challenge Answer for Biometric
   Background:
     * url baseURL
     * def testData = read('classpath:data/data_test.json')
+    * def Const = read('classpath:data/enum.json')
 
   @FIDO-Requester
   Scenario: Generate challenge answer for Requester
@@ -85,14 +86,24 @@ Feature: Generate Challenge Answer for Biometric
     * def uploadUrl = response.data.uploadUrl
     * def uploadToken = response.data.uploadToken
 
-  @ignore @CACULATE_LIMIT_TRANSFER
+   @CACULATE_LIMIT_TRANSFER
   Scenario: Caculate the limit transfer
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * def body_estimate_fee = { "assetId":'#(testData.transfer.withdraw.tokenSymbol)', "destinationType": '#(testData.transfer.source_type)', "sourceType":'#(testData.transfer.source_type)', "sourceId": '#(dataSet.sourceId_hot)',"amount":10,"destinationId":'#(dataSet.destinationId_hot)'}
+    * def body_estimate_fee = 
+    """
+    { 
+      "assetId":'#(Const.TokenSymbol.ADA)', 
+      "destinationType": '#(Const.PeerType.EXTERNAL_WALLET)', 
+      "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
+      "sourceId": '#(dataSet.sourceId_hot)',
+      "amount":10,
+      "destinationId":'#(dataSet.destinationId_hot)'}
+    """
     Given path 'transaction/transactions/estimated-fee'
     And request body_estimate_fee
     When method POST
     Then status 201
+    * def amount_default = 3
     * def tokenPrice = response.data.totalToUSD / 10
     * def tier_signer = call read('this:Common.feature@TIERS_SIGNER')
     * def limit_low = tier_signer.response.data[0].to - 1

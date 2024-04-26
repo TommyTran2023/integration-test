@@ -1,6 +1,6 @@
 {
-  "address" : "rGGGBKLgqLHJQSM7LKARcdgSSo7cCQo5Mv",
-  "tokenId" : "1e62f02c-7ae7-4735-a9ec-22347d6af122",
+  "address" : "addr_test1qrxlfuwgqmjpwmywra04kxalmc3pt0yuaq5l2ux9er88vueme8fc2239tkh9ag3ptmqswf3kktc6pmjfg5w4a59gl9zsnj73g7",
+  "tokenId" : "3ec53849-2838-4b83-8925-97ae3d299eea",
   "stakeToken" : "3ec53849-2838-4b83-8925-97ae3d299eea",
   "advVaultWithAllUsers" : "7658e9b8-ac56-4b2a-bd47-8f6922268b85",
   "advanceHotVaultForStakeId" : "2b6dca44-fd2f-4221-a51c-0c2a9a59ecb6",
@@ -21,5 +21,8 @@
   "advanceHotVaultId" : "b8ebd5c4-3059-4f2c-9ca4-ffe11fd66ead",
   "advanceColdVaultId" : "a676b6ff-38a2-408d-ba5e-20bdadee68c5",
   "standardVaultForEditPolicy" : "ba1fcdc3-e1b6-4f12-aa37-25b24c674c1a",
-  "standardVaultForEditPolicy2" : "c819feb1-a494-4df7-b34d-b33bd05a6872"
+  "standardVaultForEditPolicy2" : "c819feb1-a494-4df7-b34d-b33bd05a6872",
+  "whitelistTokenId": "c634bfb5-b6c7-402e-9370-8fadd2948c9c",
+  "whitelistAddress": "tb1qpv3zlej4ldwh5ldf7dsyxzftsa2ck64jzx9dga",
+  "transferWhitelistToken":"fd2e88cd-6495-40c1-ad2c-a8332c56261b"
 }

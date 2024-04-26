@@ -13,7 +13,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             do {
                 java.lang.Thread.sleep(25000); 
                 karate.call(svc + 'Transaction.feature@SyncTransaction', { transactionId: transactionId })
-                java.lang.Thread.sleep(5000); 
+                java.lang.Thread.sleep(10000); 
                 var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
                 retry--
             }
@@ -138,9 +138,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
         # 12. Verify the balance of source is updated correctly 
-        # Bug REP-1222
         * print available, amount_low, available_source_afterTransfer
-        # * match available_source_afterTransfer == available - amount_low
+        * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
         * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
@@ -257,9 +256,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
         # 12. Verify the balance of source is updated correctly 
-        # Bug REP-1222
         * print available, amount_low, available_source_afterTransfer
-        # * match available_source_afterTransfer == available - amount_low
+        * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
         * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
@@ -377,9 +375,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
         # 12. Verify the balance of source is updated correctly 
-        # Bug REP-1222
         * print available, amount_low, available_source_afterTransfer
-        # * match available_source_afterTransfer == available - amount_low
+        * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
         * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
@@ -498,19 +495,17 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
         # 12. Verify the balance of source is updated correctly 
-        # Bug REP-1222
         * print available, amount_low, available_source_afterTransfer
-        # * match available_source_afterTransfer == available - amount_low
+        * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
         * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
         # --- Verify the balance of source is updated correctly
-        # Bug REP-1222
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-        # * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
+        * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     @RAKCON-19332
     Scenario: REBALANCE - Transfer WARM to COLD - SAME company
@@ -625,17 +620,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def available_source_afterTransfer = parseFloat(getDetailTokenSource.response.data.available)
 
         # 12. Verify the balance of source is updated correctly 
-        # Bug REP-1222
         * print available, amount_low, available_source_afterTransfer
-        # * match available_source_afterTransfer == available - amount_low
+        * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
         * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
         # --- Verify the balance of source is updated correctly
-        # Bug REP-1222
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
-        # * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
+        * match total_destination_afterTransfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 

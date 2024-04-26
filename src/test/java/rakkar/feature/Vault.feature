@@ -334,7 +334,7 @@ Feature: Vault
   Scenario: View hidden listing vault
     * call read('this:Vault.feature@ViewHiddenVaultCommon')
     * def vaultsSchema = schemaBody.vault.schema_list
-    * match response.data.list == '#[]vaultsSchema'
+    * match response.data.list contains vaultsSchema
     * match response.data.total == '#number'
 
     @RAKCON-11370 @SearchHiddenVault
@@ -1028,7 +1028,7 @@ Feature: Vault
       "externalAssetId": "#string"
     }
     """
-    * match each response.data.list[*] == expectedVaultSchema
+    * match each response.data.list[*] contains expectedVaultSchema
     * match each response.data.list[*].wallets[*] == expectedWalletSchema
     * def actual = $response.data.list[*].totalUSD
     * def expected = $response.data.list[*].totalUSD

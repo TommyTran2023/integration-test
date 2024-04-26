@@ -87,7 +87,8 @@
       "totalUSDYesterday": "#number",
       "isMasked": "#boolean",
       "isArchived": "#boolean",
-      "createdAt": "#string"
+      "createdAt": "#string",
+      "disableType": "#string"
     },
     "details":{
       "id": "#uuid",

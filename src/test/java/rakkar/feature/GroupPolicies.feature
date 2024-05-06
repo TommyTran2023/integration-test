@@ -233,7 +233,6 @@ Feature: Group Policies
 
     @RAKCON-25918 @MOB-77 @EditGroupHavePendingVaultPolicy
     Scenario: Edit Group Have Pending Vault Policy
-        # Bug MOB-5101
         * def group = groupHandle().selectGroupHavePendingPolicyRequest()
         * call read(svc + 'Group.feature@ValidatePrerequisitesGroup') {groupId: #(group.id)}
         Then match responseStatus == 400

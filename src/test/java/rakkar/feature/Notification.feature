@@ -3,7 +3,7 @@ Feature: Notification
 
   Background:
     * url baseURL
-    * def testData = read('classpath:data/data_test.json')
+    * def Const = read('classpath:data/enum.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-11009 @NotificationSetting
@@ -22,33 +22,54 @@ Feature: Notification
     * def createVaultRequestId = call read('this:Vault.feature@GetCreateVaultRequestID')
     * call read('this:ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
-    * match notificationCenter.response.data.notifications[0].requestId == createVaultRequestId.requestId
-    * match notificationCenter.response.data.notifications[0].title == testData.notification.vault.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == testData.notification.vault.state
-    * def notificationContent = "You have received a request for a new vault policy for <<"+createVaultRequestId.vaultNameResponseWA+">>"
-    * match notificationCenter.response.data.notifications[0].body == notificationContent
+    * def noti = notificationCenter.response.data.notifications[0]
+    * match noti.requestId == createVaultRequestId.requestId
+    * match noti.title == Const.Notifications.CreateVaultPolicy.title
+    * match noti.type == Const.Notifications.CreateVaultPolicy.type
+    * def notificationContent = Const.Notifications.CreateVaultPolicy.body.replace("vaultName", createVaultRequestId.vaultNameResponseWA) 
+    * match noti.body == notificationContent
 
   @RAKCON-12514 @ViewNotificationCenterAlert
   Scenario: View Notification - Alert
     * def rejectTransfer = call read('this:RejectRequest.feature@RejectTransfer_Hot_to_Cold')
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
-    * match notificationCenter.response.data.notifications[0].requestId == rejectTransfer.requestId
-    * match notificationCenter.response.data.notifications[0].title == testData.notification.rejectTransfer.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == testData.notification.rejectTransfer.state
-    * def notificationContent = "Your request to transfer <<"+rejectTransfer.value.response.data.amount+">> "+"<<"+rejectTransfer.value.response.data.symbol+">> from <<"+rejectTransfer.value.response.data.sourceName+">> to <<"+rejectTransfer.value.response.data.destinationName+">> has been rejected."
-    * match notificationCenter.response.data.notifications[0].body == notificationContent
+    * def noti = notificationCenter.response.data.notifications[0]
+    * def expectedMetadataParams = 
+    """
+    {
+      "AMOUNT":"#string",
+      "ASSET_SYMBOL":"#string",
+      "FROM_VAULT_NAME":"#string",
+      "TO_VAULT_NAME":"#string"
+    }
+    """
+    * match noti.requestId == rejectTransfer.requestId
+    * match noti.title == Const.Notifications.RejectTransfer.title
+    * match noti.type == Const.Notifications.RejectTransfer.type
+    * match noti.body == Const.Notifications.RejectTransfer.body
+    * match noti.params == expectedMetadataParams
 
   @RAKCON-12515 @ViewNotificationCenterTransactionAlert
   Scenario: View Notification Center - Transaction Alert
     * def approveTransfer = call read('this:ApprovalRequest.feature@ApprovalTransfer_Hot_to_cold')
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def notificationCenter = call read('this:Notification.feature@ViewNotificationCenter-Common')
-    * match notificationCenter.response.data.notifications[0].requestId == approveTransfer.requestId
-    * match notificationCenter.response.data.notifications[0].title == testData.notification.approveTransfer.labelInApp
-    * match notificationCenter.response.data.notifications[0].type == testData.notification.approveTransfer.state
-    * def notificationContent = "Your request to transfer <<"+approveTransfer.value.response.data.amount+">> "+"<<"+approveTransfer.value.response.data.symbol+">>"+" from <<"+approveTransfer.value.response.data.sourceName+">> to <<"+approveTransfer.value.response.data.destinationName+">> has been approved"
-    * match notificationCenter.response.data.notifications[0].body == notificationContent
+    * def noti = notificationCenter.response.data.notifications[0]
+    * def expectedMetadataParams = 
+    """
+    {
+      "AMOUNT":"#string",
+      "ASSET_SYMBOL":"#string",
+      "FROM_VAULT_NAME":"#string",
+      "TO_VAULT_NAME":"#string"
+    }
+    """
+    * match noti.requestId == approveTransfer.requestId
+    * match noti.title == Const.Notifications.ApproveTransfer.title
+    * match noti.type == Const.Notifications.ApproveTransfer.type
+    * match noti.body == Const.Notifications.ApproveTransfer.body
+    * match noti.params == expectedMetadataParams
 
   @ignore @ViewNotificationCenter-Common
   Scenario: View Notification Center - Common

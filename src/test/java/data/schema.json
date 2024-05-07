@@ -208,12 +208,14 @@
       "type" : "#string"
      },
     "discoverableNetworkListing": {
-       "workspaceName" : "#string",
-       "id" : "#string",
-       "workspaceId" : "#string",
-       "workspaceExternalId" : "#string",
-       "name" : "#string",
-        "workspaceType" : "#string"
+      "workspaceName" : "#string",
+      "id" : "#string",
+      "workspaceId" : "#number",
+      "workspaceExternalId" : "#string",
+      "name" : "#string",
+      "workspaceType" : "#string",
+      "isDiscoverable": true,
+      "routingPolicy": "##"
     },
     "connectionsList": {
       "status" : "#string",

@@ -4,7 +4,7 @@ function fn(){
         return 'AT-VRAK-'+now
     }
 
-    function setUpAdvQuorum(memberList) {
+    function setUpAdvQuorum(memberList, isCreateQuorum = false) {
         var quorums = []
 
         for (var i in memberList){
@@ -27,7 +27,7 @@ function fn(){
                     "numMemberInGroup": x.totalMember,
                     "users": x.memberInfos,
                     "members": x.memberInfos,
-                    "type": "GROUP",
+                    "type": isCreateQuorum ? "group" : "GROUP",
                     "groupName": x.name,
                     "groupId": x.id
                 }})
@@ -69,7 +69,7 @@ function fn(){
         },
 
         createAdvanceVault: function(memberList, vaultType) {
-            var quorums = setUpAdvQuorum(memberList)
+            var quorums = setUpAdvQuorum(memberList, true)
 
             var data = {
                 "name": "Adv " + generateVaultName(),

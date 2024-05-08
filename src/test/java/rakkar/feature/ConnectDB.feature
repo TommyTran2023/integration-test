@@ -26,9 +26,7 @@ Feature: Connect to PostgreSQL
                 "OR \"toCustomerId\" = '" + customerId + "' " +
             "ORDER BY \"createdAt\" DESC LIMIT 1000"
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectVaultsOfCustomer
     Scenario: Select all vaults of customer
@@ -39,9 +37,7 @@ Feature: Connect to PostgreSQL
             "AND id in (" + vaultIds + ") " + 
             "LIMIT 10"
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectBalanceOfCustomer
     Scenario: Select balance of customer
@@ -70,9 +66,7 @@ Feature: Connect to PostgreSQL
         "AND \"assetExternalId\" = '" + assetId + "' " +
         "GROUP BY \"assetExternalId\" "
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectVaultOfUser
     Scenario: Select vault by user
@@ -98,9 +92,7 @@ Feature: Connect to PostgreSQL
         "and v.\"hiddenOnUI\" = false  " +
         "order by a.total desc, v.name asc; "
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectAssignVault
     Scenario: Select assign vault 
@@ -123,9 +115,7 @@ Feature: Connect to PostgreSQL
         "and v.\"hiddenOnUI\" = false " +
         "order by a.total desc;"
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectUnsupportedToken
     Scenario: Select assign vault 
@@ -139,6 +129,14 @@ Feature: Connect to PostgreSQL
         "        on cc.\"entityRelationId\" = ccer.id " +
         "    where cc.id = '" + customerId + "'); "
         """
-        * print query
         * def result = coreDb.readRows(query)
-        * print result
+
+    @SelectATransactionNotBelongToCustomer
+    Scenario: Select a transaction not belong to customer
+        * def query =
+        """
+        "select * from txn_transactions tt " +
+        "where tt.\"customerId\" != '" + customerId + "' and tt.\"toCustomerId\" != '" + customerId + "' " +
+        "order by tt.\"createdAt\" limit 1" 
+        """
+        * def result = coreDb.readRows(query)

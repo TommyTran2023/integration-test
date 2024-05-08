@@ -31,11 +31,16 @@
         }
     },
     "TokenSymbol":{
-        "XRP":"XRP_TEST"
+        "XRP":"XRP_TEST",
+        "ADA":"ADA_TEST",
+        "BTC":"BTC_TEST",
+        "DAI":"DAI_BSC_TEST_I53O"
     },
     "Symbol":{
         "XRP":"XRP",
-        "ADA":"ADA"
+        "ADA":"ADA",
+        "BTC":"BTC",
+        "DAI":"DAI"
     },
     "PeerType":{
         "VAULT_ACCOUNT" : "VAULT_ACCOUNT",

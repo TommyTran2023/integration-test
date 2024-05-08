@@ -2,7 +2,7 @@
   "dev_workspace": {
     "url_dev": "https://mobile-dev-api.thailaksa.net",
     "vaultId_Destination": "431b1ce6-a2b2-4cda-8548-d7be7d56f85c",
-    "walletId_Destination": "870ff087-d87f-4d7e-bbe0-bd72e4812f58",
+    "walletId_Destination": "73379768-50cc-441d-992c-9c93c8ab5be7",
     "userInfo": {
       "requesterUsername": "PASSPORT271192SG",
       "requesterPasscode": "271198",
@@ -22,7 +22,7 @@
     }
   },
   "qa_workspace": {
-    "url_qa": "https://mobile-qa-api.thailaksa.net",
+    "url_qa": "https://test-mobile-api.thailaksa.net",
     "vaultId_Destination": "5d3286d3-8e76-4db6-98ee-a9426a1a23a3",
     "walletId_Destination": "15c9d5f7-9c1c-408e-a238-5c7ddce4b42f",
     "userInfo": {

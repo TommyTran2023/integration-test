@@ -10,7 +10,6 @@ function fn(){
         for (var i in memberList){
             var q = memberList[i]
             var members = []
-            karate.log("groups log", q.groups)
             
             if (q.users) {
                 members = q.users.map( x => { return {
@@ -28,7 +27,7 @@ function fn(){
                     "numMemberInGroup": x.totalMember,
                     "users": x.memberInfos,
                     "members": x.memberInfos,
-                    "type": "group",
+                    "type": "GROUP",
                     "groupName": x.name,
                     "groupId": x.id
                 }})

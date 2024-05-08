@@ -92,9 +92,10 @@ Feature: Group Policies
     * def data =
     """
     {
-        "authorization":#(accessToken),
+        authorization:'#(accessToken)',
+        groupId: '#(groupId)',
         body:{
-            name : #(name)
+            name : '#(name)'
         }
     }
     """
@@ -198,4 +199,20 @@ Feature: Group Policies
     }
     """
     * call read(svc + 'coreSvc.feature@AdvVaultByGroup') data
+
+    @SearchUsersInGroup
+  Scenario: Search Users in Group
+    * def data = 
+    """
+    {
+      headers:{
+        Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+      },
+      groupId: "#(groupId)",
+      params:{
+        keywordUser: "#(typeof keywordUser == 'undefined' ? null : keywordUser)"
+      }
+    }
+    """
+    * call read(svc + 'advQuorumSvc.feature@SearchUsersInGroup') data
 

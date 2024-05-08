@@ -167,5 +167,12 @@ Feature: Transaction Service
       * header authorization = authorization
       * request body
       When method PUT
+
+    #----------------------------------
+    @SyncTransaction
+    Scenario: Sync Transaction
+      Given path `transaction/transactions/${transactionId}/sync`
+      * header authorization = authorization
+      When method POST
     
     

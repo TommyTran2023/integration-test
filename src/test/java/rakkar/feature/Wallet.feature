@@ -5,6 +5,7 @@ Feature: Wallet
     #@PRECOND_RAKCON-11355
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+    * def userInfo = karate.callSingle('this:GetUserInfo.feature@GetUserInfo')
     * def vault = karate.callSingle('this:Vault.feature@RAKCON-10217')
     * def vaultId = vault.response.data.id
     * def schemaJson = read('classpath:data/schema.json')
@@ -15,21 +16,28 @@ Feature: Wallet
     * call read(svc + 'Wallet.feature@GetTokens') data
     Then match responseStatus == 200
     And match response.data.tokens contains schemaJson.wallet.tokenList
-    * def assetId = response.data.tokens[1].id
-    * def symbolView = response.data.tokens[1].symbol
-    * def networkView = response.data.tokens[1].network
+
+    * def tokens = response.data.tokens
+    * def unSupported = callonce read('ConnectDB.feature@SelectUnsupportedToken') {customerId: #(userInfo.response.data.customerId)}
+    * def unSupported = unSupported.result.map(x => x.assetExternalId)
+    * def asset = tokens.find( x => !unSupported.includes(x.nativeAsset) && x.nativeAsset != 'ETH-AETH_GOERLI')
+    
+    * def assetId = asset.id
+    * def symbolView = asset.symbol
+    * def networkView = asset.network
 
   @RAKCON-10944 @ADD_WALLET
   Scenario: Add asset to the vault
-    * call read('this:Wallet.feature@VIEW-LIST-ASSET')
+    * call read('@VIEW-LIST-ASSET')
     * def data = { vaultId: '#(vaultId)', tokenIds: '#(assetId)' }
     * call read(svc + 'Wallet.feature@AddAssets') data
     Then match responseStatus == 201
     * def symbolAdd = response.data.success[0].symbol
     * def networkAdd = response.data.success[0].network
+    * def walletId = response.data.success[0].id
+    * print walletId
     And match symbolAdd == symbolView
     And match networkAdd == networkView
-    * karate.call(svc + 'Wallet.feature@HideAsset', {walletId: '#(walletId)'});
 
   @RAKCON-10952 @SORT_WALLETS_FROM_A_Z
   Scenario: Sort wallets from A >Z

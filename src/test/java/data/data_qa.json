@@ -1,12 +1,12 @@
 {
-  "address" : "rpVYZuDkX51ogcPVT12bhYM2ypE3hmbtNv",
-  "tokenId" : "8053beee-fedd-4408-9337-987774e105ae",
+  "address" : "addr_test1qzx9q54y9axk2c3erc0a0tc0mvm8hqm4utrkuq9mt2tn485a2fav2eycpf7l9kcnsrqc8wsca2wjf4f3fe2x7ppnfjrqfujm3r",
+  "tokenId" : "d757f635-15b6-413e-8f6d-ca8e7782278f",
   "normalGroup" : "881c8c59-0c1c-40ea-af3b-87da706b3c50",
   "stakeToken" : "d757f635-15b6-413e-8f6d-ca8e7782278f",
   "advVaultWithAllUsers" : "5ede098a-4af3-4693-afc4-1294e9cc66fb",
   "advanceHotVaultForStakeId" : "0c8c4167-627c-40af-a4a4-8b7932adaa72",
   "skipColdVaultId" : "e13f0e8b-a7ef-4e84-869a-09f81706e559",
-  "externalId" : "981cb084-3900-4ecb-889e-bf0025022b56",
+  "externalId" : "8a5fa7c5-2937-4db4-b684-a79f310f9539",
   "vaultUpdateStake" : "d7817b02-a427-4abb-883f-c6829e98b115",
   "destinationId_hot" : "caf44eda-4004-42f7-bc85-affe933c9fee",
   "sourceId_hot" : "43b56537-1edd-4326-af9a-da3dfadeb2d5",
@@ -22,5 +22,8 @@
   "advVaultWithAllGroups" : "81d4e41d-d441-4f88-87ae-2c8d2b2b07f5",
   "advanceHotVaultId" : "a29f77f9-428a-4b1f-8718-856e80a00de0",
   "advanceColdVaultId" : "ee541ab2-236a-49d3-bda4-2d59e29633b6",
-  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe"
+  "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe",
+  "whitelistTokenId": "dbc4bcce-38d1-4a5c-b812-882aae89ebe6",
+  "whitelistAddress": "tb1qpv3zlej4ldwh5ldf7dsyxzftsa2ck64jzx9dga",
+  "transferWhitelistToken":"f9830719-0015-468e-84f0-ee10ddb281ae"
 }

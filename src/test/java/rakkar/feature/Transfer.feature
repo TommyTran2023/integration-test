@@ -561,8 +561,11 @@ Feature: Transfer
     """ 
     * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total != null && x.total != 0)
+    * print searchVault
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
-    * match each response.data.list[*] contains {"status":"PENDING"}
+    * def actualVaults = response.data.list
+    * def vault = actualVaults.find(x => x.name == searchVault.name)
+    * match vault.status == "PENDING"
     
 @RAKCON-24736 @TransferSourceScreenSkipPolicyVault @MOB-300
 Scenario: Transfer Source Screen Skip Policy Vault

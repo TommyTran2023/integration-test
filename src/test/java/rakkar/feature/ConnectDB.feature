@@ -142,3 +142,15 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
         * print result
+
+    @SelectATransactionNotBelongToCustomer
+    Scenario: Select a transaction not belong to customer
+        * def query =
+        """
+        "select * from txn_transactions tt " +
+        "where tt.\"customerId\" != '" + customerId + "' and tt.\"toCustomerId\" != '" + customerId + "' " +
+        "order by tt.\"createdAt\" limit 1" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+        * print result

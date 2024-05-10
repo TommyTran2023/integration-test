@@ -480,12 +480,29 @@ Feature: walletConnect
 				externalWalletType : '#(externalWalletType)',
 				fbRaw : '#(fbRaw)',
 				status : '#(status)',
-				isDeleted : '#(isDeleted)',
+				isDeleted : '#(isDeleted)'
  			}
   		}
   		"""
   		* call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
 
+	  @WcRequestWeb3ConnectController_validateQRCode
+	Scenario: Wc Request Web3Connect Controller validate QR Code
+		 * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+		 * def body = 'qrCode=' + qrCode + '&vaultId=' + vaultId
+		 * def data = 
+		 """
+		 {
+			headers: 
+			{ 
+			   authorization: '#(accessToken)',
+			   "Content-Type":"application/x-www-form-urlencoded; charset=utf-8"
+			},
+			body: '#(body)'
+		 }
+		 """
+		 * call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
+   
     #----------------------------------
    	@WcRequestWeb3ConnectController_approveRequestWeb3Connect
  	Scenario: Wc Request Web3Connect Controller approve Request Web3Connect
@@ -1431,11 +1448,11 @@ Feature: walletConnect
   		},
   		params: 
   		{
- 			limit : "#(typeof limit == 'undefined' ? '' : limit)", 
- 			offset : "#(typeof offset == 'undefined' ? '' : offset)", 
+ 			limit : "#(typeof limit == 'undefined' ? 20 : limit)", 
+ 			offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
  			searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
  			ids : "#(typeof ids == 'undefined' ? '' : ids)", 
- 			where : "#(typeof where == 'undefined' ? '' : where)", 
+ 			where : "#(typeof where == 'undefined' ? '{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}' : where)", 
  			order : "#(typeof order == 'undefined' ? '' : order)" 
   		}
    	}

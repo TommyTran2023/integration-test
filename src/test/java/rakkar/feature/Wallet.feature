@@ -18,7 +18,7 @@ Feature: Wallet
     And match response.data.tokens contains schemaJson.wallet.tokenList
 
     * def tokens = response.data.tokens
-    * def unSupported = callonce read('ConnectDB.feature@SelectUnsupportedToken') {customerId: #(userInfo.response.data.customerId)}
+    * def unSupported = callonce read('classpath:rakkar/common/ConnectDB.feature@SelectUnsupportedToken') {customerId: #(userInfo.response.data.customerId)}
     * def unSupported = unSupported.result.map(x => x.assetExternalId)
     * def asset = tokens.find( x => !unSupported.includes(x.nativeAsset) && x.nativeAsset != 'ETH-AETH_GOERLI')
     

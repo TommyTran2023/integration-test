@@ -178,6 +178,7 @@
           "vaultId": "#string",
           "isRequiredApprover": "#boolean",
           "isValidNumUserInQuorum":"#boolean",
+          "isInAdvancedQuorum": "#boolean",
           "vaultName": "#string"
         }
       ]
@@ -210,11 +211,11 @@
     "discoverableNetworkListing": {
       "workspaceName" : "#string",
       "id" : "#string",
-      "workspaceId" : "#number",
+      "workspaceId" : "##",
       "workspaceExternalId" : "#string",
       "name" : "#string",
       "workspaceType" : "#string",
-      "isDiscoverable": true,
+      "isDiscoverable": "##",
       "routingPolicy": "##"
     },
     "connectionsList": {

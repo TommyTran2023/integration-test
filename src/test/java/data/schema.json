@@ -378,9 +378,13 @@
       "destinationName": "#string",
       "sourceAddress": "#string",
       "destinationAddress": "#string",
-      "sourceType": "#string",
+      "sourceType": "##",
       "sourceMapping": "#string",
-      "repStatus": "#string"
+      "repStatus": "#string",
+      "newSource":{},
+      "newDestination":{},
+      "txnType":"#string",
+      "txnIndex":"##"
     }
   },
   "quorumDetails":{

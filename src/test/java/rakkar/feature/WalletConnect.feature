@@ -145,7 +145,7 @@ Feature: Wallet Connect
         """
         {
             "id":"#uuid",
-            "name":"OpenEden",
+            "name":"OpenEden Testnet",
             "externalId":"1412ecdfc5ad591bd39044157fdbd6545895b5d93eee87861bb7e1095629cfa4",
             "url":"https://app.openeden.com",
             "destinationNote":"OpenEden | Earn U.S. Treasury Yields On-Chain",

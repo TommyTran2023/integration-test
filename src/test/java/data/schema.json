@@ -178,7 +178,6 @@
           "vaultId": "#string",
           "isRequiredApprover": "#boolean",
           "isValidNumUserInQuorum":"#boolean",
-          "isInAdvancedQuorum": "#boolean",
           "vaultName": "#string"
         }
       ]

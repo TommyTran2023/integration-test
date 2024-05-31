@@ -72,7 +72,7 @@ Feature: Connect to PostgreSQL
     Scenario: Select vault by user
         * def query =
         """
-        "select a.\"assetExternalId\", a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
+        "select a.\"assetExternalId\", a.available, a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
         "    case " +
         "        when \"uv\".\"id\" is not null then false " +
         "        else true " +
@@ -89,6 +89,7 @@ Feature: Connect to PostgreSQL
         "left join assets a " +
         "on aw.\"assetId\"  = a.id " +
         "where v.\"customerId\" = '"+customerId+"' " +
+        "and a.available::numeric  > 0  " +
         "and v.\"hiddenOnUI\" = false  " +
         "order by a.total desc, v.name asc; "
         """

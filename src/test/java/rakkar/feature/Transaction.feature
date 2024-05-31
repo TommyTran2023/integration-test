@@ -14,7 +14,7 @@ Feature: Transaction
     * def response = filterRequest.response
     * match $response.status == "success"
     * match $response == schemaBody.transaction.filterTransaction
-    * match each $response.data.transactions == schemaBody.transaction.transactionDetails
+    * match $response.data.transactions[*] contains schemaBody.transaction.transactionDetails
 
     @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing

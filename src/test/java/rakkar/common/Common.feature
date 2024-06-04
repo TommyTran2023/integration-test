@@ -4,15 +4,14 @@ Feature: Common Feature
         * callonce read(svc + 'ReadData.feature')
         * callonce read(svc + 'Auth.feature@GetRequesterAccessToken')
         * callonce read(svc + 'Auth.feature@GetListUsers')
+        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
 
     @CancelAllRequests
     Scenario: Cancel all request
-        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
         * requestHandle().cancelAllMyPendingRequest(requesterUserID)
 
     @RejectAllRequests
     Scenario: Reject all request
-        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
         * requestHandle().rejectAllPendingRequest()
 
     @Deposit
@@ -25,5 +24,8 @@ Feature: Common Feature
 
     @CancelAllTranferRequests
     Scenario: Cancel all request
-        * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
         * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)
+
+    @ApproveTransactionCommon
+    Scenario: Approve transaction by id
+        * requestHandle().approveTransaction('3c30fa61-9178-4d00-ab3f-51b8bebd2dc5')

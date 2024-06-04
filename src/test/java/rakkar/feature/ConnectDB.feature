@@ -26,6 +26,7 @@ Feature: Connect to PostgreSQL
                 "OR \"toCustomerId\" = '" + customerId + "' " +
             "ORDER BY \"createdAt\" DESC LIMIT 1000"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectVaultsOfCustomer
@@ -37,6 +38,7 @@ Feature: Connect to PostgreSQL
             "AND id in (" + vaultIds + ") " + 
             "LIMIT 10"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectBalanceOfCustomer
@@ -66,6 +68,7 @@ Feature: Connect to PostgreSQL
         "AND \"assetExternalId\" = '" + assetId + "' " +
         "GROUP BY \"assetExternalId\" "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectVaultOfUser
@@ -89,10 +92,10 @@ Feature: Connect to PostgreSQL
         "left join assets a " +
         "on aw.\"assetId\"  = a.id " +
         "where v.\"customerId\" = '"+customerId+"' " +
-        "and a.available::numeric  > 0  " +
         "and v.\"hiddenOnUI\" = false  " +
-        "order by a.total desc, v.name asc; "
+        "order by a.available desc, v.name asc; "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectAssignVault
@@ -116,6 +119,7 @@ Feature: Connect to PostgreSQL
         "and v.\"hiddenOnUI\" = false " +
         "order by a.total desc;"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectUnsupportedToken
@@ -130,6 +134,7 @@ Feature: Connect to PostgreSQL
         "        on cc.\"entityRelationId\" = ccer.id " +
         "    where cc.id = '" + customerId + "'); "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectATransactionNotBelongToCustomer
@@ -140,4 +145,5 @@ Feature: Connect to PostgreSQL
         "where tt.\"customerId\" != '" + customerId + "' and tt.\"toCustomerId\" != '" + customerId + "' " +
         "order by tt.\"createdAt\" limit 1" 
         """
+        * print query
         * def result = coreDb.readRows(query)

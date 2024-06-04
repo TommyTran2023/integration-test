@@ -306,19 +306,24 @@ Feature: Transfer
     """
     * call read('this:Transfer.feature@Total_estimate_fee_common')
 
+  @ignore @GetTokenId
+  Scenario: Get token id
+    * def token = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: keyword}).response.data
+
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
+    * callonce read('@GetTokenId') {keyword: '#(a.TokenSymbol.ADA)'}
     * def body_transfer = 
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(dataSet.transferWhitelistToken)',
-      "feeType":'#(a.TokenSymbol.DAI)',
+      "tokenId":'#(token.tokens[0].id)',
+      "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
-      "feeLevel": '#(a.TokenSymbol.DAI)', 
+      "feeLevel": '#(a.TokenSymbol.ADA)', 
       "destination":{
-        "type":'#(testData.transfer.destinationType)',
+        "type":'#(a.PeerType.EXTERNAL_WALLET)',
         "id":'#(dataSet.externalId)'
       }, 
       "source": {

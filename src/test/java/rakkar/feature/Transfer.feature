@@ -100,16 +100,20 @@ Feature: Transfer
     * def body = 
     """
     { 
-      "operation":'#(testData.transfer.operation)',
+      "operation":'#(a.Transfer.Operation.TRANSFER)',
       "tokenId":'#(dataSet.tokenId)',
-      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
       "feeLevel": '#(testData.transfer.feeLevel)', 
-      "destination":{"type":'#(testData.transfer.source_type)',
-      "id":'#(dataSet.destinationId_hot)'}, 
-      "source": {"type":'#(testData.transfer.source_type)',
-      "id":'#(dataSet.sourceId_hot)'},
+      "destination":{
+        "type":'#(a.PeerType.VAULT_ACCOUNT)',
+        "id":'#(dataSet.destinationId_hot)'
+      }, 
+      "source": {
+        "type":'#(a.PeerType.VAULT_ACCOUNT)',
+        "id":'#(dataSet.sourceId_hot)'
+      },
       "amount":'#(amount_default)',
       "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
     }

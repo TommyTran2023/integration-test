@@ -2,8 +2,9 @@
 Feature: Withdraw from WARM vault - Same and cross workspace
 
     Background:
-        * def Const = read('classpath:data/enum.json')
+        * callonce read(svc + 'ReadData.feature')
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * def env = karate.properties['karate.env']
         * def amount_low = 2
         * def BigDecimal = Java.type('java.math.BigDecimal')
         * def waitUntilTransactionCompleted = 
@@ -11,8 +12,6 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         function(transactionId){ 
             var retry = 18
             do {
-                //java.lang.Thread.sleep(25000); 
-                // karate.call(svc + 'Transaction.feature@SyncTransaction', { transactionId: transactionId })
                 java.lang.Thread.sleep(10000); 
                 var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
                 retry--
@@ -23,6 +22,33 @@ Feature: Withdraw from WARM vault - Same and cross workspace
                 throw Error ("Transaction cannot be completed: " + transactionId)
 
             return getTransactionDetail
+        }
+        """
+        * def verifyCrossWorkSpace =
+        """
+        function(env, totalEstimatedFee, isWarm){
+            java.lang.Thread.sleep(180000); 
+            var destEnv = 'qa';
+            
+            if (env != 'uat'){
+                destEnv = 'uat'
+            }
+
+            karate.call('this:CrossWorkSpace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
+        }
+        """
+        * def getDestinationBalance =
+        """
+        function(env, isWarm){
+            var destEnv = 'qa';
+
+            if (env == 'uat'){
+                destEnv = 'uat'
+            }
+
+            var balance = karate.call('this:CrossWorkSpace.feature@GetDestinationBalance', { destinationEnv: destEnv, isWarm: isWarm } ).response
+            
+            return balance
         }
         """
 
@@ -51,8 +77,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(env, true)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
@@ -142,7 +169,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev') {feeData: #(totalEstimatedFee)}
+        * eval verifyCrossWorkSpace(env, totalEstimatedFee, true)
 
     @RAKCON-19301
     Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace

@@ -361,7 +361,7 @@
       "amount": "#number",
       "txHash": "#ignore",
       "status": "#string",
-      "subStatusFireblock": "#string",
+      "subStatusFireblock": "##string",
       "fireblocksStatus": "#ignore",
       "createdAt": "#string",
       "updatedAt": "#string",

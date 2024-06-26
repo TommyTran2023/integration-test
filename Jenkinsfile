@@ -31,12 +31,15 @@ pipeline {
     }
 
     triggers {
-        cron(env.BRANCH_NAME == 'sit' ? '00 19 * * 1-5' : '')
+        cron(env.BRANCH_NAME == 'uat' ? '00 10 * * 1' : env.BRANCH_NAME == 'sit' ? '00 19 * * 1-5' : '')
     }
 
     stages {
 
         stage ('Initialize settings') {
+            steps {
+                sh "npm i puppeteer"
+            }
             steps {
                 // update branch and test environment
                 script {
@@ -50,7 +53,7 @@ pipeline {
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
-                            HEALTH_CHECK_PATH = "uat"
+                            HEALTH_CHECK_PATH = "uat"   
                             credentials = readJSON file: SECRET_FILE_CONTENT_UAT
                             DBNAME = 'rak_svc_core_uat'
                     }

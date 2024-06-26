@@ -19,13 +19,13 @@ Feature: Transaction
     @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing
     # View transaction listing
-    * def query = { offset: '0', limit:'10'}
+    * def query = { offset: '0', limit:'10', keyword:''}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transListResponse = response.data.transactions
 
     @RAKCON-12325 @Filter_transaction_by_value
     Scenario: Filter transaction by value
-      * def query = { limit:'10', offset: '0', priceFrom:'0', priceTo: '100'}
+      * def query = { limit:'10', offset: '0', priceFrom:'0', priceTo: '100', keyword:''}
       * call read('this:Transaction.feature@Filter_transaction_common')
       * match each $response.data.transactions[*].amountUSD == '#? _ <= 100'
 

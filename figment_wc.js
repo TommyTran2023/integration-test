@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 (async () => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   // Navigate the page to a URL
@@ -27,9 +27,11 @@ const puppeteer = require('puppeteer');
   await page.waitForSelector(btnOrganization);
   await page.click(btnOrganization);
 
-  // Check if Testnet enable
-  const swtTestnet = "div.my-2:nth-child(5) > div > div > button";
+  // Click on Stake
+  const swtTestnet = "a[href='/stake']";
   await page.waitForSelector(swtTestnet);
+
+  // Select testnet
   let isTestnetMode = await page.$eval(swtTestnet, element=> element.getAttribute("aria-checked"));
   if (isTestnetMode == 'false')
     await page.click(swtTestnet);

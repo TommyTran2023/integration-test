@@ -21,6 +21,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             if (retry <= 0 && getTransactionDetail.response.data.status != "COMPLETED")
                 throw Error ("Transaction cannot be completed: " + transactionId)
 
+            java.lang.Thread.sleep(10000);     
             return getTransactionDetail
         }
         """
@@ -528,7 +529,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
@@ -653,7 +654,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)

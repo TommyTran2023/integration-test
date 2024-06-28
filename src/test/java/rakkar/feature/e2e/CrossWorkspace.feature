@@ -54,6 +54,7 @@ Feature: Get access token for user from cross workspace
     # Get recent transaction to check destination show in transaction
     * def query = { offset: 0, limit: 20, type: ['INCOMING']  }
     Given url customUrl + '/transaction/transactions/v1'
+    And headers { Authorization: '#(accessTokenWP)' }
     And request query
     When method POST
     Then status 201

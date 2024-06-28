@@ -43,7 +43,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         function(env, isWarm){
             var destEnv = 'qa';
 
-            if (env == 'uat'){
+            if (env != 'uat'){
                 destEnv = 'uat'
             }
 

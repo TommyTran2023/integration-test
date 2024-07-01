@@ -3,18 +3,19 @@ Feature: Connect to PostgreSQL
 
     Background:
         # use jdbc to validate
-        * def dbUrl = "jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/" + dbName
+        * def dbUrl = dbUrl + dbName
         * def coreConfig = 
         """
         { 
-            username: #(coreUserName), 
-            password: #(corePass), 
-            url: #(dbUrl), 
+            username: '#(coreUserName)', 
+            password: '#(corePass)', 
+            url: '#(dbUrl)', 
             driverClassName: 'org.postgresql.Driver' 
         }
         """
         * def DbUtils = Java.type('util.DbUtils')
         * def coreDb = new DbUtils(coreConfig)
+        * print coreConfig
 
     @SelectTransactionsOfCustomer
     Scenario: Select all transactions of customer
@@ -140,3 +141,16 @@ Feature: Connect to PostgreSQL
         "order by tt.\"createdAt\" limit 1" 
         """
         * def result = coreDb.readRows(query)
+
+    @SelectDiscoverableNetwork
+    Scenario: Select Discoverable Network   
+        * def query =
+        """
+            "select * from \"net_networkProfiles\" nnp " +
+            "where \"customerId\" ='" + customerId + "' " +
+            "and \"isDiscoverable\" = true " +
+            "and nnp.\"networkName\" like 'AT_Profile%'" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+    

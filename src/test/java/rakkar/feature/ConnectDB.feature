@@ -149,7 +149,7 @@ Feature: Connect to PostgreSQL
             "select * from \"net_networkProfiles\" nnp " +
             "where \"customerId\" ='" + customerId + "' " +
             "and \"isDiscoverable\" = true " +
-            "and nnp.\"networkName\" like 'AT_Profile%'" 
+            "and nnp.\"networkName\" like 'Profile%'" 
         """
         * print query
         * def result = coreDb.readRows(query)

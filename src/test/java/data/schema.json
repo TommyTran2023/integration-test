@@ -178,6 +178,7 @@
           "vaultId": "#string",
           "isRequiredApprover": "#boolean",
           "isValidNumUserInQuorum":"#boolean",
+          "isInAdvancedQuorum":"#boolean",
           "vaultName": "#string"
         }
       ]
@@ -384,7 +385,9 @@
       "newSource":{},
       "newDestination":{},
       "txnType":"#string",
-      "txnIndex":"##"
+      "txnIndex":"##",
+      "additionalData": "##",
+      "externalExchangeAccountId":"#string"
     }
   },
   "quorumDetails":{

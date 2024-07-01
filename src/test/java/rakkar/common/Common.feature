@@ -27,3 +27,18 @@ Feature: Common Feature
     Scenario: Cancel all request
         * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
         * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)
+
+    @UpdateExistingNetworkToPrivate
+    Scenario: Update Existing Network To Private
+        * def userInfo = call read(svc + 'Auth.feature@GetRequesterInfo')
+        * def data = 
+        """
+        {
+            customerId: '#(userInfo.response.data.customerId)'
+        }
+        """
+        * def listNetworks = call read('classpath:rakkar/feature/ConnectDB.feature@SelectDiscoverableNetwork') data
+        * print listNetworks.result.length
+        * eval for(var i = 0; i<listNetworks.result.length; i++) karate.call(svc + 'Network.feature@SetNetworkProfileSetting', {networkId: listNetworks.result[i].id})
+
+        

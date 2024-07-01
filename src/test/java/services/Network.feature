@@ -61,7 +61,7 @@ Feature: Network
     
     @CreateNetworkProfile
     Scenario: Create Network Profile
-        * def isDiscoverable = karate.get('isDiscoverable', true)
+        * def isDiscoverable = karate.get('isDiscoverable', false)
         * def data = 
         """
         {
@@ -136,13 +136,14 @@ Feature: Network
     @SetNetworkProfileSetting
     Scenario: Set Network Profile Setting
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def isDiscoverable = karate.get('isDiscoverable', false)
         * def data = 
         """
         {
-            authorization: #(accessToken),
-            networkId : #(networkId), //string
+            authorization: '#(accessToken)',
+            networkId : '#(networkId)', 
             body:{
-                isDiscoverable : #(isDiscoverable), //boolean
+                isDiscoverable : '#(isDiscoverable)'
             }
         }
         """

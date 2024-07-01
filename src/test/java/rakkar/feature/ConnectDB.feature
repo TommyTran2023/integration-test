@@ -15,7 +15,6 @@ Feature: Connect to PostgreSQL
         """
         * def DbUtils = Java.type('util.DbUtils')
         * def coreDb = new DbUtils(coreConfig)
-        * print coreConfig
 
     @SelectTransactionsOfCustomer
     Scenario: Select all transactions of customer

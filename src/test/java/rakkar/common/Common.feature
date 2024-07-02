@@ -41,4 +41,10 @@ Feature: Common Feature
         * print listNetworks.result.length
         * eval for(var i = 0; i<listNetworks.result.length; i++) karate.call(svc + 'Network.feature@SetNetworkProfileSetting', {networkId: listNetworks.result[i].id})
 
-        
+    @DeleteAllTestGroups
+    Scenario: Delete all test groups
+        * def getGroups = call read(svc + 'Group.feature@GetGroupPolicies') {keyword:'AT-RAK-GR'}
+        * def groups = getGroups.response.data.groups
+        * print groups.length
+        * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
+        * eval for(var i = 0; i<groups.length; i++) groupHandle().deleteGroupById(groups[i].id)

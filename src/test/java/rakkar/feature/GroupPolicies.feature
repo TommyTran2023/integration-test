@@ -29,7 +29,7 @@ Feature: Group Policies
     Scenario: Edit Group name With New Name
         * call read('this:GroupPolicies.feature@GetGroupPolicies')
         * call read('this:GroupPolicies.feature@GenerateGroupName')
-        * def requestBody = { "groupName": '#(groupName) Edited' }
+        * def requestBody = { "groupName": '#(groupName)' }
         * call read('this:GroupPolicies.feature@ValidateGroupPolicies')
         * call read(svc + 'Group.feature@EditGroupName') {groupId: #(groups[0].id), name: #(groupName) }
         Then match responseStatus == 201

@@ -8,7 +8,7 @@ Feature: Get access token for user from cross workspace
     * call read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(crossData.userInfo.requesterUsername)'}
     * def accessTokenWP = 'Bearer ' + response.data.AuthenticationResult.AccessToken
 
-  # ============ This is for verify the destination on UAT env - with COLD workspace =============
+    
   @GetDestinationBalance
   Scenario: Get balance token
     * def destinationVault = isWarm ? crossData.vaultId_Destination_warm : crossData.vaultId_Destination
@@ -46,13 +46,12 @@ Feature: Get access token for user from cross workspace
     * def amount_recieve = parseFloat(amount_low) - feeData
 
     # --- Verify balance of destination updated correctly
-    # Bug REP-1222
     * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
     * print amount_recieve, destinationAmountBefore, totalExpectedDestination
     * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction
-    * def query = { offset: 0, limit: 20, type: ['INCOMING']  }
+    * def query = { offset: 0, limit: 10, type: ['INCOMING'], sort: "DESC" , sortBy:"CREATED_DATE", destinationId: '#(destinationVault)'}
     Given url customUrl + '/transaction/transactions/v1'
     And headers { Authorization: '#(accessTokenWP)' }
     And request query

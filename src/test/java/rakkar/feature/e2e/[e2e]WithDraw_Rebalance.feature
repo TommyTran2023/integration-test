@@ -25,15 +25,21 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             return getTransactionDetail
         }
         """
+        * def selectDestEnv =
+        """
+        function(env, needCrossEnv){
+            if (!needCrossEnv)
+                return env;
+            
+            var destEnv = env != 'uat' ? 'uat' : 'qa';
+            
+            return destEnv;
+        }
+        """
         * def verifyCrossWorkSpace =
         """
-        function(env, totalEstimatedFee, isWarm){
+        function(destEnv, totalEstimatedFee, isWarm){
             java.lang.Thread.sleep(180000); 
-            var destEnv = 'qa';
-            
-            if (env != 'uat'){
-                destEnv = 'uat'
-            }
 
             karate.call('this:CrossWorkSpace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
         }
@@ -41,12 +47,6 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def getDestinationBalance =
         """
         function(env, isWarm){
-            var destEnv = 'qa';
-
-            if (env != 'uat'){
-                destEnv = 'uat'
-            }
-
             var balance = karate.call('this:CrossWorkSpace.feature@GetDestinationBalance', { destinationEnv: destEnv, isWarm: isWarm } ).response
             
             return balance
@@ -55,6 +55,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
     @RAKCON-19300
     Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
+        * def destEnv = selectDestEnv(env, true)
+        * print env, destEnv
         # 1.Select token for doing transfer
         * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
@@ -78,7 +80,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = getDestinationBalance(env, true)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, true)
         * print getBalanceTokenBeforeTransfer
         * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
@@ -170,10 +172,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * eval verifyCrossWorkSpace(env, totalEstimatedFee, true)
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, true)
 
     @RAKCON-19301
     Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
+        # Transfer Warm to Cold vault of another customer
+        * def destEnv = selectDestEnv(env, false)
+        * print env, destEnv
         # 1.Select token for doing transfer
         * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
@@ -197,8 +202,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat') {isWarm: false}
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, false)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
@@ -288,11 +294,14 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat') {feeData: #(totalEstimatedFee), isWarm: false}
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, false)
 
 
     @RAKCON-19302
     Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
+        # Transfer Warm to Cold vault of another customer
+        * def destEnv = selectDestEnv(env, false)
+        * print env, destEnv
         # 1.Select token for doing transfer
         * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
@@ -316,8 +325,9 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat') {isWarm: true}
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, true)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
@@ -407,7 +417,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat') {feeData: #(totalEstimatedFee), isWarm: true }
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, true)
 
 
     ######################### REBALANCE  #################################################################

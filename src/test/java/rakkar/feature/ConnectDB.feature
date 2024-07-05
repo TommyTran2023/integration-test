@@ -3,13 +3,13 @@ Feature: Connect to PostgreSQL
 
     Background:
         # use jdbc to validate
-        * def dbUrl = "jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/" + dbName
+        * def dbUrl = dbUrl + dbName
         * def coreConfig = 
         """
         { 
-            username: #(coreUserName), 
-            password: #(corePass), 
-            url: #(dbUrl), 
+            username: '#(coreUserName)', 
+            password: '#(corePass)', 
+            url: '#(dbUrl)', 
             driverClassName: 'org.postgresql.Driver' 
         }
         """
@@ -147,3 +147,16 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
+
+    @SelectDiscoverableNetwork
+    Scenario: Select Discoverable Network   
+        * def query =
+        """
+            "select * from \"net_networkProfiles\" nnp " +
+            "where \"customerId\" ='" + customerId + "' " +
+            "and \"isDiscoverable\" = true " +
+            "and nnp.\"networkName\" like 'Profile%'" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+    

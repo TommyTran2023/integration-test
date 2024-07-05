@@ -37,7 +37,7 @@ Feature: Network Management
     * def vaultId = vaultData.response.data.vaults[0].id
     * def now = function(){ return java.lang.System.currentTimeMillis() }
     * def profileName = 'Profile-' + now()
-    * def body = {"isDiscoverable" : true,"networkName": '#(profileName)', "vaultId": "#(vaultId)" }
+    * def body = {"isDiscoverable" : false,"networkName": '#(profileName)', "vaultId": "#(vaultId)" }
     Given path 'network/networks'
     * header challenge-answer = challengeAnswerRequest
     And request body

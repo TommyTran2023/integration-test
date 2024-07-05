@@ -26,6 +26,28 @@ Feature: Common Feature
     Scenario: Cancel all request
         * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)
 
+
     @ApproveTransactionCommon
     Scenario: Approve transaction by id
         * requestHandle().approveTransaction('3c30fa61-9178-4d00-ab3f-51b8bebd2dc5')
+
+    @UpdateExistingNetworkToPrivate
+    Scenario: Update Existing Network To Private
+        * def userInfo = call read(svc + 'Auth.feature@GetRequesterInfo')
+        * def data = 
+        """
+        {
+            customerId: '#(userInfo.response.data.customerId)'
+        }
+        """
+        * def listNetworks = call read('classpath:rakkar/feature/ConnectDB.feature@SelectDiscoverableNetwork') data
+        * print listNetworks.result.length
+        * eval for(var i = 0; i<listNetworks.result.length; i++) karate.call(svc + 'Network.feature@SetNetworkProfileSetting', {networkId: listNetworks.result[i].id})
+
+    @DeleteAllTestGroups
+    Scenario: Delete all test groups
+        * def getGroups = call read(svc + 'Group.feature@GetGroupPolicies') {keyword:'AT-RAK-GR'}
+        * def groups = getGroups.response.data.groups
+        * print groups.length
+        * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
+        * eval for(var i = 0; i<groups.length; i++) groupHandle().deleteGroupById(groups[i].id)

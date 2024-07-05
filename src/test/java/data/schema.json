@@ -178,6 +178,7 @@
           "vaultId": "#string",
           "isRequiredApprover": "#boolean",
           "isValidNumUserInQuorum":"#boolean",
+          "isInAdvancedQuorum":"#boolean",
           "vaultName": "#string"
         }
       ]
@@ -361,6 +362,7 @@
       "amount": "#number",
       "txHash": "#ignore",
       "status": "#string",
+      "subStatusFireblock": "##string",
       "fireblocksStatus": "#ignore",
       "createdAt": "#string",
       "updatedAt": "#string",
@@ -383,7 +385,9 @@
       "newSource":"{}",
       "newDestination":"{}",
       "txnType":"#string",
-      "txnIndex":"##"
+      "txnIndex":"##",
+      "additionalData": "##",
+      "externalExchangeAccountId":"#string"
     }
   },
   "quorumDetails":{

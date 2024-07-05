@@ -19,15 +19,16 @@ Feature: Transaction
     @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing
     # View transaction listing
-    * def query = { offset: '0', limit:'10'}
+    * def query = { offset: '0', limit:'10', priceTo: '10'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transListResponse = response.data.transactions
 
     @RAKCON-12325 @Filter_transaction_by_value
     Scenario: Filter transaction by value
-      * def query = { limit:'10', offset: '0', priceFrom:'0', priceTo: '100'}
+      * def query = { limit:'10', offset: '0', priceFrom:'100', priceTo: '150'}
       * call read('this:Transaction.feature@Filter_transaction_common')
-      * match each $response.data.transactions[*].amountUSD == '#? _ <= 100'
+      * match each $response.data.transactions[*].amountUSD == '#? _ >= 100'
+      * match each $response.data.transactions[*].amountUSD == '#? _ <= 150'
 
     @RAKCON-12326 @Filter_transaction_by_date_last30days
   Scenario: Filter transaction by date
@@ -84,7 +85,7 @@ Feature: Transaction
 
     @RAKCON-12422 @Filter_transaction_by_type_rebalancing
   Scenario: Filter transaction by type - rebalancing
-    * def query = { limit:'10', offset: '0',type: ['#(Const.TransactionType.REBALANCING)']}
+    * def query = { limit:'10', offset: '0',type: ['#(Const.TransactionType.REBALANCING)'], priceTo: '10'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].type == "#(Const.TransactionType.REBALANCING)"
 
@@ -126,13 +127,13 @@ Feature: Transaction
 
     @RAKCON-12428 @Filter_transaction_create_by
   Scenario: Filter transaction created by
-    * def query = { limit:'10', offset: '0',createdById: '#(userInfo.userId)'}
+    * def query = { limit:'10', offset: '0',createdById: '#(userInfo.userId)', priceTo: '10'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].createdById == "#(userInfo.userId)"
 
     @RAKCON-10972 @View_transaction_detail
   Scenario: View transaction detail
-    * def query = { limit:'10', offset: '0'}
+    * def query = { limit:'10', offset: '0', priceTo: '5'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transactionId = response.data.transactions[0].id
     * def status = response.data.transactions[0].status
@@ -153,7 +154,7 @@ Feature: Transaction
     * def body = { "keyword":'',"offset":0,"sort": 'DESC',"sortBy":'CREATED_DATE'}
     * def exportResponse = call read(transactionSvc + '@ExportTransaction') { body: '#(body)' }
     * match exportResponse.responseStatus == 201
-    * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
+    * match exportResponse.response contains "Customer name,Transaction ID,Transaction type,Method,Transaction date,Last updated date,Transaction status,Asset,Requested amount,Value in USD,Net amount,Network,Fee asset,Fee asset amount,Fee value in USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Signed date,Signed by,Completed date,Rejected date,Rejected by,Rejected reason,Cancelled date,Cancelled by,Cancelled reason,Failed date,Failed by,Failed reason"
     * print exportResponse.response
 
     @ExportTransactionWithFilter
@@ -226,7 +227,7 @@ Feature: Transaction
     """
     * def exportResponse = call read(transactionSvc + '@ExportTransactionFull') body
     * match exportResponse.responseStatus == 201
-    * match exportResponse.response contains "Transaction ID,Transaction type,Transaction status,Asset,Asset amount,Value in USD,Network,Transaction date,Last updated date,Network fee asset amount,Network fee USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Rejected date,Rejected by,Rejected reason,Signed date,Signed by,Completed date,Cancelled date,Cancelled by,Failed date,Failed by,Failed reason"
+    * match exportResponse.response contains "Customer name,Transaction ID,Transaction type,Method,Transaction date,Last updated date,Transaction status,Asset,Requested amount,Value in USD,Net amount,Network,Fee asset,Fee asset amount,Fee value in USD,Transaction hash,Internal note,Source,Source address,Destination,Destination address,Destination tag/memo,Initiated date,Initiated by,Approved date,Approved by,Signed date,Signed by,Completed date,Rejected date,Rejected by,Rejected reason,Cancelled date,Cancelled by,Cancelled reason,Failed date,Failed by,Failed reason"
     * print exportResponse.response
 
     @RAKCON-18275 @FilterTransactionFromWhitelistAddress
@@ -239,7 +240,7 @@ Feature: Transaction
   Scenario: Customer cannot search for another customer vault
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId
-    * def query = { limit:'100', offset: '0' }
+    * def query = { limit:'100', offset: '0' , priceTo: '10'}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * def transactions = response.data.transactions
     * def isCustomerData = 
@@ -265,7 +266,7 @@ Feature: Transaction
     @RAKCON-23649 @SearchTransactionsOnMaskedVault
   Scenario: User unable to search transactions on Masked Vault
     * def testData_v2 = read('classpath:data/data.json')
-    * def query = { limit:'50', offset: '0'}
+    * def query = { limit:'50', offset: '0', priceTo: '10'}
     * call read('this:Transaction.feature@Filter_transaction_common') 
     * match each response.data.transactions[*].sourceName !contains testData_v2.maskedVault
     * match each response.data.transactions[*].destinationName !contains testData_v2.maskedVault

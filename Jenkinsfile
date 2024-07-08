@@ -36,10 +36,14 @@ pipeline {
 
     stages {
 
-        stage ('Initialize settings') {
+        stage ('Install lib') {
             steps {
+                sh "node -v"
                 sh "npm i puppeteer"
             }
+        }
+
+        stage ('Initialize settings') {
             steps {
                 // update branch and test environment
                 script {

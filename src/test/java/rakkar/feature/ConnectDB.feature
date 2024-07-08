@@ -26,6 +26,7 @@ Feature: Connect to PostgreSQL
                 "OR \"toCustomerId\" = '" + customerId + "' " +
             "ORDER BY \"createdAt\" DESC LIMIT 1000"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectVaultsOfCustomer
@@ -37,6 +38,7 @@ Feature: Connect to PostgreSQL
             "AND id in (" + vaultIds + ") " + 
             "LIMIT 10"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectBalanceOfCustomer
@@ -66,13 +68,14 @@ Feature: Connect to PostgreSQL
         "AND \"assetExternalId\" = '" + assetId + "' " +
         "GROUP BY \"assetExternalId\" "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectVaultOfUser
     Scenario: Select vault by user
         * def query =
         """
-        "select a.\"assetExternalId\", a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
+        "select a.\"assetExternalId\", a.available, a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
         "    case " +
         "        when \"uv\".\"id\" is not null then false " +
         "        else true " +
@@ -90,8 +93,9 @@ Feature: Connect to PostgreSQL
         "on aw.\"assetId\"  = a.id " +
         "where v.\"customerId\" = '"+customerId+"' " +
         "and v.\"hiddenOnUI\" = false  " +
-        "order by a.total desc, v.name asc; "
+        "order by a.available desc, v.name asc; "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectAssignVault
@@ -115,6 +119,7 @@ Feature: Connect to PostgreSQL
         "and v.\"hiddenOnUI\" = false " +
         "order by a.total desc;"
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectUnsupportedToken
@@ -129,6 +134,7 @@ Feature: Connect to PostgreSQL
         "        on cc.\"entityRelationId\" = ccer.id " +
         "    where cc.id = '" + customerId + "'); "
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectATransactionNotBelongToCustomer
@@ -139,6 +145,7 @@ Feature: Connect to PostgreSQL
         "where tt.\"customerId\" != '" + customerId + "' and tt.\"toCustomerId\" != '" + customerId + "' " +
         "order by tt.\"createdAt\" limit 1" 
         """
+        * print query
         * def result = coreDb.readRows(query)
 
     @SelectDiscoverableNetwork

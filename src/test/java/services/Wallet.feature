@@ -54,11 +54,12 @@ Feature: Wallet
                 offset: '0', 
                 sort:'ASC', 
                 groupBy: 'ASSET', 
-                keyword:'#(keyword)'
+                keyword:'#(keyword)',
+                isSupportedToken: true
             }
         }
         """
-        * call read(svc + 'coreSvc.feature@GetWalletTransferTokens') data
+        * call read(svc + 'coreSvc.feature@GetWalletTransferTokens_v2') data
     
     @GetWallets
     Scenario: Get Wallets on Vault

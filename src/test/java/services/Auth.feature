@@ -25,8 +25,8 @@ Feature: Common call from Auth services
 
     @GetUserAccessToken
     Scenario: Get Requester Access Token
-        * def answer = #(typeof customAnswer != 'undefined' ? customAnswer : testData.common.challengeAnswerAuth)
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(testData.common.challengeAnswerAuth)'}
+        * def answer = typeof customAnswer != 'undefined' ? customAnswer : testData.common.challengeAnswerAuth
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(answer)'}
     
     @GetRequesterInfo
     Scenario: Get Requester Info

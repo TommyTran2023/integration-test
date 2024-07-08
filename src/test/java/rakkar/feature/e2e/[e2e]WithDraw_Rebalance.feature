@@ -2,17 +2,16 @@
 Feature: Withdraw from WARM vault - Same and cross workspace
 
     Background:
-        * def Const = read('classpath:data/enum.json')
+        * callonce read(svc + 'ReadData.feature')
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * def amount_low = 11
+        * def env = karate.properties['karate.env']
+        * def amount_low = 2
         * def BigDecimal = Java.type('java.math.BigDecimal')
         * def waitUntilTransactionCompleted = 
         """
         function(transactionId){ 
-            var retry = 6
+            var retry = 18
             do {
-                java.lang.Thread.sleep(25000); 
-                karate.call(svc + 'Transaction.feature@SyncTransaction', { transactionId: transactionId })
                 java.lang.Thread.sleep(10000); 
                 var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
                 retry--
@@ -22,20 +21,50 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             if (retry <= 0 && getTransactionDetail.response.data.status != "COMPLETED")
                 throw Error ("Transaction cannot be completed: " + transactionId)
 
+            java.lang.Thread.sleep(10000);     
             return getTransactionDetail
+        }
+        """
+        * def selectDestEnv =
+        """
+        function(env, needCrossEnv){
+            if (!needCrossEnv)
+                return env;
+            
+            var destEnv = env != 'uat' ? 'uat' : 'qa';
+            
+            return destEnv;
+        }
+        """
+        * def verifyCrossWorkSpace =
+        """
+        function(destEnv, totalEstimatedFee, isWarm){
+            java.lang.Thread.sleep(180000); 
+
+            karate.call('this:CrossWorkSpace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
+        }
+        """
+        * def getDestinationBalance =
+        """
+        function(env, isWarm){
+            var balance = karate.call('this:CrossWorkSpace.feature@GetDestinationBalance', { destinationEnv: destEnv, isWarm: isWarm } ).response
+            
+            return balance
         }
         """
 
     @RAKCON-19300
     Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
+        * def destEnv = selectDestEnv(env, true)
+        * print env, destEnv
         # 1.Select token for doing transfer
-        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
         * def tokenSymbol = getToken.tokens[0].externalAssetId
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.ADA), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -51,14 +80,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferDev')
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, true)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -73,13 +103,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
             "amount":'#(amount_low)',
             "destinationId":'#(destinationId_warm)', 
-            "fee":'#(fee)',
+            "fee":#(fee),
             "isNetAmount":false,
             "isStake":false
         }
@@ -94,8 +124,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbolXRP)',
-            "fee":'#(fee)', 
+            "feeType":'#(Const.TokenSymbol.ADA)',
+            "fee":#(fee), 
             "treatAsGrossAmount": true, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
             "destination":{
@@ -142,18 +172,21 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationDev')
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, true)
 
     @RAKCON-19301
     Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
+        # Transfer Warm to Cold vault of another customer
+        * def destEnv = selectDestEnv(env, false)
+        * print env, destEnv
         # 1.Select token for doing transfer
-        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
         * def tokenSymbol = getToken.tokens[0].externalAssetId
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.ADA), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -169,14 +202,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat')
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, false)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -191,13 +225,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
             "amount":'#(amount_low)',
             "destinationId":'#(destinationId_warm)', 
-            "fee":'#(fee)',
+            "fee":#(fee),
             "isNetAmount":false,
             "isStake":false
         }
@@ -212,8 +246,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbolXRP)',
-            "fee":'#(fee)', 
+            "feeType":'#(Const.TokenSymbol.ADA)',
+            "fee":#(fee), 
             "treatAsGrossAmount": true, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
             "destination":{
@@ -260,19 +294,22 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, false)
 
 
     @RAKCON-19302
     Scenario: WITHDRAW - Transfer WARM to WARM - SAME workspace (Different company)
+        # Transfer Warm to Cold vault of another customer
+        * def destEnv = selectDestEnv(env, false)
+        * print env, destEnv
         # 1.Select token for doing transfer
-        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
         * def tokenSymbol = getToken.tokens[0].externalAssetId
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.ADA), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -288,14 +325,15 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def whitelist_type = destination_warm.type == "external" ? Const.PeerType.EXTERNAL_WALLET : Const.PeerType.INTERNAL_WALLET
 
         # 4.Get total amount of destination token before doing transfer
-        * def getBalanceTokenBeforeTransfer = call read('this:VerifyCrossWorkSpace.feature@GetBalanceTokenBeforeTransferUat')
-        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.response.data.available)
+        * def getBalanceTokenBeforeTransfer = getDestinationBalance(destEnv, true)
+        * print getBalanceTokenBeforeTransfer
+        * def destinationAmountBefore = parseFloat(getBalanceTokenBeforeTransfer.data.available)
 
         # 5.Get estimated fee
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -310,13 +348,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
             "amount":'#(amount_low)',
             "destinationId":'#(destinationId_warm)', 
-            "fee":'#(fee)',
+            "fee":#(fee),
             "isNetAmount":false,
             "isStake":false
         }
@@ -331,8 +369,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbolXRP)',
-            "fee":'#(fee)', 
+            "feeType":'#(Const.TokenSymbol.ADA)',
+            "fee":#(fee), 
             "treatAsGrossAmount": true, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
             "destination":{
@@ -379,20 +417,20 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer == available - amount_low
 
         # 13. Verify balance of destination && transaction show in destination
-        * call read('this:VerifyCrossWorkSpace.feature@VerifyBalanceDestinationUat')
+        * eval verifyCrossWorkSpace(destEnv, totalEstimatedFee, true)
 
 
     ######################### REBALANCE  #################################################################
     @RAKCON-19306
     Scenario: REBALANCE - Transfer WARM to WARM - SAME company
         # 1.Select token for doing transfer
-        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
         * def tokenSymbol = getToken.tokens[0].externalAssetId
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.ADA),searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -406,7 +444,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def destinationName_warm = destination_warm.name
         
         # 4.Get total amount of destination token before doing transfer
-        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'XRP'}
+        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'ADA'}
         * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
         * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
 
@@ -414,7 +452,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -429,13 +467,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
             "amount":'#(amount_low)',
             "destinationId":'#(destinationId_warm)', 
-            "fee":'#(fee)',
+            "fee":#(fee),
             "isNetAmount":false,
             "isStake":false
         }
@@ -451,8 +489,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbolXRP)',
-            "fee":'#(fee)', 
+            "feeType":'#(Const.TokenSymbol.ADA)',
+            "fee":#(fee), 
             "treatAsGrossAmount": true, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
             "destination":{
@@ -501,7 +539,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)
@@ -510,13 +548,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
     @RAKCON-19332
     Scenario: REBALANCE - Transfer WARM to COLD - SAME company
         # 1.Select token for doing transfer
-        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'XRP'}).response.data
+        * def getToken = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: 'ADA'}).response.data
         * def tokenId_transfer = getToken.tokens[0].id
         * def tokenSymbol = getToken.tokens[0].externalAssetId
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.ADA),searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -531,7 +569,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def destinationName_warm = destination_warm.name
         
         # 4.Get total amount of destination token before doing transfer
-        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'XRP'}
+        * def findWallet = call read(svc + 'Wallet.feature@GetWallets') {vaultId:#(destination_warm.id), tokenSymbol:'ADA'}
         * def destinationAmountBefore = get[0] findWallet.response.data.wallets[0].available
         * def walletId_destination = get[0] findWallet.response.data.wallets[0].id
 
@@ -539,7 +577,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -554,13 +592,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XRP)', 
+            "assetId":'#(Const.TokenSymbol.ADA)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
             "amount":'#(amount_low)',
             "destinationId":'#(destinationId_warm)', 
-            "fee":'#(fee)',
+            "fee":#(fee),
             "isNetAmount":false,
             "isStake":false
         }
@@ -576,8 +614,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbolXRP)',
-            "fee":'#(fee)', 
+            "feeType":'#(Const.TokenSymbol.ADA)',
+            "fee":#(fee), 
             "treatAsGrossAmount": true, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
             "destination":{
@@ -626,7 +664,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         # 13. Verify balance of destination && transaction show in destination
         * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.total)
+        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
         * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_recieve + parseFloat(destinationAmountBefore)

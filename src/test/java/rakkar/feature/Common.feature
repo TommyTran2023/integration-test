@@ -93,7 +93,7 @@ Feature: Generate Challenge Answer for Biometric
     """
     { 
       "assetId":'#(Const.TokenSymbol.ADA)', 
-      "destinationType": '#(Const.PeerType.EXTERNAL_WALLET)', 
+      "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
       "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
       "sourceId": '#(dataSet.sourceId_hot)',
       "amount":10,

@@ -1,6 +1,6 @@
 {
   "address" : "rHBWWqpRsMGsDA2EKHfC4LiKZ8pfjWqCEx",
-  "tokenId" : "c271e173-4067-4147-8c42-1baea29ea2ae",
+  "tokenId" : "975ab105-3d4a-457e-9ff8-dfdfbd8710d0",
   "stakeToken" : "975ab105-3d4a-457e-9ff8-dfdfbd8710d0",
   "advVaultWithAllUsers" : "f9ac8c5f-979a-4cd3-9718-4ebd894be59c",
   "advanceHotVaultForStakeId" : "c7a3db47-222f-4982-9263-8e8a773f6d80",
@@ -8,7 +8,7 @@
   "externalId" : "3c9621a4-10e6-4e03-a0ba-18fa7b55fcce",
   "vaultUpdateStake" : "f212894c-c9fc-4fa1-82bd-948b885ce527",
   "destinationId_hot" : "d51ab6c0-9873-4526-8118-ab9683074bcd",
-  "sourceId_hot" : "19f1e19d-a3d8-40cf-b15e-085216452d0a",
+  "sourceId_hot" : "487d91f4-35e4-45b6-825d-42d75b6843f1",
   "advVaultWithAllGroupsAndUsers" : "9e1666c8-ff2e-463e-9a5e-204eeb334e52",
   "destinationId_cold" : "a6d6aa2e-a9da-4ba4-ad5d-88834e0f11a7",
   "skipHotVaultId" : "19f1e19d-a3d8-40cf-b15e-085216452d0a",
@@ -18,5 +18,8 @@
   "advVaultWithAllGroups" : "76d1ffcd-2010-4873-bb36-aa9f6315bb17",
   "advanceHotVaultId" : "f6091232-0384-41b9-ad14-9d9be4cb1e89",
   "advanceColdVaultId" : "d3133c3b-e9b2-410d-bfc4-2083267be5c0",
-  "standardVaultForEditPolicy" : "67e5639f-db35-40d7-9090-37f1c14115c8"
+  "standardVaultForEditPolicy" : "67e5639f-db35-40d7-9090-37f1c14115c8",
+  "whitelistTokenId": "baff969e-6fdb-4b49-a621-f6be9c29cf68",
+  "whitelistAddress": "tb1qlj64u6fqutr0xue85kl55fx0gt4m4urun25p7q",
+  "transferWhitelistToken":""
 }

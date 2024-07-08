@@ -38,6 +38,9 @@ pipeline {
 
         stage ('Initialize settings') {
             steps {
+                sh "npm i puppeteer"
+            }
+            steps {
                 // update branch and test environment
                 script {
                     def credentials = null
@@ -50,7 +53,7 @@ pipeline {
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
-                            HEALTH_CHECK_PATH = "uat"
+                            HEALTH_CHECK_PATH = "uat"   
                             credentials = readJSON file: SECRET_FILE_CONTENT_UAT
                     }
                     else if (env.BRANCH_NAME == 'develop'){

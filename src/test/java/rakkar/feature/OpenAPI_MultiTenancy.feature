@@ -4,7 +4,7 @@ Feature: Open API from another customer
 
     @RAKCON-20394 @VerifyListTransactionsOfCustomer
     Scenario: User unable to see list transactions from other customer
-        * call read('classpath:rakkar/feature/ConnectDB.feature@SelectTransactionsOfCustomer') {customerId: #(crossTenant.accountId)}
+        * call read('classpath:rakkar/common/ConnectDB.feature@SelectTransactionsOfCustomer') {customerId: #(crossTenant.accountId)}
         * call read(svc + 'OpenAPI.feature@GetTransactions') { apiKey: #(crossTenant.apiKey), accountId: #(crossTenant.accountId) }
         Then match responseStatus == 200
         And assert response.transactions.length == result.length
@@ -15,7 +15,7 @@ Feature: Open API from another customer
         * call read(svc + 'OpenAPI.feature@GetVaults') { apiKey: #(crossTenant.apiKey), accountId: #(crossTenant.accountId) }
         Then match responseStatus == 200
         * def actualVaultId = karate.jsonPath(response.vaults,"$..['vault_id']").map(v => {return  "'" + v + "'" }).join(",")
-        * call read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultsOfCustomer') {customerId: #(crossTenant.accountId), vaultIds: #(actualVaultId)}
+        * call read('classpath:rakkar/common/ConnectDB.feature@SelectVaultsOfCustomer') {customerId: #(crossTenant.accountId), vaultIds: #(actualVaultId)}
         * def result = karate.jsonPath(result,"$..['customerId']").map(v => {return  v.toString().replaceAll("-","") })
         And assert response.vaults.length == result.length
         And match each result == crossTenant.accountId
@@ -24,7 +24,7 @@ Feature: Open API from another customer
     Scenario: User able to see balance of customer by vault type and asset id
         # BUG @RAKSEC-110
         * def assetId = 'XRP_TEST'
-        * call read('classpath:rakkar/feature/ConnectDB.feature@SelectBalanceOfCustomer') {customerId: #(crossTenant.accountId), type: 'COLD_WALLET', assetId: #(assetId)}
+        * call read('classpath:rakkar/common/ConnectDB.feature@SelectBalanceOfCustomer') {customerId: #(crossTenant.accountId), type: 'COLD_WALLET', assetId: #(assetId)}
         * def data =
         """
         { 

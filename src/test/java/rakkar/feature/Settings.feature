@@ -2,7 +2,7 @@
 Feature: Settings
 
   Background:
-    * url baseURL
+    * url baseMobileURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def challengeRequester = call read('this:Common.feature@FIDO-Requester')
     * def testData = read('classpath:data/data_test.json')
@@ -39,7 +39,7 @@ Feature: Settings
   @RAKCON-13185 @CheckNewPassCode
   Scenario: Check new passcode when performing forgot PIN
     Given path '/auth/account/check-new-passcode'
-    * request { "passcode" : "testData.settings.newPasscode" }
+    * request { "passcode" : "#(testData.settings.newPasscode)" }
     When method POST
     Then status 201
     * match response.data.isSameOldPasscode == false

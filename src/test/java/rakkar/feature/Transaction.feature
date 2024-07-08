@@ -14,7 +14,7 @@ Feature: Transaction
     * def response = filterRequest.response
     * match $response.status == "success"
     * match $response == schemaBody.transaction.filterTransaction
-    * match $response.data.transactions[*] contains schemaBody.transaction.transactionDetails
+    * match each $response.data.transactions contains schemaBody.transaction.transactionDetails
 
     @RAKCON-10904 @ViewTransactionListing
   Scenario: View transaction listing
@@ -55,7 +55,7 @@ Feature: Transaction
 
     @RAKCON-12327 @Filter_transaction_by_source
   Scenario: Filter transactions by source
-    * def value = call read(svc + 'Vault.feature@GetAllVaults')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true}
     * def sourceId = value.response.data.vaults[0].id
     * def sourceName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0', sourceData: [ { sourceType: 'internal', sourceId: '#(sourceId)'}] }
@@ -64,7 +64,7 @@ Feature: Transaction
 
     @RAKCON-12328 @Filter_transaction_by_destination
   Scenario: Filter transactions by destination
-    * def value = call read(svc + 'Vault.feature@GetAllVaults')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true}
     * def destinationId = value.response.data.vaults[0].id
     * def destinationName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0',destinationData: [ { destinationType: 'internal', destinationId: '#(destinationId)'}] }

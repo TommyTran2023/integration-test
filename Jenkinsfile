@@ -55,21 +55,18 @@ pipeline {
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"   
                             credentials = readJSON file: SECRET_FILE_CONTENT_UAT
-                            DBNAME = 'rak_svc_core_uat'
                     }
                     else if (env.BRANCH_NAME == 'develop'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
                             credentials = readJSON file: SECRET_FILE_CONTENT_DEV
-                            DBNAME = 'rak_dev_svc_core'
                     }
                     else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
                             credentials = readJSON file: SECRET_FILE_CONTENT_SIT
-                            DBNAME = 'rak_sit_svc_core_cleanup'
                     }
 
                     env.BRANCH = BRANCH
@@ -78,6 +75,7 @@ pipeline {
 
                     USERNAME = credentials['core-svc']['DATABASE_USERNAME']
                     PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
+                    DBNAME = credentials['core-svc']['DATABASE_NAME']
                 }
             }
         }

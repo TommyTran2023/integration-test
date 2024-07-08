@@ -12,7 +12,7 @@ Feature: Transfer
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
-    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: a.Symbol.ADA}
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: "#(a.Symbol.ADA)"}
     Then match responseStatus == 200
     And match response.status == "success"
 
@@ -100,16 +100,20 @@ Feature: Transfer
     * def body = 
     """
     { 
-      "operation":'#(testData.transfer.operation)',
+      "operation":'#(a.Transfer.Operation.TRANSFER)',
       "tokenId":'#(dataSet.tokenId)',
-      "feeType":'#(testData.transfer.withdraw.feeType)',
+      "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
       "feeLevel": '#(testData.transfer.feeLevel)', 
-      "destination":{"type":'#(testData.transfer.source_type)',
-      "id":'#(dataSet.destinationId_hot)'}, 
-      "source": {"type":'#(testData.transfer.source_type)',
-      "id":'#(dataSet.sourceId_hot)'},
+      "destination":{
+        "type":'#(a.PeerType.VAULT_ACCOUNT)',
+        "id":'#(dataSet.destinationId_hot)'
+      }, 
+      "source": {
+        "type":'#(a.PeerType.VAULT_ACCOUNT)',
+        "id":'#(dataSet.sourceId_hot)'
+      },
       "amount":'#(amount_default)',
       "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
     }
@@ -306,19 +310,24 @@ Feature: Transfer
     """
     * call read('this:Transfer.feature@Total_estimate_fee_common')
 
+  @ignore @GetTokenId
+  Scenario: Get token id
+    * def token = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: keyword}).response.data
+
   @RAKCON-11408 @External_Transfer
   Scenario:  External - Submit transfer
+    * callonce read('@GetTokenId') {keyword: '#(a.TokenSymbol.ADA)'}
     * def body_transfer = 
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(dataSet.transferWhitelistToken)',
-      "feeType":'#(a.TokenSymbol.DAI)',
+      "tokenId":'#(token.tokens[0].id)',
+      "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
-      "feeLevel": '#(a.TokenSymbol.DAI)', 
+      "feeLevel": '#(a.TokenSymbol.ADA)', 
       "destination":{
-        "type":'#(testData.transfer.destinationType)',
+        "type":'#(a.PeerType.EXTERNAL_WALLET)',
         "id":'#(dataSet.externalId)'
       }, 
       "source": {
@@ -457,7 +466,7 @@ Feature: Transfer
           "type":'#(testData.transfer.source_type)',
           "id":'#(sourceId)'
         },
-        "amount":#(amount_low),
+        "amount":"#(amount_low)",
         "totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'
         }
     """
@@ -561,8 +570,11 @@ Feature: Transfer
     """ 
     * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total != null && x.total != 0)
+    * print searchVault
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
-    * match each response.data.list[*] contains {"status":"PENDING"}
+    * def actualVaults = response.data.list
+    * def vault = actualVaults.find(x => x.name == searchVault.name)
+    * match vault.status == "PENDING"
     
 @RAKCON-24736 @TransferSourceScreenSkipPolicyVault @MOB-300
 Scenario: Transfer Source Screen Skip Policy Vault

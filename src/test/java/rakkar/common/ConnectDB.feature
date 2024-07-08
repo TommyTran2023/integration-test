@@ -3,13 +3,13 @@ Feature: Connect to PostgreSQL
 
     Background:
         # use jdbc to validate
-        * def dbUrl = "jdbc:postgresql://rds-nonprod.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/" + dbName
+        * def dbUrl = dbUrl + dbName
         * def coreConfig = 
         """
         { 
-            username: #(coreUserName), 
-            password: #(corePass), 
-            url: #(dbUrl), 
+            username: '#(coreUserName)', 
+            password: '#(corePass)', 
+            url: '#(dbUrl)', 
             driverClassName: 'org.postgresql.Driver' 
         }
         """
@@ -28,7 +28,6 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectVaultsOfCustomer
     Scenario: Select all vaults of customer
@@ -41,7 +40,6 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectBalanceOfCustomer
     Scenario: Select balance of customer
@@ -72,13 +70,12 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectVaultOfUser
     Scenario: Select vault by user
         * def query =
         """
-        "select a.\"assetExternalId\", a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
+        "select a.\"assetExternalId\", a.available, a.total, qr.\"type\" as policyType, aw.\"walletId\"  ,v.*, " +
         "    case " +
         "        when \"uv\".\"id\" is not null then false " +
         "        else true " +
@@ -96,11 +93,10 @@ Feature: Connect to PostgreSQL
         "on aw.\"assetId\"  = a.id " +
         "where v.\"customerId\" = '"+customerId+"' " +
         "and v.\"hiddenOnUI\" = false  " +
-        "order by a.total desc, v.name asc; "
+        "order by a.available desc, v.name asc; "
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectAssignVault
     Scenario: Select assign vault 
@@ -125,7 +121,6 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
 
     @SelectUnsupportedToken
     Scenario: Select assign vault 
@@ -141,4 +136,27 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
-        * print result
+
+    @SelectATransactionNotBelongToCustomer
+    Scenario: Select a transaction not belong to customer
+        * def query =
+        """
+        "select * from txn_transactions tt " +
+        "where tt.\"customerId\" != '" + customerId + "' and tt.\"toCustomerId\" != '" + customerId + "' " +
+        "order by tt.\"createdAt\" limit 1" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+    @SelectDiscoverableNetwork
+    Scenario: Select Discoverable Network   
+        * def query =
+        """
+            "select * from \"net_networkProfiles\" nnp " +
+            "where \"customerId\" ='" + customerId + "' " +
+            "and \"isDiscoverable\" = true " +
+            "and nnp.\"networkName\" like 'Profile%'" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+    

@@ -178,6 +178,7 @@
           "vaultId": "#string",
           "isRequiredApprover": "#boolean",
           "isValidNumUserInQuorum":"#boolean",
+          "isInAdvancedQuorum":"#boolean",
           "vaultName": "#string"
         }
       ]
@@ -208,12 +209,14 @@
       "type" : "#string"
      },
     "discoverableNetworkListing": {
-       "workspaceName" : "#string",
-       "id" : "#string",
-       "workspaceId" : "#string",
-       "workspaceExternalId" : "#string",
-       "name" : "#string",
-        "workspaceType" : "#string"
+      "workspaceName" : "#string",
+      "id" : "#string",
+      "workspaceId" : "##",
+      "workspaceExternalId" : "#string",
+      "name" : "#string",
+      "workspaceType" : "#string",
+      "isDiscoverable": "##",
+      "routingPolicy": "##"
     },
     "connectionsList": {
       "status" : "#string",
@@ -359,6 +362,7 @@
       "amount": "#number",
       "txHash": "#ignore",
       "status": "#string",
+      "subStatusFireblock": "##string",
       "fireblocksStatus": "#ignore",
       "createdAt": "#string",
       "updatedAt": "#string",
@@ -375,9 +379,13 @@
       "destinationName": "#string",
       "sourceAddress": "#string",
       "destinationAddress": "#string",
-      "sourceType": "#string",
-      "sourceMapping": "#string",
-      "repStatus": "#string"
+      "sourceType": "##",
+      "sourceMapping": "##string",
+      "repStatus": "#string",
+      "txnType":"#string",
+      "txnIndex":"##",
+      "additionalData": "##",
+      "externalExchangeAccountId":"##string"
     }
   },
   "quorumDetails":{

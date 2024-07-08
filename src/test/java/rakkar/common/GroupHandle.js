@@ -208,6 +208,17 @@ function fn(){
             }
 
             return group
+        },
+
+        deleteGroupById:function(groupId){
+            var bio = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
+            var data = {
+                groupId: groupId,
+                accessToken: bio.requesterAccessToken,
+                challengeAnswerRequest: bio.challengeAnswerRequest
+            }
+            
+            karate.call(svc + 'Group.feature@DeleteGroup', data) 
         }
     }
 }

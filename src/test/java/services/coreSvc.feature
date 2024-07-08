@@ -752,28 +752,28 @@ Feature: All api call to core services
 
     @CheckExistingShortcut
   Scenario: Check existing asset shortcuts
-    Given path '/core/assets/check-existing
+    Given path '/core/assets/check-existing'
     * header Authorization = authorization
     * params params
     When method GET
 
     @AllocationDetail
   Scenario: Get asset allocation detail 
-    Given path '/core/assets/allocation-detail
+    Given path '/core/assets/allocation-detail'
     * header Authorization = authorization
     * params params
     When method GET
 
     @GetAllVaultOfAsset
   Scenario: Get all asset vault
-    Given path '/core/assets/overview
+    Given path '/core/assets/overview'
     * header Authorization = authorization
     * params params
     When method GET
 
     @GetListAssetsStaking
   Scenario: Get List Assets Staking
-    Given path '/core/assets/assets-staking
+    Given path '/core/assets/assets-staking'
     * header Authorization = authorization
     When method GET
 
@@ -788,14 +788,14 @@ Feature: All api call to core services
   Scenario: Create Comment
     Given path entityType + '/' + entityId + '/comments'
     * header Authorization = authorization
-    * request {content:content}
+    * request {content:'#content'}
     When method POST
 
     @UpdateComment
   Scenario: Update Comment
     Given path entityType + '/' + entityId + '/comments/' + commentId 
     * header Authorization = authorization
-    * request {content:content}
+    * request {content:'#content'}
     When method POST
 
     @DeleteComment

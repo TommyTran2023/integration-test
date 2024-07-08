@@ -148,8 +148,16 @@ function fn(){
             var editRequest = karate.call(svc + 'Vault.feature@EditVaultPolicy', editData)
             
             return editRequest.response.data.data.record.id
-        }
+        },
 
-        
+        approveTransaction: function(txnId){
+            var biometric = karate.call(svc + 'Biometric.feature@ApproverDoBiometric')
+            var data = {
+                requestId:txnId,
+                approvalAccessToken: biometric.approvalAccessToken,
+                challengeAnswerApprover: biometric.challengeAnswerApprover
+            }
+            karate.call(svc + 'Quorums.feature@ApproveRequest', data)
+        }
     }
 }

@@ -139,5 +139,28 @@
     "WalletMethodOptions":{
         "SATOSHI_TEST" : "SATOSHI_TEST",
         "SELF_ATTESTATION" : "SELF_ATTESTATION"
+    },
+    "Notifications":{
+        "CreateVaultPolicy":{
+            "type": "Warning",
+            "moduleType" : "TEMPLATE_CREATE_VAULT_POLICY",
+            "moduleAction" : "CREATE_VAULT",
+            "title": "Vault policy",
+            "body":"You have received a request for a new vault policy for <<vaultName>>"
+        },
+        "RejectTransfer":{
+            "type": "Error",
+            "moduleType" : "TEMPLATE_RAK_REJECT_TRANSFER",
+            "moduleAction" : "REJECT_WITHDRAW_APPROVAL",
+            "title": "msg-transfer-vault:RAK_REJECT_TRANSFER",
+            "body":"msg-transfer-vault:RAK_REJECT_TRANSFER"
+        },
+        "ApproveTransfer":{
+            "type": "Success",
+            "moduleType" : "TEMPLATE_RAK_APPROVE_TRANSFER",
+            "moduleAction" : "APPROVE_WITHDRAW_APPROVAL",
+            "title": "msg-transfer-vault:RAK_APPROVE_TRANSFER",
+            "body":"msg-transfer-vault:RAK_APPROVE_TRANSFER"
+        }
     }
 }

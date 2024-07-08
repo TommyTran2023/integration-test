@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 (async () => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
   // Navigate the page to a URL
@@ -27,27 +27,41 @@ const puppeteer = require('puppeteer');
   await page.waitForSelector(btnOrganization);
   await page.click(btnOrganization);
 
+  //Select Test mode
   // Click on Stake
-  const swtTestnet = "a[href='/stake']";
-  await page.waitForSelector(swtTestnet);
+  const btnTestnet = "a[href='/stake']";
+  await page.waitForSelector(btnTestnet);
+  await page.click(btnTestnet);
+
+  // Wait Page load
+  await page.waitForNavigation({
+    waitUntil: 'load',
+  });
 
   // Select testnet
-  let isTestnetMode = await page.$eval(swtTestnet, element=> element.getAttribute("aria-checked"));
-  if (isTestnetMode == 'false')
-    await page.click(swtTestnet);
+  let ddlNetwork = "document.elementFromPoint(window.innerWidth/2, 100)";
+  ddlNetwork = (await page.evaluateHandle(ddlNetwork)).asElement();
+  await ddlNetwork?.click();
 
-  // Click Stake hETH
-  const btnStake = "div.mt-2 > div > button";
-  await page.waitForSelector(btnStake);
-  await page.click(btnStake);
-  
+  let optTestnet = "document.elementFromPoint(window.innerWidth/2, 160)";
+  optTestnet = (await page.evaluateHandle(optTestnet)).asElement();
+  await optTestnet?.click();
+
+  // Select stake method
+  var args = process.argv.slice(2)[0];
+
+  if (args?.includes("liquidStaking"))
+    await liquidStaking(page);
+  else
+    await pureStaking(page);
+
   // Wait wallet Connect protocol 
   const walletConnect = 'document.querySelector("body > w3m-modal").shadowRoot.querySelector("wui-flex > wui-card > w3m-router").shadowRoot.querySelector("div > w3m-connect-view").shadowRoot.querySelector("wui-flex > wui-list-wallet:nth-child(2)")'
   let btnWalletConnect = (await page.evaluateHandle(walletConnect)).asElement();
   await btnWalletConnect?.click();
 
   // Wait QR Code appear 
-  await new Promise(r => setTimeout(r, 2000));
+  await new Promise(r => setTimeout(r, 1000));
 
   // Read QR code
   const qrCodeElement = 'document.querySelector("body > w3m-modal").shadowRoot.querySelector("wui-flex > wui-card > w3m-router").shadowRoot.querySelector("div > w3m-connecting-wc-view").shadowRoot.querySelector("w3m-connecting-wc-qrcode").shadowRoot.querySelector("wui-flex > wui-shimmer > wui-qr-code")'
@@ -59,3 +73,25 @@ const puppeteer = require('puppeteer');
 
   process.stdout.write(encodeURIComponent(fullQR).replace('%3F', '?'));
 })();
+
+async function pureStaking(page){
+  // Click Connect Wallet
+  const btnConnectWallet = "div > button";
+  await page.waitForSelector(btnConnectWallet);
+  await page.click(btnConnectWallet);
+}
+
+async function liquidStaking(page){
+  // Click on Liquid Staking
+  const btnTestnet = "a[href='/stake/liquid']";
+  await page.waitForSelector(btnTestnet);
+  await page.click(btnTestnet);
+
+  // Wait QR Code appear 
+  await new Promise(r => setTimeout(r, 1000));
+
+  // Click Connect Wallet button
+  let btnConnectWallet = "document.querySelector('w3m-connect-button').shadowRoot.querySelector('wui-connect-button')";
+  btnConnectWallet = (await page.evaluateHandle(btnConnectWallet)).asElement();
+  await btnConnectWallet?.click();
+}

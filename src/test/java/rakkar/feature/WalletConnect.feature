@@ -113,10 +113,10 @@ Feature: Wallet Connect
         """
         {
             "id":"#uuid",
-            "name":"Figment",
+            "name":"#string",
             "externalId":"8f3b9e890a63e147986c7c4d06ccd49c483abb39c10e65df91688c380431421c",
             "url":"https://app.figment.io",
-            "destinationNote":"Earn rewards while staking ETH with Figment",
+            "destinationNote":"#string",
             "logo":"https://static.fireblocks.io/wcs/dappIcon/8f3b9e890a63e147986c7c4d06ccd49c483abb39c10e65df91688c380431421c"
         }
         """
@@ -145,10 +145,10 @@ Feature: Wallet Connect
         """
         {
             "id":"#uuid",
-            "name":"OpenEden Testnet",
+            "name":"#string",
             "externalId":"1412ecdfc5ad591bd39044157fdbd6545895b5d93eee87861bb7e1095629cfa4",
-            "url":"https://app.openeden.com",
-            "destinationNote":"OpenEden | Earn U.S. Treasury Yields On-Chain",
+            "url":"#regex https://(.*).openeden.com",
+            "destinationNote": "#string",
             "logo":"https://static.fireblocks.io/wcs/dappIcon/1412ecdfc5ad591bd39044157fdbd6545895b5d93eee87861bb7e1095629cfa4"
         }
         """

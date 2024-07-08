@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 (async () => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
   // Navigate the page to a URL
@@ -20,6 +20,9 @@ const puppeteer = require('puppeteer');
   const btnProceed = "div[data-headlessui-state='open'] > div > button.text-white"
   await page.waitForSelector(btnProceed);
   await page.click(btnProceed);
+
+  // Wait Page load
+  await new Promise(r => setTimeout(r, 1000));
   
   // Wait wallet Connect protocol 
   const walletConnect = 'document.querySelector("body > w3m-modal").shadowRoot.querySelector("wui-flex > wui-card > w3m-router").shadowRoot.querySelector("div > w3m-connect-view").shadowRoot.querySelector("wui-flex > wui-list-wallet:nth-child(2)").shadowRoot.querySelector("button > wui-text")'
@@ -27,7 +30,7 @@ const puppeteer = require('puppeteer');
   await btnWalletConnect?.click();
 
   // Wait QR Code appear 
-  await new Promise(r => setTimeout(r, 2000));
+  await new Promise(r => setTimeout(r, 1000));
 
   // Read QR code
   const qrCodeElement = 'document.querySelector("body > w3m-modal").shadowRoot.querySelector("wui-flex > wui-card > w3m-router").shadowRoot.querySelector("div > w3m-connecting-wc-view").shadowRoot.querySelector("w3m-connecting-wc-qrcode").shadowRoot.querySelector("wui-flex > wui-shimmer > wui-qr-code")'

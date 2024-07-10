@@ -35,14 +35,6 @@ pipeline {
     }
 
     stages {
-
-        stage ('Install lib') {
-            steps {
-                sh "node -v"
-                sh "npm i puppeteer"
-            }
-        }
-
         stage ('Initialize settings') {
             steps {
                 // update branch and test environment
@@ -123,9 +115,17 @@ pipeline {
                         // This step will only be executed if the serviceStatus = 0
                         echo "KARATE_ENV = ${KARATE_ENV}"
                         def tag = params.E2E ? "@e2e" : "~@e2e"
-                        withMaven(maven: 'Maven') {
-                            sh "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
-                        }
+                        def command = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
+                        echo command
+                        
+                        sh "docker build -t integration-test:latest ."
+                        sh '''
+                            docker run  \
+                            --name integration-test -it --rm \
+                            -v $(pwd):/usr/src/ \
+                            integration-test:latest \
+                            ${command}
+                        '''
                     
                 }
             }

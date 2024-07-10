@@ -108,6 +108,14 @@ pipeline {
                 }
             }
         }
+
+        stage ('Build Image') {
+            steps {
+                script {
+                    sh "make build"
+                }
+            }
+        }
     
         stage ('Test Execution') {
             steps {
@@ -118,14 +126,7 @@ pipeline {
                         def command = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
                         echo command
                         
-                        sh "docker build -t integration-test:latest ."
-                        sh '''
-                            docker run  \
-                            --name integration-test -it --rm \
-                            -v $(pwd):/usr/src/ \
-                            integration-test:latest \
-                            ${command}
-                        '''
+                        sh "make run COMMAND=${command}"
                     
                 }
             }

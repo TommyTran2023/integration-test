@@ -9,5 +9,5 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
-	docker run --name $(IMAGE_NAME) -it --rm -v $(pwd):/usr/src/ integration-test:latest /bin/sh -c "$(COMMAND)"
+	docker run --name $(IMAGE_NAME) --rm -v $(pwd):/usr/src/ integration-test:latest /bin/sh -c "$(COMMAND)"
 

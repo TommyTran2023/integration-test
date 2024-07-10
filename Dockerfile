@@ -1,7 +1,7 @@
 FROM node:current-alpine3.19
 
 RUN apk update \
-    && apk add openjdk22 \
+    && apk add openjdk20 \
     && apk add maven \
     && apk add --no-cache \
       chromium \

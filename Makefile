@@ -1,5 +1,6 @@
 # Define the image name
 IMAGE_NAME = integration-test:latest
+CONTAINER_NAME = integration-test-container
 
 # Build the Docker image
 .PHONY: build
@@ -9,5 +10,13 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
-	docker run --name integration-test-container --rm -v ./:/usr/src/ $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
+	docker run --name $(CONTAINER_NAME) --rm $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
+
+.PHONY: copy
+copy:
+	docker cp $(CONTAINER_NAME):./usr/src/target .
+
+.PHONY: clean
+clean:
+	docker rm -f $(CONTAINER_NAME)	
 

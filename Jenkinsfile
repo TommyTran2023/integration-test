@@ -112,8 +112,6 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
-                    sh "mkdir target"
-                    sh "chmod -R 755 target"
                     sh "make build"
                 }
             }
@@ -122,13 +120,21 @@ pipeline {
         stage ('Test Execution') {
             steps {
                 script {
-                        // This step will only be executed if the serviceStatus = 0
-                        echo "KARATE_ENV = ${KARATE_ENV}"
-                        def tag = params.E2E ? "@e2e" : "~@e2e"
-                        env.COMMAND = "mvn test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
-                        
-                        sh "make run"
+                    // This step will only be executed if the serviceStatus = 0
+                    echo "KARATE_ENV = ${KARATE_ENV}"
+                    def tag = params.E2E ? "@e2e" : "~@e2e"
+                    env.COMMAND = "mvn test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
                     
+                    sh "make run"
+                    
+                }
+            }
+        }
+
+        stage ('Copy report') {
+            steps {
+                script {
+                    sh "make copy"
                 }
             }
         }

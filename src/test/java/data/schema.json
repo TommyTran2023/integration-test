@@ -382,8 +382,6 @@
       "sourceType": "##",
       "sourceMapping": "##string",
       "repStatus": "#string",
-      "newSource":"{}",
-      "newDestination":"{}",
       "txnType":"#string",
       "txnIndex":"##",
       "additionalData": "##",

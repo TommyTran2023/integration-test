@@ -123,10 +123,9 @@ pipeline {
                         // This step will only be executed if the serviceStatus = 0
                         echo "KARATE_ENV = ${KARATE_ENV}"
                         def tag = params.E2E ? "@e2e" : "~@e2e"
-                        def command = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
-                        echo command
+                        env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
                         
-                        sh "make run COMMAND=${command}"
+                        sh "make run"
                     
                 }
             }

@@ -385,7 +385,7 @@
       "txnType":"#string",
       "txnIndex":"##",
       "additionalData": "##",
-      "externalExchangeAccountId":"#string"
+      "externalExchangeAccountId":"##string"
     }
   },
   "quorumDetails":{

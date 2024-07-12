@@ -113,6 +113,7 @@ pipeline {
             steps {
                 script {
                     env.jenkinsPwd = pwd()
+                    echo env.jenkinsPwd
                     // Get Jenkins user and group ID
                     env.jenkinsUid = sh(script: 'id -u', returnStdout: true).trim()
                     env.jenkinsGid = sh(script: 'id -g', returnStdout: true).trim()

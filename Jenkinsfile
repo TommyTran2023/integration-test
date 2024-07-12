@@ -112,6 +112,8 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
+                    sh "mkdir target"
+                    sh "chmod -R 755 target"
                     sh "make build"
                 }
             }

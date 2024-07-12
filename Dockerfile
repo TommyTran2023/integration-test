@@ -21,8 +21,8 @@ RUN npm i puppeteer
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
-    && chown -R pptruser:pptruser /usr/src/ \
-    && chmod -R 777 /usr/src/
+    && chown -R pptruser:pptruser /usr/src \
+    && chmod -R 777 /usr/src
 
 # Run everything after as non-privileged user.
 USER pptruser

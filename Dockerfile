@@ -16,6 +16,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /usr/src/
 RUN mkdir -p /usr/src/target/classes
+COPY . .
 
 RUN npm i puppeteer
 

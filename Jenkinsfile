@@ -112,8 +112,6 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
-                    sh "mkdir ./target"
-                    sh "mkdir ./target/classes"
 
                     // Get Jenkins user and group ID
                     env.jenkinsUid = sh(script: 'id -u', returnStdout: true).trim()

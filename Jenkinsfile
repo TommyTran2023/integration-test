@@ -112,6 +112,7 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
+                    env.jenkinsPwd = pwd()
                     // Get Jenkins user and group ID
                     env.jenkinsUid = sh(script: 'id -u', returnStdout: true).trim()
                     env.jenkinsGid = sh(script: 'id -g', returnStdout: true).trim()

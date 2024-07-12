@@ -11,7 +11,7 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
-	docker run --name $(CONTAINER_NAME) -v $(pwd)/:/usr/src/ -u $(jenkinsUid):$(jenkinsGid) $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
+	docker run --name $(CONTAINER_NAME) -v $(jenkinsPwd)/:/usr/src/ -u $(jenkinsUid):$(jenkinsGid) $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
 
 .PHONY: copy
 copy:

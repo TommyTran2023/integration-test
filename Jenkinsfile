@@ -151,6 +151,10 @@ pipeline {
 
         always {
             script {
+                sh "make copy"
+            }
+
+            script {
 
                 //continue gather the result if checkService pass and the test was executed
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'

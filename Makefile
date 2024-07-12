@@ -11,6 +11,8 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
+	mkdir -p target/classes
+	chmod 777 -R target/
 	docker run --name $(CONTAINER_NAME) -v $(JENKINS_PWD):/usr/src/ -u $(JENKINS_USER):$(JENKINS_GROUP) $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
 
 .PHONY: copy

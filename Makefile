@@ -1,6 +1,7 @@
 # Define the image name
 IMAGE_NAME = integration-test:latest
 CONTAINER_NAME = integration-test-container
+COMMAND ?= "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
 
 # Build the Docker image
 .PHONY: build
@@ -10,7 +11,7 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
-	docker run --name $(CONTAINER_NAME) $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
+	docker run --name $(CONTAINER_NAME) $(IMAGE_NAME) /bin/sh -c $(COMMAND)
 
 .PHONY: copy
 copy:
@@ -18,5 +19,5 @@ copy:
 
 .PHONY: clean
 clean:
-	docker rm -f $(CONTAINER_NAME)	
+	docker rm -f $(CONTAINER_NAME) || true
 

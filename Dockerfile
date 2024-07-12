@@ -15,7 +15,6 @@ RUN apk update \
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /usr/src/
-RUN mkdir -p /usr/src/target/classes
 COPY . .
 
 RUN npm i puppeteer
@@ -23,11 +22,9 @@ RUN npm i puppeteer
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /usr/src/* \
-    && chmod -R 777 /usr/src/*
+    && chmod -R 777 /usr/src/* \
+    && chmod -R 777 /usr/src/target
 
 # Run everything after as non-privileged user.
 USER pptruser
 
-
-# Run Maven to clean and build the project
-RUN mvn clean install

@@ -52,7 +52,7 @@ pipeline {
                             HEALTH_CHECK_PATH = "uat"   
                             credentials = readJSON file: SECRET_FILE_CONTENT_UAT
                     }
-                    else if (env.BRANCH_NAME == 'develop'){
+                    else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"

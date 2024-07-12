@@ -23,6 +23,7 @@ RUN npm i puppeteer
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /usr/src/* \
     && chmod -R 777 /usr/src/* \
+    && chmod -R 777 /usr/src/src \
     && chmod -R 777 /usr/src/target
 
 # Run everything after as non-privileged user.

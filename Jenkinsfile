@@ -112,7 +112,10 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
-                    sh "chmod -R 755 target"
+                    // Get Jenkins user and group ID
+                    env.jenkinsUid = sh(script: 'id -u', returnStdout: true).trim()
+                    env.jenkinsGid = sh(script: 'id -g', returnStdout: true).trim()
+                    
                     sh "make build"
                 }
             }
@@ -132,13 +135,13 @@ pipeline {
             }
         }
 
-        stage ('Copy report') {
-            steps {
-                script {
-                    sh "make copy"
-                }
-            }
-        }
+        // stage ('Copy report') {
+        //     steps {
+        //         script {
+        //             sh "make copy"
+        //         }
+        //     }
+        // }
     }
 
     post {

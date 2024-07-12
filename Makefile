@@ -10,7 +10,7 @@ build:
 # Run the Docker container
 .PHONY: run
 run:
-	docker run --name $(CONTAINER_NAME) --rm $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
+	docker run --name $(CONTAINER_NAME) --rm $(IMAGE_NAME) -v .:/usr/src/ -u $(jenkinsUid):$(jenkinsGid) /bin/sh -c "$(COMMAND)"
 
 .PHONY: copy
 copy:

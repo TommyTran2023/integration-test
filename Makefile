@@ -3,6 +3,9 @@ IMAGE_NAME = integration-test:latest
 CONTAINER_NAME = integration-test-container
 COMMAND ?= "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
 
+# Maven repository location
+MAVEN_REPO = $(JENKINS_PWD)/.m2/repository
+
 # Build the Docker image
 .PHONY: build
 build:
@@ -12,7 +15,7 @@ build:
 .PHONY: run
 run:
 	mkdir -p target/classes/
-	docker run --name $(CONTAINER_NAME) -v $(JENKINS_PWD):/usr/src/ -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
+	docker run --name $(CONTAINER_NAME) -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
 
 .PHONY: copy
 copy:

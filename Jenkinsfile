@@ -151,6 +151,10 @@ pipeline {
             script {
                 sh "make copy"
             }
+            
+            script {
+                sh "make clean"
+            }
 
             script {
 

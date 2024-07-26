@@ -5,11 +5,6 @@ CONTAINER_NAME = integration-test-container
 # Default command to run in the container
 COMMAND = "mvn clean test -Dkarate.env=dev -Dkarate.options='--tags @Get_balance_by_vaultType' -DuserName='dev_readwrite_gcp' -Dpass='TvEQwY3ZGbUf' -DdbName='dev_core_svc' -Drerun='true'"
 
-# Jenkins user, group, and working directory
-JENKINS_USER = jenkins
-JENKINS_GROUP = jenkins
-JENKINS_PWD = $(PWD)
-
 # Maven repository location
 MAVEN_REPO = $(JENKINS_PWD)/.m2/repository
 

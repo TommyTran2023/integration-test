@@ -114,8 +114,8 @@ pipeline {
                 script {
                     env.JENKINS_PWD = pwd()
                     // Get Jenkins user and group ID
-                    env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
-                    env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
+                    // env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
+                    // env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
                     sh "make clean"
                     sh "make build"
                 }
@@ -128,7 +128,11 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' Dmaven.repo.local=/usr/src/.m2/repository"
+                    // env.COMMAND = "mvn test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' Dmaven.repo.local=/usr/src/.m2/repository"
+                    
+                    env.JENKINS_USER = sh(script: 'whoami', returnStdout: true).trim()
+                    env.JENKINS_GROUP = sh(script: 'id -gn', returnStdout: true).trim()
+                    env.JENKINS_PWD = pwd()
                     
                     sh "make run"
                     

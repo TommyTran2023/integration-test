@@ -15,7 +15,7 @@ build:
 .PHONY: run
 run:
 	mkdir -p target/classes/
-	docker run --name $(CONTAINER_NAME) -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
+	docker run --name $(CONTAINER_NAME) -v "$(JENKINS_PWD):/usr/src" -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND) 
 
 .PHONY: copy
 copy:

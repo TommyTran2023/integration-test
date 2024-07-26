@@ -153,10 +153,6 @@ pipeline {
             }
 
             script {
-                sh "make clean"
-            }
-
-            script {
 
                 //continue gather the result if checkService pass and the test was executed
                 testSummary = junit testResults: 'target/karate-reports/**/*.xml'

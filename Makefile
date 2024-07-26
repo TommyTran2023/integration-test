@@ -16,6 +16,8 @@ build:
 # Run the Docker container with the specified command
 .PHONY: run
 run:
+	mkdir -p $(MAVEN_REPO) && \
+	chown -R $(JENKINS_USER):$(JENKINS_GROUP) $(MAVEN_REPO)
 	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND)
 
 # Copy the target directory from the running container

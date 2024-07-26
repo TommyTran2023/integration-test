@@ -114,8 +114,8 @@ pipeline {
                 script {
                     env.JENKINS_PWD = pwd()
                     // Get Jenkins user and group ID
-                    env.JENKINS_USER = sh "id -u"
-                    env.JENKINS_GROUP = sh "id -g"
+                    env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
+                    env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
                     sh "make clean"
                     sh "make build"
                 }

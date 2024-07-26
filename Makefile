@@ -3,7 +3,7 @@ IMAGE_NAME = integration-test:latest
 CONTAINER_NAME = integration-test-container
 
 # Default command to run in the container
-COMMAND = "mvn clean test -Dkarate.env=dev -Dkarate.options='--tags @Get_balance_by_vaultType' -DuserName='dev_readwrite_gcp' -Dpass='TvEQwY3ZGbUf' -DdbName='dev_core_svc' -Drerun='true'"
+COMMAND = "mvn clean test -Dmaven.repo.local=/usr/src/.m2/repository -Dkarate.env=dev -Dkarate.options='--tags @Get_balance_by_vaultType' -DuserName='dev_readwrite_gcp' -Dpass='TvEQwY3ZGbUf' -DdbName='dev_core_svc' -Drerun='true'"
 
 # Maven repository location
 MAVEN_REPO = $(JENKINS_PWD)/.m2/repository

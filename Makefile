@@ -7,6 +7,7 @@ COMMAND = "mvn clean test -Dmaven.repo.local=/usr/src/.m2/repository -Dkarate.en
 
 # Maven repository location
 MAVEN_REPO = $(JENKINS_PWD)/.m2/repository
+SBT_DIR = $(JENKINS_PWD)/.sbt
 
 # Build the Docker image
 .PHONY: build
@@ -16,8 +17,10 @@ build:
 # Run the Docker container with the specified command
 .PHONY: run
 run:
-	mkdir -p $(MAVEN_REPO)
+	mkdir -p $(MAVEN_REPO) $(SBT_DIR) 
 	chmod 777 -R $(MAVEN_REPO)
+	chmod 777 -R $(SBT_DIR)
+	export SBT_HOME=$(SBT_DIR)
 	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND)
 
 # Copy the target directory from the running container

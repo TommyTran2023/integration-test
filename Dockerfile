@@ -18,7 +18,9 @@ RUN mkdir -p /usr/src/.sbt && \
     unzip /tmp/sbt.zip -d /usr/src/.sbt && \
     rm /tmp/sbt.zip
 
-ENV SBT_OPTS="-Dsbt.global.base=/usr/src/.sbt -Dsbt.ivy.home=/usr/src/.ivy2"
+RUN ls /usr/src/.sbt/sbt -la
+
+ENV SBT_OPTS="-Dsbt.global.base=/usr/src/.sbt/sbt -Dsbt.ivy.home=/usr/src/.ivy2"
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser

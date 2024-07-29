@@ -21,6 +21,7 @@ run:
 	chmod 777 -R $(MAVEN_REPO)
 	chmod 777 -R $(SBT_DIR)
 	export SBT_HOME=$(SBT_DIR) 
+	ls /usr/src -la
 	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -v "$(MAVEN_REPO):/usr/src/.m2/repository" -v "$(SBT_DIR):/usr/src/.sbt" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND)
 
 # Copy the target directory from the running container

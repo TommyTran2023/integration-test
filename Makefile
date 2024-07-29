@@ -7,7 +7,6 @@ COMMAND = "export SBT_HOME=/usr/src/.sbt/sbt && export MAVEN_OPTS='-Dmaven.repo.
 
 # Maven repository location
 MAVEN_REPO = $(JENKINS_PWD)/.m2/repository
-SBT_HOME = $(JENKINS_PWD)/.sbt
 
 # Build the Docker image
 .PHONY: build
@@ -19,7 +18,6 @@ build:
 run:
 	mkdir -p $(MAVEN_REPO)
 	chmod 777 -R $(MAVEN_REPO)
-	chmod 777 -R $(SBT_HOME)
 	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -v "$(MAVEN_REPO):/usr/src/.m2/repository" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND)
 
 # Copy the target directory from the running container

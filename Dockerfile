@@ -2,8 +2,7 @@ FROM node:current-alpine3.19
 
 RUN apk update \
     && apk add openjdk20 \
-    && apk add maven \
-    && apk add sbt \
+    && apk add maven curl unzip bash \
     && apk add --no-cache \
       chromium \
       nss \
@@ -11,6 +10,13 @@ RUN apk update \
       harfbuzz \
       ca-certificates \
       ttf-freefont
+
+# Install SBT
+RUN mkdir -p /usr/src/.sbt && \
+    curl -L -o /tmp/sbt.zip https://github.com/sbt/sbt/releases/download/v1.5.5/sbt-1.5.5.zip && \
+    unzip /tmp/sbt.zip -d /opt && \
+    rm /tmp/sbt.zip && \
+    ln -s /opt/sbt/bin/sbt /usr/src/.sbt
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser

@@ -3,6 +3,7 @@ FROM node:current-alpine3.19
 RUN apk update \
     && apk add openjdk20 \
     && apk add maven \
+    && apk add sbt \
     && apk add --no-cache \
       chromium \
       nss \

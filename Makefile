@@ -7,7 +7,7 @@ COMMAND = "export SBT_HOME=/usr/src/.sbt/sbt && export MAVEN_OPTS='-Dmaven.repo.
 
 # Maven repository location
 MAVEN_REPO = $(JENKINS_PWD)/.m2/repository
-SBT_HOME = $(JENKINS_PWD)/.sbt/sbt
+SBT_HOME = $(JENKINS_PWD)/.sbt
 
 # Build the Docker image
 .PHONY: build

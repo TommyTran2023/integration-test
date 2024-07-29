@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 (async () => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   // Navigate the page to a URL
@@ -30,6 +30,7 @@ const puppeteer = require('puppeteer');
   //Select Test mode
   // Click on Stake
   const btnTestnet = "a[href='/stake']";
+  await page.waitForNavigation();
   await page.waitForSelector(btnTestnet);
   await page.click(btnTestnet);
 

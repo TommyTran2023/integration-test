@@ -15,9 +15,8 @@ RUN apk update \
 RUN mkdir -p /usr/src/.sbt && \
     mkdir -p /usr/src/.ivy2 && \
     curl -L -o /tmp/sbt.zip https://github.com/sbt/sbt/releases/download/v1.5.5/sbt-1.5.5.zip && \
-    unzip /tmp/sbt.zip -d /opt && \
-    rm /tmp/sbt.zip && \
-    ln -s /opt/sbt/bin/sbt /usr/src/.sbt
+    unzip /tmp/sbt.zip -d /usr/src/.sbt && \
+    rm /tmp/sbt.zip
 
 ENV SBT_OPTS="-Dsbt.global.base=/usr/src/.sbt -Dsbt.ivy.home=/usr/src/.ivy2"
 

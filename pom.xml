@@ -174,7 +174,6 @@
                                 <arg>-language:implicitConversions</arg>
                                 <arg>-language:postfixOps</arg>
                             </args>
-                            <sbtHome>/usr/src/.sbt</sbtHome>
                         </configuration>
                     </execution>
                 </executions>

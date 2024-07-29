@@ -152,9 +152,9 @@ pipeline {
     post {
 
         always {
-            script {
-                sh "make copy"
-            }
+            // script {
+            //     sh "make copy"
+            // }
 
             script {
 

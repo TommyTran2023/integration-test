@@ -24,11 +24,12 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chmod -R 777 /usr/src
 
 # Create directories for Maven and SBT
-RUN mkdir -p /usr/src/.m2/repository /usr/src/.sbt
+RUN mkdir -p /usr/src/.m2/repository /usr/src/.sbt 
 
 # Ensure permissions are correct
-RUN chown -R pptruser:pptruser /usr/src/.m2 /usr/src/.sbt
-RUN chmod -R 777 /usr/src/.m2 /usr/src/.sbt
+RUN chown -R pptruser:pptruser /usr/src/.m2 
+RUN chmod -R 777 /usr/src/.m2 
+RUN chmod -R 777 /home/pptruser
 
 # Run everything after as non-privileged user.
 USER pptruser

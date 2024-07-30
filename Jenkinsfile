@@ -139,22 +139,11 @@ pipeline {
                 }
             }
         }
-
-        // stage ('Copy report') {
-        //     steps {
-        //         script {
-        //             sh "make copy"
-        //         }
-        //     }
-        // }
     }
 
     post {
 
         always {
-            // script {
-            //     sh "make copy"
-            // }
 
             script {
 

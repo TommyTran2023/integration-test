@@ -75,14 +75,14 @@ pipeline {
                 }
             }
         }
-        // stage ('Git Checkout') {
-        //     steps {
+        stage ('Git Checkout') {
+            steps {
 
-        //         git branch: "${BRANCH}",
-        //             credentialsId: 'github',
-        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
-        //     }
-        // }
+                git branch: "${BRANCH}",
+                    credentialsId: 'github',
+                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
+            }
+        }
 
         stage ('Check Service Status') {
             steps {
@@ -113,9 +113,6 @@ pipeline {
             steps {
                 script {
                     env.JENKINS_PWD = pwd()
-                    // Get Jenkins user and group ID
-                    // env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
-                    // env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
                     sh "make clean"
                     sh "make build"
                 }

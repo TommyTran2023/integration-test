@@ -140,7 +140,7 @@ Feature: Network Management
   Scenario: Get discoverable network id
     * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
-    * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)', keyword: 'Rakkar - UAT (Testnet) - Tommy' }
+    * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)', keyword: 'Rakkar' }
     Given path 'network/networks/discoverable-network-ids'
     And params query
     When method GET

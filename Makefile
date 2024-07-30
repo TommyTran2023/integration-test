@@ -10,7 +10,7 @@ build:
 # Run the Docker container with the specified command
 .PHONY: run
 run:
-	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c $(COMMAND)
+	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
 
 # Copy the target directory from the running container
 .PHONY: copy

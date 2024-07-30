@@ -27,9 +27,8 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
 RUN mkdir -p /usr/src/.m2/repository /usr/src/.sbt 
 
 # Ensure permissions are correct
-RUN chown -R pptruser:pptruser /usr/src/.m2 
-RUN chmod -R 777 /usr/src/.m2 
-RUN chmod -R 777 /home/pptruser
+RUN chown -R pptruser:pptruser /usr/src/.m2 /home/pptruser
+RUN chmod -R 777 /usr/src/.m2 /home/pptruser
 
 # Run everything after as non-privileged user.
 USER pptruser

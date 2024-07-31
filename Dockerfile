@@ -17,14 +17,18 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 WORKDIR /usr/src/
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package*.json /usr
 
-RUN npm install
+# # Clean npm cache and node_modules
+RUN npm cache clean --force && rm -rf node_modules && rm -f package-lock.json
+
+# # Install npm dependencies including Puppeteer
+RUN npm i
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /usr/src \
-    && chmod -R 777 /usr/src
+    && chmod -R 777 /usr/src 
 
 # Create directories for Maven and SBT
 RUN mkdir -p /.m2/repository /.sbt 

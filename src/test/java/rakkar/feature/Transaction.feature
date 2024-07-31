@@ -318,6 +318,104 @@ Feature: Transaction
       } 
       """
       Then match response.data contains expectedSchema
+
+    @RAKCON-29141 @FilterTransactionByDApp
+    Scenario: Filter Transaction By DApp
+      * def dApps = callonce read(svc + 'WalletConnect.feature@WcApplicationController_getListEntity') { where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"figment\"}}]}' }
+      * def query = 
+      """
+      {
+        limit:'20', 
+        offset: '0',
+        destinationData:[
+          {
+            destinationId: '#(dApps.response.data.list[0].id)',
+            destinationType: 'dApp'
+          }
+        ]
+      }
+      """
+      * call read(transactionSvc + '@GetTransactionsList') { query: '#(query)' }
+      * def src_desc_schema =
+      """
+      {
+        "id": "#uuid",
+        "name": "#string",
+        "type": "#string",
+        "externalId": "#string",
+        "externalName": "#string",
+        "externalType": "#string"
+      }
+      """
+      * def expectedSchema = 
+      """
+      {
+        "id": "#uuid",
+        "transactionId": "#uuid",
+        "type": "CONTRACT_CALL",
+        "amount": "#number",
+        "txHash": "#string",
+        "status": "#string",
+        "subStatusFireblock": "#string",
+        "fireblocksStatus": "#string",
+        "createdAt": "#string",
+        "updatedAt": "#string",
+        "amountUSD": "#number",
+        "customerName": "#string",
+        "scusId": "##uuid",
+        "dcusId": "##uuid",
+        "walletInfoId": "#uuid",
+        "name": "#string",
+        "symbol": "#string",
+        "network": "#string",
+        "image": "#string",
+        "sourceAddress": "#string",
+        "destinationAddress": "#string",
+        "newSource": '#(src_desc_schema)',
+        "newDestination": '#(src_desc_schema)',
+        "txnType": "#string",
+        "txnIndex": "#number",
+        "sourceType": "##string",
+        "externalExchangeAccountId": "##string",
+        "sourceMapping": "##string",
+        "sourceName": "#string",
+        "destinationName": "#string",
+        "repStatus": "#string"
+      }
+      """
+      And match each response.data.transactions contains '#(^expectedSchema)'
+      * def additionalData = 
+      """
+      {
+        "app": "#string",
+        "feature": "#string",
+        "quorumId": "#string",
+        "walletInfoId": [
+          "#uuid"
+        ],
+        "quorumRequestId": "#string",
+        "contractCallMethod": "#string"
+      }
+      """
+      And match each response.data.transactions[*].additionalData contains '#(^additionalData)'
+      * def walletInfoDictSchema = 
+      """
+      {
+        "name": "#string",
+        "type": "#string",
+        "image": "#string",
+        "status": "#string",
+        "symbol": "#string",
+        "network": "#string",
+        "customerId": "#uuid",
+        "nativeAsset": "#string",
+        "networkImage": "#string",
+        "tokenAddress": "#string",
+        "externalAssetId": "#string"
+      }
+      """
+      And match each response.data.transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
+
     
     
 

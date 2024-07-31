@@ -13,8 +13,6 @@ RUN apk update \
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-ENV XDG_CONFIG_HOME=/tmp/.chromium
-ENV XDG_CACHE_HOME=/tmp/.chromium
 
 WORKDIR /usr/src/
 

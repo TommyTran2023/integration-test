@@ -16,7 +16,10 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /usr/src/
 
-RUN npm i puppeteer
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+RUN npm install
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \

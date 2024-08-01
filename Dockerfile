@@ -9,7 +9,8 @@ RUN apk update \
       freetype \
       harfbuzz \
       ca-certificates \
-      ttf-freefont
+      ttf-freefont \
+      yarn
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
@@ -23,14 +24,14 @@ COPY package*.json /usr
 RUN npm cache clean --force && rm -rf node_modules && rm -f package-lock.json
 
 # # Install npm dependencies including Puppeteer
-RUN npm i
+RUN yarn add puppeteer@13.5.0
 
 WORKDIR /usr/src
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
-    && chown -R pptruser:pptruser /usr/src /usr/bin \
-    && chmod -R 777 /usr/src /usr/bin
+    && chown -R pptruser:pptruser /usr/src \
+    && chmod -R 777 /usr/src 
 
 # Create directories for Maven and SBT
 RUN mkdir -p /.m2/repository /.sbt 

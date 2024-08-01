@@ -14,7 +14,7 @@ RUN apk update \
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-WORKDIR /usr/src/
+WORKDIR /usr
 
 # Copy package.json and package-lock.json
 COPY package*.json /usr
@@ -24,6 +24,8 @@ RUN npm cache clean --force && rm -rf node_modules && rm -f package-lock.json
 
 # # Install npm dependencies including Puppeteer
 RUN npm i
+
+WORKDIR /usr/src
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \

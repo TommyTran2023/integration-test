@@ -27,8 +27,8 @@ RUN npm i
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
-    && chown -R pptruser:pptruser /usr/src \
-    && chmod -R 777 /usr/src 
+    && chown -R pptruser:pptruser /usr/src /usr/bin \
+    && chmod -R 777 /usr/src /usr/bin
 
 # Create directories for Maven and SBT
 RUN mkdir -p /.m2/repository /.sbt 

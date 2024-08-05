@@ -25,7 +25,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENV', choices: 'SIT\nUAT', description: 'Test Environment [SIT, UAT, PROD]')
+        choice(name: 'ENV', choices: 'DEV\nSIT\nUAT', description: 'Test Environment [DEV, SIT, UAT]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }
@@ -52,7 +52,7 @@ pipeline {
                             HEALTH_CHECK_PATH = "uat"   
                             credentials = readJSON file: SECRET_FILE_CONTENT_UAT
                     }
-                    else if (env.BRANCH_NAME == 'develop'){
+                    else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
@@ -112,8 +112,7 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
-                    sh "mkdir target"
-                    sh "chmod -R 755 target"
+                    sh "make clean"
                     sh "make build"
                 }
             }
@@ -122,12 +121,16 @@ pipeline {
         stage ('Test Execution') {
             steps {
                 script {
-                        // This step will only be executed if the serviceStatus = 0
-                        echo "KARATE_ENV = ${KARATE_ENV}"
-                        def tag = params.E2E ? "@e2e" : "~@e2e"
-                        env.COMMAND = "mvn test -Dkarate.env=${KARATE_ENV} -Dkarate.options=\"--tags ${tag}\" -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
-                        
-                        sh "make run"
+                    // This step will only be executed if the serviceStatus = 0
+                    echo "KARATE_ENV = ${KARATE_ENV}"
+                    def tag = params.E2E ? "@e2e" : "~@e2e"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
+                    
+                    env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
+                    env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
+                    env.JENKINS_PWD = pwd()
+                    
+                    sh "make run"
                     
                 }
             }
@@ -137,6 +140,7 @@ pipeline {
     post {
 
         always {
+
             script {
 
                 //continue gather the result if checkService pass and the test was executed

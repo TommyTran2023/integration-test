@@ -3,7 +3,7 @@ Feature: Wallet Connect
     Background:
         * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
-    @GetListWalletConnect
+    @RAKCON-29143 @GetListWalletConnect
     Scenario: Get list Wallet Connect
         * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity')
         Then match responseStatus == 200
@@ -61,7 +61,7 @@ Feature: Wallet Connect
         """
         * match each response.data.list == expectedSchema
 
-    @GetVaultToConnect
+    @RAKCON-29144 @GetVaultToConnect
     Scenario: Get vault to connect
         * call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
         Then match responseStatus == 200
@@ -90,8 +90,8 @@ Feature: Wallet Connect
         """
         * match each response.data.list == expectedSchema
 
-    @WalletConnectToFigment
-    Scenario: Validate Wallet Connect QR Code
+    @RAKCON-29145 @WalletConnectToFigment
+    Scenario: Validate Wallet Connect Figment QR Code
         * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
         * def qrCode = karate.exec('node figment_wc.js')
         * def data = 
@@ -104,8 +104,8 @@ Feature: Wallet Connect
         * call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_validateQRCode') data
         Then match responseStatus == 201
 
-    @GetFigmentAppInfomation
-    Scenario: Get dApp Information
+    @RAKCON-29146 @GetFigmentAppInfomation
+    Scenario: Get dApp Figment Information
         * def wcInfo = callonce read('@WalletConnectToFigment')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
@@ -122,8 +122,8 @@ Feature: Wallet Connect
         """
         And match response.data == expectedSchema
 
-    @WalletConnectToOpenEden
-    Scenario: Validate Wallet Connect QR Code
+    @RAKCON-29147 @WalletConnectToOpenEden
+    Scenario: Validate Wallet Connect Open Eden QR Code
         * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
         * def qrCode = karate.exec('node openEden_wc.js')
         * def data = 
@@ -136,8 +136,8 @@ Feature: Wallet Connect
         * call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_validateQRCode') data
         Then match responseStatus == 201
 
-    @GetOpenEdenAppInfomation
-    Scenario: Get dApp Information
+    @RAKCON-29148 @GetOpenEdenAppInfomation
+    Scenario: Get dApp Open Eden Information
         * def wcInfo = callonce read('@WalletConnectToOpenEden')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
@@ -153,3 +153,22 @@ Feature: Wallet Connect
         }
         """
         And match response.data == expectedSchema
+
+    @RAKCON-29149 @GetDAppInDestinationList
+    Scenario: Filter Transaction - Get DApp In Destination list
+        * call read(svc + 'WalletConnect.feature@WcApplicationController_getListEntity')
+        Then match responseStatus == 200 
+        * def expectedSchema = 
+        """
+        {
+            "id": "#uuid",
+            "name": "#string",
+            "externalId": "#string",
+            "url": "#string",
+            "destinationNote": "#string",
+            "logo": "#string"
+        }
+        """
+        And match each response.data.list contains '#(^expectedSchema)'
+
+

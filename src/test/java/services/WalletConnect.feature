@@ -286,12 +286,12 @@ Feature: walletConnect
  			},
  			params: 
  			{
-				limit : "#(typeof limit == 'undefined' ? '' : limit)", 
-				offset : "#(typeof offset == 'undefined' ? '' : offset)", 
-				searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
-				ids : "#(typeof ids == 'undefined' ? '' : ids)", 
-				where : "#(typeof where == 'undefined' ? '' : where)", 
-				order : "#(typeof order == 'undefined' ? '' : order)"
+				limit : "#(typeof limit == 'undefined' ? 10 : limit)", 
+				offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
+				searchText : "#(typeof searchText == 'undefined' ? null : searchText)", 
+				ids : "#(typeof ids == 'undefined' ? null : ids)", 
+				where : "#(typeof where == 'undefined' ? decodeURI('{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}') : decodeURI(where))", 
+				order : "#(typeof order == 'undefined' ? decodeURI('[{\"sort\": \"name\", \"order\": \"ASC\"}]') : decodeURI(order))"
  			}
   		}
   		"""

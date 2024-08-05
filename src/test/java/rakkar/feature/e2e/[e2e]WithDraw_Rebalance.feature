@@ -41,13 +41,13 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         function(destEnv, totalEstimatedFee, isWarm){
             java.lang.Thread.sleep(180000); 
 
-            karate.call('this:CrossWorkSpace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
+            karate.call('this:CrossWorkspace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
         }
         """
         * def getDestinationBalance =
         """
         function(env, isWarm){
-            var balance = karate.call('this:CrossWorkSpace.feature@GetDestinationBalance', { destinationEnv: destEnv, isWarm: isWarm } ).response
+            var balance = karate.call('this:CrossWorkspace.feature@GetDestinationBalance', { destinationEnv: destEnv, isWarm: isWarm } ).response
             
             return balance
         }

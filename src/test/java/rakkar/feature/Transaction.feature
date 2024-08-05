@@ -258,7 +258,7 @@ Feature: Transaction
   Scenario: View Transaction Details Of Other Customer
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId
-    * def crossTxnId = call read('this:ConnectDB.feature@SelectATransactionNotBelongToCustomer') {customerId: #(customerId)}
+    * def crossTxnId = call read(connectDB + 'SelectATransactionNotBelongToCustomer') {customerId: #(customerId)}
     * call read(svc + 'Transaction.feature@ViewTransactionDetail') { transactionId: #(crossTxnId.result[0].id) }
     * match responseStatus == 404
     * match response.message == "TRANSACTION_NOT_FOUND"

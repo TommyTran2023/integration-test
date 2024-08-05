@@ -36,7 +36,7 @@ Feature: Connect to PostgreSQL
             "SELECT * FROM vaults " +
             "WHERE \"customerId\" = '" + customerId + "' " +
             "AND id in (" + vaultIds + ") " + 
-            "LIMIT 10"
+            "LIMIT 200"
         """
         * print query
         * def result = coreDb.readRows(query)

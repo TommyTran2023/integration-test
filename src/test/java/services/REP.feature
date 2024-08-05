@@ -477,3 +477,503 @@ Feature: REP
         """
         * call read(svc + 'coreSvc.feature@REP_DeleteDailyJournalCustomers') data
 
+
+    #----------------------------------
+    @VaultWcREPController_getPaginationConfig
+  Scenario: Vault Wc REPController get Pagination Config
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_getPaginationConfig') data
+
+    #----------------------------------
+    @VaultWcREPController_getListEntity
+  Scenario: Vault Wc REPController get List Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        params: 
+        {
+            limit : "#(typeof limit == 'undefined' ? '' : limit)", 
+            offset : "#(typeof offset == 'undefined' ? '' : offset)", 
+            searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
+            ids : "#(typeof ids == 'undefined' ? '' : ids)", 
+            where : "#(typeof where == 'undefined' ? '' : where)", 
+            order : "#(typeof order == 'undefined' ? '' : order)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_getListEntity') data
+
+    @VaultWcREPController_saveEntity
+  Scenario: Vault Wc REPController save Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_saveEntity') data
+
+    #----------------------------------
+    @VaultWcREPController_findOneByUId
+  Scenario: Vault Wc REPController find One By UId
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_findOneByUId') data
+
+    @VaultWcREPController_updateOneById
+  Scenario: Vault Wc REPController update One By Id
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_updateOneById') data
+
+    @VaultWcREPController_delete
+  Scenario: Vault Wc REPController delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_delete') data
+
+    #----------------------------------
+    @VaultWcREPController_hardDelete
+  Scenario: Vault Wc REPController hard Delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@VaultWcREPController_hardDelete') data
+
+    #----------------------------------
+   	@CusSubscribeREPController_findOneByUId
+  Scenario: Cus Subscribe REPController find One By UId
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_findOneByUId') data
+
+    @CusSubscribeREPController_updateOneById
+  Scenario: Cus Subscribe REPController update One By Id
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)", 
+        body: 
+        {
+            customerId : '#(customerId)',
+            type : '#(type)',
+            startDate : '#(startDate)',
+            endDate : '#(endDate)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_updateOneById') data
+
+    @CusSubscribeREPController_delete
+  Scenario: Cus Subscribe REPController delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_delete') data
+
+    #----------------------------------
+    @CusSubscribeREPController_hardDelete
+  Scenario: Cus Subscribe REPController hard Delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_hardDelete') data
+
+    #----------------------------------
+    @CusSubscribeREPController_getPaginationConfig
+  Scenario: Cus Subscribe REPController get Pagination Config
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_getPaginationConfig') data
+
+    #----------------------------------
+    @CusSubscribeREPController_getListEntity
+  Scenario: Cus Subscribe REPController get List Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        params: 
+        {
+            limit : "#(typeof limit == 'undefined' ? '' : limit)", 
+            offset : "#(typeof offset == 'undefined' ? '' : offset)", 
+            searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
+            ids : "#(typeof ids == 'undefined' ? '' : ids)", 
+            where : "#(typeof where == 'undefined' ? '' : where)", 
+            order : "#(typeof order == 'undefined' ? '' : order)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_getListEntity') data
+
+    @CusSubscribeREPController_saveEntity
+  Scenario: Cus Subscribe REPController save Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        body: 
+        {
+            customerId : '#(customerId)',
+            type : '#(type)',
+            startDate : '#(startDate)',
+            endDate : '#(endDate)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CusSubscribeREPController_saveEntity') data
+
+#----------------------------------
+@CustomerEntityRelationsREPController_getListEntity
+Scenario: Customer Entity Relations REPController get List Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        params: 
+        {
+            limit : "#(typeof limit == 'undefined' ? '' : limit)", 
+            offset : "#(typeof offset == 'undefined' ? '' : offset)", 
+            searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
+            ids : "#(typeof ids == 'undefined' ? '' : ids)", 
+            where : "#(typeof where == 'undefined' ? '' : where)", 
+            order : "#(typeof order == 'undefined' ? '' : order)", 
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_getListEntity') data
+
+@CustomerEntityRelationsREPController_saveEntity
+Scenario: Customer Entity Relations REPController save Entity
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        body: 
+        {
+            id : '#(id)',
+            countryCode : '#(countryCode)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_saveEntity') data
+
+#----------------------------------
+@CustomerEntityRelationsREPController_getPaginationConfig
+Scenario: Customer Entity Relations REPController get Pagination Config
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_getPaginationConfig') data
+
+#----------------------------------
+@CustomerEntityRelationsREPController_findOneByUId
+Scenario: Customer Entity Relations REPController find One By UId
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_findOneByUId') data
+
+@CustomerEntityRelationsREPController_updateOneById
+Scenario: Customer Entity Relations REPController update One By Id
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)", 
+        body: 
+        {
+            id : '#(id)',
+            countryCode : '#(countryCode)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_updateOneById') data
+
+@CustomerEntityRelationsREPController_delete
+Scenario: Customer Entity Relations REPController delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_delete') data
+
+#----------------------------------
+@CustomerEntityRelationsREPController_hardDelete
+Scenario: Customer Entity Relations REPController hard Delete
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@CustomerEntityRelationsREPController_hardDelete') data
+
+#----------------------------------
+@Cfg_purposesREPController_getPaginationConfig
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_getPaginationConfig') data
+
+#----------------------------------
+@Cfg_purposesREPController_getListEntity
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        params: 
+        {
+            limit : "#(typeof limit == 'undefined' ? '' : limit)", 
+            offset : "#(typeof offset == 'undefined' ? '' : offset)", 
+            searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
+            ids : "#(typeof ids == 'undefined' ? '' : ids)", 
+            where : "#(typeof where == 'undefined' ? '' : where)", 
+            order : "#(typeof order == 'undefined' ? '' : order)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_getListEntity') data
+
+@Cfg_purposesREPController_saveEntity
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        body: 
+        {
+            id : '#(id)',
+            name : '#(name)',
+            status : '#(status)',
+            isDeleted : '#(isDeleted)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_saveEntity') data
+
+#----------------------------------
+@Cfg_purposesREPController_findOneByUId
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_findOneByUId') data
+
+@Cfg_purposesREPController_updateOneById
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)", 
+        body: 
+        {
+            id : '#(id)',
+            name : '#(name)',
+            status : '#(status)',
+            isDeleted : '#(isDeleted)'
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_updateOneById') data
+
+@Cfg_purposesREPController_delete
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_delete') data
+
+#----------------------------------
+@Cfg_purposesREPController_hardDelete
+Scenario: Invalid Input Format
+    * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+    * def data = 
+    """
+    {
+        headers: 
+        { 
+            authorization: "#(accessToken)"
+        },
+        id : "#(typeof id == 'undefined' ? '' : id)"
+    }
+    """
+    * call read(svc + 'coreSvc.feature@Cfg_purposesREPController_hardDelete') data
+
+

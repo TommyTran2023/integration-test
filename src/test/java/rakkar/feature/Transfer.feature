@@ -539,7 +539,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def maskedVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && x.isMasked && x.total > 1)
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(maskedVault.name)}
     * assert response.data.list.length == 0
@@ -554,7 +554,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * call read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * call read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.total == 0)
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
     * assert response.data.list.length == 0
@@ -568,7 +568,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total != null && x.total != 0)
     * print searchVault
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
@@ -585,7 +585,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
     customerId: "#(userInfo.response.data.customerId)"
   }
   """ 
-  * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+  * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
   * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total == null)
   * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
   * match each response.data.list[*] contains {"status":"PENDING"}
@@ -623,7 +623,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0 && x.isMasked == false)
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * match each response.data.list[*].symbol == "XRP"
@@ -638,7 +638,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/feature/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
     * def searchVault = result.find(x => x.walletId == null )
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * assert response.data.list.length > 0

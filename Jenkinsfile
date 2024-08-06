@@ -25,7 +25,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENV', choices: 'DEV\nSIT\nUAT', description: 'Test Environment [DEV, SIT, UAT]')
+        choice(name: 'ENV', choices: 'SIT\nUAT\nDEV', description: 'Test Environment [SIT, UAT, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }

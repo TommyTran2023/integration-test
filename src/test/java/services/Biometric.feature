@@ -7,7 +7,7 @@ Feature: Biometric
     Scenario: Generate challenge answer
         * def authToken = authResponse.response.data.AuthenticationResult.AccessToken
         * def accessToken = 'Bearer ' + authToken
-        * call read(svc + 'coreSvc.feature@RequestChallenge') {authorization: #(accessToken)}
+        * call read(svc + 'coreSvc.feature@RequestChallenge') { authorization: '#(accessToken)' }
         Then match responseStatus == 201
         And match response.status == 'success'
 
@@ -24,7 +24,7 @@ Feature: Biometric
     @ApproverDoBiometric
     Scenario: Generate challenge answer for Approver
         * def authResponse = call read(svc + 'Auth.feature@GetApproverAccessToken')
-        * call read(svc + 'Biometric.feature@DoBiometric')
+        * call read('@DoBiometric')
         * def challenge = response.data.challenge
         * string command = testData.common.commandToGenChallengeAnswer + challenge
         * def challengeAnswerApprover = karate.exec(command)

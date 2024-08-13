@@ -79,20 +79,14 @@ Feature: Approval Request
   Scenario: Approval - Transfer with high value
     * def value = call read('this:Transfer.feature@Transfer_high_value')
     * def requestId = value.response.data.requestId
-    # * call read('this:GetUserInfo.feature@GetApproverInfo')
+    * call read(svc + 'Biometric.feature@ApproverDoBiometric')
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
-    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
-    * call read('this:Common.feature@UPLOAD_LINK')
-    * call read('this:ApprovalRequest.feature@PutVideoForApprover')
-    * def body = { "uploadToken":'#(uploadToken)',"vdoSentence":'#(vdoSentence)'}
-    Given path '/advance-quorum/quorums/approval/'+requestId
-    * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * header passcode = approverInfo.approverPasscode
-    And request body
-    When method POST
-    Then status 201
-    * def statusMsg = response.status
-    * match statusMsg == 'success'
+    * def uploadLink = call read(svc + 's3.feature@GetUploadLink') { fileType: 'video', userId: '#(userId)', accessToken: '#(approvalAccessToken)' }
+    * call read(svc + 's3.feature@PutFile') { fileType: 'video', userId: '#(userId)', uploadUrl: '#(uploadLink.response.data.uploadUrl)', accessToken: '#(approvalAccessToken)' }
+    * def body = { "uploadToken":'#(uploadLink.response.data.uploadToken)',"vdoSentence":'#(vdoSentence)'}
+    * call read(svc + 'Quorums.feature@ApproveRequest') { requestId: '#(requestId)', requestBody: '#(body)' }
+    Then match responseStatus == 201
+    And match response.status == 'success'
 
   @ignore @PutVideoForApprover
   Scenario: Put video

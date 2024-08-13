@@ -409,11 +409,11 @@ Feature: Common call from Auth services
         * def data = 
         """
         {
-            authorization: #(accessToken),
-            userId : #(userId), //string
+            authorization: '#(accessToken)',
+            userId : '#(userId)', 
             body: 
             {
-                uploadToken : #(uploadToken) //string
+                uploadToken : '#(uploadToken)'
             }
         }
         """

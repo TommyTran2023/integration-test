@@ -173,4 +173,70 @@ Feature: Wallet Connect
         """
         And match each response.data.list contains '#(^expectedSchema)'
 
+    @MOB-3356
+    Scenario: Disconnect from Application - User changed to VIEW ONLY in Advanced vault
+        # Get vault have 'ETH_TEST6'
+        * def getwc = 
+        """
+        {
+            where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"AT Warm Figment\"}}]}',
+            order: '[{\"sort\":\"name\",\"order\":\"ASC\"}]'
+        }
+        """
+        * def getVault = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection') getwc
+        * def haveETH = 
+        """
+        function(vaults){
+            for (var i = 0; i < vaults.length; i++){
+                var wallets = vaults[i].wallets
+                for (var j = 0; j < wallets.length; j++) {
+                    if (wallets[j].externalAssetId == 'ETH_TEST6'){
+                        return vaults[i]
+                    }
+                }
+            }
+
+            throw new Error("Don't have vault to test Wallet Connect.")
+        }
+        """
+        * def vaultETH = haveETH(getVault.response.data.list)
+
+        # Get vault policy detail
+        * def vaultETH = call read(svc + 'Vault.feature@GetVaultDetail') { vaultId: '#(vaultETH.id)' }
+        * callonce read(svc + 'Auth.feature@GetRequesterInfo')
+
+        # Add current user to quorum
+        * def vaultHandle = read('classpath:rakkar/common/VaultHandle.js')
+        * vaultHandle().addUserAsMemberToVaultQuorum(userId, vaultETH.response.data)
+
+        # Make connection
+        * def qrCode = karate.exec('node figment_wc.js')
+        * def cnn = 
+        """
+        {
+            qrCode: '#(qrCode)',
+            vaultId: '#(vaultETH.response.data.id)'
+        }
+        """
+        * def wcInfo = call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_validateQRCode') cnn
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_approveRequestWeb3Connect') {id:'#(wcInfo.response.data.id)'}
+
+        # Get connection list and verify connection is created
+        * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity') getwc
+        * def compareToNow = 
+        """
+        function(isoDateString) {
+            return (new Date() - new Date(isoDateString))/1000;
+        }
+        """
+        * assert compareToNow(response.data.list[0].wcItems[0].createdAt) < 30
+
+        # Demote current user to VIEWER in quorum
+        * vaultHandle().removeUserFromVaultQuorum(userId, vaultETH.response.data)
+
+        # Get connection list and verify connection is remove
+        * eval java.lang.Thread.sleep(3000)
+        * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity') getwc
+
 

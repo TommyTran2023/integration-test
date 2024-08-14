@@ -10,6 +10,7 @@ Feature: Advance Quorum Service
     * header Authorization = authorization
     * header challenge-answer = challengeAnswer
     * header passcode = passcode
+    * request requestBody
     When method POST
 
     @RejectRequest

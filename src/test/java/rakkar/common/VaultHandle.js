@@ -47,6 +47,7 @@ function fn(){
             var qu = quorum.quorums[i]
             var members = qu.members
             var user = members.find(u => u.userId == userId)
+
             if (user != null){
                 quorum.viewers.push(user)
 
@@ -56,7 +57,20 @@ function fn(){
                 return quorum
             }
         }
-        throw new Error("Expected user is not a member of quorum: " + userId + "\nquorum:\n" + JSON.stringify(quorum))
+        
+        var viewers = quorum.viewers
+        var user = viewers.find(u => u.userId == userId)
+
+        if(user == null){
+            quorum.viewers.push({
+                type: "USER",
+                userId: userId
+            })
+
+            return quorum
+        }
+
+        throw new Error("Cannot demote user to viewer of quorum: " + userId + "\nquorum:\n" + JSON.stringify(quorum))
     }
 
     function addUserAsMemberToQuorum(userId, quorum){
@@ -204,10 +218,7 @@ function fn(){
         },
 
         addUserAsMemberToVaultQuorum: function(userId, vault){
-            if (vault.policyType == 'standard'){
-                throw new Error("Not implemeted")
-            }
-            else {
+            if (vault.policyType == 'advanced'){
                 var quorum = karate.call(svc + 'Quorums.feature@GetQuorumPolicy', { quorumId: vault.quorumId }).response.data 
                 var index = -1
                 for (var i = 0; i < quorum.quorums.length; i++) {
@@ -223,6 +234,9 @@ function fn(){
 
                     editAdvPolicyRequest(vault.id, quorum.quorums, quorum.viewers, "MOB-3356 addUserAsMemberToVaultQuorum")
                 }
+            }
+            else {
+                throw new Error("Not implemeted for Vault Policy: " + vault.policyType)
             }
         }
     }

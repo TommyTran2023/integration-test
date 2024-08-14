@@ -173,13 +173,13 @@ Feature: Wallet Connect
         """
         And match each response.data.list contains '#(^expectedSchema)'
 
-    @MOB-3356
+    @MOB-3356 @DisconnectWhenInitiatorGotDemoted
     Scenario: Disconnect from Application - User changed to VIEW ONLY in Advanced vault
         # Get vault have 'ETH_TEST6'
         * def getwc = 
         """
         {
-            where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"AT Warm Figment\"}}]}',
+            where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"AT Figment\"}}]}',
             order: '[{\"sort\":\"name\",\"order\":\"ASC\"}]'
         }
         """
@@ -236,7 +236,20 @@ Feature: Wallet Connect
         * vaultHandle().removeUserFromVaultQuorum(userId, vaultETH.response.data)
 
         # Get connection list and verify connection is remove
-        * eval java.lang.Thread.sleep(3000)
-        * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity') getwc
+        * def verifyWCDisconnected = 
+        """
+        function(data){
+            var retry = 3
+            for (var i = 0; i < retry; i++){
+                java.lang.Thread.sleep(3000)
+                var res = karate.call(svc + 'WalletConnect.feature@VaultWcController_getListEntity', data)
+
+                if (res.responseStatus == 200 && res.response.data.list.length == 0)
+                    return true
+            }
+            return false
+        }
+        """
+        * assert verifyWCDisconnected(getwc)
 
 

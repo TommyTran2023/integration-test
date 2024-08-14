@@ -173,7 +173,7 @@ Feature: Wallet Connect
         """
         And match each response.data.list contains '#(^expectedSchema)'
 
-    @MOB-3356 @DisconnectWhenInitiatorGotDemoted
+    @RAKCON-29604 @MOB-3356 @DisconnectWhenInitiatorGotDemoted
     Scenario: Disconnect from Application - User changed to VIEW ONLY in Advanced vault
         # Get vault have 'ETH_TEST6'
         * def getwc = 

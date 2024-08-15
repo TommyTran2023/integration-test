@@ -176,10 +176,12 @@ Feature: Wallet Connect
     @RAKCON-29604 @MOB-3356 @DisconnectWhenInitiatorGotDemoted
     Scenario: Disconnect from Application - User changed to VIEW ONLY in Advanced vault
         # Get vault have 'ETH_TEST6'
+        * def figmentVaultName = read('classpath:data/data.json').figmentVault
+        * def whereClause = '{\"OR\":[{\"name\":{\"CONTAINS\":\"'+figmentVaultName+'\"}}]}'
         * def getwc = 
         """
         {
-            where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"AT Figment\"}}]}',
+            where: '#(whereClause)',
             order: '[{\"sort\":\"name\",\"order\":\"ASC\"}]'
         }
         """

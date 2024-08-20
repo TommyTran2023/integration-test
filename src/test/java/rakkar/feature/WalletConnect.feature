@@ -207,11 +207,11 @@ Feature: Wallet Connect
         * def vaultETH = call read(svc + 'Vault.feature@GetVaultDetail') { vaultId: '#(vaultETH.id)' }
         * callonce read(svc + 'Auth.feature@GetRequesterInfo')
 
-        # Add current user to quorum
+        # 1. Add current user to quorum
         * def vaultHandle = read('classpath:rakkar/common/VaultHandle.js')
         * vaultHandle().addUserAsMemberToVaultQuorum(userId, vaultETH.response.data)
 
-        # Make connection
+        # 2. Make connection
         * def qrCode = karate.exec('node figment_wc.js')
         * def cnn = 
         """
@@ -224,7 +224,7 @@ Feature: Wallet Connect
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
         * call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_approveRequestWeb3Connect') {id:'#(wcInfo.response.data.id)'}
 
-        # Get connection list and verify connection is created
+        # 3. Get connection list and verify connection is created
         * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity') getwc
         * def compareToNow = 
         """
@@ -232,12 +232,13 @@ Feature: Wallet Connect
             return (new Date() - new Date(isoDateString))/1000;
         }
         """
+        # Validate new connection should be created within 30s
         * assert compareToNow(response.data.list[0].wcItems[0].createdAt) < 30
 
-        # Demote current user to VIEWER in quorum
+        # 4. Demote current user to VIEWER in quorum
         * vaultHandle().removeUserFromVaultQuorum(userId, vaultETH.response.data)
 
-        # Get connection list and verify connection is remove
+        # 5. Get connection list and verify connection is remove
         * def verifyWCDisconnected = 
         """
         function(data){

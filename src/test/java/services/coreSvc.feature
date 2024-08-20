@@ -1535,6 +1535,7 @@ Feature: All api call to core services
   Scenario: Vault Wc Controller get List Vault Selection
     Given path 'core/v2/vault/wc/selection'
     * headers headers
+    * params params
     When method GET
 
     #----------------------------------

@@ -173,4 +173,86 @@ Feature: Wallet Connect
         """
         And match each response.data.list contains '#(^expectedSchema)'
 
+    @RAKCON-29604 @MOB-3356 @DisconnectWhenInitiatorGotDemoted
+    Scenario: Disconnect from Application - User changed to VIEW ONLY in Advanced vault
+        # Get vault have 'ETH_TEST6'
+        * def figmentVaultName = read('classpath:data/data.json').figmentVault
+        * def whereClause = '{\"OR\":[{\"name\":{\"CONTAINS\":\"'+figmentVaultName+'\"}}]}'
+        * def getwc = 
+        """
+        {
+            where: '#(whereClause)',
+            order: '[{\"sort\":\"name\",\"order\":\"ASC\"}]'
+        }
+        """
+        * def getVault = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection') getwc
+        * def haveETH = 
+        """
+        function(vaults){
+            for (var i = 0; i < vaults.length; i++){
+                var wallets = vaults[i].wallets
+                for (var j = 0; j < wallets.length; j++) {
+                    if (wallets[j].externalAssetId == 'ETH_TEST6'){
+                        return vaults[i]
+                    }
+                }
+            }
+
+            throw new Error("Don't have vault to test Wallet Connect.")
+        }
+        """
+        * def vaultETH = haveETH(getVault.response.data.list)
+
+        # Get vault policy detail
+        * def vaultETH = call read(svc + 'Vault.feature@GetVaultDetail') { vaultId: '#(vaultETH.id)' }
+        * callonce read(svc + 'Auth.feature@GetRequesterInfo')
+
+        # 1. Add current user to quorum
+        * def vaultHandle = read('classpath:rakkar/common/VaultHandle.js')
+        * vaultHandle().addUserAsMemberToVaultQuorum(userId, vaultETH.response.data)
+
+        # 2. Make connection
+        * def qrCode = karate.exec('node figment_wc.js')
+        * def cnn = 
+        """
+        {
+            qrCode: '#(qrCode)',
+            vaultId: '#(vaultETH.response.data.id)'
+        }
+        """
+        * def wcInfo = call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_validateQRCode') cnn
+        * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+        * call read(svc + 'WalletConnect.feature@WcRequestWeb3ConnectController_approveRequestWeb3Connect') {id:'#(wcInfo.response.data.id)'}
+
+        # 3. Get connection list and verify connection is created
+        * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity') getwc
+        * def compareToNow = 
+        """
+        function(isoDateString) {
+            return (new Date() - new Date(isoDateString))/1000;
+        }
+        """
+        # Validate new connection should be created within 30s
+        * assert compareToNow(response.data.list[0].wcItems[0].createdAt) < 30
+
+        # 4. Demote current user to VIEWER in quorum
+        * vaultHandle().removeUserFromVaultQuorum(userId, vaultETH.response.data)
+
+        # 5. Get connection list and verify connection is remove
+        * def verifyWCDisconnected = 
+        """
+        function(data){
+            var retry = 3
+            for (var i = 0; i < retry; i++){
+                java.lang.Thread.sleep(3000)
+                var res = karate.call(svc + 'WalletConnect.feature@VaultWcController_getListEntity', data)
+
+                if (res.responseStatus == 200 && res.response.data.list.length == 0)
+                    return true
+            }
+            return false
+        }
+        """
+        * assert verifyWCDisconnected(getwc)
+
 

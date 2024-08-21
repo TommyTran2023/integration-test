@@ -200,7 +200,6 @@ Feature: walletConnect
   Scenario: Wc Request Web3Connect Controller approve Request Web3Connect
    	Given path `wallet-connect/v2/wcRequestWeb3Connect/${id}/submit`
    	* headers headers
-   	* params params
    	When method PATCH
 
     #----------------------------------

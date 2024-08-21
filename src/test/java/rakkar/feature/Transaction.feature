@@ -321,7 +321,7 @@ Feature: Transaction
       """
       Then match response.data contains expectedSchema
 
-    @RAKCON-29141 @FilterTransactionByDApp
+    @ignore @FilterTransactionByDApp
     Scenario: Filter Transaction By DApp
       * def dApps = callonce read(svc + 'WalletConnect.feature@WcApplicationController_getListEntity') { where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"figment\"}}]}' }
       * def query = 
@@ -386,20 +386,42 @@ Feature: Transaction
       }
       """
       And match each response.data.transactions contains '#(^expectedSchema)'
+      
+
+    @RAKCON-29141 @FilterTransactionByDApp_VerifyPureStaking
+    Scenario: Listing Transaction - Verify Pure Staking transaction
+      * callonce read('@FilterTransactionByDApp')
+      * def transactions = response.data.transactions.filter(x => x.additionalData.feature == 'PURE_STAKING')
       * def additionalData = 
       """
       {
         "app": "#string",
-        "feature": "#string",
+        "feature": "PURE_STAKING",
+        "quorumId": "#string",
+        "quorumRequestId": "#string",
+        "contractCallMethod": "deposit"
+      }
+      """
+      And match each transactions[*].additionalData contains '#(^additionalData)'
+
+    @RAKCON-29736 @FilterTransactionByDApp_VerifyLiquidStaking
+    Scenario: Listing Transaction - Verify Liquid transaction
+      * callonce read('@FilterTransactionByDApp')
+      * def transactions = response.data.transactions.filter(x => x.additionalData.feature == 'LIQUID_STAKING')
+      * def additionalData = 
+      """
+      {
+        "app": "#string",
+        "feature": "LIQUID_STAKING",
         "quorumId": "#string",
         "walletInfoId": [
           "#uuid"
         ],
         "quorumRequestId": "#string",
-        "contractCallMethod": "#string"
+        "contractCallMethod": "deposit"
       }
       """
-      And match each response.data.transactions[*].additionalData contains '#(^additionalData)'
+      And match each transactions[*].additionalData contains '#(^additionalData)'
       * def walletInfoDictSchema = 
       """
       {
@@ -416,7 +438,9 @@ Feature: Transaction
         "externalAssetId": "#string"
       }
       """
-      And match each response.data.transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
+      And match each transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
+
+
 
     
     

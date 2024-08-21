@@ -305,15 +305,15 @@ Feature: Vault
         * def data =
         """
         {
-            authorization: #(accessToken),
-            vaultId: #(vaultId),
+            authorization: '#(accessToken)',
+            vaultId: '#(vaultId)',
             body:{
-                approverNumber : #(approverNumber),
-                policyType : #(policyType),
-                quorums : #(quorums),
-                viewers : #(viewers),
-                clientId : #(clientId),
-                note : #(note)
+                approverNumber : '#(approverNumber)',
+                policyType : '#(policyType)',
+                quorums : '#(quorums)',
+                viewers : '#(viewers)',
+                clientId : "#(typeof clientId == 'undefined' ? 'ITTest-Karate' : clientId)",
+                note : '#(note)'
             }
         }
         """

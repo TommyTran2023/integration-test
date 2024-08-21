@@ -512,7 +512,8 @@ Feature: walletConnect
   		{
  			headers: 
  			{ 
-				authorization: '#(accessToken)'
+				authorization: '#(accessToken)',
+				challenge-answer: '#(challengeAnswerRequest)'
  			},
  			id : "#(typeof id == 'undefined' ? '' : id)"
   		}
@@ -1451,9 +1452,8 @@ Feature: walletConnect
  			limit : "#(typeof limit == 'undefined' ? 20 : limit)", 
  			offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
  			searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
- 			ids : "#(typeof ids == 'undefined' ? '' : ids)", 
- 			where : "#(typeof where == 'undefined' ? '{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}' : where)", 
- 			order : "#(typeof order == 'undefined' ? '' : order)" 
+ 			where : "#(typeof where == 'undefined' ? decodeURI('{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}') : decodeURI(where))", 
+ 			order : "#(typeof order == 'undefined' ? decodeURI('') : decodeURI(order))" 
   		}
    	}
    	"""

@@ -70,6 +70,40 @@ Feature: Open API
     Then status 200
     And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
 
+  @RAKCON-29947 @Get_whitelist_type_third_party
+  Scenario: Open API - Get whitelist
+    * header x-api-key = key
+    * header account-id = accountId
+    * def query = {whitelist_type: 'third_party', limit: 10, offset: 0 }
+    Given path 'v1/whitelist'
+    And params query
+    When method GET
+    Then status 200
+    * match each $response.whitelists[*].whitelist_type == "third_party"
+
+  @RAKCON-29948 @Get_whitelist_type_my_organization
+  Scenario: Open API - Get whitelist
+    * header x-api-key = key
+    * header account-id = accountId
+    * def query = {whitelist_type: 'my_organization', limit: 10, offset: 0 }
+    Given path 'v1/whitelist'
+    And params query
+    When method GET
+    Then status 200
+    * match each $response.whitelists[*].whitelist_type == "my_organization"
+
+  @RAKCON-29949 @Get_whitelist_check_asset_ID
+  Scenario: Open API - Get whitelist
+    * header x-api-key = key
+    * header account-id = accountId
+    * def query = { asset_id: 'DAI_BSC_TEST_I53O',network_id: 'BNB_TEST', limit: 10, offset: 0 }
+    Given path 'v1/whitelist'
+    And params query
+    When method GET
+    Then status 200
+    * match each $response.whitelists[*].assets[*].asset_id == "DAI_BSC_TEST_I53O"
+    * match each $response.whitelists[*].assets[*].network_id == "BNB_TEST"
+
   @RAKCON-17448 @Transaction_by_sourceId
   Scenario: Open API - Get transaction by sourceId
     * def query = { source_id: '#(sourceId)', limit: 10, offset: 0 }

@@ -440,7 +440,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def walletId_warm = source_warm.wallets[0].id
 
         # 3.Select destination from whitelist. The whitelist contains token from an other workspace
-        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(Const.TokenSymbol.XLM), sourceVaultId:#(sourceId_warm) }
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
@@ -566,8 +566,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 3.Select destination from internal.
         * def vaultType = Const.VaultType.COLD_WALLET
-        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {sourceVaultId:#(sourceId_warm)}
-        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(Const.TokenSymbol.XLM), sourceVaultId:#(sourceId_warm) }
+        * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[0]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
         

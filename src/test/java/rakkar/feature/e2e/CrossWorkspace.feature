@@ -20,29 +20,51 @@ Feature: Get access token for user from cross workspace
       destinationWallet: '#(destinationWallet)'
     }
     """
-    * def query_detail = { vaultId :'#(destinationVault)', walletId: '#(destinationWallet)'}
-    Given url customUrl + '/core/wallet/token-details/'
-    And headers { Authorization: '#(accessTokenWP)' }
-    And params query_detail
-    When method GET
-    Then status 200
+    * call read(svc + 'Wallet.feature@GetTokenDetails') { accessToken: #(accessTokenWP), vaultId :'#(destinationVault)', walletId: '#(destinationWallet)'}
+    Then match responseStatus == 200
 
   @VerifyBalanceDestination
   Scenario: Verify balance for destination 
-    * call read('@GetDestinationBalance')
-    # Verify balance updated correct
-    * def destinationVault = isWarm ? crossData.vaultId_Destination_warm : crossData.vaultId_Destination
-    * def destinationWallet = isWarm ? crossData.walletId_Destination_warm : crossData.walletId_Destination
-    * def destination = 
+    * def waitNewTransactionComing = 
     """
-    {
-      destinationVault: '#(destinationVault)',
-      destinationWallet: '#(destinationWallet)'
+    function(isWarm, crossData, hash){
+      var destinationWallet = karate.call("@GetDestinationBalance")
+      
+      var today = new Date();
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      var query = {
+        status : [
+          "COMPLETED"
+        ],
+        assetId : [
+          destinationWallet.response.data.id
+        ],
+        limit : 10,
+        vaultId : destinationWallet.destinationVault,
+        offset : 0,
+        dateTo : today.toISOString(),
+        dateFrom : yesterday.toISOString()
+      }
+
+      for (var i = 18; i > 0; i--) {
+        java.lang.Thread.sleep(10000)
+        var txnList = karate.call(svc + 'Transaction.feature@GetTransactionsList', { customUrl: customUrl, accessToken: destinationWallet.accessTokenWP, query: query }).response
+        var txn = txnList.data.transactions.find(x => x.txHash == hash)
+        
+        if (txn != null)
+          return {
+            transaction: txn,
+            walletInfo: karate.call("@GetDestinationBalance").response
+          }
+      }
+      throw new Error(`\n---> Destination wallet cannot recieve token\nvaultId: ${destinationWallet.destinationVault}\nwalletId: ${destinationWallet.destinationWallet}\nhash: ${hash}`)
     }
     """
-    * def query_detail = { vaultId :'#(destinationVault)', walletId: '#(destinationWallet)'}
-    * def getDestinationToken = call read('@GetDestinationBalance') {isWarm: #(isWarm)}
-    * def total_destination_after_transfer = parseFloat(getDestinationToken.response.data.total)
+    # Verify balance updated correct
+    * def getDestination = waitNewTransactionComing(isWarm, crossData, hash)
+    * def total_destination_after_transfer = parseFloat(getDestination.walletInfo.data.total)
     * def amount_recieve = parseFloat(amount_low) - feeData
 
     # --- Verify balance of destination updated correctly
@@ -51,18 +73,11 @@ Feature: Get access token for user from cross workspace
     * match total_destination_after_transfer.toFixed(4) == totalExpectedDestination.toFixed(4)
 
     # Get recent transaction to check destination show in transaction
-    * def query = { offset: 0, limit: 10, type: ['INCOMING'], sort: "DESC" , sortBy:"CREATED_DATE", destinationId: '#(destinationVault)'}
-    Given url customUrl + '/transaction/transactions/v1'
-    And headers { Authorization: '#(accessTokenWP)' }
-    And request query
-    When method POST
-    Then status 201
-    And match response.status == "success"
-    * def transactionID_inDestination = response.data.transactions[0].id
+    * def transactionID_inDestination = getDestination.transaction.id
     # --- Verify the destination show transaction
-    * match response.data.transactions[0].sourceAddress == sourceAdress_from_sourceTransfer
-    * match response.data.transactions[0].destinationAddress == destinationAdress_from_sourceTransfer
+    * match getDestination.transaction.sourceAddress == sourceAdress_from_sourceTransfer
+    * match getDestination.transaction.destinationAddress == destinationAdress_from_sourceTransfer
     # --- Verify the type of transaction is "Deposit"
-    * match response.data.transactions[0].type == "INCOMING"
+    * match getDestination.transaction.type == "INCOMING"
 
 

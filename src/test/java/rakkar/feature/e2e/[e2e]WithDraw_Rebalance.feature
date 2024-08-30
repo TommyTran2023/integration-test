@@ -37,10 +37,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         """
         * def verifyCrossWorkSpace =
         """
-        function(destEnv, totalEstimatedFee, isWarm){
-            java.lang.Thread.sleep(180000); 
-
-            karate.call('this:CrossWorkspace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm } )
+        function(destEnv, totalEstimatedFee, isWarm, hash){
+            karate.call('this:CrossWorkspace.feature@VerifyBalanceDestination', { destinationEnv: destEnv, feeData: totalEstimatedFee, isWarm: isWarm, hash: hash } )
         }
         """
         * def getDestinationBalance =
@@ -172,7 +170,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match (available_source_afterTransfer).toFixed(5) == (available - amount_low - networkFee).toFixed(5)
 
         # 13. Verify balance of destination && transaction show in destination
-        * eval verifyCrossWorkSpace(destEnv, 0, true)
+        * eval verifyCrossWorkSpace(destEnv, 0, true, getTransactionDetail.response.data.txHash)
 
     @RAKCON-19301
     Scenario: WITHDRAW - Transfer WARM to COLD - CROSS workspace
@@ -295,7 +293,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match (available_source_afterTransfer).toFixed(5) == (available - amount_low - networkFee).toFixed(5)
 
         # 13. Verify balance of destination && transaction show in destination
-        * eval verifyCrossWorkSpace(destEnv, 0, false)
+        * eval verifyCrossWorkSpace(destEnv, 0, false, getTransactionDetail.response.data.txHash)
 
 
     @RAKCON-19302
@@ -419,7 +417,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match (available_source_afterTransfer).toFixed(5) == (available - amount_low - networkFee).toFixed(5)
 
         # 13. Verify balance of destination && transaction show in destination
-        * eval verifyCrossWorkSpace(destEnv, 0, true)
+        * eval verifyCrossWorkSpace(destEnv, 0, true, getTransactionDetail.response.data.txHash)
 
 
     ######################### REBALANCE  #################################################################
@@ -469,7 +467,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.ADA)', 
+            "assetId":'#(Const.TokenSymbol.XLM)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -491,7 +489,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.ADA)',
+            "feeType":'#(Const.TokenSymbol.XLM)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
@@ -544,7 +542,6 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
         * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
-        # * def amount_recieve = parseFloat(transferAmount) + parseFloat(networkFee)
         * def totalExpectedDestination = amount_low + parseFloat(destinationAmountBefore)
         * match total_destination_afterTransfer.toFixed(5) == totalExpectedDestination.toFixed(5)
 
@@ -670,7 +667,6 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
         * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
-        # * def amount_recieve = parseFloat(transferAmount) - parseFloat(fee)
         * def totalExpectedDestination = amount_low + parseFloat(destinationAmountBefore)
         * match total_destination_afterTransfer.toFixed(5) == totalExpectedDestination.toFixed(5)
 

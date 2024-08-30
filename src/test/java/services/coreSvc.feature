@@ -1,7 +1,7 @@
     @ignore
 Feature: All api call to core services
   Background:
-    * url baseURL
+    * url typeof customUrl != 'undefined' ? customUrl : baseURL
 
     #----------Biometric---------#
     @RequestChallenge

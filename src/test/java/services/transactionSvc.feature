@@ -1,7 +1,7 @@
 Feature: Transaction Service
     # including all api calls related to route /transaction
   Background:
-    Given url baseURL
+    Given url typeof customUrl != 'undefined' ? customUrl : baseURL
   
     @GetTransactionsList
     Scenario: Get transactions list

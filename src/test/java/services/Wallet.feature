@@ -109,7 +109,7 @@ Feature: Wallet
         * def data =
         """
         {
-            authorization: #(accessToken),
+            authorization: '#(accessToken)',
             params: { 
                 vaultId:'#(vaultId)', 
                 walletId: '#(walletId)'

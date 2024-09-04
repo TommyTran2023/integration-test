@@ -14,8 +14,8 @@
     "url_uat": "https://mobile-sandbox-api.rakkardigital.com",
     "vaultId_Destination": "61265e24-6beb-418a-8f2a-9026dd7e4d85",
     "vaultId_Destination_warm": "a8c7c0c2-009c-44d0-b92c-c8835fb4cc71",
-    "walletId_Destination": "c100aa4e-9f46-48e1-a67a-fc01af873b34",
-    "walletId_Destination_warm": "e9051f55-691b-486c-95ef-d16b1bd56b52",
+    "walletId_Destination": "eb547117-4bdb-4a12-ae52-1cce5ecf63be",
+    "walletId_Destination_warm": "1d60136d-b1e7-44d7-80ad-139f8d25a87a",
     "userInfo": {
       "requesterUsername": "PASSPORT123456DZ",
       "requesterPasscode": "123123",
@@ -27,8 +27,8 @@
     "url_qa": "https://test-mobile-api.thailaksa.net",
     "vaultId_Destination": "eb48fc0e-9b8e-417c-8987-7f2b4919e9a9",
     "vaultId_Destination_warm": "8f90e765-37c3-4904-9123-f748ed20da91",
-    "walletId_Destination": "d3d339cf-4b19-4d45-8ab6-340d2a24989c",
-    "walletId_Destination_warm": "d8aaa2ec-8522-45b5-aad4-00bc3c6b4aa1",
+    "walletId_Destination": "28ee0bcf-7754-4df2-92f2-a338f022df63",
+    "walletId_Destination_warm": "5be98924-9a60-4ddc-a1a3-37b28e34fe59",
     "userInfo": {
       "requesterUsername": "PASSPORTQASN31101545TH",
       "requesterPasscode": "123123",

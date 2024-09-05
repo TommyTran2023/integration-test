@@ -47,9 +47,11 @@ Feature: Transaction
 
     @RAKCON-10973 @Filter_transaction_by_asset
    Scenario: Filter transaction by asset
-    * call read('Transfer.feature@Get_asset_transfer')
+    * def a = read('classpath:data/enum.json')
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: "#(a.Symbol.XRP)"}
     * def tokenName = response.data.tokens[0].name
-    * def query = { limit:'10', offset: '0',assetId: ['#(dataSet.tokenId)']}
+    * def tokenId = response.data.tokens[0].id
+    * def query = { limit:'10', offset: '0',assetId: ['#(tokenId)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].name == "#(tokenName)"
 

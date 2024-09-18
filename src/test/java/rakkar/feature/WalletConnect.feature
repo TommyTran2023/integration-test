@@ -256,3 +256,59 @@ Feature: Wallet Connect
         * assert verifyWCDisconnected(getwc)
 
 
+    @RAKCON-30427 @dAppAlreadyConnectedPopup
+    Scenario: Get vault to connect 
+        * def tommy  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.connecteddAppVaultId+'"}}]}'
+        * print tommy
+
+        * def data =
+        """
+        {
+
+            "where": #(tommy)
+        }
+        """
+        * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
+            * def expectedFbRaw =
+            """
+            {
+                "id": "#string",
+          "userId": "#uuid",
+          "chainIds": [
+            "#string"
+          ],
+          "feeLevel": "#string",
+          "creationDate": "#string",
+          "connectionType": "WalletConnect",
+          "vaultAccountId": "#number",
+          "sessionMetadata": {
+            "appUrl": "#string",
+            "appIcon": "#string",
+            "appName": "#string",
+            "appDescription": "#string"
+          },
+          "connectionMethod": "API"
+            }
+            """
+            * def expectedSchema = 
+            """
+            {
+                "id": "#uuid",
+                "wcAppId": "#(dataSet.figmentdAppId)",
+                "wcAppEntityId": "#string",
+                "vaultId": "#(dataSet.connecteddAppVaultId)",
+                "externalId": "#string",
+                "externalWorkspaceId":"#uuid",
+                "externalVaultId":"#string",
+                "externalWalletType":"WalletConnect",
+                
+                "status":"ACTIVE",
+                "isDeleted": false,
+                "createdBy":"#uuid"    
+            }
+            """
+    
+            Then match responseStatus == 200
+            And match each response.data.list contains '#(^expectedSchema)'
+            And match each response.data.list[*].fbRaw contains '#(expectedFbRaw)'
+            And assert response.data.list.length >0

@@ -268,11 +268,12 @@ Feature: Group Policies
         * def expectedVaultDetail = 
         """
         {
-            "id":"##uuid",
+            "id":"#uuid",
             "vaultExternalId":"#string",
             "name":"#string",
             "hiddenOnUI":"#boolean",
-            "customerRefId":"##string",
+            "customerRefId":"#string",
+            "thirdPartyVaultName":"##string",
             "autoFuel":"#boolean",
             "status":"#string",
             "customerId":"#string",

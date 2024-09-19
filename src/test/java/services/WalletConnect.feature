@@ -347,12 +347,10 @@ Feature: walletConnect
  			},
  			params: 
  			{
-				limit : "#(typeof limit == 'undefined' ? '' : limit)", 
-				offset : "#(typeof offset == 'undefined' ? '' : offset)", 
-				searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
-				ids : "#(typeof ids == 'undefined' ? '' : ids)", 
-				where : "#(typeof where == 'undefined' ? '' : where)", 
-				order : "#(typeof order == 'undefined' ? '' : order)"
+				limit : "#(typeof limit == 'undefined' ? 1 : limit)", 
+				offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
+				where : "#(typeof where == 'undefined' ? decodeURI('{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}') : decodeURI(where))", 
+				order : "#(typeof order == 'undefined' ? '' : decodeURI(order))"
  			}
   		}
   		"""

@@ -25,5 +25,8 @@
   "standardVaultForEditPolicy" : "2c431bc9-d18c-4949-bdfb-7aed65c31cbe",
   "whitelistTokenId": "dbc4bcce-38d1-4a5c-b812-882aae89ebe6",
   "whitelistAddress": "tb1qpv3zlej4ldwh5ldf7dsyxzftsa2ck64jzx9dga",
-  "transferWhitelistToken":"f9830719-0015-468e-84f0-ee10ddb281ae"
+  "transferWhitelistToken":"f9830719-0015-468e-84f0-ee10ddb281ae",
+  "connecteddAppVaultId":"4ac4844e-a2ec-465e-8e5b-d837f2ee86c5",
+  "figmentdAppId":"a084ea46-f9be-45fa-bb95-268fd8912241",
+  "kilndAppId":"c3e64d4a-c5e5-47da-b56a-c047c947dc1b"
 }

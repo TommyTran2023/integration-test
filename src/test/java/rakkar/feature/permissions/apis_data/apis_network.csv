@@ -1,0 +1,15 @@
+method,path,pathParams,queryParams,requestBody,requirePasscode,requireAnswer,expectedStatus
+GET,'/network/health',"{}","{}","{}",false,false,200
+POST,'/network/networks',"{}","{}","{""networkName"":""8bh31oiar7g"",""vaultId"":""kqgjx11fk5o"",""isDiscoverable"":true}",false,false,200
+GET,'/network/networks',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""keyword"":""""}","{}",false,false,200
+GET,'/network/networks/discoverable-network-ids',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""keyword"":"""",""currentProfileId"":""uy5icia4zid""}","{}",false,false,200
+GET,'/network/networks/{networkId}',"{""networkId"":""28rutnr2wn""}","{}","{}",false,false,200
+GET,'/network/networks/validate/network-name',"{}","{""networkName"":""ffhuqdu221g""}","{}",false,false,200
+PUT,'/network/networks/setting/{networkId}',"{""networkId"":""j0qxp0jk6ln""}","{}","{""isDiscoverable"":true}",false,false,200
+POST,'/network/networks/set-profile-routing',"{}","{}","{""networkId"":""jdsttkjlgid"",""vaultId"":""vmvwqklkfor"",""internalNote"":""9fxbwu34s2j""}",false,false,200
+POST,'/network/networks/{networkId}/connections',"{""networkId"":""9g2yfuqqzyl""}","{}","{""vaultId"":""zcw1w0isl6"",""vaultName"":""k0fiilhrdjc"",""counterpartyId"":""cr58zetcxlk"",""counterpartyName"":""fyz6e10sfjl"",""internalNote"":""wj6hpgn9yx"",""counterpartyNote"":""k8lb81b8vld"",""hasDefaultRouting"":true,""type"":""4ljimtk7emn""}",false,false,200
+GET,'/network/networks/{networkId}/connections',"{""networkId"":""sq9177lmoy""}","{""limit"":10,""offset"":0,""sort"":""DESC"",""keyword"":"""",""status"":""y8bk0k3s5f""}","{}",false,false,200
+GET,'/network/networks/{networkId}/connections/{connectionId}',"{""networkId"":""er1034tdbm6"",""connectionId"":""m2pu9mjnz9o""}","{}","{}",false,false,200
+DELETE,'/network/networks/{networkId}/connections/{connectionId}',"{""networkId"":""ubaflhtqlx"",""connectionId"":""zrw9an7od0s""}","{}","{""note"":""gv2ujy423bo""}",false,false,200
+PUT,'/network/networks/{networkId}/connections/{connectionId}/deposit-routing',"{""networkId"":""xn195qg7wf"",""connectionId"":""23r0y9fx68h""}","{}","{""vaultId"":""kuyruzdm38"",""vaultName"":""03n7pdttleb4"",""hasDefaultRouting"":true,""note"":""34dbctzi8jl""}",false,false,200
+GET,'/network/networks/connections/counterparties',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""keyword"":""""}","{}",false,false,200

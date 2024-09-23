@@ -1,0 +1,6 @@
+method,path,pathParams,queryParams,requestBody,requirePasscode,requireAnswer,expectedStatus
+GET,'/audit/health',"{}","{}","{}",false,false,200
+GET,'/audit/audit-log',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""customerIds"":""9sgh75dx3j8"",""userIds"":""sxwymnfudyc"",""categories"":""mc7zyzrjlzd"",""types"":""65ttjp47pb9"",""actions"":""2mxlwc140cb"",""statuses"":""i6e8oxn6ba9"",""dateFrom"":""krswvvaw9qj"",""dateTo"":""getoi6747r"",""keyword"":"""",""sortBy"":""rfk3dbhja2"",""isAllRequest"":""y83gudq1poo"",""timeZone"":""svlazya2fyi""}","{}",false,false,200
+GET,'/audit/audit-log/{auditLogId}',"{""auditLogId"":""dka6t6ug4xd""}","{}","{}",false,false,200
+GET,'/audit/audit-log/category/group-by-field',"{}","{""categories"":""z6yem30rxz"",""types"":""ykvejw74xem"",""groupBy"":""39x7sgd573e""}","{}",false,false,200
+GET,'/audit/audit-log/logging/export',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""customerIds"":""366ti61vqm5"",""userIds"":""ojh1c1zs7"",""categories"":""mnnch54kdr"",""types"":""hja1ncg27kr"",""actions"":""fjtm8yfovrt"",""statuses"":""6fwxuhah27p"",""dateFrom"":""dvg7vy989hg"",""dateTo"":""r7bjeth7z3"",""keyword"":"""",""sortBy"":""hzcxfnwumhm"",""isAllRequest"":""b7u5w1ax3ph"",""timeZone"":""py5tzx9zo3j""}","{}",false,false,200

@@ -1,0 +1,16 @@
+method,path,pathParams,queryParams,requestBody,requirePasscode,requireAnswer,expectedStatus
+GET,'/staking/health',"{}","{}","{}",false,false,200
+GET,'/staking/actions/progress',"{}","{}","{}",false,false,200
+GET,'/staking/actions/transactions',"{}","{}","{}",false,false,200
+GET,'/staking/actions/dashboard',"{}","{}","{}",false,false,200
+GET,'/staking/actions/asset/{assetId}',"{""assetId"":""r089gpkgjz""}","{}","{}",false,false,200
+GET,'/staking/records',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""keyword"":"""",""priceFrom"":""64rdkhh1hs5"",""priceTo"":""f8hu22e84q7""}","{}",false,false,200
+POST,'/staking/records',"{}","{}","{""tokenId"":""h8gb2afvt6f"",""tokenExternalId"":""6wp21c44nyi"",""source"":""bt44md30y2"",""destinationId"":""bv0f0mqdtaq"",""amount"":123,""note"":""cih7ju5xmk"",""fee"":123,""feeType"":""z1wgy78n898"",""totalEstimatedFee"":123,""feeLevel"":""1cvedaik7t1"",""registrationFee"":123}",false,false,200
+PUT,'/staking/records/{transactionId}/un-staking',"{""transactionId"":""5w42qkev0aw""}","{}","{""note"":""yrz620sc9oe"",""estimatedFee"":123}",false,false,200
+POST,'/staking/records/claim-reward',"{}","{}","{""tokenId"":""m08qpy90qk9"",""sourceId"":""n5rkwgnky39"",""destination"":""wxtdi7diyr"",""amount"":123,""note"":""jh1xaxj3ioj"",""fee"":123,""feeType"":""6plrf7qzr49"",""totalEstimatedFee"":123,""feeLevel"":""1r3lrn444kw""}",false,false,200
+GET,'/staking/records/estimated-fee',"{}","{""tokenId"":""6h468i8woec""}","{}",false,false,200
+GET,'/staking/records/assets',"{}","{""keyword"":"""",""limit"":10,""page"":""7xbhwqbwx98""}","{}",false,false,200
+PUT,'/staking/records/change-staking-pool/{stakeRecordId}',"{""stakeRecordId"":""88hh0krfhwt""}","{}","{""source"":""a498x84pccs"",""tokenExternalId"":""1uwh1q0e4nl"",""destinationId"":""r0q96a78i7d"",""note"":""3rwmfcsbajs"",""fee"":123,""feeType"":""xgbku131l8"",""totalEstimatedFee"":123,""feeLevel"":""jbehsdvdzq""}",false,false,200
+GET,'/staking/pools',"{}","{""sort"":""DESC"",""sortBy"":""1wmdx2a9lst"",""keyword"":"""",""page"":""ypxpthv8fw"",""limit"":10,""tokenId"":""bd965iw2uxd"",""allPools"":""osrgzt4qt1"",""fromScreen"":""mosdz2x595""}","{}",false,false,200
+GET,'/staking/pools/{poolId}',"{""poolId"":""nzx7rlw2q0k""}","{""tokenId"":""o8oydd8w3f""}","{}",false,false,200
+POST,'/staking/pools/recommend',"{}","{}","{}",false,false,200

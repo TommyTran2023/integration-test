@@ -1,0 +1,8 @@
+method,path,pathParams,queryParams,requestBody,requirePasscode,requireAnswer,expectedStatus
+GET,'/crm/health',"{}","{}","{}",false,false,200
+POST,'/crm/tickets',"{}","{}","{""category"":""20k0vlk12dp"",""platforms"":[],""requestType"":""riwi3955pb"",""productType"":[],""subject"":""agcf7xj556g"",""description"":""csix4m60glb"",""attachmentTokens"":[],""emailCcs"":[],""followupTicketId"":123}",false,false,200
+GET,'/crm/tickets',"{}","{""category"":""nzeesvnhpcm"",""platform"":""w87wqqmaiuc"",""requestType"":""9bvz6s2jw9q"",""productType"":""lq2v8hhzhh"",""keyword"":"""",""status"":""wyu79x0rpbh"",""page"":""glc7r379qkj"",""pageSize"":""7s84jnbu8mj"",""sort"":""DESC"",""dateFrom"":""a1usxtb4zba"",""dateTo"":""bcc03iy73im""}","{}",false,false,200
+GET,'/crm/tickets/fields',"{}","{}","{}",false,false,200
+GET,'/crm/tickets/{ticketId}',"{""ticketId"":""qy0vfyrubd""}","{}","{}",false,false,200
+GET,'/crm/tickets/{ticketId}/comments',"{""ticketId"":""pdsj6rx5r0h""}","{""page"":""wzfioemfdn"",""pageSize"":""w6egm4lf2d"",""order"":""mj3pqyi7uxl""}","{}",false,false,200
+POST,'/crm/zendesk/sso',"{}","{}","{}",false,false,200

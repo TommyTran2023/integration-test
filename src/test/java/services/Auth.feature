@@ -519,7 +519,7 @@ Feature: Common call from Auth services
             authorization: #(accessToken),
             body: 
             {
-                passcode : #(passcode) //string
+                passcode : #(passcode)
             }
         }
         """

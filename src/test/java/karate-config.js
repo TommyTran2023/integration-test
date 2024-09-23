@@ -11,7 +11,7 @@ function fn () {
     }
     var config = envFile[env];
     karate.configure('headers', { Accept: 'application/json' });
-    karate.log(config);
+    // karate.log(config);
 
     // Set svc as services folder
     karate.set('svc', 'classpath:services/')
@@ -33,6 +33,12 @@ function fn () {
         myClass.DataListMap = karate.read('classpath:data/data_'+env+'.json');
     }
     karate.set('dataSet', myClass.DataListMap); 
+
+    var dataToEncrypt = config.requesterInfo.requesterPasscode;
+    // karate.log(dataToEncrypt);
+    var iv = config.requesterInfo.id.replaceAll('-','').slice(0, 16);
+    var requesterPasscode = karate.exec(`node aes.js encrypt ${dataToEncrypt} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${iv}`);
+    karate.set('requesterPasscode', requesterPasscode);
 
     return config;
 }

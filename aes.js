@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const { createDecipheriv } = require('crypto');
 const { HmacSHA512 } = require('crypto-js');
 
 function encryptAES(data, secretKey, iv) {
@@ -19,32 +19,53 @@ function encryptAES(data, secretKey, iv) {
   return encrypted.toString('base64') + tag.toString('base64'); 
 }
 
-function decryptAES_GCM(encryptedData, secretKey) {
-  // Split the encrypted data into its components
-  const [ivHex, ciphertextHex, tagHex] = encryptedData.split(':');
-
-  // Convert hex strings back to Buffers
-  const iv = Buffer.from(ivHex, 'hex');
-  const ciphertext = Buffer.from(ciphertextHex, 'hex');
-  const tag = Buffer.from(tagHex, 'hex');
-
-  // Create a decipher with GCM mode and the authentication tag
-  const decipher = crypto.createDecipheriv('aes-256-gcm', Buffer.from(secretKey), iv, {
-    authTagLength: 15 // 120 bits = 15 bytes
+function decryptAES_GCM(encryptedData, userId, secretKey) {
+  // if (isEmpty(encryptedData) || isEmpty(secretKey) || isEmpty(userId)) {
+  //   throw new Error('Invalid inputs');
+  // }
+  let result = '';
+  console.log(`MOB-99 ${encryptedData} \t userId: ${userId}\t secretKey: ${secretKey}`);
+  // AES 256 with GCM mode
+  const algorithm = 'aes-256-gcm';
+  const ivString = extractIvStringFromUserId(userId);
+  const extractResult = aesGcmExtractCiphertextAuthTag(encryptedData);
+  console.log(`MOB-99 ivString: ${ivString}\t extractREsult: ${JSON.stringify(extractResult, null, 2)}`);
+  const keyBuffer = Buffer.from(secretKey, 'utf-8');
+  const ivBuffer = Buffer.from(ivString, 'utf-8');
+  const decipher = createDecipheriv(algorithm, keyBuffer, ivBuffer, {
+    authTagLength: 16,
   });
-  decipher.setAuthTag(tag);
+  decipher.setAuthTag(Buffer.from(extractResult.authTag, 'hex'));
+  result = decipher.update(
+    Buffer.from(extractResult.ciphertext, 'base64'),
+    undefined,
+    'utf-8',
+  );
+  console.log(`MOB-99 result: ${result}`);
+  return result;
+} 
 
-  // Decrypt the data
-  let decrypted = decipher.update(ciphertext);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
+function aesGcmExtractCiphertextAuthTag(encryptedString) {
+  const authTagLength = 16;
+  const encryptedBuffer = Buffer.from(encryptedString, 'base64');
+  const ciphertextBuffer = encryptedBuffer.subarray(
+    0,
+    encryptedBuffer.length - authTagLength + 1,
+  );
+  const authTagBuffer = encryptedBuffer.subarray(encryptedBuffer.length - 16);
 
-  // Return the decrypted data as a string
-  return decrypted.toString();
+  const ciphertext = ciphertextBuffer.toString('base64');
+  const authTag = authTagBuffer.toString('hex');
+
+  return { ciphertext, authTag };
+}
+
+function extractIvStringFromUserId(userId) {
+  const ivString = userId.replace(/-/g, '').substring(0, 16) || '';
+  return ivString;
 }
 
 function hmacSHA512(bodyPasscode, salt, passcode){
-  console.log(bodyPasscode);
-  console.log(salt);
   console.log(passcode);
   console.log(HmacSHA512(bodyPasscode, salt).toString());
 
@@ -60,9 +81,15 @@ if (process.argv[2] == 'encrypt'){
   console.log(encryptedData); 
 }
 else {
-  const bodyPasscode = process.argv[3];
-  const salt = process.argv[4];
-  const passcode = process.argv[5];
+  // const bodyPasscode = process.argv[3];
+  // const salt = process.argv[4];
+  // const passcode = process.argv[5];
   
-  hmacSHA512(bodyPasscode, salt, passcode);
+  // const sHA512 = hmacSHA512(bodyPasscode, salt, passcode);
+  // console.log(sHA512);
+
+  const encryptedData = 'sol0Pr/IWM7nHS3zO725esIFrBBx';
+  const userId = '24c42ada-22d4-47c5-9a79-0a00929d8561';
+  const secretKey = 'MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi';
+  console.log(decryptAES_GCM(encryptedData, userId, secretKey ))
 }

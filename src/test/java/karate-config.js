@@ -36,7 +36,7 @@ function fn () {
 
     var dataToEncrypt = config.requesterInfo.requesterPasscode;
     // karate.log(dataToEncrypt);
-    var iv = config.requesterInfo.id.replaceAll('-','').slice(0, 16);
+    var iv = config.requesterInfo.userId.replaceAll('-','').slice(0, 16);
     var requesterPasscode = karate.exec(`node aes.js encrypt ${dataToEncrypt} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${iv}`);
     karate.set('requesterPasscode', requesterPasscode);
 

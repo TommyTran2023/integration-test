@@ -105,7 +105,7 @@ Feature: Vault
   Scenario: Create new vault - Common
     Given path '/core/vault'
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * request requestBody
     When method POST
     Then status 201

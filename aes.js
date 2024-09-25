@@ -80,3 +80,18 @@ if (process.argv[2] == 'encrypt'){
   const encryptedData = encryptAES(dataToEncrypt, secretKey, iv);
   console.log(encryptedData); 
 }
+else {
+  // const bodyPasscode = process.argv[3];
+  // const salt = process.argv[4];
+  // const passcode = process.argv[5];
+  
+  // const sHA512 = hmacSHA512(bodyPasscode, salt, passcode);
+  // console.log(sHA512);
+  // sol0Pr/IWM7nHS3zO725esIFrBBx
+  const encryptedData = 'ttsJ70UxH5FZPLbA3yvThDAO25V5';
+  const userId = '8a229e6e-f688-4d8a-9ba4-c359d95772cd';
+  const secretKey = 'MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi';
+  var bodyPasscode = decryptAES_GCM(encryptedData, userId, secretKey );
+
+  console.log(bodyPasscode);
+}

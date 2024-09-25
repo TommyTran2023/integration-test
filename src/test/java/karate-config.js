@@ -38,7 +38,7 @@ function fn () {
     var approverPass = config.approverInfo.approverPasscode;
     
     var requestIv = config.requesterInfo.userId.replaceAll('-','').slice(0, 16);
-    var approverIv = config.requesterInfo.userId.replaceAll('-','').slice(0, 16);
+    var approverIv = config.approverInfo.userId.replaceAll('-','').slice(0, 16);
 
     var requesterPasscode = karate.exec(`node aes.js encrypt ${requestPass} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${requestIv}`);
     var approverPasscode = karate.exec(`node aes.js encrypt ${approverPass} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${approverIv}`);

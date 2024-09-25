@@ -9,7 +9,7 @@ Feature: Customers
             authorization: #(requesterAccessToken),
             customerId: #(customerId),
             challengeAnswer: #(challengeAnswerRequest),
-            passcode: #(requesterInfo.requesterPasscode),
+            passcode: #(requesterPasscode),
             body: {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
         }
         """

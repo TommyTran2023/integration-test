@@ -50,7 +50,7 @@ Feature: Settings
     * def requestBody = 
     """
     { 
-      "passcode" : "#(requesterInfo.requesterPasscode)", 
+      "passcode" : "#(requesterPasscode)", 
       "securityAnswer" : { 
         "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
         "postalCode" : "#(requesterInfo.postalCode)", 
@@ -77,7 +77,7 @@ Feature: Settings
   Scenario: Change PIN
     Given path '/auth/account/passcode'
     * header challenge-answer = challengeRequester.challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * request { "isForgotPasscode" : false, "passcode" : "#(testData.settings.changePasscode)", "securityAnswer" : null }
     When method PUT
     Then status 200

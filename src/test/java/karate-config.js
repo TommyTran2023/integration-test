@@ -34,8 +34,8 @@ function fn () {
     }
     karate.set('dataSet', myClass.DataListMap); 
 
-    var requestPass = config.requesterInfo.requesterPasscode;
-    var approverPass = config.approverInfo.approverPasscode;
+    var requestPass = config.requesterPasscode;
+    var approverPass = config.approverPasscode;
     
     var requestIv = config.requesterInfo.userId.replaceAll('-','').slice(0, 16);
     var approverIv = config.approverInfo.userId.replaceAll('-','').slice(0, 16);

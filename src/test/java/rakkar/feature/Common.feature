@@ -42,7 +42,7 @@ Feature: Generate Challenge Answer for Biometric
     * def requesterAuthToken = requesterAuthResponse.response.data.AuthenticationResult.AccessToken
     * def requesterAccessToken = 'Bearer ' + requesterAuthToken
     * header Authorization = requesterAccessToken
-    * request {"passcode":'#(requesterInfo.requesterPasscode)'}
+    * request {"passcode":'#(requesterPasscode)'}
     When method POST
     Then status 201
     * def verifyStatus = response.data.verify

@@ -111,7 +111,7 @@ Feature: Group Policies
       headers:{
         authorization: "#(accessToken)",
         challenge-answer: "#(challengeAnswerRequest)",
-		    passcode: "#(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode)"
+		    passcode: "#(typeof passcode != 'undefined' ? passcode: requesterPasscode)"
       },
       body:{
           name : "#(name)",

@@ -154,7 +154,7 @@ function fn(){
             data = {
                 accessToken: bio.requesterAccessToken, 
                 challengeAnswerRequest: bio.challengeAnswerRequest,
-                passcode: requesterInfo.requesterPasscode,
+                passcode: requesterPasscode,
                 notificationId: request.response.data.notificationId
             }
             var submit = karate.call(svc + 'Vault.feature@SubmitRequestCreateVault', data).response.data

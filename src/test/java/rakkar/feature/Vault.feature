@@ -91,7 +91,7 @@ Feature: Vault
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
-    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
+    * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
     * call read('this:Vault.feature@CreateVault-Common')
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
@@ -322,7 +322,7 @@ Feature: Vault
     * request requestBody
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     When method PUT
 
     @RAKCON-11286 @HideVault
@@ -379,7 +379,7 @@ Feature: Vault
     * call read('this:Common.feature@FIDO-Requester')
     * call read('this:Vault.feature@CHECK-LIST-USER')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'COLD_WALLET',"approverNumber":'#(testData.vault.approve_number)',"note":"AT Test"}
     * request requestBody
     When method POST
@@ -389,7 +389,7 @@ Feature: Vault
     Scenario: Request create new vault from web
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path '/core/vault/request-create-vault'
     * request requestBody
     When method POST

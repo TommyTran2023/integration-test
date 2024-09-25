@@ -87,7 +87,7 @@ Feature: Network
         {
             challengeAnswer: #(challengeAnswerRequest),
             authorization: #(requesterAccessToken),
-            passcode: '#(requesterInfo.requesterPasscode)',
+            passcode: '#(requesterPasscode)',
             profileId: '#(profileId)',
             body:{
                 "internalNote": '#(note)', 

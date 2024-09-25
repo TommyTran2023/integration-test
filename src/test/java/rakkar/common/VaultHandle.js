@@ -168,7 +168,7 @@ function fn(){
                 requestId: vault.requestId,
                 approvalAccessToken: bio.approvalAccessToken, 
                 challengeAnswerApprover: bio.challengeAnswerApprover,
-                passcode: approverInfo.approverPasscode
+                passcode: approverPasscode
             }
             karate.call(svc + 'Quorums.feature@ApproveRequest', data)
             vault = karate.call(svc + 'Vault.feature@GetVaultDetail', { vaultId: vaultId }).response.data

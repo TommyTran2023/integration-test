@@ -353,7 +353,7 @@ Feature: Transfer
   @ignore @Internal_Transfer_Medium_High_Value
   Scenario:  Internal - Submit internal transfer common
     * call read('this:Common.feature@FIDO-Requester')
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * header challenge-answer = challengeAnswerRequest
     Given path 'transaction/transactions'
     And request body

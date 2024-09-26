@@ -154,7 +154,7 @@ function fn(){
             data = {
                 accessToken: bio.requesterAccessToken, 
                 challengeAnswerRequest: bio.challengeAnswerRequest,
-                passcode: requesterInfo.requesterPasscode,
+                passcode: requesterPasscode,
                 notificationId: request.response.data.notificationId
             }
             var submit = karate.call(svc + 'Vault.feature@SubmitRequestCreateVault', data).response.data
@@ -168,7 +168,7 @@ function fn(){
                 requestId: vault.requestId,
                 approvalAccessToken: bio.approvalAccessToken, 
                 challengeAnswerApprover: bio.challengeAnswerApprover,
-                passcode: approverInfo.approverPasscode
+                passcode: approverPasscode
             }
             karate.call(svc + 'Quorums.feature@ApproveRequest', data)
             vault = karate.call(svc + 'Vault.feature@GetVaultDetail', { vaultId: vaultId }).response.data

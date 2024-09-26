@@ -13,7 +13,7 @@ const puppeteer = require('puppeteer');
         }
       } catch (error) {
       }
-    maxRetries--;
+    maxRetries++;
   }
 
   throw new Error('Cannot get QR code ', qr)

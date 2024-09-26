@@ -634,11 +634,12 @@ Scenario: Transfer Source Screen Skip Policy Vault
     """
     {
       userId: "#(userInfo.response.data.id)",
-      customerId: "#(userInfo.response.data.customerId)"
+      customerId: "#(userInfo.response.data.customerId)",
+      assetExternalId: 'XRP_TEST'
     }
     """ 
-    * callonce read(connectDB + 'SelectVaultOfUser') data
-    * def searchVault = result.find(x => x.walletId == null )
+    * callonce read(connectDB + 'SelectAssignedVaultDontHaveAsset') data
+    * def searchVault = result[0]
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * assert response.data.list.length > 0
     * match each response.data.list[*].symbol == null

@@ -12,7 +12,7 @@ Feature: Vault
             authorization:"#(requesterAccessToken)",
             requestBody: '#(requestBody)', 
             challengeAnswer: '#(challengeAnswerRequest)', 
-            passcode: '#(requesterInfo.requesterPasscode)'
+            passcode: '#(requesterPasscode)'
         }
         """
         * call read(coreSvc + 'CreateVault') data
@@ -342,7 +342,7 @@ Feature: Vault
             headers:{
                 authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
                 challenge-answer: "#(challengeAnswerRequest)",
-                passcode: "#(typeof passcode == 'undefined' ? requesterInfo.requesterPasscode : passcode)"
+                passcode: "#(typeof passcode == 'undefined' ? requesterPasscode : passcode)"
             },
             vaultId: #(vaultId),
             requestDraftId: #(requestDraftId)
@@ -392,7 +392,7 @@ Feature: Vault
             vaultId: #(vaultId),
             requestDraftId: #(requestDraftId),
             challengeAnswer: '#(challengeAnswerRequest)',
-            passcode: '#(requesterInfo.requesterPasscode)'
+            passcode: '#(requesterPasscode)'
         }
         """
         * call read(svc + 'coreSvc.feature@SubmitUpdateVaultRequest') data
@@ -564,7 +564,7 @@ Feature: Vault
         {
             authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
             challengeAnswer: #(challengeAnswerRequest),
-            passcode: #(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode),
+            passcode: #(typeof passcode != 'undefined' ? passcode: requesterPasscode),
             body:{ 
                 "notificationId" : "#(notificationId)" 
             }

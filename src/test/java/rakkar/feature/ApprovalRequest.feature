@@ -135,7 +135,7 @@ Feature: Approval Request
   Scenario: Approve pending request - Common
     Given path '/advance-quorum/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * header passcode = approverInfo.approverPasscode
+    * header passcode = approverPasscode
     When method POST
     Then status 201
     * def statusMsg = response.status
@@ -158,7 +158,7 @@ Feature: Approval Request
   Scenario: Approve pending request - Common
     Given path '/advance-quorum/quorums/approval/'+requestId
     * header challenge-answer = challengeApprover.challengeAnswerRequest
-    * header passcode = approverInfo.approverPasscode
+    * header passcode = approverPasscode
     When method POST
     Then status 201
     * def statusMsg = response.status

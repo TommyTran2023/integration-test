@@ -33,7 +33,7 @@ Feature: Staking
     * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(dataSet.stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.vaultCreateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(testData.staking.poolID)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'staking/records'
     And request body
     When method POST
@@ -96,7 +96,7 @@ Feature: Staking
     * def body = { "estimatedFee":'#(totalEstimatedFee)'}
     * call read('Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'staking/records/' + transactionId +'/un-staking'
     And request body
     When method PUT
@@ -119,7 +119,7 @@ Feature: Staking
     * def body = { "totalEstimatedFee":'#(totalEstimatedFee)',"tokenId":'#(dataSet.stakeToken)',"registrationFee": 2,"feeLevel":'#(testData.staking.feeLevel)', "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.vaultUpdateStake)'},"amount":#(testData.staking.amount),"destinationId":'#(poolChangeId)', "tokenExternalId": '#(testData.staking.tokenExternalId)'}
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'staking/records/change-staking-pool/'+ stakeId
     And request body
     When method PUT
@@ -193,7 +193,7 @@ Feature: Staking
     """
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'staking/records'
     And request body
     When method POST

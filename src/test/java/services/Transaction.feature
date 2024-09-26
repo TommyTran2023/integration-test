@@ -7,7 +7,7 @@ Feature: Tranaction Service
     {
         authorization: #(requesterAccessToken),
         challengeAnswer: "#(challengeAnswerRequest)",
-        passcode: "#(requesterInfo.requesterPasscode)",
+        passcode: "#(requesterPasscode)",
         body: #(body)
     }
     """

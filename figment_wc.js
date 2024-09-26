@@ -1,6 +1,25 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+  var maxRetries = 3;
+
+  for (var i = 0; i <= maxRetries; i++) {
+      try {
+        var qr = await getQR();
+
+        if (qr.startsWith('wc')){
+          process.stdout.write(qr);
+          return;
+        }
+      } catch (error) {
+      }
+    maxRetries++;
+  }
+
+  throw new Error('Cannot get QR code ', qr)
+})();
+
+async function getQR() {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -74,8 +93,10 @@ const puppeteer = require('puppeteer');
 
   await browser.close();
 
-  process.stdout.write(encodeURIComponent(fullQR).replace('%3F', '?'));
-})();
+  // process.stdout.write(encodeURIComponent(fullQR).replace('%3F', '?'));
+  // return encodeURIComponent(fullQR).replace('%3F', '?');
+  return fullQR;
+}
 
 async function pureStaking(page){
   // Click Connect Wallet

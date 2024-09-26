@@ -92,7 +92,7 @@ Feature: Wallet Connect
 
     @RAKCON-29145 @WalletConnectToFigment
     Scenario: Validate Wallet Connect Figment QR Code
-        * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
+        * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
         * def qrCode = karate.exec('node figment_wc.js')
         * def data = 
         """
@@ -106,7 +106,7 @@ Feature: Wallet Connect
 
     @RAKCON-29146 @GetFigmentAppInfomation
     Scenario: Get dApp Figment Information
-        * def wcInfo = callonce read('@WalletConnectToFigment')
+        * def wcInfo = call read('@WalletConnectToFigment')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
         * def expectedSchema =
@@ -125,7 +125,7 @@ Feature: Wallet Connect
     @RAKCON-29147 @WalletConnectToOpenEden @ignore
     Scenario: Validate Wallet Connect Open Eden QR Code
         # ignore because don't have Open Eden in UAT
-        * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
+        * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
         * def qrCode = karate.exec('node openEden_wc.js')
         * def data = 
         """
@@ -140,7 +140,7 @@ Feature: Wallet Connect
     @RAKCON-29148 @GetOpenEdenAppInfomation @ignore
     Scenario: Get dApp Open Eden Information
         # ignore because don't have Open Eden in UAT
-        * def wcInfo = callonce read('@WalletConnectToOpenEden')
+        * def wcInfo = call read('@WalletConnectToOpenEden')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
         * def expectedSchema =

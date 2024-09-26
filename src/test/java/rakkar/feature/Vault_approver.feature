@@ -8,11 +8,6 @@ Feature: Vault - Member and Approver Validation
     * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def requesterUserID = getRequesterIDResponse.response.data.id
     * def testData = read('classpath:data/data_test.json')
-    * def schemaBody = read('classpath:data/schema.json')
-    * def Collections = Java.type('java.util.Collections')
-    * def Const = read('classpath:data/enum.json')
-    * def testData_v2 = read('classpath:data/data.json')
-    # * callonce read(svc + 'ReadData.feature')
 
   @RAKCON-30547
   Scenario: Create standard vault with 1 member not allow

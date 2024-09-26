@@ -76,6 +76,7 @@ Feature: Vault
       }
     """
     * call read('this:Vault.feature@CreateVault-Common')
+    Then status 201
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
     * def vaultNameResponseWA = response.data.name
@@ -93,6 +94,7 @@ Feature: Vault
     #Add a new vault without admin quorum setup
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
     * call read('this:Vault.feature@CreateVault-Common')
+    Then status 201
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
     * def vaultNameResponseWOA = response.data.name
@@ -108,7 +110,7 @@ Feature: Vault
     * header passcode = requesterPasscode
     * request requestBody
     When method POST
-    Then status 201
+    # Then status 201
 
     @RAKCON-10218 @ViewVaultListing
   Scenario: View vault listing

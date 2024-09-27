@@ -7,12 +7,12 @@ Feature: Vault - Member and Approver Validation
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def requesterUserID = getRequesterIDResponse.response.data.id
+    * callonce read('this:Vault.feature@CHECK-LIST-USER')
     * def testData = read('classpath:data/data_test.json')
 
   @RAKCON-30547
   Scenario: Create standard vault with 1 member not allow
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -22,20 +22,19 @@ Feature: Vault - Member and Approver Validation
         "memberRequiredApprove":[],
         "name":#(vaultName),
         "hasRequiredApprover":false,
-        "memberIds":[#(requesterUserID),#(requesterUserID)],
+        "memberIds":[#(requesterUserID)],
         "type":'#(testData.vault.vault_type)',
-        "approverNumber":'1',
+        "approverNumber":'2',
         "note":"AT Test"
       }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
   @RAKCON-30548
   Scenario: Create standard vault with 1 approver not allow
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -51,14 +50,13 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
   @RAKCON-30811
   Scenario: Create standard vault with 2 duplicated member not allow
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -74,14 +72,13 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
   @RAKCON-30549
   Scenario: Create standard vault with member < approver not allow
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -97,14 +94,13 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 400
     Then match response.errorCode == "APPROVER_NUMBER"
 
   @RAKCON-30550
   Scenario: Create standard vault with 2 member, 2 approver
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault with admin quorum setup
@@ -120,13 +116,12 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 201
 
   @RAKCON-30551
   Scenario: Create skip vault with 1 member not allow
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
@@ -142,14 +137,13 @@ Feature: Vault - Member and Approver Validation
       "note":""
     }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
   @RAKCON-30552
   Scenario: Create skip vault with 2 members
     * call read('this:Vault.feature@GenerateVaultName')
-    * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
@@ -165,5 +159,5 @@ Feature: Vault - Member and Approver Validation
       "note":""
     }
     """
-    * call read('this:Vault.feature@CreateVault-Common')
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
     Then match responseStatus == 201

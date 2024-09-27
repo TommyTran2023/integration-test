@@ -55,6 +55,29 @@ Feature: Vault - Member and Approver Validation
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
+  @RAKCON-30811
+  Scenario: Create standard vault with 2 duplicated member not allow
+    * call read('this:Vault.feature@GenerateVaultName')
+    * call read('this:Vault.feature@CHECK-LIST-USER')
+    #Get variable challengeAnswerRequest
+    * call read('this:Common.feature@FIDO-Requester')
+    #Add a new vault with admin quorum setup
+    * def requestBody = 
+    """
+      {
+        "memberRequiredApprove":[],
+        "name":#(vaultName),
+        "hasRequiredApprover":false,
+        "memberIds":[#(requesterUserID),#(requesterUserID)],
+        "type":'#(testData.vault.vault_type)',
+        "approverNumber":'2',
+        "note":"AT Test"
+      }
+    """
+    * call read('this:Vault.feature@CreateVault-Common')
+    Then match responseStatus == 400
+    Then match response.errorCode == "MEMBER_REQUIRED"
+
   @RAKCON-30549
   Scenario: Create standard vault with member < approver not allow
     * call read('this:Vault.feature@GenerateVaultName')

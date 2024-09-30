@@ -24,7 +24,7 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
@@ -44,7 +44,7 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
@@ -64,7 +64,7 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
@@ -84,7 +84,7 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 400
     Then match response.errorCode == "APPROVER_NUMBER"
 
@@ -104,7 +104,7 @@ Feature: Vault - Member and Approver Validation
         "note":"AT Test"
       }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 201
 
   @RAKCON-30551
@@ -123,7 +123,7 @@ Feature: Vault - Member and Approver Validation
       "note":""
     }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 400
     Then match response.errorCode == "MEMBER_REQUIRED"
 
@@ -143,5 +143,5 @@ Feature: Vault - Member and Approver Validation
       "note":""
     }
     """
-    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)', challengeAnswerRequest: '#(challengeAnswerRequest)', passcode: '#(requesterInfo.requesterPasscode)'}
+    * call read(svc + 'Vault.feature@CreateVault') {requestBody: '#(requestBody)'}
     Then match responseStatus == 201

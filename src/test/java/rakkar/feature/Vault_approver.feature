@@ -2,7 +2,6 @@
 Feature: Vault - Member and Approver Validation
 
   Background:
-    #@PRECOND_RAKCON-10225
     * url baseURL
     * callonce read(svc + 'Auth.feature@GetRequesterAccessToken')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
@@ -12,9 +11,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30547
   Scenario: Create standard vault with 1 member not allow
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault with admin quorum setup
     * def requestBody = 
     """
       {
@@ -34,9 +31,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30548
   Scenario: Create standard vault with 1 approver not allow
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault with admin quorum setup
     * def requestBody = 
     """
       {
@@ -56,9 +51,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30811
   Scenario: Create standard vault with 2 duplicated member not allow
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault with admin quorum setup
     * def requestBody = 
     """
       {
@@ -78,9 +71,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30549
   Scenario: Create standard vault with member < approver not allow
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault with admin quorum setup
     * def requestBody = 
     """
       {
@@ -100,9 +91,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30550
   Scenario: Create standard vault with 2 member, 2 approver
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault with admin quorum setup
     * def requestBody = 
     """
       {
@@ -121,9 +110,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30551
   Scenario: Create skip vault with 1 member not allow
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault without admin quorum setup
     * def requestBody = 
     """
     {
@@ -143,9 +130,7 @@ Feature: Vault - Member and Approver Validation
   @RAKCON-30552
   Scenario: Create skip vault with 2 members
     * call read(svc + 'Vault.feature@GenerateVaultName')
-    #Get variable challengeAnswerRequest
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-    #Add a new vault without admin quorum setup
     * def requestBody = 
     """
     {

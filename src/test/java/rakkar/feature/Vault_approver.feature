@@ -4,17 +4,16 @@ Feature: Vault - Member and Approver Validation
   Background:
     #@PRECOND_RAKCON-10225
     * url baseURL
-    * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetRequesterInfo')
-    * def requesterUserID = getRequesterIDResponse.response.data.id
-    * callonce read('this:Vault.feature@CHECK-LIST-USER')
-    * def testData = read('classpath:data/data_test.json')
+    * callonce read(svc + 'Auth.feature@GetRequesterAccessToken')
+    * callonce read(svc + 'Auth.feature@GetRequesterInfo')
+    * callonce read(svc + 'Auth.feature@GetListUsers')
+    * def Const = read('classpath:data/enum.json')
 
   @RAKCON-30547
   Scenario: Create standard vault with 1 member not allow
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault with admin quorum setup
     * def requestBody = 
     """
@@ -23,7 +22,7 @@ Feature: Vault - Member and Approver Validation
         "name":#(vaultName),
         "hasRequiredApprover":false,
         "memberIds":[#(requesterUserID)],
-        "type":'#(testData.vault.vault_type)',
+        "type":'#(Const.VaultType.HOT_WALLET)',
         "approverNumber":'2',
         "note":"AT Test"
       }
@@ -34,9 +33,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30548
   Scenario: Create standard vault with 1 approver not allow
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault with admin quorum setup
     * def requestBody = 
     """
@@ -45,7 +44,7 @@ Feature: Vault - Member and Approver Validation
         "name":#(vaultName),
         "hasRequiredApprover":false,
         "memberIds":[#(requesterUserID),#(approvalUserID)],
-        "type":'#(testData.vault.vault_type)',
+        "type":'#(Const.VaultType.COLD_WALLET)',
         "approverNumber":'1',
         "note":"AT Test"
       }
@@ -56,9 +55,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30811
   Scenario: Create standard vault with 2 duplicated member not allow
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault with admin quorum setup
     * def requestBody = 
     """
@@ -67,7 +66,7 @@ Feature: Vault - Member and Approver Validation
         "name":#(vaultName),
         "hasRequiredApprover":false,
         "memberIds":[#(requesterUserID),#(requesterUserID)],
-        "type":'#(testData.vault.vault_type)',
+        "type":'#(Const.VaultType.HOT_WALLET)',
         "approverNumber":'2',
         "note":"AT Test"
       }
@@ -78,9 +77,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30549
   Scenario: Create standard vault with member < approver not allow
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault with admin quorum setup
     * def requestBody = 
     """
@@ -89,7 +88,7 @@ Feature: Vault - Member and Approver Validation
         "name":#(vaultName),
         "hasRequiredApprover":false,
         "memberIds":[#(requesterUserID),#(approvalUserID)],
-        "type":'#(testData.vault.vault_type)',
+        "type":'#(Const.VaultType.COLD_WALLET)',
         "approverNumber":'3',
         "note":"AT Test"
       }
@@ -100,9 +99,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30550
   Scenario: Create standard vault with 2 member, 2 approver
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault with admin quorum setup
     * def requestBody = 
     """
@@ -111,7 +110,7 @@ Feature: Vault - Member and Approver Validation
         "name":#(vaultName),
         "hasRequiredApprover":false,
         "memberIds":[#(requesterUserID),#(approvalUserID)],
-        "type":'#(testData.vault.vault_type)',
+        "type":'#(Const.VaultType.COLD_WALLET)',
         "approverNumber":'2',
         "note":"AT Test"
       }
@@ -121,9 +120,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30551
   Scenario: Create skip vault with 1 member not allow
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault without admin quorum setup
     * def requestBody = 
     """
@@ -132,7 +131,7 @@ Feature: Vault - Member and Approver Validation
       "name":#(vaultName),
       "hasRequiredApprover":false,
       "memberIds":[#(requesterUserID)],
-      "type":'#(testData.vault.vault_type)',
+      "type":'#(Const.VaultType.COLD_WALLET)',
       "approverNumber":0,
       "note":""
     }
@@ -143,9 +142,9 @@ Feature: Vault - Member and Approver Validation
 
   @RAKCON-30552
   Scenario: Create skip vault with 2 members
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     #Get variable challengeAnswerRequest
-    * call read('this:Common.feature@FIDO-Requester')
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     #Add a new vault without admin quorum setup
     * def requestBody = 
     """
@@ -154,7 +153,7 @@ Feature: Vault - Member and Approver Validation
       "name":#(vaultName),
       "hasRequiredApprover":false,
       "memberIds":[#(requesterUserID),#(approvalUserID)],
-      "type":'#(testData.vault.vault_type)',
+      "type":'#(Const.VaultType.HOT_WALLET)',
       "approverNumber":0,
       "note":""
     }

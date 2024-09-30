@@ -14,11 +14,6 @@ Feature: Vault
     * def testData_v2 = read('classpath:data/data.json')
     # * callonce read(svc + 'ReadData.feature')
 
-    @ignore @GenerateVaultName
-  Scenario: Generate vault name
-    * def now = function(){ return java.lang.System.currentTimeMillis() }
-    * def vaultName = 'AT-RAK-' + now()
-
     @RAKCON-12842 @CHECK-VAULT-NAME-EXIST
   Scenario: Check vault name is existed in the company
     * def value = call read('this:Vault.feature@ViewVaultListing')

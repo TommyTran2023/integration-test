@@ -53,7 +53,7 @@ Feature: Vault
 
     @RAKCON-10217 @AddNewVaultWithAdminSetup
   Scenario: Create a new vault with admin quorum setup
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
@@ -71,7 +71,7 @@ Feature: Vault
       }
     """
     * call read('this:Vault.feature@CreateVault-Common')
-    Then status 201
+    Then match responseStatus == 201
     * def hiddenOnUIResponseWA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWA == false
     * def vaultNameResponseWA = response.data.name
@@ -82,14 +82,14 @@ Feature: Vault
 
     @RAKCON-10220 @AddNewVaultWithOutAdminSetup
   Scenario: Create a new vault without admin quorum setup
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * call read('this:Vault.feature@CHECK-LIST-USER')
     #Get variable challengeAnswerRequest
     * call read('this:Common.feature@FIDO-Requester')
     #Add a new vault without admin quorum setup
     * def requestBody = {"memberRequiredApprove":[],"name":#(vaultName),"hasRequiredApprover":false,"memberIds":[#(requesterUserID),#(approvalUserID),#(adminUserID)],"type":'#(testData.vault.vault_type)',"approverNumber":0,"note":""}
     * call read('this:Vault.feature@CreateVault-Common')
-    Then status 201
+    Then match responseStatus == 201
     * def hiddenOnUIResponseWOA = response.data.hiddenOnUI
     * match hiddenOnUIResponseWOA == false
     * def vaultNameResponseWOA = response.data.name
@@ -281,7 +281,7 @@ Feature: Vault
     @RAKCON-10956 @EditVaultName
   Scenario: Edit vault name
     #Check vault name is existed or not
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * def creatingVault = callonce read('this:Vault.feature@AddNewVaultWithAdminSetup')
     Given path '/core/vault/account/'+creatingVault.vaultIDWA
     * request {"name":#(vaultName)}
@@ -372,7 +372,7 @@ Feature: Vault
     @RAKCON-17772 @CreateVaultCold
   Scenario: Create vault - cold
     Given path '/core/vault'
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * call read('this:Common.feature@FIDO-Requester')
     * call read('this:Vault.feature@CHECK-LIST-USER')
     * header challenge-answer = challengeAnswerRequest
@@ -409,7 +409,7 @@ Feature: Vault
     @RAKCON-18141 @SubmitRequestCreateAdvanceVaultFromMobile
   Scenario: Submit request create advance vault from mobile
     * def policyType = 'advanced'
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * call read('this:UserManagement.feature@ListUsers')
     * def viewer1 = listUsers[0]
     * def viewer2 = listUsers[1]
@@ -446,7 +446,7 @@ Feature: Vault
     @RAKCON-18213 @SubmitRequestCreateSkipPolicyVaultFromMobile
   Scenario: Submit request create skip policy vault from mobile
     * def policyType = null
-    * call read('this:Vault.feature@GenerateVaultName')
+    * call read(svc + 'Vault.feature@GenerateVaultName')
     * call read('this:Vault.feature@CHECK-LIST-USER')
     * def requestBody = 
     """

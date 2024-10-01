@@ -604,3 +604,8 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@GetVaultFromDestinationScreen') data
+
+  @GenerateVaultName
+  Scenario: Generate vault name
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def vaultName = 'AT-RAK-' + now()

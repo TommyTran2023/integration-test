@@ -81,15 +81,15 @@ Feature: Connect to PostgreSQL
         "        else true " +
         "    end as \"isMasked\" " +
         "from vaults v  " +
-        "left join \"userVaults\" uv  " +
+        "inner join \"userVaults\" uv  " +
         "on \"uv\".\"vaultId\" = \"v\".\"id\" AND \"uv\".\"userId\" = '"+ userId +"' " +
-        "left join \"quorumRules\" qr  " +
+        "inner join \"quorumRules\" qr  " +
         "on v.id = qr.\"objectId\" and qr.\"status\" = 'ACTIVE' " +
-        "left join \"vaultWallets\" vw   " +
+        "inner join \"vaultWallets\" vw   " +
         "on v.id = vw.\"vaultId\"  " +
-        "left join \"assetWallets\" aw  " +
+        "inner join \"assetWallets\" aw  " +
         "on vw.\"walletId\" = aw.\"walletId\" " +
-        "left join assets a " +
+        "inner join assets a " +
         "on aw.\"assetId\"  = a.id " +
         "where v.\"customerId\" = '"+customerId+"' " +
         "and v.\"hiddenOnUI\" = false  " +
@@ -156,6 +156,34 @@ Feature: Connect to PostgreSQL
             "where \"customerId\" ='" + customerId + "' " +
             "and \"isDiscoverable\" = true " +
             "and nnp.\"networkName\" like 'Profile%'" 
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+    @SelectAssignedVaultDontHaveAsset
+    Scenario: Select Assigned vault don't have asset
+        * def query = 
+        """
+            "SELECT v2.* " +
+            "FROM vaults v2 " +
+            "INNER JOIN \"userVaults\" uv2 ON \"uv2\".\"vaultId\" = \"v2\".\"id\" " +
+            "AND \"uv2\".\"userId\" = '"+ userId +"' " +
+            "WHERE v2.\"customerId\" = '" + customerId + "' " +
+            "AND v2.id NOT IN " +
+            "    (SELECT v.id " +
+            "    FROM vaults v " +
+            "    INNER JOIN \"userVaults\" uv ON \"uv\".\"vaultId\" = \"v\".\"id\" " +
+            "    AND \"uv\".\"userId\" = '"+ userId +"' " +
+            "    INNER JOIN \"quorumRules\" qr ON v.id = qr.\"objectId\" " +
+            "    AND qr.\"status\" = 'ACTIVE' " +
+            "    INNER JOIN \"vaultWallets\" vw ON v.id = vw.\"vaultId\" " +
+            "    INNER JOIN \"assetWallets\" aw ON vw.\"walletId\" = aw.\"walletId\" " +
+            "    INNER JOIN assets a ON aw.\"assetId\" = a.id " +
+            "    WHERE v.\"customerId\" = '" + customerId + "' " +
+            "    AND v.\"hiddenOnUI\" = FALSE " +
+            "    AND uv.id IS NOT NULL " +
+            "    AND a.\"assetExternalId\" = '"+assetExternalId+"' " +
+            "    GROUP BY v.id)"
         """
         * print query
         * def result = coreDb.readRows(query)

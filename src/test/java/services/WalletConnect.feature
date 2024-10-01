@@ -486,20 +486,21 @@ Feature: walletConnect
 
 	  @WcRequestWeb3ConnectController_validateQRCode
 	Scenario: Wc Request Web3Connect Controller validate QR Code
-		 * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
-		 * def body = 'qrCode=' + qrCode + '&vaultId=' + vaultId
-		 * def data = 
-		 """
-		 {
-			headers: 
-			{ 
-			   authorization: '#(accessToken)',
-			   "Content-Type":"application/x-www-form-urlencoded; charset=utf-8"
-			},
-			body: '#(body)'
-		 }
-		 """
-		 * call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
+		* def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+		* def data = 
+		"""
+		{
+		headers: 
+		{ 
+		   authorization: '#(accessToken)',
+		},
+		body: {
+			qrCode: '#(qrCode)',
+			vaultId: '#(vaultId)'
+		}
+		}
+		"""
+		* call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
    
     #----------------------------------
    	@WcRequestWeb3ConnectController_approveRequestWeb3Connect

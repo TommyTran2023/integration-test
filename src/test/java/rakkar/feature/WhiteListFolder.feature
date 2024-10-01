@@ -341,3 +341,4 @@ Scenario:Create whitelisted address common - Internal
     And params { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
     When method GET
 
+

@@ -138,138 +138,138 @@ pipeline {
         }
     }
 
-    post {
+    // post {
 
-        always {
+    //     always {
 
-            script {
+    //         script {
 
-                //continue gather the result if checkService pass and the test was executed
-                testSummary = junit testResults: 'target/karate-reports/**/*.xml'
+    //             //continue gather the result if checkService pass and the test was executed
+    //             testSummary = junit testResults: 'target/karate-reports/**/*.xml'
 
-                def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
-                if (testResultAction != null) {
-                    failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
-                    for (test in failingTests) {
-                    // skip testParallel from Karate
-                        if (!test.getName().contains("testParallel")) {
-                            failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
-                            failedScenarios.push(test.getName())
-                        }
-                    }
-                } else {
-                    // No tests were run in this build, nothing left to do.
-                    failingTests = []
-                    failedTestMsg = []
-                    failedScenarios = []
-                }
-            }
+    //             def testResultAction = currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction.class)
+    //             if (testResultAction != null) {
+    //                 failingTests = testResultAction.getResult().getResultInRun(currentBuild.rawBuild).getFailedTests()
+    //                 for (test in failingTests) {
+    //                 // skip testParallel from Karate
+    //                     if (!test.getName().contains("testParallel")) {
+    //                         failedTestMsg.push("Scenario: " + test.getName() + "\n Error: " + test.getErrorDetails())
+    //                         failedScenarios.push(test.getName())
+    //                     }
+    //                 }
+    //             } else {
+    //                 // No tests were run in this build, nothing left to do.
+    //                 failingTests = []
+    //                 failedTestMsg = []
+    //                 failedScenarios = []
+    //             }
+    //         }
 
-            // Jenkins report
-            archiveArtifacts artifacts: 'target/karate-reports/**/*,target/cucumber-html-reports/**/*'
-            publishHTML(target : [allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: './target/karate-reports',
-                reportFiles: 'karate-summary.html',
-                reportName: 'HTML Report',
-                reportTitles: 'Test Report'])
+    //         // Jenkins report
+    //         archiveArtifacts artifacts: 'target/karate-reports/**/*,target/cucumber-html-reports/**/*'
+    //         publishHTML(target : [allowMissing: false,
+    //             alwaysLinkToLastBuild: true,
+    //             keepAll: true,
+    //             reportDir: './target/karate-reports',
+    //             reportFiles: 'karate-summary.html',
+    //             reportName: 'HTML Report',
+    //             reportTitles: 'Test Report'])
 
-            // record test result to Xray
-            script {
-                if (params.XRAY) {
-                    for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                        def testName = "${BRANCH} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
-                        step([$class: 'XrayImportBuilder',
-                            endpointName: '/cucumber/multipart',
-                            importFilePath: "${file}",
-                            importInParallel: 'false',
-                            testImportInfo: """{
-                              "fields": {
-                                  "project": {
-                                     "key": "RAKCON"
-                                  },
-                                  "summary": "${testName}",
-                                  "issuetype": {
-                                    "id": "10035"
-                                  }
-                              },
-                              "xrayFields": {
-                                  "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
-                              }
-                            }""",
-                            inputTestInfoSwitcher: 'fileContent',
-                            importInfo: """{
-                                "fields": {
-                                    "project": {
-                                        "key": "RAKCON"
-                                    },
-                                  "summary": "${testName}",
-                                  "issuetype": {
-                                    "id": "10035"
-                                  },
-                                  "labels" : ["${ENV}"]
-                                },
-                              "xrayFields": {
-                                  "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
-                              }
-                            }""",
-                            inputInfoSwitcher: 'fileContent',
-                            serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221'])
-                    }
-                }
-            }
-        }
+    //         // record test result to Xray
+    //         script {
+    //             if (params.XRAY) {
+    //                 for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
+    //                     def testName = "${BRANCH} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
+    //                     step([$class: 'XrayImportBuilder',
+    //                         endpointName: '/cucumber/multipart',
+    //                         importFilePath: "${file}",
+    //                         importInParallel: 'false',
+    //                         testImportInfo: """{
+    //                           "fields": {
+    //                               "project": {
+    //                                  "key": "RAKCON"
+    //                               },
+    //                               "summary": "${testName}",
+    //                               "issuetype": {
+    //                                 "id": "10035"
+    //                               }
+    //                           },
+    //                           "xrayFields": {
+    //                               "testPlanKey": "RAKCON-10583",
+    //                               "environments": ["${ENV}"]
+    //                           }
+    //                         }""",
+    //                         inputTestInfoSwitcher: 'fileContent',
+    //                         importInfo: """{
+    //                             "fields": {
+    //                                 "project": {
+    //                                     "key": "RAKCON"
+    //                                 },
+    //                               "summary": "${testName}",
+    //                               "issuetype": {
+    //                                 "id": "10035"
+    //                               },
+    //                               "labels" : ["${ENV}"]
+    //                             },
+    //                           "xrayFields": {
+    //                               "testPlanKey": "RAKCON-10583",
+    //                               "environments": ["${ENV}"]
+    //                           }
+    //                         }""",
+    //                         inputInfoSwitcher: 'fileContent',
+    //                         serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221'])
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        success {
-            script {
-                // Passed notification
-                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
-                def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'good',
-                    message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
+    //     success {
+    //         script {
+    //             // Passed notification
+    //             def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+    //             def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+    //             "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+    //             slackSend(channel: "${SLACK_CHANNEL}",
+    //                 color: 'good',
+    //                 message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
 
-                // office365ConnectorSend color: '#4b8869',
-                //     message: "${successMsg}<br>${passedSummary}",
-                //     status: 'PASSED',
-                //     webhookUrl: "${TEAM_URL}"
-            }
-        }
+    //             // office365ConnectorSend color: '#4b8869',
+    //             //     message: "${successMsg}<br>${passedSummary}",
+    //             //     status: 'PASSED',
+    //             //     webhookUrl: "${TEAM_URL}"
+    //         }
+    //     }
 
-        failure {
-            script {
-                // Failure details
-                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
-                def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                def failedScenariosMsg = "*Failed Scenarios*\n" +
-                "${failedScenarios.join(', ')}"
-                def failedDetails = "*Failed Test:*\n" +
-                "${failedTestMsg.join('\n\n')}"
+    //     failure {
+    //         script {
+    //             // Failure details
+    //             def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+    //             def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+    //             "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+    //             def failedScenariosMsg = "*Failed Scenarios*\n" +
+    //             "${failedScenarios.join(', ')}"
+    //             def failedDetails = "*Failed Test:*\n" +
+    //             "${failedTestMsg.join('\n\n')}"
 
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'danger',
-                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
+    //             slackSend(channel: "${SLACK_CHANNEL}",
+    //                 color: 'danger',
+    //                 message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                // MS Teams limitation
-                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
+    //             // MS Teams limitation
+    //             def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
 
-                echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
-                echo "Failed Details: " + failedDetailsTeams
+    //             echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
+    //             echo "Failed Details: " + failedDetailsTeams
 
-                // office365ConnectorSend color: '#a82e2e',
-                //     message: "${buildSummary}<br>${failedSummary}",
-                //     status: 'FAILED',
-                //     webhookUrl: "${TEAM_URL}",
-                //     factDefinitions:[
-                //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
-                //         [ name: "Error", template: "${failedDetailsTeams}"]
-                //     ]
-            }
-        }
-    }
+    //             // office365ConnectorSend color: '#a82e2e',
+    //             //     message: "${buildSummary}<br>${failedSummary}",
+    //             //     status: 'FAILED',
+    //             //     webhookUrl: "${TEAM_URL}",
+    //             //     factDefinitions:[
+    //             //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
+    //             //         [ name: "Error", template: "${failedDetailsTeams}"]
+    //             //     ]
+    //         }
+    //     }
+    // }
 }

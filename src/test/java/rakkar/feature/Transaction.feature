@@ -442,7 +442,24 @@ Feature: Transaction
       """
       And match each transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
 
-
+    @RAKCON-30951 @GetAssetActivationTransactionDetail
+    Scenario: Get Asset Activation Detail
+      # 1. Get list transaction
+      * def query = { offset: '0', limit:'10', priceTo: '0.01'}
+      * def txnList = call read(svc + 'Transaction.feature@GetTransactionsList')
+      * match txnList.responseStatus == 201
+      # 2. Find Asset Activation
+      * def txn = txnList.response.data.transactions.find(x => x.operation == 'ENABLE_ASSET')
+      * assert txn != null
+      # 3. Get detail transaction
+      * call read(svc + 'Transaction.feature@ViewTransactionDetail') {transactionId : #(txn.id)}
+      * match responseStatus == 200
+      * match response.data.type == 'ENABLE_ASSET'
+      * match response.data.status == 'COMPLETED'
+      * match response.data.operation == 'ENABLE_ASSET'
+      * match response.data.nativeAsset == response.data.feeCurrency
+  
+  
 
     
     

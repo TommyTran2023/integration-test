@@ -341,4 +341,16 @@ Scenario:Create whitelisted address common - Internal
     And params { limit:'10', offset: '0', sort:'ASC', sortBy: 'SYMBOL',folderId: '#(folderId)'}
     When method GET
 
+  @TestRequesterDoBiometric
+  Scenario: TestRequesterDoBiometric
+    * call read(svc + 'Biometric.feature@RequesterDoBiometric')
+    * call read(svc + 'Biometric.feature@ApproverDoBiometric')
+    * def data = 
+    """
+    {
+      userName: "#(requesterInfo.requesterUsername)",
+      customAnswer: "#(privateKey.challengeAnswerAuth)"
+    }
+    """
+    * call read(svc + 'Auth.feature@GetUserAccessToken') data
 

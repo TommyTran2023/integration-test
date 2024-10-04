@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 
 public class FileUtils {
     public static Map<String, Object> DataListMap = new HashMap<>();
@@ -31,4 +33,10 @@ public class FileUtils {
         writer.close();
     }
 
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> readSecretConfig(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File jsonFile = new File(filePath);
+        return objectMapper.readValue(jsonFile, Map.class);
+    }
 }

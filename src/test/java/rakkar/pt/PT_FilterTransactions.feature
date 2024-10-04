@@ -28,7 +28,7 @@ Feature: Filter transactions
           "ChallengeName": "CUSTOM_CHALLENGE", 
           "ChallengeResponses": { 
             "USERNAME": '#(requesterUserName)', 
-            "ANSWER": '#(testData.common.challengeAnswerAuth)' 
+            "ANSWER": '#(privateKey.challengeAnswerAuth)' 
           }, 
           "Session": '#(requesterToken)' 
         }, 

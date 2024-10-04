@@ -19,9 +19,9 @@ pipeline {
     }
 
     environment {
-        SECRET_FILE_CONTENT_SIT = credentials('rakkar-db-credentials-sit')
-        SECRET_FILE_CONTENT_UAT = credentials('rakkar-db-credentials-uat')
-        SECRET_FILE_CONTENT_DEV = credentials('rakkar-db-credentials-dev')
+        DB_SIT = credentials('rakkar-db-credentials-sit')
+        DB_UAT = credentials('rakkar-db-credentials-uat')
+        DB_DEV = credentials('rakkar-db-credentials-dev')
     }
 
     parameters {
@@ -50,19 +50,19 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"   
-                            credentials = readJSON file: SECRET_FILE_CONTENT_UAT
+                            credentials = readJSON file: DB_UAT
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
-                            credentials = readJSON file: SECRET_FILE_CONTENT_DEV
+                            credentials = readJSON file: DB_DEV
                     }
                     else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
-                            credentials = readJSON file: SECRET_FILE_CONTENT_SIT
+                            credentials = readJSON file: DB_SIT
                     }
 
                     env.BRANCH = BRANCH
@@ -76,14 +76,14 @@ pipeline {
             }
         }
 
-        stage ('Git Checkout') {
-            steps {
+        // stage ('Git Checkout') {
+        //     steps {
 
-                git branch: "${BRANCH}",
-                    credentialsId: 'github',
-                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
-            }
-        }
+        //         git branch: "${BRANCH}",
+        //             credentialsId: 'github',
+        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
+        //     }
+        // }
 
         stage ('Check Service Status') {
             steps {
@@ -125,7 +125,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' -D runMode='JENKINS'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

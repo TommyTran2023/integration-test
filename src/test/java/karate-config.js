@@ -34,15 +34,15 @@ function fn () {
     karate.set('dataSet', fileUtils.DataListMap); 
     
     // Load secret
-    var secret = karate.properties['secret'];
     if (karate.properties['runMode'] == 'JENKINS'){
         var path = karate.env('rakkar_auto_secret');
-        secret = karate.read(path);
+        var secret = karate.read(path);
         karate.set('privateKey', sesecretc);
         console.log('-->>>>:' + secret.secret);
     }
     else if (fileUtils.isFileExist(secret)){
         try {
+            var secret = karate.properties['secret'];
             secret = fileUtils.readSecretConfig(secret);
             karate.set('privateKey', secret);
         }

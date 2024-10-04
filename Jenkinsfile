@@ -22,6 +22,7 @@ pipeline {
         DB_SIT = credentials('rakkar-db-credentials-sit')
         DB_UAT = credentials('rakkar-db-credentials-uat')
         DB_DEV = credentials('rakkar-db-credentials-dev')
+        SECRET = credentials('rakkar_auto_secret')
     }
 
     parameters {

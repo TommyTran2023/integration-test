@@ -35,9 +35,9 @@ function fn () {
     
     // Load secret
     if (karate.properties['runMode'] == 'JENKINS'){
-        var path = karate.env('rakkar_auto_secret');
+        var path = karate.env('SECRET');
         var secret = karate.read(path);
-        karate.set('privateKey', sesecretc);
+        karate.set('privateKey', secret.secret);
         console.log('-->>>>:' + secret.secret);
     }
     else if (fileUtils.isFileExist(secret)){

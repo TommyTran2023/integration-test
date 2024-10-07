@@ -108,5 +108,5 @@ docker run  \
 --name integration-test -it --rm \
 -v $(pwd):/usr/src/ \
 integration-test:latest \
-/bin/sh -c "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
+/bin/sh -c "mvn test -Dkarate.env=qa -D secret=\"./auto_secret.json\" -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
 ```

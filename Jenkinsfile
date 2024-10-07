@@ -73,6 +73,8 @@ pipeline {
                     USERNAME = credentials['core-svc']['DATABASE_USERNAME']
                     PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
                     DBNAME = credentials['core-svc']['DATABASE_NAME']
+
+                    sh 'cp ${SECRET} ./src/'
                 }
             }
         }
@@ -116,7 +118,6 @@ pipeline {
                 script {
                     sh "make clean"
                     sh "make build"
-                    sh 'docker cp ${SECRET} `docker ps -a -l --filter ancestor=integration-test --format "{{.ID}}"`:/usr/src/test/java/data/'
                 }
             }
         }
@@ -127,7 +128,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @TestRequesterDoBiometric' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' -D secret='${SECRET}'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @TestRequesterDoBiometric' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' -D secret='./auto_secret.json'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

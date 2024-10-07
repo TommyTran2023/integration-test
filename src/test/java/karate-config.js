@@ -34,9 +34,9 @@ function fn () {
     karate.set('dataSet', fileUtils.DataListMap); 
     
     // Load secret
+    var secret = karate.properties['secret'];
     if (fileUtils.isFileExist(secret)){
         try {
-            var secret = karate.properties['secret'];
             secret = fileUtils.readSecretConfig(secret);
             karate.set('privateKey', secret);
         }

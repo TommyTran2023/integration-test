@@ -9,6 +9,7 @@ Feature: Accessing Jenkins secrets
 
   
   Scenario: TestRequesterDoBiometric
+    * print privateKey
     * call read(svc + 'Biometric.feature@RequesterDoBiometric')
     * call read(svc + 'Biometric.feature@ApproverDoBiometric')
     * def data = 

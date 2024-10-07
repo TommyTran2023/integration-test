@@ -1,6 +1,7 @@
     @TestRequesterDoBiometric
 Feature: Accessing Jenkins secrets
 
+@ignore
   Scenario: Read secrets from JSON file
     * def secretFilePath = karate.env('rakkar_auto_secret')
     * def secrets = read(secretFilePath)

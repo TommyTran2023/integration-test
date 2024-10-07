@@ -75,7 +75,7 @@ pipeline {
                     DBNAME = credentials['core-svc']['DATABASE_NAME']
 
                     def configPath = './src/test/java/'
-                    sh 'cp ${SECRET} ${configPath}'
+                    sh "cp ${SECRET} ${configPath}"
                 }
             }
         }

@@ -37,8 +37,9 @@ function fn () {
     var secret = karate.properties['secret'];
     if (fileUtils.isFileExist(secret)){
         try {
+            console.log("readSecretConfig -->>>>>" + secret);
             secret = fileUtils.readSecretConfig(secret);
-            console.log(secret);
+            console.log("readSecretConfig -->>>>>" + secret);
             karate.set('privateKey', secret);
         }
         catch (ex){

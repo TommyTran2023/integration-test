@@ -34,13 +34,7 @@ function fn () {
     karate.set('dataSet', fileUtils.DataListMap); 
     
     // Load secret
-    if (karate.properties['runMode'] == 'JENKINS'){
-        // var path = karate.env('SECRET');
-        // var secret = karate.read(path);
-        // karate.set('privateKey', secret.secret);
-        // console.log('-->>>>:' + secret.secret);
-    }
-    else if (fileUtils.isFileExist(secret)){
+    if (fileUtils.isFileExist(secret)){
         try {
             var secret = karate.properties['secret'];
             secret = fileUtils.readSecretConfig(secret);

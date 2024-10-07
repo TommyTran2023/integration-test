@@ -126,7 +126,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @TestRequesterDoBiometric' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' -D runMode='JENKINS'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @TestRequesterDoBiometric' -D userName='${USERNAME}' -D pass='${PASSWORD}' -D dbName='${DBNAME}' -D rerun='true' -D secret='${SECRET}'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

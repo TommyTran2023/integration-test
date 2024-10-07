@@ -46,6 +46,9 @@ function fn () {
             throw new Error("Cannot read secret file");
         }
     }
+    else{
+        console.log("Cannot read secret content readSecretConfig -->>>>>" + secret);
+    }
 
     // Set encrypted passcode
     var requestPass = config.requesterInfo.requesterPasscode;

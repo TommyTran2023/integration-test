@@ -34,7 +34,7 @@ function fn () {
     karate.set('dataSet', fileUtils.DataListMap); 
     
     // Load secret
-    var secret = karate.read("file:" + karate.properties['secret']);
+    var secret = karate.read("classpath:" + karate.properties['secret']);
     karate.set('privateKey', secret);
 
     // Set encrypted passcode

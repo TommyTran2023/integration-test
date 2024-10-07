@@ -2,6 +2,7 @@
 Feature: Upload file
   Background:
     * url crmUploadUrl
+    * configure charset = null
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
   @UPLOAD_IMAGE_ON_CRM

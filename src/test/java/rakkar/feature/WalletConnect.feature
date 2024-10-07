@@ -256,16 +256,16 @@ Feature: Wallet Connect
         * assert verifyWCDisconnected(getwc)
 
 
-    @RAKCON-30427 @dAppAlreadyConnectedPopup
-    Scenario: Get vault to connect 
-        * def tommy  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.connecteddAppVaultId+'"}}]}'
-        * print tommy
+    @RAKCON-30427 @checkVaultDappConnected
+    Scenario: Get connected vault to connect 
+        * def validateConnected  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.connecteddAppVaultId+'"}}]}'
+        * print validateConnected
 
         * def data =
         """
         {
 
-            "where": #(tommy)
+            "where": #(validateConnected)
         }
         """
         * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
@@ -312,3 +312,20 @@ Feature: Wallet Connect
             And match each response.data.list contains '#(^expectedSchema)'
             And match each response.data.list[*].fbRaw contains '#(expectedFbRaw)'
             And assert response.data.list.length >0
+
+    @RAKCON-30546 @checkVaultNoDappConnected
+    Scenario: Get non-connected vault to connect 
+         * def validateConnected  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.notConnecteddAppVaultId+'"}}]}'
+         
+         * def data =
+         """
+         {
+ 
+             "where": #(validateConnected)
+         }
+         """
+        * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
+        Then match responseStatus == 200   
+        And assert response.data.list.length == 0
+        And assert response.data.total == 0
+        

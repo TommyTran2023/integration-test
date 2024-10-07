@@ -34,21 +34,8 @@ function fn () {
     karate.set('dataSet', fileUtils.DataListMap); 
     
     // Load secret
-    var secret = karate.properties['secret'];
-    if (fileUtils.isFileExist(secret)){
-        try {
-            console.log("readSecretConfig -->>>>>" + secret);
-            secret = fileUtils.readSecretConfig(secret);
-            console.log("readSecretConfig -->>>>>" + secret);
-            karate.set('privateKey', secret);
-        }
-        catch (ex){
-            throw new Error("Cannot read secret file");
-        }
-    }
-    else{
-        console.log("Cannot read secret content readSecretConfig -->>>>>" + secret);
-    }
+    var secret = karate.read("file:" + karate.properties['secret']);
+    karate.set('privateKey', secret);
 
     // Set encrypted passcode
     var requestPass = config.requesterInfo.requesterPasscode;

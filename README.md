@@ -36,12 +36,12 @@ mvn test -Dkarate.env=qa -Dthread=4
 
 To run only specific feature file:
 ```
-mvn test -Dkarate.env=qa -Dkarate.options="classpath:rakkar/feature/Wallet.feature"
+mvn test -Dkarate.env=qa -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="classpath:rakkar/feature/Wallet.feature" 
 ```
 
 To run only specific tag:
 ```
-mvn test -Dkarate.env=qa -Dkarate.options="--tags @VIEW-LIST-ASSET"
+mvn test -Dkarate.env=qa -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="--tags @VIEW-LIST-ASSET" 
 ```
 
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
@@ -87,9 +87,9 @@ Usage: ```dataSet.advanceHotVaultId```
 - Group1: (requester, admin1)
 - Group2: (approver, admin2)
 
-### Run script for scenarios require db connect
-1. Add `-D userName='{username}' -D pass='{password}' -D dbName='{dbName}'` in cli
-Ex: `mvn clean test -Dkarate.env=qa -D userName='{username}' -D pass='{password}' -D dbName='{dbName}'`
+### Run script with config file, ask @TommyTran2023
+1. Add `-D secret='{path_to_secret_file}' -D dbConfig='{path_to_db_credentials_file}'` in cli
+Ex: `mvn clean test -Dkarate.env=qa -D secret='{path_to_secret_file}' -D dbConfig='{path_to_db_credentials_file}'`
 
 ### OPTIONAL Run locally with Docker
 1. Install Docker Desktop
@@ -108,5 +108,5 @@ docker run  \
 --name integration-test -it --rm \
 -v $(pwd):/usr/src/ \
 integration-test:latest \
-/bin/sh -c "mvn test -Dkarate.env=qa -D secret=\"./auto_secret.json\" -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
+/bin/sh -c "mvn test -Dkarate.env=qa -D secret=\"{path_to_secret_file}\" -D dbConfig=\"{path_to_db_credentials_file}\" -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
 ```

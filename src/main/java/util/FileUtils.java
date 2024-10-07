@@ -32,14 +32,4 @@ public class FileUtils {
         writer.write(jsonString);
         writer.close();
     }
-
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> readSecretConfig(String filePath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        File jsonFile = new File(filePath);
-        Map<String, Object> data = objectMapper.readValue(jsonFile, Map.class);
-        System.out.println("\nreadSecretConfig -->>>>>" + data);
-
-        return data;
-    }
 }

@@ -12,6 +12,7 @@ Feature: Connect to PostgreSQL
             driverClassName: 'org.postgresql.Driver' 
         }
         """
+        * print coreConfig
         * def DbUtils = Java.type('util.DbUtils')
         * def coreDb = new DbUtils(coreConfig)
 

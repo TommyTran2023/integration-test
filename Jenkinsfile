@@ -50,30 +50,25 @@ pipeline {
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
-                            HEALTH_CHECK_PATH = "uat"   
-                            credentials = DB_UAT
+                            HEALTH_CHECK_PATH = "uat"
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
-                            credentials = DB_DEV
+                            sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
-                            credentials = DB_SIT
+                            sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
                     env.BRANCH = BRANCH
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
-                    // USERNAME = credentials['core-svc']['DATABASE_USERNAME']
-                    // PASSWORD = credentials['core-svc']['DATABASE_PASSWORD']
-                    // DBNAME = credentials['core-svc']['DATABASE_NAME']
-                    sh 'cp -rf ${credentials} ./rakkar-db-credentials.json'
                     sh 'cp -rf ${SECRET} .'
                 }
             }
@@ -128,7 +123,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D rerun='true' -D secret='./auto_secret.json' -D dbConfig = './rakkar-db-credentials.json'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D rerun='true' -D secret='./auto_secret.json' -D dbConfig='./rakkar-db-credentials.json'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

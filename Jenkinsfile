@@ -116,6 +116,7 @@ pipeline {
                 script {
                     sh "make clean"
                     sh "make build"
+                    sh 'docker cp ${SECRET} `docker ps -a -l --filter ancestor=integration-test --format "{{.ID}}"`:/usr/src/test/java/data/'
                 }
             }
         }

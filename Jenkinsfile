@@ -51,6 +51,7 @@ pipeline {
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
+                            sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"

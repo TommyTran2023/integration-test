@@ -40,7 +40,7 @@ Feature: Common Feature
             customerId: '#(userInfo.response.data.customerId)'
         }
         """
-        * def listNetworks = call read('classpath:rakkar/feature/ConnectDB.feature@SelectDiscoverableNetwork') data
+        * def listNetworks = call read(connectDB + '@SelectDiscoverableNetwork') data
         * print listNetworks.result.length
         * eval for(var i = 0; i<listNetworks.result.length; i++) karate.call(svc + 'Network.feature@SetNetworkProfileSetting', {networkId: listNetworks.result[i].id})
 

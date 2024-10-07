@@ -2,9 +2,9 @@ function fn () {
     var envFile = read('classpath:data/env_data.json');
     var env = karate.env;
     karate.log('Karate Environment: ', env);
-    karate.set('coreUserName', karate.properties['userName']);
-    karate.set('corePass', karate.properties['pass']);
-    karate.set('dbName', karate.properties['dbName']);
+    // karate.set('coreUserName', karate.properties['userName']);
+    // karate.set('corePass', karate.properties['pass']);
+    // karate.set('dbName', karate.properties['dbName']);
 
     if(!env) {
         env = 'uat'; //default env
@@ -50,6 +50,9 @@ function fn () {
     karate.set('requesterPasscode', requesterPasscode);
     karate.set('approverPasscode', approverPasscode);
 
+    // Load db config
+    var dbConfig = karate.read("file:" + karate.properties['dbConfig']);
+    karate.set('dbConfig', dbConfig);
 
     return config;
 }

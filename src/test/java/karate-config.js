@@ -42,7 +42,7 @@ function fn () {
             karate.set('privateKey', secret);
         }
         catch (ex){
-            throw ex;
+            throw new Error("Cannot read secret file");
         }
     }
 

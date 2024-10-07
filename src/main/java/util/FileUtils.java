@@ -37,6 +37,9 @@ public class FileUtils {
     public static Map<String, Object> readSecretConfig(String filePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         File jsonFile = new File(filePath);
-        return objectMapper.readValue(jsonFile, Map.class);
+        Map<String, Object> data = objectMapper.readValue(jsonFile, Map.class);
+        System.out.println("\nreadSecretConfig -->>>>>" + data);
+
+        return data;
     }
 }

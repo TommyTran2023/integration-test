@@ -328,3 +328,4 @@ Feature: Wallet Connect
         Then match responseStatus == 200   
         And assert response.data.list.length == 0
         And assert response.data.total == 0
+        

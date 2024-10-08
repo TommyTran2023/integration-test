@@ -70,7 +70,7 @@ pipeline {
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
-                    sh 'cp -rf ${SECRET} .'
+                    sh 'cp -rf ${SECRET} ./auto_secret.json'
                 }
             }
         }

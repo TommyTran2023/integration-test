@@ -140,6 +140,10 @@ pipeline {
     post {
 
         always {
+            script {
+                // remove secret file
+                sh "rm -f ./auto_secret.json ./rakkar-db-credentials.json"
+            }
 
             script {
 

@@ -75,14 +75,14 @@ pipeline {
             }
         }
 
-        stage ('Git Checkout') {
-            steps {
+        // stage ('Git Checkout') {
+        //     steps {
 
-                git branch: "${BRANCH}",
-                    credentialsId: 'github',
-                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
-            }
-        }
+        //         git branch: "${BRANCH}",
+        //             credentialsId: 'github',
+        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
+        //     }
+        // }
 
         stage ('Check Service Status') {
             steps {

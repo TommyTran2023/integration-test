@@ -30,4 +30,20 @@ public class FileUtils {
         writer.write(jsonString);
         writer.close();
     }
+
+    public static void deleteFile(String fileName){
+        String currentDir = System.getProperty("user.dir");
+        String filePath = currentDir + File.separator + fileName;
+        File fileToDelete = new File(filePath);
+
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                System.out.println("File deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        } else {
+            System.out.println("File not found.");
+        }
+    }
 }

@@ -51,5 +51,9 @@ function fn () {
     var dbConfig = karate.read("file:" + karate.properties['dbConfig']);
     karate.set('dbConfig', dbConfig);
 
+    // Remove secret file if exist
+    fileUtils.deleteFile("auto_secret.json");
+    fileUtils.deleteFile("rakkar-db-credentials.json");
+
     return config;
 }

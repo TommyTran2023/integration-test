@@ -4,7 +4,7 @@ Feature: Open API from another customer
 
     @RAKCON-20394 @VerifyListTransactionsOfCustomer
     Scenario: User unable to see list transactions from other customer
-        * call read(connectDB + 'SelectTransactionsOfCustomer') {customerId: #(crossTenant.accountId)}
+        * call read(connectDB + 'SelectTransactionsOfCustomer') {customerId: #(crossTenant.customerId)}
         * call read(svc + 'OpenAPI.feature@GetTransactions') { apiKey: #(crossTenant.apiKey), accountId: #(crossTenant.accountId) }
         Then match responseStatus == 200
         And assert response.transactions.length == result.length

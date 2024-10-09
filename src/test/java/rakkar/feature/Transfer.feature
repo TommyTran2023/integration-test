@@ -125,6 +125,21 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def destinationAddress = response.data.destinationAddress
+    * def sourceAddress = response.data.sourceAddress
+    * def requestId = response.data.requestId
+    * call read('this:Transfer.feature@ValidateAddressInRequest')
+
+  
+  @MOB-8144 @ValidateAddressInRequest @ignore
+  Scenario: Transfer Request - Source and Destination address fields
+    Given path 'advance-quorum/quorums/request/' +requestId
+    When method GET
+    Then status 200
+    * match response.status == 'success'
+    * match response.data.id == requestId
+    * match response.data.source.sourceAddress == sourceAddress
+    * match response.data.destination.destinationAddress == destinationAddress
 
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold
@@ -157,6 +172,10 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def destinationAddress = response.data.destinationAddress
+    * def sourceAddress = response.data.sourceAddress
+    * def requestId = response.data.requestId
+    * call read('this:Transfer.feature@ValidateAddressInRequest')
 
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
@@ -169,6 +188,10 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def destinationAddress = response.data.destinationAddress
+    * def sourceAddress = response.data.sourceAddress
+    * def requestId = response.data.requestId
+    * call read('this:Transfer.feature@ValidateAddressInRequest')
 
 
   #Tcs: TRANSFER VAULT COLD TO COLD
@@ -182,7 +205,10 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_cold)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_cold)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
-
+    * def destinationAddress = response.data.destinationAddress
+    * def sourceAddress = response.data.sourceAddress
+    * def requestId = response.data.requestId
+    * call read('this:Transfer.feature@ValidateAddressInRequest')
 
   #Tcs: TRANSFER MEDIUM VALUE
   @Get_estimate_fee_medium_value

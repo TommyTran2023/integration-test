@@ -16,7 +16,7 @@ Feature: Generate Challenge Answer for Biometric
     When method POST
     Then status 201
     * def challenge = response.data.challenge
-    * string command = testData.common.commandToGenChallengeAnswer + challenge
+    * string command = privateKey.commandToGenChallengeAnswer + challenge
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
 
@@ -30,7 +30,7 @@ Feature: Generate Challenge Answer for Biometric
     When method POST
     Then status 201
     * def challenge = response.data.challenge
-    * string command = testData.common.commandToGenChallengeAnswer + challenge
+    * string command = privateKey.commandToGenChallengeAnswer + challenge
     * def challengeAnswerRequest = karate.exec(command)
     * print challengeAnswerRequest
 

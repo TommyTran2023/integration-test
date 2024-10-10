@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
     try {
       qr = await getQR();
     } catch (error) {
+      process.stdout.write("Cannot get QR code 1");
       qr = null
     }
       

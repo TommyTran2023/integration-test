@@ -12,6 +12,7 @@ const puppeteer = require('puppeteer');
         return;
       }
   }
+  process.stdout.write("Cannot get QR code ");
 })();
 
 async function getQR() {

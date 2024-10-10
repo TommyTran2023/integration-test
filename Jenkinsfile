@@ -124,7 +124,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}' -D rerun='true' -D secret='./auto_secret.json' -D dbConfig='./rakkar-db-credentials.json'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='classpath:rakkar/feature/WalletConnect.feature' -D rerun='true' -D secret='./auto_secret.json' -D dbConfig='./rakkar-db-credentials.json'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

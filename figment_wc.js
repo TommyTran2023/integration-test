@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 (async () => {
   var maxRetries = 3;
 
-  for (var i = 0; i <= maxRetries; i++) {
+  for (var i = 0; i < maxRetries; i++) {
       try {
         var qr = await getQR();
 
@@ -14,8 +14,7 @@ const puppeteer = require('puppeteer');
       } catch (error) {
       }
   }
-
-  throw new Error('Cannot get QR code ', qr)
+  process.stdout.write('Cannot get QR code');
 })();
 
 async function getQR() {

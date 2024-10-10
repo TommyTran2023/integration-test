@@ -12,6 +12,7 @@ const puppeteer = require('puppeteer');
           return;
         }
       } catch (error) {
+        process.stdout.write('error get qr' + error.message);
       }
   }
   process.stdout.write('Cannot get QR code');

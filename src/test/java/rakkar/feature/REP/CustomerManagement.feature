@@ -37,7 +37,7 @@ Feature: All API in REP - Customer Management page
         Then match each response.data.customers[*] contains expCustomerSchema
         Then match each response.data.customers[*].currentAddress contains expAddress
 
-    @GetCustomerListing_Filters
+    @GetCustomerListing_Filters_SortByBUSINESS_REGISTRATION_ID
     Scenario: Get list customers - Add filters - sort by BUSINESS_REGISTRATION_ID DESC
         * def data = 
         """
@@ -47,7 +47,6 @@ Feature: All API in REP - Customer Management page
 			businessType : "DIGITAL_ASSET_ISSUER", 
 			country : "Thailand", 
 			product : "HOT_WALLET,COLD_WALLET", 
-			workspace : "Rakkar (Cold wallet - Testnet)", 
 			customerStatus : "ACTIVE"
         }
         """
@@ -55,7 +54,37 @@ Feature: All API in REP - Customer Management page
         Then match responseStatus == 200 
         Then match each response.data.customers[*].hotWallet == "#string"
         Then match each response.data.customers[*].coldWallet == "#string"
-        * def expBusinessList = response.data.customers.map(x => x.businessRegistrationId).toReverse()
-        Then match response.data.customers[*].businessRegistrationId == expBusinessList
+        * def actualBusinessList = response.data.customers.map(x => x.businessRegistrationId.toUpperCase())
+        * copy expectedBusinessList = actualBusinessList
+        Then match actualBusinessList == expectedBusinessList.sort().reverse()
+        Then match each response.data.customers[*].businessType == "Digital asset issuer"
+        Then match each response.data.customers[*].currentCountryAddress == "Thailand"
+        Then match each response.data.customers[*].status == "ACTIVE"
+
+    @GetWorkspace
+    Scenario Outline: Get <type> workspace
+        * call read(repSvc + 'Customers.feature@CustomerREPController_getListWorkspace') {type: <type>}
+        Then match responseStatus == 200
+        * def expSchema = 
+        """
+        {
+            "id": "#number",
+            "name": "#string",
+            "type": <type>,
+            "externalId": "#uuid"
+        }
+        """
+        * match each response.data.workspaces contains expSchema
+        Examples:
+            | type |
+            | warm |
+            | cold |
+
+    @GetEntityRelation
+    Scenario: Get entity relation
+        * call read(repSvc + 'Customers.feature@CustomerREPController_getListCustomerEntityRelation')
+        Then match responseStatus == 200
+            
+
 
 

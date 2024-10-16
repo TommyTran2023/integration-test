@@ -15,7 +15,7 @@ Feature: Get access token for Approval
     Given path '/auth/authorization/respond-to-auth-challenge'
     * def responseTest1 = call read('this:ApprovalAuthenticator.feature@GetSessionForLogin')
     * def Session1 = responseTest1.response.data.Session
-    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(approverInfo.approvalUsername)', "ANSWER": '#(testData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
+    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(approverInfo.approvalUsername)', "ANSWER": '#(privateKey.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST
     Then def APIStatus = response.status
     * assert (APIStatus == "success")

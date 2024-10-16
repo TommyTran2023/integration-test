@@ -7,7 +7,7 @@ Feature: Tranaction Service
     {
         authorization: #(requesterAccessToken),
         challengeAnswer: "#(challengeAnswerRequest)",
-        passcode: "#(requesterInfo.requesterPasscode)",
+        passcode: "#(requesterPasscode)",
         body: #(body)
     }
     """
@@ -16,7 +16,7 @@ Feature: Tranaction Service
 
     @GetTransactionsList
   Scenario: Get transactions list
-    * call read(svc + 'transactionSvc.feature@GetTransactionsList') {authorization: #(requesterAccessToken)}
+    * call read(svc + 'transactionSvc.feature@GetTransactionsList') {authorization: #(typeof accessToken == "undefined" ? requesterAccessToken : accessToken)}
     Then match responseStatus == 201
 
     @ViewTransactionDetail

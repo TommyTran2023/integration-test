@@ -1,7 +1,7 @@
     @ignore
 Feature: All api call to core services
   Background:
-    * url baseURL
+    * url typeof customUrl != 'undefined' ? customUrl : baseURL
 
     #----------Biometric---------#
     @RequestChallenge
@@ -1535,6 +1535,7 @@ Feature: All api call to core services
   Scenario: Vault Wc Controller get List Vault Selection
     Given path 'core/v2/vault/wc/selection'
     * headers headers
+    * params params
     When method GET
 
     #----------------------------------

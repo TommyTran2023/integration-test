@@ -12,7 +12,7 @@ Feature: Vault
             authorization:"#(requesterAccessToken)",
             requestBody: '#(requestBody)', 
             challengeAnswer: '#(challengeAnswerRequest)', 
-            passcode: '#(requesterInfo.requesterPasscode)'
+            passcode: '#(requesterPasscode)'
         }
         """
         * call read(coreSvc + 'CreateVault') data
@@ -305,15 +305,15 @@ Feature: Vault
         * def data =
         """
         {
-            authorization: #(accessToken),
-            vaultId: #(vaultId),
+            authorization: '#(accessToken)',
+            vaultId: '#(vaultId)',
             body:{
-                approverNumber : #(approverNumber),
-                policyType : #(policyType),
-                quorums : #(quorums),
-                viewers : #(viewers),
-                clientId : #(clientId),
-                note : #(note)
+                approverNumber : '#(approverNumber)',
+                policyType : '#(policyType)',
+                quorums : '#(quorums)',
+                viewers : '#(viewers)',
+                clientId : "#(typeof clientId == 'undefined' ? 'ITTest-Karate' : clientId)",
+                note : '#(note)'
             }
         }
         """
@@ -342,7 +342,7 @@ Feature: Vault
             headers:{
                 authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
                 challenge-answer: "#(challengeAnswerRequest)",
-                passcode: "#(typeof passcode == 'undefined' ? requesterInfo.requesterPasscode : passcode)"
+                passcode: "#(typeof passcode == 'undefined' ? requesterPasscode : passcode)"
             },
             vaultId: #(vaultId),
             requestDraftId: #(requestDraftId)
@@ -392,7 +392,7 @@ Feature: Vault
             vaultId: #(vaultId),
             requestDraftId: #(requestDraftId),
             challengeAnswer: '#(challengeAnswerRequest)',
-            passcode: '#(requesterInfo.requesterPasscode)'
+            passcode: '#(requesterPasscode)'
         }
         """
         * call read(svc + 'coreSvc.feature@SubmitUpdateVaultRequest') data
@@ -564,7 +564,7 @@ Feature: Vault
         {
             authorization: #(typeof accessToken != 'undefined' ? accessToken: requesterAccessToken),
             challengeAnswer: #(challengeAnswerRequest),
-            passcode: #(typeof passcode != 'undefined' ? passcode: requesterInfo.requesterPasscode),
+            passcode: #(typeof passcode != 'undefined' ? passcode: requesterPasscode),
             body:{ 
                 "notificationId" : "#(notificationId)" 
             }
@@ -604,3 +604,8 @@ Feature: Vault
         }
         """
         * call read(svc + 'coreSvc.feature@GetVaultFromDestinationScreen') data
+
+  @GenerateVaultName
+  Scenario: Generate vault name
+    * def now = function(){ return java.lang.System.currentTimeMillis() }
+    * def vaultName = 'AT-RAK-' + now()

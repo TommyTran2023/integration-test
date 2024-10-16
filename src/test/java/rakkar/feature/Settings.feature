@@ -9,10 +9,12 @@ Feature: Settings
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN
+    * def requestIv = requesterInfo.userId.replaceAll('-', '').slice(0, 16);
+    * def newPasscode = karate.exec(`node aes.js encrypt ${testData.settings.newPasscode} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${requestIv}`)
     * def requestBody = 
     """
     { 
-      "passcode" : "#(testData.settings.newPasscode)", 
+      "passcode" : "#(newPasscode)", 
       "securityAnswer" : { 
         "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
         "postalCode" : "#(requesterInfo.postalCode)", 
@@ -38,8 +40,10 @@ Feature: Settings
 
   @RAKCON-13185 @CheckNewPassCode
   Scenario: Check new passcode when performing forgot PIN
+    * def requestIv = requesterInfo.userId.replaceAll('-', '').slice(0, 16);
+    * def newPasscode = karate.exec(`node aes.js encrypt ${testData.settings.newPasscode} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${requestIv}`)
     Given path '/auth/account/check-new-passcode'
-    * request { "passcode" : "#(testData.settings.newPasscode)" }
+    * request { "passcode" : "#(newPasscode)" }
     When method POST
     Then status 201
     * match response.data.isSameOldPasscode == false
@@ -50,7 +54,7 @@ Feature: Settings
     * def requestBody = 
     """
     { 
-      "passcode" : "#(requesterInfo.requesterPasscode)", 
+      "passcode" : "#(requesterPasscode)", 
       "securityAnswer" : { 
         "dateOfBirth" : "#(requesterInfo.dateOfBirth)", 
         "postalCode" : "#(requesterInfo.postalCode)", 
@@ -75,10 +79,12 @@ Feature: Settings
 
   @RAKCON-11012 @ChangePIN
   Scenario: Change PIN
+    * def requestIv = requesterInfo.userId.replaceAll('-', '').slice(0, 16);
+    * def newPasscode = karate.exec(`node aes.js encrypt ${testData.settings.changePasscode} MIIBCgKCAQEAniN5htNE5JBVkA5M3Tfi ${requestIv}`)
     Given path '/auth/account/passcode'
     * header challenge-answer = challengeRequester.challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
-    * request { "isForgotPasscode" : false, "passcode" : "#(testData.settings.changePasscode)", "securityAnswer" : null }
+    * header passcode = requesterPasscode
+    * request { "isForgotPasscode" : false, "passcode" : "#(newPasscode)", "securityAnswer" : null }
     When method PUT
     Then status 200
     * match response.status == 'success'

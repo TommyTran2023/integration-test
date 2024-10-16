@@ -47,15 +47,18 @@ Feature: Transaction
 
     @RAKCON-10973 @Filter_transaction_by_asset
    Scenario: Filter transaction by asset
-    * call read('Transfer.feature@Get_asset_transfer')
+    * def a = read('classpath:data/enum.json')
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: "#(a.Symbol.XRP)"}
     * def tokenName = response.data.tokens[0].name
-    * def query = { limit:'10', offset: '0',assetId: ['#(dataSet.tokenId)']}
+    * def tokenId = response.data.tokens[0].id
+    * def query = { limit:'10', offset: '0',assetId: ['#(tokenId)']}
     * call read('this:Transaction.feature@Filter_transaction_common')
     * match each $response.data.transactions[*].name == "#(tokenName)"
 
     @RAKCON-12327 @Filter_transaction_by_source
   Scenario: Filter transactions by source
-    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true}
+    * def data = read('classpath:data/data.json')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true, keyword: '#(data.standardWarmVault_1)'}
     * def sourceId = value.response.data.vaults[0].id
     * def sourceName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0', sourceData: [ { sourceType: 'internal', sourceId: '#(sourceId)'}] }
@@ -64,7 +67,8 @@ Feature: Transaction
 
     @RAKCON-12328 @Filter_transaction_by_destination
   Scenario: Filter transactions by destination
-    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true}
+    * def data = read('classpath:data/data.json')
+    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true, keyword: '#(data.standardWarmVault_2)'}
     * def destinationId = value.response.data.vaults[0].id
     * def destinationName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0',destinationData: [ { destinationType: 'internal', destinationId: '#(destinationId)'}] }
@@ -258,7 +262,7 @@ Feature: Transaction
   Scenario: View Transaction Details Of Other Customer
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * def customerId = userInfo.response.data.customerId
-    * def crossTxnId = call read('this:ConnectDB.feature@SelectATransactionNotBelongToCustomer') {customerId: #(customerId)}
+    * def crossTxnId = call read(connectDB + 'SelectATransactionNotBelongToCustomer') {customerId: #(customerId)}
     * call read(svc + 'Transaction.feature@ViewTransactionDetail') { transactionId: #(crossTxnId.result[0].id) }
     * match responseStatus == 404
     * match response.message == "TRANSACTION_NOT_FOUND"
@@ -319,7 +323,7 @@ Feature: Transaction
       """
       Then match response.data contains expectedSchema
 
-    @RAKCON-29141 @FilterTransactionByDApp
+    @ignore @FilterTransactionByDApp
     Scenario: Filter Transaction By DApp
       * def dApps = callonce read(svc + 'WalletConnect.feature@WcApplicationController_getListEntity') { where: '{\"OR\":[{\"name\":{\"CONTAINS\":\"figment\"}}]}' }
       * def query = 
@@ -384,20 +388,42 @@ Feature: Transaction
       }
       """
       And match each response.data.transactions contains '#(^expectedSchema)'
+      
+
+    @RAKCON-29141 @FilterTransactionByDApp_VerifyPureStaking
+    Scenario: Listing Transaction - Verify Pure Staking transaction
+      * callonce read('@FilterTransactionByDApp')
+      * def transactions = response.data.transactions.filter(x => x.additionalData.feature == 'PURE_STAKING')
       * def additionalData = 
       """
       {
         "app": "#string",
-        "feature": "#string",
+        "feature": "PURE_STAKING",
+        "quorumId": "#string",
+        "quorumRequestId": "#string",
+        "contractCallMethod": "deposit"
+      }
+      """
+      And match each transactions[*].additionalData contains '#(^additionalData)'
+
+    @RAKCON-29736 @FilterTransactionByDApp_VerifyLiquidStaking
+    Scenario: Listing Transaction - Verify Liquid transaction
+      * callonce read('@FilterTransactionByDApp')
+      * def transactions = response.data.transactions.filter(x => x.additionalData.feature == 'LIQUID_STAKING')
+      * def additionalData = 
+      """
+      {
+        "app": "#string",
+        "feature": "LIQUID_STAKING",
         "quorumId": "#string",
         "walletInfoId": [
           "#uuid"
         ],
         "quorumRequestId": "#string",
-        "contractCallMethod": "#string"
+        "contractCallMethod": "deposit"
       }
       """
-      And match each response.data.transactions[*].additionalData contains '#(^additionalData)'
+      And match each transactions[*].additionalData contains '#(^additionalData)'
       * def walletInfoDictSchema = 
       """
       {
@@ -414,7 +440,26 @@ Feature: Transaction
         "externalAssetId": "#string"
       }
       """
-      And match each response.data.transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
+      And match each transactions[*].additionalData.walletInfoDict.* contains '#(^walletInfoDictSchema)'
+
+    @RAKCON-30951 @GetAssetActivationTransactionDetail
+    Scenario: Get Asset Activation Detail
+      # 1. Get list transaction
+      * def query = { offset: '0', limit:'10', priceTo: '0.01'}
+      * def txnList = call read(svc + 'Transaction.feature@GetTransactionsList')
+      * match txnList.responseStatus == 201
+      # 2. Find Asset Activation
+      * def txn = txnList.response.data.transactions.find(x => x.operation == 'ENABLE_ASSET')
+      * assert txn != null
+      # 3. Get detail transaction
+      * call read(svc + 'Transaction.feature@ViewTransactionDetail') {transactionId : #(txn.id)}
+      * match responseStatus == 200
+      * match response.data.type == 'ENABLE_ASSET'
+      * match response.data.status == 'COMPLETED'
+      * match response.data.operation == 'ENABLE_ASSET'
+      * match response.data.nativeAsset == response.data.feeCurrency
+  
+  
 
     
     

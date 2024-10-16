@@ -347,12 +347,10 @@ Feature: walletConnect
  			},
  			params: 
  			{
-				limit : "#(typeof limit == 'undefined' ? '' : limit)", 
-				offset : "#(typeof offset == 'undefined' ? '' : offset)", 
-				searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
-				ids : "#(typeof ids == 'undefined' ? '' : ids)", 
-				where : "#(typeof where == 'undefined' ? '' : where)", 
-				order : "#(typeof order == 'undefined' ? '' : order)"
+				limit : "#(typeof limit == 'undefined' ? 1 : limit)", 
+				offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
+				where : "#(typeof where == 'undefined' ? decodeURI('{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}') : decodeURI(where))", 
+				order : "#(typeof order == 'undefined' ? '' : decodeURI(order))"
  			}
   		}
   		"""
@@ -488,20 +486,21 @@ Feature: walletConnect
 
 	  @WcRequestWeb3ConnectController_validateQRCode
 	Scenario: Wc Request Web3Connect Controller validate QR Code
-		 * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
-		 * def body = 'qrCode=' + qrCode + '&vaultId=' + vaultId
-		 * def data = 
-		 """
-		 {
-			headers: 
-			{ 
-			   authorization: '#(accessToken)',
-			   "Content-Type":"application/x-www-form-urlencoded; charset=utf-8"
-			},
-			body: '#(body)'
-		 }
-		 """
-		 * call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
+		* def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+		* def data = 
+		"""
+		{
+		headers: 
+		{ 
+		   authorization: '#(accessToken)',
+		},
+		body: {
+			qrCode: '#(qrCode)',
+			vaultId: '#(vaultId)'
+		}
+		}
+		"""
+		* call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
    
     #----------------------------------
    	@WcRequestWeb3ConnectController_approveRequestWeb3Connect
@@ -512,7 +511,8 @@ Feature: walletConnect
   		{
  			headers: 
  			{ 
-				authorization: '#(accessToken)'
+				authorization: '#(accessToken)',
+				challenge-answer: '#(challengeAnswerRequest)'
  			},
  			id : "#(typeof id == 'undefined' ? '' : id)"
   		}
@@ -1451,9 +1451,8 @@ Feature: walletConnect
  			limit : "#(typeof limit == 'undefined' ? 20 : limit)", 
  			offset : "#(typeof offset == 'undefined' ? 0 : offset)", 
  			searchText : "#(typeof searchText == 'undefined' ? '' : searchText)", 
- 			ids : "#(typeof ids == 'undefined' ? '' : ids)", 
- 			where : "#(typeof where == 'undefined' ? '{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}' : where)", 
- 			order : "#(typeof order == 'undefined' ? '' : order)" 
+ 			where : "#(typeof where == 'undefined' ? decodeURI('{\"OR\":[{\"name\":{\"CONTAINS\":\"\"}}]}') : decodeURI(where))", 
+ 			order : "#(typeof order == 'undefined' ? decodeURI('') : decodeURI(order))" 
   		}
    	}
    	"""

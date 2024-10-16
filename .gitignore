@@ -109,3 +109,7 @@ dist
 /target
 /idea
 .DS_Store
+
+# secret file
+auto_secret.json
+rakkar-db-credentials*.json

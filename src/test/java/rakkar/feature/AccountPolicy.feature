@@ -28,7 +28,7 @@ Feature: Account admin policy
     Given path '/core/customers/' + customerId
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
     When method PUT
     Then status 200
@@ -42,7 +42,7 @@ Feature: Account admin policy
     Given path '/core/customers/' + customerId
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * request {"note" : "AT Edit Account Policy Note",  "memberRequired" : [],  "quorumSize" : 2}
     When method PUT
     Then status 400

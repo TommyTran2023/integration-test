@@ -3,6 +3,7 @@
     Background:
       * url baseURL
       * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
+      # * callonce read(svc + 'Auth.feature@GetRequesterAccessToken')
       * def Collections = Java.type('java.util.Collections')
       * def schemaJson = read('classpath:data/schema.json')
       * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
@@ -125,16 +126,12 @@
 
     # EDIT OWN PROFILE
     @RAKCON-11020 @Edit_own_profile
-      Scenario: Check edit own profile - edit avatar
-      * call read('this:GetUserInfo.feature@GetUserInfo')
-      * def query_upload_link = { contentType: 'image/jpg', fileName:'image_test.jpg', userId: '#(userId)'}
-      * call read('this:Common.feature@UPLOAD_LINK')
-      * call read('this:UploadFile.feature@PUT_VIDEO')
-      * def body = { "uploadToken":'#(uploadToken)'}
-      Given path 'auth/account/users/'+ userId + '/avatar'
-      And request body
-      When method PUT
-      Then status 200
+    Scenario: Check edit own profile - edit avatar
+      * call read(svc + 'Auth.feature@GetRequesterInfo')
+      * def uploadLink = call read(svc + 's3.feature@GetUploadLink') {userId: '#(userId)', accessToken: '#(accessToken)'}
+      * call read(svc + 's3.feature@PutFile') {uploadUrl: '#(uploadLink.response.data.uploadUrl)', accessToken: '#(accessToken)'}
+      * call read(svc + 'Auth.feature@UpdateUserAvatar') { "uploadToken":'#(uploadLink.response.data.uploadToken)'}
+      Then match responseStatus == 200
       And match response.status == "success"
 
     # CHANGE ROLE

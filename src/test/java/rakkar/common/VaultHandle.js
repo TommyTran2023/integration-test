@@ -1,4 +1,5 @@
 function fn(){
+    var requestHandler = karate.call('classpath:rakkar/common/RequestHandle.js')
     function generateVaultName(){
         var now = java.lang.System.currentTimeMillis()
         return 'AT-VRAK-'+now
@@ -39,6 +40,73 @@ function fn(){
         }
 
         return quorums
+    }
+
+    function demoteAdminMemberToViewerInAdvVault(userId, quorum){
+        for (var i = 0; i < quorum.quorums.length; i++){
+            var qu = quorum.quorums[i]
+            var members = qu.members
+            var user = members.find(u => u.userId == userId)
+
+            if (user != null){
+                quorum.viewers.push(user)
+
+                var users = members.filter(u => u.userId != userId)
+                qu.members = users
+
+                return quorum
+            }
+        }
+        
+        var viewers = quorum.viewers
+        var user = viewers.find(u => u.userId == userId)
+
+        if(user == null){
+            quorum.viewers.push({
+                type: "USER",
+                userId: userId
+            })
+
+            return quorum
+        }
+
+        throw new Error("Cannot demote user to viewer of quorum: " + userId + "\nquorum:\n" + JSON.stringify(quorum))
+    }
+
+    function addUserAsMemberToQuorum(userId, quorum){
+        var usr = quorum.viewers.find(u => u.userId == userId)
+        if (usr != null){
+            quorum.viewers = quorum.viewers.filter(u => u.userId != userId)
+        }
+
+        quorum.quorums[0].members.push({
+            type: "USER",
+            userId: userId
+        })
+
+        return quorum
+    }
+
+    function editAdvPolicyRequest(vaultId, quorums, viewers, note){
+        var vaultData = {
+            vaultId: vaultId,
+            policyType: "advanced",
+            quorums: quorums,
+            viewers: viewers,
+            note: note
+        }
+        
+        var request = karate.call(svc + 'Vault.feature@RequestUpdateVaultPolicy', vaultData).response.data
+
+        var bio = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
+        var submitData = {
+            authorization: bio.requesterAccessToken,
+            challengeAnswerRequest: bio.challengeAnswerRequest,
+            vaultId: vaultId,
+            requestDraftId: request.requestDraftId
+        }
+        var req = karate.call(svc + 'Vault.feature@SubmitRequestEditVaultPolicyByRequestDraftId', submitData).response.data.quorumDraftId
+        requestHandler.approveTransaction(req)
     }
 
     return {
@@ -86,7 +154,7 @@ function fn(){
             data = {
                 accessToken: bio.requesterAccessToken, 
                 challengeAnswerRequest: bio.challengeAnswerRequest,
-                passcode: requesterInfo.requesterPasscode,
+                passcode: requesterPasscode,
                 notificationId: request.response.data.notificationId
             }
             var submit = karate.call(svc + 'Vault.feature@SubmitRequestCreateVault', data).response.data
@@ -100,7 +168,7 @@ function fn(){
                 requestId: vault.requestId,
                 approvalAccessToken: bio.approvalAccessToken, 
                 challengeAnswerApprover: bio.challengeAnswerApprover,
-                passcode: approverInfo.approverPasscode
+                passcode: approverPasscode
             }
             karate.call(svc + 'Quorums.feature@ApproveRequest', data)
             vault = karate.call(svc + 'Vault.feature@GetVaultDetail', { vaultId: vaultId }).response.data
@@ -130,6 +198,46 @@ function fn(){
                 requestDraftId: request.requestDraftId
             }
             return karate.call(svc + 'Vault.feature@SubmitRequestEditVaultPolicyByRequestDraftId', submitData).response
+        },
+
+        getCurrentVaultQuorum: function(vaultId){
+            var vault = karate.call(svc + 'Vault.feature@GetVaultDetail', { vaultId: vaultId }).response
+            return karate.call(svc + 'Quorums.feature@GetQuorumPolicy', { quorumId: vault.data.quorumId }).response.data 
+        },
+
+        removeUserFromVaultQuorum: function(userId, vault){
+            if (vault.policyType == 'standard'){
+                throw new Error("Not implemeted")
+            }
+            else {
+                var quorum = karate.call(svc + 'Quorums.feature@GetQuorumPolicy', { quorumId: vault.quorumId }).response.data 
+                quorum = demoteAdminMemberToViewerInAdvVault(userId, quorum)
+
+                editAdvPolicyRequest(vault.id, quorum.quorums, quorum.viewers, "MOB-3356 removeUserFromVaultQuorum")
+            }
+        },
+
+        addUserAsMemberToVaultQuorum: function(userId, vault){
+            if (vault.policyType == 'advanced'){
+                var quorum = karate.call(svc + 'Quorums.feature@GetQuorumPolicy', { quorumId: vault.quorumId }).response.data 
+                var index = -1
+                for (var i = 0; i < quorum.quorums.length; i++) {
+                    var q = quorum.quorums[i]
+                    if (q.members.find(u => u.userId == userId) != null){
+                        index = i
+                        break
+                    }
+                }
+
+                if (index == -1){
+                    quorum = addUserAsMemberToQuorum(userId, quorum)
+
+                    editAdvPolicyRequest(vault.id, quorum.quorums, quorum.viewers, "MOB-3356 addUserAsMemberToVaultQuorum")
+                }
+            }
+            else {
+                throw new Error("Not implemeted for Vault Policy: " + vault.policyType)
+            }
         }
     }
 }

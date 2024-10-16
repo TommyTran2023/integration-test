@@ -243,13 +243,12 @@ Feature: Transfer
   @RAKCON-11405 @Transfer_high_value
   Scenario: Transfer high - Submit transfer
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
-    * def query_upload_link = { contentType: 'video/mp4', fileName:'video.mp4', userId: '#(userId)', type: 'VIDEO'}
-    * call read('this:Common.feature@UPLOAD_LINK')
-    * call read('this:UploadFile.feature@PUT_VIDEO')
+    * def uploadLink = call read(svc + 's3.feature@GetUploadLink') { fileType: 'video', userId: '#(userId)', accessToken: '#(accessToken)' }
+    * call read(svc + 's3.feature@PutFile') { fileType: 'video', userId: '#(userId)', uploadUrl: '#(uploadLink.response.data.uploadUrl)', accessToken: '#(accessToken)' }
     * def body = 
     """
       { 
-        "uploadToken":'#(uploadToken)',
+        "uploadToken":'#(uploadLink.response.data.uploadToken)',
         "vdoSentence":'#(vdoSentence)', 
         "operation":'#(testData.transfer.operation)',
         "tokenId":'#(dataSet.tokenId)',
@@ -354,7 +353,7 @@ Feature: Transfer
   @ignore @Internal_Transfer_Medium_High_Value
   Scenario:  Internal - Submit internal transfer common
     * call read('this:Common.feature@FIDO-Requester')
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     * header challenge-answer = challengeAnswerRequest
     Given path 'transaction/transactions'
     And request body
@@ -539,7 +538,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read(connectDB + 'SelectVaultOfUser') data
     * def maskedVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && x.isMasked && x.total > 1)
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(maskedVault.name)}
     * assert response.data.list.length == 0
@@ -554,7 +553,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * call read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
+    * call read(connectDB + 'SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.total == 0)
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
     * assert response.data.list.length == 0
@@ -568,7 +567,7 @@ Feature: Transfer
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read(connectDB + 'SelectVaultOfUser') data
     * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total != null && x.total != 0)
     * print searchVault
     * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
@@ -585,7 +584,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
     customerId: "#(userInfo.response.data.customerId)"
   }
   """ 
-  * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
+  * callonce read(connectDB + 'SelectVaultOfUser') data
   * def searchVault = result.find(x => x.policyType != null && x.assetExternalId == 'XRP_TEST' && !x.isMasked && x.status == "PENDING" && x.total == null)
   * call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {searchText: #(searchVault.name)}
   * match each response.data.list[*] contains {"status":"PENDING"}
@@ -623,7 +622,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
       customerId: "#(userInfo.response.data.customerId)"
     }
     """ 
-    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
+    * callonce read(connectDB + 'SelectVaultOfUser') data
     * def searchVault = result.find(x => x.assetExternalId == 'XRP_TEST' && x.total == 0 && x.isMasked == false)
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * match each response.data.list[*].symbol == "XRP"
@@ -635,11 +634,12 @@ Scenario: Transfer Source Screen Skip Policy Vault
     """
     {
       userId: "#(userInfo.response.data.id)",
-      customerId: "#(userInfo.response.data.customerId)"
+      customerId: "#(userInfo.response.data.customerId)",
+      assetExternalId: 'XRP_TEST'
     }
     """ 
-    * callonce read('classpath:rakkar/common/ConnectDB.feature@SelectVaultOfUser') data
-    * def searchVault = result.find(x => x.walletId == null )
+    * callonce read(connectDB + 'SelectAssignedVaultDontHaveAsset') data
+    * def searchVault = result[0]
     * call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') {searchText: #(searchVault.name), sourceVaultId:#(dataSet.sourceId_hot)}
     * assert response.data.list.length > 0
     * match each response.data.list[*].symbol == null

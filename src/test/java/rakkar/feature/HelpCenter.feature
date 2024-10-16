@@ -24,6 +24,22 @@ Feature:Help Center
     * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
     * call read('this:HelpCenter.feature@CreateTicketIssue')
 
+  @RAKCON-31279 @UploadInvalidFileType
+  Scenario: Upload invalid file type
+    * def headers = {Content-type: "image/png"}
+    * def filename = 'image.xxx'
+    * call read('this:UploadFile.feature@UPLOAD_CRM')
+    Then match responseStatus == 403
+    * match response == "Unsupported file type"
+
+  @RAKCON-31280 @UploadInvalidContentType
+  Scenario: Upload invalid file content type
+    * def headers = {Content-type: "application/zip"}
+    * def filename = 'image.png'
+    * call read('this:UploadFile.feature@UPLOAD_CRM')
+    Then match responseStatus == 403
+    * match response == "Unsupported file type"
+
   @RAKCON-11378 @CreateTicketQuestion
   Scenario: Create a ticket detail page - Question
     * def descriptionTicket = 'description for create question' + now()

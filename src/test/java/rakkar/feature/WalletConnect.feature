@@ -93,7 +93,7 @@ Feature: Wallet Connect
     @RAKCON-29145 @WalletConnectToFigment
     Scenario: Validate Wallet Connect Figment QR Code
         * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
-        * def qrCode = karate.exec('node figment_wc.js')
+        * call read(svc + 'WalletConnect.feature@GetFigmentPureQR')
         * def data = 
         """
         {
@@ -126,7 +126,7 @@ Feature: Wallet Connect
     Scenario: Validate Wallet Connect Open Eden QR Code
         # ignore because don't have Open Eden in UAT
         * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
-        * def qrCode = karate.exec('node openEden_wc.js')
+        * call read(svc + 'WalletConnect.feature@GetOpenEdenQR')
         * def data = 
         """
         {
@@ -212,7 +212,7 @@ Feature: Wallet Connect
         * vaultHandle().addUserAsMemberToVaultQuorum(userId, vaultETH.response.data)
 
         # 2. Make connection
-        * def qrCode = karate.exec('node figment_wc.js')
+        * call read(svc + 'WalletConnect.feature@GetFigmentPureQR')
         * def cnn = 
         """
         {
@@ -264,8 +264,7 @@ Feature: Wallet Connect
         * def data =
         """
         {
-
-            "where": #(validateConnected)
+            "where": '#(validateConnected)'
         }
         """
         * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
@@ -320,8 +319,7 @@ Feature: Wallet Connect
          * def data =
          """
          {
- 
-             "where": #(validateConnected)
+             "where": '#(validateConnected)'
          }
          """
         * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data

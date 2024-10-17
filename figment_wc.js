@@ -74,7 +74,7 @@ async function getQR() {
   await page.waitForSelector(ddlNetwork);
   await page.click(ddlNetwork);
 
-  const optTestnet = "::-p-xpath(//div[contains(@id,'option-1')])";
+  const optTestnet = "::-p-xpath(//div[contains(@id,'option') and contains(.,'Holesky')])";
   await page.waitForSelector(optTestnet);
   await page.click(optTestnet);
 

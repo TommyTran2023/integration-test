@@ -133,9 +133,7 @@ Feature: Transfer
   
   @MOB-8144 @ValidateAddressInRequest @ignore
   Scenario: Transfer Request - Source and Destination address fields
-    Given path 'advance-quorum/quorums/request/' +requestId
-    When method GET
-    Then status 200
+    * call read(svc + 'Quorums.feature@ViewAccountPolicyRequest')
     * match response.status == 'success'
     * match response.data.id == requestId
     * match response.data.source.sourceAddress == sourceAddress

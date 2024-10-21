@@ -27,7 +27,7 @@ COPY package*.json /usr
 RUN npm cache clean --force && rm -rf node_modules && rm -f package-lock.json
 
 # # Install npm dependencies including Puppeteer
-RUN yarn add puppeteer
+RUN npm i
 
 WORKDIR /usr/src
 

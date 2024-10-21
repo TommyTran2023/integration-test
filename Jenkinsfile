@@ -226,53 +226,53 @@ pipeline {
             }
         }
 
-        success {
-            script {
-                // Passed notification
-                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
-                def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'good',
-                    message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
+        // success {
+        //     script {
+        //         // Passed notification
+        //         def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+        //         def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+        //         slackSend(channel: "${SLACK_CHANNEL}",
+        //             color: 'good',
+        //             message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
 
-                // office365ConnectorSend color: '#4b8869',
-                //     message: "${successMsg}<br>${passedSummary}",
-                //     status: 'PASSED',
-                //     webhookUrl: "${TEAM_URL}"
-            }
-        }
+        //         // office365ConnectorSend color: '#4b8869',
+        //         //     message: "${successMsg}<br>${passedSummary}",
+        //         //     status: 'PASSED',
+        //         //     webhookUrl: "${TEAM_URL}"
+        //     }
+        // }
 
-        failure {
-            script {
-                // Failure details
-                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
-                def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                def failedScenariosMsg = "*Failed Scenarios*\n" +
-                "${failedScenarios.join(', ')}"
-                def failedDetails = "*Failed Test:*\n" +
-                "${failedTestMsg.join('\n\n')}"
+        // failure {
+        //     script {
+        //         // Failure details
+        //         def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+        //         def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+        //         def failedScenariosMsg = "*Failed Scenarios*\n" +
+        //         "${failedScenarios.join(', ')}"
+        //         def failedDetails = "*Failed Test:*\n" +
+        //         "${failedTestMsg.join('\n\n')}"
 
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'danger',
-                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
+        //         slackSend(channel: "${SLACK_CHANNEL}",
+        //             color: 'danger',
+        //             message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                // MS Teams limitation
-                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
+        //         // MS Teams limitation
+        //         def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
 
-                echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
-                echo "Failed Details: " + failedDetailsTeams
+        //         echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
+        //         echo "Failed Details: " + failedDetailsTeams
 
-                // office365ConnectorSend color: '#a82e2e',
-                //     message: "${buildSummary}<br>${failedSummary}",
-                //     status: 'FAILED',
-                //     webhookUrl: "${TEAM_URL}",
-                //     factDefinitions:[
-                //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
-                //         [ name: "Error", template: "${failedDetailsTeams}"]
-                //     ]
-            }
-        }
+        //         // office365ConnectorSend color: '#a82e2e',
+        //         //     message: "${buildSummary}<br>${failedSummary}",
+        //         //     status: 'FAILED',
+        //         //     webhookUrl: "${TEAM_URL}",
+        //         //     factDefinitions:[
+        //         //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
+        //         //         [ name: "Error", template: "${failedDetailsTeams}"]
+        //         //     ]
+        //     }
+        // }
     }
 }

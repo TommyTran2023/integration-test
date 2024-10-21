@@ -30,8 +30,7 @@ async function getQRCode() {
 async function getQR() {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
   const page = await browser.newPage();
 

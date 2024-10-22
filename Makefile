@@ -10,7 +10,7 @@ build:
 # Run the Docker container with the specified command
 .PHONY: run
 run:
-	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c "$(COMMAND)"
+	docker run --name $(CONTAINER_NAME) --rm -v "$(JENKINS_PWD):/usr/src" -u "$(JENKINS_USER):$(JENKINS_GROUP)" $(IMAGE_NAME) /bin/sh -c "$(COMMAND) -D rerun='true' -D secret='./auto_secret.json' -D dbConfig='./rakkar-db-credentials.json'"
 
 # Copy the target directory from the running container
 .PHONY: copy

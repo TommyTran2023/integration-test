@@ -2,7 +2,7 @@ Feature: Validate transaction permission
 Background:
     * callonce read('this:login.feature@Login')
 
-@Permissions @RAKAdmin
+@Permissions @RAKViewer
 Scenario Outline: transaction: <method> <path>
     * def testData = 
     """
@@ -16,7 +16,7 @@ Scenario Outline: transaction: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: <requirePasscode>, 
         requireAnswer: <requireAnswer>, 
-        expectedStatus: <expectedRAKStatus_Admin>
+        expectedStatus: <expectedRAKStatus_Viewer>
     }
     """
     * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData

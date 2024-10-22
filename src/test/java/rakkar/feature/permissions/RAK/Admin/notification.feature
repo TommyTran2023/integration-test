@@ -1,10 +1,14 @@
-Feature: Validate core permission
+Feature: Validate notification permission
+Background:
+    * callonce read('this:login.feature@Login')
 
-@permissions
-Scenario Outline: Verify Core API permission: <method> <path>
+@Permissions @RAKAdmin
+Scenario Outline: notification: <method> <path>
     * def testData = 
     """
     {
+        userAccessToken: '#(userAccessToken)',
+        user: #(user),
         method: <method>, 
         path: <path>, 
         pathParams: '<pathParams>', 
@@ -12,10 +16,10 @@ Scenario Outline: Verify Core API permission: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: <requirePasscode>, 
         requireAnswer: <requireAnswer>, 
-        expectedStatus: <expectedStatus>
+        expectedStatus: <expectedRAKStatus_Admin>
     }
     """
-    * call read('this:permissions.feature@test') testData
+    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
     Examples:
         |  read('classpath:rakkar/feature/permissions/apis_data/apis_notification.csv')  |
 

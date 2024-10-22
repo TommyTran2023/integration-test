@@ -1,9 +1,9 @@
-Feature: Validate transaction permission
+Feature: Validate audit permission
 Background:
     * callonce read('this:login.feature@Login')
 
-@Permissions @RAKAdmin
-Scenario Outline: transaction: <method> <path>
+@Permissions @RAKViewer
+Scenario Outline: audit: <method> <path>
     * def testData = 
     """
     {
@@ -16,11 +16,11 @@ Scenario Outline: transaction: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: <requirePasscode>, 
         requireAnswer: <requireAnswer>, 
-        expectedStatus: <expectedRAKStatus_Admin>
+        expectedStatus: <expectedRAKStatus_Viewer>
     }
     """
     * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
     Examples:
-        |  read('classpath:rakkar/feature/permissions/apis_data/apis_transaction.csv')  |
+        |  read('classpath:rakkar/feature/permissions/apis_data/apis_audit.csv')  |
 
 

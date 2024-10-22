@@ -35,6 +35,8 @@
     },
     "adminUsername": "ID_CARD90VN342AD3AU",
     "adminUsername2": "PASSPORT234567334SG",
+    "member1":"PASSPORT2345678MEM1BZ",
+    "viewer1":"ID_CARDID63677VI1AT",
     "businessRegistrationId": "RaSI12345",
     "crossTenant":{
       "txnId": "bc4e9a1f-176f-4774-bdd1-c8476d20378b",

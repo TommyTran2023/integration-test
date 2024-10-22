@@ -1,4 +1,4 @@
-Feature: Validate core permission
+Feature: Validate advance-quorum permission
 Background:
     * callonce read('this:login.feature@Login')
 
@@ -7,6 +7,7 @@ Scenario Outline: advance-quorum: <method> <path>
     * def testData = 
     """
     {
+        userAccessToken: '#(userAccessToken)',
         user: #(user),
         method: <method>, 
         path: <path>, 
@@ -15,7 +16,7 @@ Scenario Outline: advance-quorum: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: <requirePasscode>, 
         requireAnswer: <requireAnswer>, 
-        expectedStatus: <expectedStatus>
+        expectedStatus: <expectedRAKStatus_Admin>
     }
     """
     * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData

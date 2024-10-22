@@ -11,6 +11,7 @@ function fn () {
 
     // Set svc as services folder
     karate.set('svc', 'classpath:services/')
+    karate.set('repSvc', 'classpath:services/REP/')
     karate.set('connectDB', 'classpath:rakkar/common/ConnectDB.feature@')
 
     // Check and create a data_{{env}}.json if not exist

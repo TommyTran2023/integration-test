@@ -125,6 +125,14 @@ Feature: Transfer
     And response.data.sourceName == "#(testData.transfer.withdraw.sourceName_hot)"
     And response.data.destinationName == "#(testData.transfer.withdraw.destinationName_hot)"
     And response.data.symbol == "#(testData.transfer.withdraw.symbol)"
+    * def destinationAddress = response.data.destinationAddress
+    * def sourceAddress = response.data.sourceAddress
+    * print response.data
+    * call read(svc + 'Quorums.feature@ViewRequestDetails') {requestId: #(response.data.requestId)}
+    * match response.status == 'success'
+    * match response.data.source.sourceAddress == sourceAddress
+    * match response.data.destination.destinationAddress == destinationAddress
+
 
     #Tcs: TRANSFER VAULT HOT TO COLD
   @RAKCON-11393 @Transfer_value_hot_to_cold

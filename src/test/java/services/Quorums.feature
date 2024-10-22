@@ -108,7 +108,7 @@ Feature: Advance-quorum
         * print data
         * call read(svc + 'advQuorumSvc.feature@RejectRequest') data
 
-    @ViewAccountPolicyRequest
+    @ViewAccountPolicyRequest @ViewRequestDetails
     Scenario: View account policy request
         * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
         * def data =

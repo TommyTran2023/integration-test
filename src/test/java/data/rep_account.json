@@ -1,0 +1,42 @@
+[
+    {
+        "role": "Operation",
+        "email": "at_operation1@rakkardigital.com",
+        "name": "REP Auto Test (Operation 1)"
+    },
+    {
+        "role": "Operation",
+        "email": "at_operation2@rakkardigital.com",
+        "name": "REP Auto Test (Operation 2)"
+    },
+    {
+        "role": "CustomerSuccess",
+        "email": "at_cs@rakkardigital.com",
+        "name": "REP Auto Test (CS)"
+    },
+    {
+        "role": "Compliance",
+        "email": "at_compliance@rakkardigital.com",
+        "name": "REP Auto Test (Compliance)"
+    },
+    {
+        "role": "Finance",
+        "email": "at_finance@rakkardigital.com",
+        "name": "REP Auto Test (Fiance)"
+    },
+    {
+        "role": "Product",
+        "email": "at_product@rakkardigital.com",
+        "name": "REP Auto Test (Product)"
+    },
+    {
+        "role": "ProductReviewTransaction",
+        "email": "at_productR@rakkardigital.com",
+        "name": "REP Auto Test (Product + Review)"
+    },
+    {
+        "role": "Security",
+        "email": "at_security@rakkardigital.com",
+        "name": "REP Auto Test (Security)"
+    }
+]

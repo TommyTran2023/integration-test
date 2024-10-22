@@ -42,7 +42,7 @@ Feature: Cancel Request
   @RAKCON-15489 @CancelInternalWithdraw
   Scenario: Cancel request - Cancel internal withdraw
     * def value = call read('this:Transfer.feature@Transfer_value_hot_to_hot')
-    * def requestId = value.response.data.requestId
+    * def requestId = value.response.data.id
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 
   @RAKCON-18739 @CancelEditGroupMembers @ignore

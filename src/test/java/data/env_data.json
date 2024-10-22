@@ -47,7 +47,8 @@
       "apiKey": "3ca9d140a80845b6a8f7338181d00d14",
       "accountId":"5c1b4db2ab1b4e2c9eb245169c8de4bf",
       "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf"
-    }
+    },
+    "repURL": "https://test-rep.thailaksa.net/"
   },
   "uat": {
     "baseURL": "https://sandbox-api.rakkardigital.com",
@@ -97,7 +98,8 @@
       "apiKey": "0ae7230600954bfc9d4c805faf28d353",
       "accountId":"f61c8e36da61491693208be475a5e3ae",
       "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae"
-    }
+    },
+    "repURL": "https://sandbox-rep.rakkardigital.com/"
   },
   "pt": {
     "baseURL": "https://pt-api.thailaksa.net",
@@ -159,6 +161,7 @@
       "apiKey": "86e575338c2c4964b9f644567f6e7d63",
       "accountId":"db9742a286f74736953818236084c6e4",
       "customerId":"db9742a2-86f7-4736-9538-18236084c6e4"
-    }
+    },
+    "repURL": "https://dev-rep.thailaksa.net/"
   }
 }

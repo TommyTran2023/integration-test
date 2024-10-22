@@ -60,7 +60,7 @@ Feature: Approval Request
   @RAKCON-11048 @ApprovalTransferLowValue
   Scenario: Approval - Transfer with low value
     * def value = call read('this:Transfer.feature@Transfer_value_hot_to_hot')
-    * def requestId = value.response.data.requestId
+    * def requestId = value.response.data.id
     * karate.call('this:ApprovalRequest.feature@ApproveRequestCommon')
 
   @RAKCON-11049 @ApprovalTransferMediumValue

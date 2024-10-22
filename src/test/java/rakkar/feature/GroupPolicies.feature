@@ -279,7 +279,8 @@ Feature: Group Policies
             "customerId":"#string",
             "type":"#string",
             "createdAt":"#string",
-            "updatedAt":"#string"
+            "updatedAt":"#string",
+            "workSpaceId": "#string"
         }
         """
         * match each response.data.data == expectedVaultDetail

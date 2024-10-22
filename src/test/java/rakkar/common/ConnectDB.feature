@@ -3,13 +3,12 @@ Feature: Connect to PostgreSQL
 
     Background:
         # use jdbc to validate
-        * def dbUrl = dbUrl + dbName
         * def coreConfig = 
         """
         { 
-            username: '#(coreUserName)', 
-            password: '#(corePass)', 
-            url: '#(dbUrl)', 
+            username: '#(dbConfig["core-svc"].DATABASE_USERNAME)', 
+            password: '#(dbConfig["core-svc"].DATABASE_PASSWORD)', 
+            url: '#(dbConfig["core-svc"].DATABASE_HOST)', 
             driverClassName: 'org.postgresql.Driver' 
         }
         """

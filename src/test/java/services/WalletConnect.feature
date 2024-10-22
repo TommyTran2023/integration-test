@@ -1519,3 +1519,18 @@ Feature: walletConnect
    	}
    	"""
    	* call read(svc + 'coreSvc.feature@VaultWcController_hardDelete') data
+
+	@GetFigmentPureQR
+	Scenario: Get Figment Pure QR code
+		* def qrCode = karate.exec(`node figment_wc.js ${privateKey.figmentEmail} ${privateKey.figmentPassword}`)
+		Then match qrCode == "#regex wc:.*"
+	
+	@GetFigmentLiquidStakingQR
+	Scenario: Get Figment Liquid Staking QR code
+		* def qrCode = karate.exec(`node figment_wc.js ${privateKey.figmentEmail} ${privateKey.figmentPassword} liquidStaking`)
+		Then match qrCode == "#regex wc:.*"
+
+	@GetOpenEdenQR
+	Scenario: Get Open Eden QR
+		* def qrCode = karate.exec('node openEden_wc.js')
+		Then match qrCode == "#regex wc:.*"

@@ -52,7 +52,7 @@ Feature: Reject Request
   @RAKCON-11064 @RejectTransferLow
     Scenario: Reject request - Reject transfer low value
     * def value = call read('this:Transfer.feature@Transfer_value_hot_to_hot')
-    * def requestId = value.response.data.requestId
+    * def requestId = value.response.data.id
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11791 @RejectTransferMediun

@@ -18,7 +18,7 @@ Feature: Get access token for user from cross workspace
     Given url testData.dev_workspace.url_dev + '/auth/authorization/respond-to-auth-challenge'
     * def responseTest1 = call read('CrossWorkSpaceAuthenticator.feature@GetSessionForLoginDev')
     * def Session1 = responseTest1.response.data.Session
-    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(testData.dev_workspace.userInfo.requesterUsername)', "ANSWER": '#(challengeData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
+    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(testData.dev_workspace.userInfo.requesterUsername)', "ANSWER": '#(privateKey.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST
     Then status 201
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
@@ -38,7 +38,7 @@ Feature: Get access token for user from cross workspace
     Given url testData.uat_workspace.url_uat + '/auth/authorization/respond-to-auth-challenge'
     * def responseTest2 = call read('CrossWorkSpaceAuthenticator.feature@GetSessionForLoginUat')
     * def Session2 = responseTest2.response.data.Session
-    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(testData.uat_workspace.userInfo.requesterUsername)', "ANSWER": '#(challengeData.common.challengeAnswerAuth)' }, "Session": '#(Session2)' }, "deviceName": "duncan" }
+    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(testData.uat_workspace.userInfo.requesterUsername)', "ANSWER": '#(privateKey.challengeAnswerAuth)' }, "Session": '#(Session2)' }, "deviceName": "duncan" }
     When method POST
     Then def APIStatus = response.status
     * assert (APIStatus == "success")
@@ -54,7 +54,7 @@ Feature: Get access token for user from cross workspace
     {
       customUrl: "#(testData.qa_workspace.url_qa)",
       userName: "#(testData.qa_workspace.userInfo.requesterUsername)",
-      customAnswer: "#(testData.qa_workspace.userInfo.challengeAnswerAuth)"
+      customAnswer: "#(privateKey.challengeAnswerAuth)"
     }
     """
     * call read(svc + 'Auth.feature@GetUserAccessToken') data

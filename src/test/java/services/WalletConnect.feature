@@ -486,20 +486,21 @@ Feature: walletConnect
 
 	  @WcRequestWeb3ConnectController_validateQRCode
 	Scenario: Wc Request Web3Connect Controller validate QR Code
-		 * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
-		 * def body = 'qrCode=' + qrCode + '&vaultId=' + vaultId
-		 * def data = 
-		 """
-		 {
-			headers: 
-			{ 
-			   authorization: '#(accessToken)',
-			   "Content-Type":"application/x-www-form-urlencoded; charset=utf-8"
-			},
-			body: '#(body)'
-		 }
-		 """
-		 * call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
+		* def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+		* def data = 
+		"""
+		{
+		headers: 
+		{ 
+		   authorization: '#(accessToken)',
+		},
+		body: {
+			qrCode: '#(qrCode)',
+			vaultId: '#(vaultId)'
+		}
+		}
+		"""
+		* call read(svc + 'walletConnectSvc.feature@WcRequestWeb3ConnectController_saveEntity') data
    
     #----------------------------------
    	@WcRequestWeb3ConnectController_approveRequestWeb3Connect
@@ -1518,3 +1519,18 @@ Feature: walletConnect
    	}
    	"""
    	* call read(svc + 'coreSvc.feature@VaultWcController_hardDelete') data
+
+	@GetFigmentPureQR
+	Scenario: Get Figment Pure QR code
+		* def qrCode = karate.exec(`node figment_wc.js ${privateKey.figmentEmail} ${privateKey.figmentPassword}`)
+		Then match qrCode == "#regex wc:.*"
+	
+	@GetFigmentLiquidStakingQR
+	Scenario: Get Figment Liquid Staking QR code
+		* def qrCode = karate.exec(`node figment_wc.js ${privateKey.figmentEmail} ${privateKey.figmentPassword} liquidStaking`)
+		Then match qrCode == "#regex wc:.*"
+
+	@GetOpenEdenQR
+	Scenario: Get Open Eden QR
+		* def qrCode = karate.exec('node openEden_wc.js')
+		Then match qrCode == "#regex wc:.*"

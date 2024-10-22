@@ -13,20 +13,19 @@ Feature: Common call from Auth services
 
     @GetApproverAccessToken
     Scenario: Get Approver Access Token
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.approvalUsername)', answer: '#(approverInfo.challengeAnswerAuth)'}
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(approverInfo.approvalUsername)', answer: '#(privateKey.challengeAnswerAuth)'}
         * def approvalAuthToken = response.data.AuthenticationResult.AccessToken
         * def approvalAccessToken = 'Bearer ' + approvalAuthToken
 
     @GetRequesterAccessToken
     Scenario: Get Requester Access Token
-        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(requesterInfo.requesterUsername)', answer: '#(requesterInfo.challengeAnswerAuth)'}
+        * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(requesterInfo.requesterUsername)', answer: '#(privateKey.challengeAnswerAuth)'}
         * def requesterAuthToken = response.data.AuthenticationResult.AccessToken
         * def requesterAccessToken = 'Bearer ' + requesterAuthToken
 
     @GetUserAccessToken
     Scenario: Get Requester Access Token
-        * def testData = read('classpath:data/data_test.json')
-        * def answer = typeof customAnswer != 'undefined' ? customAnswer : testData.common.challengeAnswerAuth
+        * def answer = typeof customAnswer != 'undefined' ? customAnswer : privateKey.challengeAnswerAuth
         * call read('this:Auth.feature@GetAccessTokenForLogin') {userName: '#(userName)', answer: '#(answer)'}
         * def userAccessToken = 'Bearer ' + response.data.AuthenticationResult.AccessToken
     
@@ -521,7 +520,7 @@ Feature: Common call from Auth services
             authorization: #(accessToken),
             body: 
             {
-                passcode : #(passcode) //string
+                passcode : #(passcode)
             }
         }
         """
@@ -536,7 +535,7 @@ Feature: Common call from Auth services
             authorization: #(accessToken),
             body: 
             {
-                passcode : #(passcode) //string
+                passcode : #(passcode)
             }
         }
         """

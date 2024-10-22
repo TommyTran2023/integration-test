@@ -17,7 +17,7 @@ Feature: Get access token for User from different customer
     Given path '/auth/authorization/respond-to-auth-challenge'
     * def responseTest1 = call read('DiffCustomerAuthenticator.feature@GetSessionForLogin_DifferentCompany')
     * def Session1 = responseTest1.response.data.Session
-    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(userOtherCustomerInfor.userName)', "ANSWER": '#(testData.common.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
+    * request { "respondToAuthChallengeRequest": { "ChallengeName": "CUSTOM_CHALLENGE", "ChallengeResponses": { "USERNAME": '#(userOtherCustomerInfor.userName)', "ANSWER": '#(privateKey.challengeAnswerAuth)' }, "Session": '#(Session1)' }, "deviceName": "duncan" }
     When method POST
     Then status 201
     * def requesterAuthToken = response.data.AuthenticationResult.AccessToken

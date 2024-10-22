@@ -9,7 +9,7 @@ Feature: Advance-quorum
             "requestId": "#(requestId)",
             "authorization": "#(approvalAccessToken)",
             "challengeAnswer": "#(challengeAnswerApprover)",
-            "passcode": "#(approverInfo.approverPasscode)",
+            "passcode": "#(approverPasscode)",
             "requestBody": "#(typeof requestBody == 'undefined' ? null : requestBody)"
         }
         """

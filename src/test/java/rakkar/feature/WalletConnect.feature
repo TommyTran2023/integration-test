@@ -92,8 +92,8 @@ Feature: Wallet Connect
 
     @RAKCON-29145 @WalletConnectToFigment
     Scenario: Validate Wallet Connect Figment QR Code
-        * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
-        * def qrCode = karate.exec('node figment_wc.js')
+        * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
+        * call read(svc + 'WalletConnect.feature@GetFigmentPureQR')
         * def data = 
         """
         {
@@ -106,7 +106,7 @@ Feature: Wallet Connect
 
     @RAKCON-29146 @GetFigmentAppInfomation
     Scenario: Get dApp Figment Information
-        * def wcInfo = callonce read('@WalletConnectToFigment')
+        * def wcInfo = call read('@WalletConnectToFigment')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
         * def expectedSchema =
@@ -125,8 +125,8 @@ Feature: Wallet Connect
     @RAKCON-29147 @WalletConnectToOpenEden @ignore
     Scenario: Validate Wallet Connect Open Eden QR Code
         # ignore because don't have Open Eden in UAT
-        * def vaults = callonce read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
-        * def qrCode = karate.exec('node openEden_wc.js')
+        * def vaults = call read(svc + 'WalletConnect.feature@VaultWcController_getListVaultSelection')
+        * call read(svc + 'WalletConnect.feature@GetOpenEdenQR')
         * def data = 
         """
         {
@@ -140,7 +140,7 @@ Feature: Wallet Connect
     @RAKCON-29148 @GetOpenEdenAppInfomation @ignore
     Scenario: Get dApp Open Eden Information
         # ignore because don't have Open Eden in UAT
-        * def wcInfo = callonce read('@WalletConnectToOpenEden')
+        * def wcInfo = call read('@WalletConnectToOpenEden')
         * call read(svc + 'WalletConnect.feature@WcApplicationController_findOneByUId') { id: '#(wcInfo.response.data.appId)' }
         Then match responseStatus == 200
         * def expectedSchema =
@@ -212,7 +212,7 @@ Feature: Wallet Connect
         * vaultHandle().addUserAsMemberToVaultQuorum(userId, vaultETH.response.data)
 
         # 2. Make connection
-        * def qrCode = karate.exec('node figment_wc.js')
+        * call read(svc + 'WalletConnect.feature@GetFigmentPureQR')
         * def cnn = 
         """
         {
@@ -256,16 +256,15 @@ Feature: Wallet Connect
         * assert verifyWCDisconnected(getwc)
 
 
-    @RAKCON-30427 @dAppAlreadyConnectedPopup
-    Scenario: Get vault to connect 
-        * def tommy  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.connecteddAppVaultId+'"}}]}'
-        * print tommy
+    @RAKCON-30427 @checkVaultDappConnected
+    Scenario: Get connected vault to connect 
+        * def validateConnected  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.connecteddAppVaultId+'"}}]}'
+        * print validateConnected
 
         * def data =
         """
         {
-
-            "where": #(tommy)
+            "where": '#(validateConnected)'
         }
         """
         * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
@@ -312,3 +311,19 @@ Feature: Wallet Connect
             And match each response.data.list contains '#(^expectedSchema)'
             And match each response.data.list[*].fbRaw contains '#(expectedFbRaw)'
             And assert response.data.list.length >0
+
+    @RAKCON-30546 @checkVaultNoDappConnected
+    Scenario: Get non-connected vault to connect 
+         * def validateConnected  = '{"AND":[{"isDeleted":{"BOOLEAN":false}},{"wcAppId":{"CONTAINS":"'+dataSet.figmentdAppId+'"}},{"status":{"IS":"ACTIVE"}},{"vaultId":{"CONTAINS":"'+dataSet.notConnecteddAppVaultId+'"}}]}'
+         
+         * def data =
+         """
+         {
+             "where": '#(validateConnected)'
+         }
+         """
+        * call read(svc + 'WalletConnect.feature@WcWeb3ConnectController_getListEntity') data
+        Then match responseStatus == 200   
+        And assert response.data.list.length == 0
+        And assert response.data.total == 0
+        

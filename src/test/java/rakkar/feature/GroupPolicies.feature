@@ -268,17 +268,19 @@ Feature: Group Policies
         * def expectedVaultDetail = 
         """
         {
-            "id":"##uuid",
+            "id":"#uuid",
             "vaultExternalId":"#string",
             "name":"#string",
             "hiddenOnUI":"#boolean",
-            "customerRefId":"##string",
+            "customerRefId":"#string",
+            "thirdPartyVaultName":"##string",
             "autoFuel":"#boolean",
             "status":"#string",
             "customerId":"#string",
             "type":"#string",
             "createdAt":"#string",
-            "updatedAt":"#string"
+            "updatedAt":"#string",
+            "workSpaceId": "#string"
         }
         """
         * match each response.data.data == expectedVaultDetail

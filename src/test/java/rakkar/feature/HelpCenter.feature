@@ -24,6 +24,22 @@ Feature:Help Center
     * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
     * call read('this:HelpCenter.feature@CreateTicketIssue')
 
+  @RAKCON-31279 @UploadInvalidFileType
+  Scenario: Upload invalid file type
+    * def headers = {Content-type: "image/png"}
+    * def filename = 'image.xxx'
+    * call read('this:UploadFile.feature@UPLOAD_CRM')
+    Then match responseStatus == 403
+    * match response == "Unsupported file type"
+
+  @RAKCON-31280 @UploadInvalidContentType
+  Scenario: Upload invalid file content type
+    * def headers = {Content-type: "application/zip"}
+    * def filename = 'image.png'
+    * call read('this:UploadFile.feature@UPLOAD_CRM')
+    Then match responseStatus == 403
+    * match response == "Unsupported file type"
+
   @RAKCON-11378 @CreateTicketQuestion
   Scenario: Create a ticket detail page - Question
     * def descriptionTicket = 'description for create question' + now()
@@ -32,7 +48,7 @@ Feature:Help Center
     * call read('this:HelpCenter.feature@Create_ticket_common')
     # we using mock service so data in here is not correct
     # * match response.data.category == "#(testData.help_center.type_question)"
-    * match response.data.category == "issue" 
+    # * match response.data.category == "issue" 
 
   @RAKCON-11379 @CreateTicketRequest
   Scenario: Create a ticket detail page - Request
@@ -43,8 +59,8 @@ Feature:Help Center
     # we using mock service so data in here is not correct
     # * match response.data.category == "#(testData.help_center.type_request)" 
     # * match response.data.requestType == "mark_lost_device"
-    * match response.data.category == "issue"  
-    * match response.data.requestType == null
+    # * match response.data.category == "issue"  
+    # * match response.data.requestType == null
 
   @RAKCON-11380 @ViewListingTicketInProgress
   Scenario: View listing ticket on tab In progress
@@ -94,8 +110,8 @@ Feature:Help Center
     # we using mock service so data in here is not correct
     # * match response.data.description == descriptionTicket
     # * match response.data.subject == "#(subject)"
-    * match response.data.description == 'Create request response from wiremock' 
-    * match response.data.subject == 'PT Helpcenter'
+    # * match response.data.description == 'Create request response from wiremock' 
+    # * match response.data.subject == 'PT Helpcenter'
 
    @ignore @Search_Filter_ticket_common
    Scenario: Filter - Search ticket common

@@ -89,7 +89,7 @@ Feature: Network Management
     * def body = {"internalNote" :'Note',"networkId": '#(profileId)', "vaultId": "#(vaultId)" }
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'network/networks/set-profile-routing'
     And request body
     When method POST
@@ -160,7 +160,7 @@ Feature: Network Management
     *  def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "counterpartyName": '#(counterName)' , "internalNote": 'Note', "counterpartyId": '#(counterId)',  "hasDefaultRouting": true }
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'network/networks/'+ profileId +'/connections'
     And request body
     When method POST
@@ -205,7 +205,7 @@ Feature: Network Management
     * def body = {"vaultName" :'#(vaultName)', "vaultId": '#(vaultId)', "hasDefaultRouting": true , "note": 'Note', }
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'network/networks/' + dataSet.networkID + '/connections/' + dataSet.connectionID + '/deposit-routing'
     And request body
     When method PUT
@@ -224,7 +224,7 @@ Feature: Network Management
     * def body = {"note": 'Note', }
     * call read('this:Common.feature@FIDO-Requester')
     * header challenge-answer = challengeAnswerRequest
-    * header passcode = requesterInfo.requesterPasscode
+    * header passcode = requesterPasscode
     Given path 'network/networks/' + dataSet.networkID + '/connections/' + dataSet.connectionID
     And request body
     When method DELETE

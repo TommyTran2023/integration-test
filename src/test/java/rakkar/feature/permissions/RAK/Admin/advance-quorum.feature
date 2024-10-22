@@ -1,10 +1,13 @@
 Feature: Validate core permission
+Background:
+    * callonce read('this:login.feature@Login')
 
-@permissions
-Scenario Outline: Verify Core API permission: <method> <path>
+@Permissions @RAKAdmin
+Scenario Outline: advance-quorum: <method> <path>
     * def testData = 
     """
     {
+        user: #(user),
         method: <method>, 
         path: <path>, 
         pathParams: '<pathParams>', 
@@ -15,7 +18,7 @@ Scenario Outline: Verify Core API permission: <method> <path>
         expectedStatus: <expectedStatus>
     }
     """
-    * call read('this:permissions.feature@test') testData
+    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
     Examples:
         |  read('classpath:rakkar/feature/permissions/apis_data/apis_advance-quorum.csv')  |
 

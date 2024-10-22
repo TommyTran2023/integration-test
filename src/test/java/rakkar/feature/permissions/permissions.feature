@@ -2,14 +2,6 @@
 Feature: Permission mapping
 
 Background: Read data
-    * def user = 
-    """
-    {
-        userName: '#(requesterInfo.requesterUsername)',
-        passcode: '#(requesterInfo.requesterPasscode)'
-    }
-    """
-    * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(user.userName)'}
     * def replacePathParams = 
     """
     function (path, params) {
@@ -52,24 +44,6 @@ Background: Read data
     }
     """
 
-    @permissions_test
-    Scenario Outline: Verify API permission: <method> <path>
-        * def newPath = replacePathParams(<path>, pathParams)
-        * def headers = convertHeaders(userAccessToken, <requirePasscode>, user.passcode, <requireAnswer>, user.userName)
-        * def queries = convertJsonParams(queryParams)
-        * def requestBody = convertJsonParams(requestBody)
-        Given url baseURL
-        * path newPath
-        * headers headers
-        * params queries
-        * request requestBody
-        When method <method>
-        # * assert successStatus()
-        Then status <expectedStatus>
-
-        Examples:
-            |  read('apis_core.csv')  |
-
     @test
     Scenario: Verify API permission
         * def newPath = replacePathParams(path, pathParams)
@@ -83,7 +57,7 @@ Background: Read data
         * request requestBody
         When method method
         # * assert successStatus()
-        Then status expectedStatus
+        Then match responseStatus == expectedStatus
 
 
     

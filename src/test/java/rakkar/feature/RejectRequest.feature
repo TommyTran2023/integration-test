@@ -34,19 +34,19 @@ Feature: Reject Request
   @RAKCON-11788 @RejectTransfer_Hot_to_Cold
   Scenario: Reject request - Reject transfer hot to cold
     * def value = call read('this:Transfer.feature@Transfer_value_hot_to_cold')
-    * def requestId = value.response.data.id
+    * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11789 @RejectTransfer_Cold_to_Hot
   Scenario: Reject request - Reject transfer cold to hot
     * def value = call read('this:Transfer.feature@Transfer_value_cold_to_hot')
-    * def requestId = value.response.data.id
+    * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11790 @RejectTransfer_Cold_to_Cold
   Scenario: Reject request - Reject transfer cold to cold
     * def value = call read('this:Transfer.feature@Transfer_value_cold_to_cold')
-    * def requestId = value.response.data.id
+    * def requestId = value.response.data.requestId
     * call read('this:RejectRequest.feature@RejectRequestCommon')
 
   @RAKCON-11064 @RejectTransferLow

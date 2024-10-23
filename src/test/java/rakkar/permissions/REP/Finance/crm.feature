@@ -20,8 +20,8 @@ Scenario Outline: crm: <method> <path>
         expectedStatus: <expectedREPStatus_Finance>
     }
     """
-    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
+    * call read('classpath:rakkar/permissions/permissions.feature@test') testData
     Examples:
-        |  read('classpath:rakkar/feature/permissions/apis_data/apis_crm.csv')  |
+        |  read('classpath:rakkar/permissions/apis_data/apis_crm.csv')  |
 
 

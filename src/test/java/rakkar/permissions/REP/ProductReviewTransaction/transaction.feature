@@ -20,8 +20,8 @@ Scenario Outline: transaction: <method> <path>
         expectedStatus: <expectedREPStatus_ProductReviewTransaction>
     }
     """
-    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
+    * call read('classpath:rakkar/permissions/permissions.feature@test') testData
     Examples:
-        |  read('classpath:rakkar/feature/permissions/apis_data/apis_transaction.csv')  |
+        |  read('classpath:rakkar/permissions/apis_data/apis_transaction.csv')  |
 
 

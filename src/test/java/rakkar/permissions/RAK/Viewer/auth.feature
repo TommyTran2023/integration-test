@@ -20,8 +20,8 @@ Scenario Outline: auth: <method> <path>
         expectedStatus: <expectedRAKStatus_Viewer>
     }
     """
-    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
+    * call read('classpath:rakkar/permissions/permissions.feature@test') testData
     Examples:
-        |  read('classpath:rakkar/feature/permissions/apis_data/apis_auth.csv')  |
+        |  read('classpath:rakkar/permissions/apis_data/apis_auth.csv')  |
 
 

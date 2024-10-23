@@ -20,8 +20,8 @@ Scenario Outline: advance-quorum: <method> <path>
         expectedStatus: <expectedREPStatus_Security>
     }
     """
-    * call read('classpath:rakkar/feature/permissions/permissions.feature@test') testData
+    * call read('classpath:rakkar/permissions/permissions.feature@test') testData
     Examples:
-        |  read('classpath:rakkar/feature/permissions/apis_data/apis_advance-quorum.csv')  |
+        |  read('classpath:rakkar/permissions/apis_data/apis_advance-quorum.csv')  |
 
 

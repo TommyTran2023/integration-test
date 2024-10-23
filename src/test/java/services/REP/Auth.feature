@@ -39,4 +39,3 @@ Feature: Login REP
   Scenario: Login REP as Security
     * def repUser = repUsers.find(x => x.role == 'Security')
     * call read('@Login_REP') {email: '#(repUser.email)'}
-    

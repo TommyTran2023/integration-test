@@ -1,5 +1,0 @@
-Feature: Login app as Rakkar Admin user
-
-@Login
-Scenario: Login as Admin Rakkar User
-    * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(requesterInfo.requesterUsername)', passcode: '#(requesterPasscode)'}

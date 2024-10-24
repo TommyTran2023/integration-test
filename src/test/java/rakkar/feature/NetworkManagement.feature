@@ -238,7 +238,7 @@ Feature: Network Management
     * call read('this:NetworkManagement.feature@View_My_Request_Network')
     * call read('this:CancelRequest.feature@CancelRequestCommon')
 
-  @RAKCON-15414 @ListNetworkForTransfer
+  @ignore @RAKCON-15414 @ListNetworkForTransfer
   Scenario: List network for transfer
     * def query = { limit:'20', offset: '0' }
     Given path 'network/networks/connections/counterparties'

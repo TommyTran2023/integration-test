@@ -88,6 +88,8 @@
     },
     "adminUsername": "PASSPORT123456",
     "adminUsername2": "ID_CARDsdsad223HK",
+    "member1":"",
+    "viewer1":"ID_CARD2342342TH",
     "businessRegistrationId": "AT123123",
     "crossTenant":{
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
@@ -119,6 +121,8 @@
     },
     "adminUsername": "PASSPORT181415",
     "adminUsername2": "PASSPORT893232",
+    "member1":"",
+    "viewer1":"",
     "dbUrl":"jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/"
   },
   "dev": {
@@ -151,6 +155,8 @@
     },
     "adminUsername": "PASSPORT12345SG",
     "adminUsername2": "ID_CARD123123TH",
+    "member1":"",
+    "viewer1":"",
     "businessRegistrationId": "7457438",
     "crossTenant":{
       "txnId": "24f7f355-042a-4137-a4e6-a7d49e3f0935",

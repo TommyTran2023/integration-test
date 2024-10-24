@@ -1,10 +1,9 @@
-@RAKCON-10583 @REP
+@RAKCON-31802 @REP
 Feature: All API in REP - Customer Management page
     Background:
-        * def repUser = read('classpath:data/rep_account.json').find(x => x.role == 'CustomerSuccess')
-        * callonce read(repSvc + 'Auth.feature@Login_REP') {email: '#(repUser.email)'}
+        * callonce read(repSvc + 'Auth.feature@LoginAsCustomerSuccess')
 
-    @GetCustomerListing
+    @RAKCON-31804 @GetCustomerListing
     Scenario: Get list customers
         * call read(repSvc + 'Customers.feature@CustomerREPController_getListCustomer')
         Then match responseStatus == 200 
@@ -37,7 +36,7 @@ Feature: All API in REP - Customer Management page
         Then match each response.data.customers[*] contains expCustomerSchema
         Then match each response.data.customers[*].currentAddress contains expAddress
 
-    @GetCustomerListing_Filters_SortByBUSINESS_REGISTRATION_ID
+    @RAKCON-31805 @GetCustomerListing_Filters_SortByBUSINESS_REGISTRATION_ID
     Scenario: Get list customers - Add filters - sort by BUSINESS_REGISTRATION_ID DESC
         * def data = 
         """
@@ -61,7 +60,7 @@ Feature: All API in REP - Customer Management page
         Then match each response.data.customers[*].currentCountryAddress == "Thailand"
         Then match each response.data.customers[*].status == "ACTIVE"
 
-    @GetWorkspace
+    @RAKCON-31806 @RAKCON-31807 @GetWorkspace
     Scenario Outline: Get <type> workspace
         * call read(repSvc + 'Customers.feature@CustomerREPController_getListWorkspace') {type: <type>}
         Then match responseStatus == 200

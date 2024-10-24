@@ -37,6 +37,16 @@
     "adminUsername2": "PASSPORT234567334SG",
     "member1":"PASSPORT2345678MEM1BZ",
     "viewer1":"ID_CARDID63677VI1AT",
+    "permission":{
+      "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf",
+      "admin1":"ID_CARD90VN342AD3AU",
+      "admin1UserId":"",
+      "member1":"PASSPORT2345678MEM1BZ",
+      "member1UserId":"",
+      "viewer1":"ID_CARDID63677VI1AT",
+      "viewer1UserId":"",
+      "passcode":"123123"
+    },
     "businessRegistrationId": "RaSI12345",
     "crossTenant":{
       "txnId": "bc4e9a1f-176f-4774-bdd1-c8476d20378b",
@@ -88,8 +98,16 @@
     },
     "adminUsername": "PASSPORT123456",
     "adminUsername2": "ID_CARDsdsad223HK",
-    "member1":"",
-    "viewer1":"ID_CARD2342342TH",
+    "permission":{
+      "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae",
+      "admin1":"PASSPORT123456",
+      "admin1UserId":"",
+      "member1":"",
+      "member1UserId":"",
+      "viewer1":"",
+      "viewer1UserId":"",
+      "passcode":"123123"
+    },
     "businessRegistrationId": "AT123123",
     "crossTenant":{
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
@@ -121,8 +139,16 @@
     },
     "adminUsername": "PASSPORT181415",
     "adminUsername2": "PASSPORT893232",
-    "member1":"",
-    "viewer1":"",
+    "permission":{
+      "customerId":"0f12c163-74d5-4ca0-9623-c3be3cb2ddeb",
+      "admin1":"PASSPORT123123HK",
+      "admin1UserId":"f1fe14c5-508d-4186-ad05-2d1ca5567b22",
+      "member1":"PASSPORT123126HK",
+      "member1UserId":"46e2f8f1-c3d1-467c-857e-ea0105281efc",
+      "viewer1":"PASSPORT123125HK",
+      "viewer1UserId":"f1373737-346a-440e-86d4-04c6819e8b4b",
+      "passcode":"031191"
+    },
     "dbUrl":"jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/"
   },
   "dev": {
@@ -155,8 +181,16 @@
     },
     "adminUsername": "PASSPORT12345SG",
     "adminUsername2": "ID_CARD123123TH",
-    "member1":"",
-    "viewer1":"",
+    "permission":{
+      "customerId":"",
+      "admin1":"",
+      "admin1UserId":"",
+      "member1":"",
+      "member1UserId":"",
+      "viewer1":"",
+      "viewer1UserId":"",
+      "passcode":""
+    },
     "businessRegistrationId": "7457438",
     "crossTenant":{
       "txnId": "24f7f355-042a-4137-a4e6-a7d49e3f0935",

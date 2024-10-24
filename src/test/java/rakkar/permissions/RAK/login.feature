@@ -1,13 +1,27 @@
 Feature: Login app as Rakkar Admin user
+Background:
+  * def loginRAK = 
+  """
+  function(userName, pass, userId, secret) {
+    var requestIv = userId.replaceAll('-','').slice(0, 16);
+    var passcode = karate.exec(`node aes.js encrypt ${passcode} ${secret} ${requestIv}`)
+
+    var userAccessToken = karate.callSingle(svc + 'Auth.feature@GetUserAccessToken', { userName: permission.admin1 }).userAccessToken
+    karate.set('userAccessToken', userAccessToken)
+
+    karate.set('user', { userName: userName, passcode: passcode })
+  }
+  """
 
     @LoginAsAdmin
   Scenario: Login as Admin Rakkar User
-    * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(requesterInfo.requesterUsername)', passcode: '#(requesterPasscode)'}
+    * print permission.admin1, permission.passcode, permission.admin1UserId, privateKey.secret
+    * eval loginRAK(permission.admin1, permission.passcode, permission.admin1UserId, privateKey.secret)
 
     @LoginAsMember
   Scenario: Login as Member Rakkar User
-    * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(member1)', passcode: '#(requesterPasscode)'}
+    * eval loginRAK(permission.member1, permission.passcode, permission.member1UserId, privateKey.secret)
 
     @LoginAsViewer
   Scenario: Login as Viewer Rakkar User
-    * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(viewer1)', passcode: '#(requesterPasscode)'}
+    * eval loginRAK(permission.viewer1, permission.passcode, permission.viewer1UserId, privateKey.secret)

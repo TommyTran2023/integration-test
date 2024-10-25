@@ -1,0 +1,12 @@
+method,path,pathParams,queryParams,requestBody,requirePasscode,requireAnswer,expectedREPStatus_Operation,expectedREPSchema_Operation,expectedREPStatus_Product,expectedREPSchema_Product,expectedREPStatus_CustomerSuccess,expectedREPSchema_CustomerSuccess,expectedREPStatus_Compliance,expectedREPSchema_Compliance,expectedREPStatus_Finance,expectedREPSchema_Finance,expectedREPStatus_ProductReviewTransaction,expectedREPSchema_ProductReviewTransaction,expectedREPStatus_Security,expectedREPSchema_Security,expectedRAKStatus_Admin,expectedRAKSchema_Admin,expectedRAKStatus_Member,expectedRAKSchema_Member,expectedRAKStatus_Viewer,expectedRAKSchema_Viewer
+GET,'/notification/',"{}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+POST,'/notification/notifications',"{}","{}","{""token"":""8qlobgbucx5"",""deviceId"":""2wcdojql8tt""}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+GET,'/notification/notifications',"{}","{""limit"":10,""offset"":0,""sort"":""DESC"",""status"":""fiwo5f9m18k""}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+POST,'/notification/notifications/settings',"{}","{}","{""transactions"":""s3o0rnnflds"",""policy"":""74t2rcgdez3"",""usersAndDevices"":""owftek22pp"",""announcements"":true}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+GET,'/notification/notifications/settings',"{}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+POST,'/notification/notifications/replace-token',"{}","{}","{""token"":""bhcudnre95c""}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+PUT,'/notification/notifications/read',"{}","{}","{""id"":""uos9qpcqg4""}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+GET,'/notification/notifications/unread-count',"{}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+GET,'/notification/notifications/by-notification-id/{notificationId}',"{""notificationId"":""3qmoq97trk1""}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+DELETE,'/notification/notifications/{notificationId}',"{""notificationId"":""whznbn8jg0o""}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,
+GET,'/notification/health',"{}","{}","{}",false,false,200,,200,,200,,200,,200,,200,,200,,200,,200,,200,

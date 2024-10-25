@@ -49,6 +49,22 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             return balance
         }
         """
+        * def waitForBalanceUpdated = 
+        """
+        function (vaultId, walletId, expectedBalance) {
+            var total_destination_afterTransfer = 0
+            var retry = 12
+
+            do {
+                java.lang.Thread.sleep(10000); 
+                total_destination_afterTransfer = karate.call(svc +'Wallet.feature@GetTokenDetails', { vaultId: vaultId, walletId: walletId }).response.data.available
+                retry --
+            }
+            while((retry > 0) && (total_destination_afterTransfer != `${expectedBalance.toFixed(5)}`))
+
+            return parseFloat(total_destination_afterTransfer).toFixed(5)
+        }
+        """
 
     @RAKCON-19300
     Scenario: WITHDRAW - Transfer WARM to WARM - CROSS workspace
@@ -538,12 +554,10 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer.toFixed(5) == (available - amount_low - networkFee).toFixed(5)
 
         # 13. Verify balance of destination && transaction show in destination
-        * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
-        * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
         # --- Verify the balance of source is updated correctly
         * def totalExpectedDestination = amount_low + parseFloat(destinationAmountBefore)
-        * match total_destination_afterTransfer.toFixed(5) == totalExpectedDestination.toFixed(5)
+        * def total_destination_afterTransfer = waitForBalanceUpdated(destinationId_warm, walletId_destination, totalExpectedDestination)
+        * match total_destination_afterTransfer == totalExpectedDestination.toFixed(5)
 
     @RAKCON-19332
     Scenario: REBALANCE - Transfer WARM to COLD - SAME company
@@ -663,10 +677,8 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * match available_source_afterTransfer.toFixed(5) == (available - amount_low - networkFee).toFixed(5)
 
         # 13. Verify balance of destination && transaction show in destination
-        * def query_detail = { vaultId :'#(destinationId_warm)', walletId: '#(walletId_destination)'}
-        * def getDetailTokenDestination = call read(svc +'Wallet.feature@GetTokenDetails') query_detail
-        * def total_destination_afterTransfer = parseFloat(getDetailTokenDestination.response.data.available)
-        # --- Verify the balance of source is updated correctly
         * def totalExpectedDestination = amount_low + parseFloat(destinationAmountBefore)
-        * match total_destination_afterTransfer.toFixed(5) == totalExpectedDestination.toFixed(5)
+        * def total_destination_afterTransfer = waitForBalanceUpdated(destinationId_warm, walletId_destination, totalExpectedDestination)
+        # --- Verify the balance of source is updated correctly
+        * match total_destination_afterTransfer == totalExpectedDestination.toFixed(5)
 

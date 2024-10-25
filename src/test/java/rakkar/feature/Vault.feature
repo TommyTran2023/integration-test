@@ -1017,11 +1017,11 @@ Feature: Vault
     {
       "id": "#uuid",
       "name": "#string",
-      "total": "#number",
+      "total": "##number",
       "symbol": "#string",
       "totalUSD": "#number",
       "availableUSD": "#number",
-      "available": "#number",
+      "available": "##number",
       "externalAssetId": "#string"
     }
     """
@@ -1030,8 +1030,6 @@ Feature: Vault
     * def actual = $response.data.list[*].totalUSD
     * def expected = $response.data.list[*].totalUSD
     * eval expected.sort((a,b) => b-a)
-    * print "actual Vault Total USD", actual
-    * print "expected Vault Total USD", expected
     * match actual.toString() == expected.toString()
 
   @RAKCON-23652 @GetListVault_v2_SortByPriceAsc

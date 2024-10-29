@@ -114,22 +114,24 @@ function fn(){
             return generateVaultName()
         },
 
-        createStandardVault: function(memberIds, type){
+        createStandardVault: function(){
+            var listUsers = karate.call(svc + 'Auth.feature@GetListUsers').vaultMemberList
+            var bio = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
             var data = {
                 "memberRequiredApprove":[],
                 "name": generateVaultName(),
                 "hasRequiredApprover":false,
-                "memberIds":memberIds,
-                "type":type,
-                "approverNumber": memberIds.length,
+                "memberIds":listUsers,
+                "type":"HOT_WALLET",
+                "approverNumber": 2,
                 "note":"AT Create Test Data"
             }
 
-            var vault = karate.call(svc + 'Vault.feature@CreateVault', {requestBody:data})
+            var vault = karate.call(svc + 'Vault.feature@CreateVault', {requestBody:data, authorization: bio.requesterAccessToken, challengeAnswerRequest: bio.challengeAnswerRequest})
             vault = karate.call(svc + 'Vault.feature@GetVaultDetail', {vaultId:vault.response.data.id})
             
             // return vault detail
-            return vault.response
+            return vault.response.data
         },
 
         archiveVault: function(vaultId){

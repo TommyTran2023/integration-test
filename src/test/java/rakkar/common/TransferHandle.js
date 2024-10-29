@@ -10,7 +10,8 @@ function fn(){
         }
         var estimatedFee = karate.call(svc + 'Transaction.feature@GetEstimatedFee', body_estimate_fee)
         
-        return (estimatedFee.response.data.totalToUSD / 10)
+        // return (estimatedFee.response.data.totalToUSD / 10)
+        return estimatedFee.response.data
     }
 
     function getTiersSigner(){
@@ -24,14 +25,16 @@ function fn(){
     }
 
     function calculateLimitTransfer(tokenSymbol, destinationType, sourceType, sourceId, destinationId, amount){
-        var estimatedFee = getEstimateFee(tokenSymbol, destinationType, sourceType, sourceId, destinationId, amount)
+        var estimatedFeeResponse = getEstimateFee(tokenSymbol, destinationType, sourceType, sourceId, destinationId, amount)
+        var estimatedFee = estimatedFeeResponse.totalToUSD / 10
         var tier_signer = getTiersSigner()
         
         return {
             tokenPrice: estimatedFee,
             amount_low: Math.round(tier_signer.limit_low / estimatedFee),
             amount_medium: Math.round(tier_signer.limit_medium / estimatedFee),
-            amount_high: Math.round(tier_signer.limit_high / estimatedFee)
+            amount_high: Math.round(tier_signer.limit_high / estimatedFee),
+            estimatedFeeData: estimatedFeeResponse
         }
     }
 
@@ -39,12 +42,13 @@ function fn(){
         createTransferRequest: function(txnInfo){
             //tier: 1-small, 2-medium, 3-high
             var amount = 0
-            var estimatedFee = calculateLimitTransfer(txnInfo.tokenSymbol, txnInfo.destinationType, txnInfo.sourceType, txnInfo.sourceId, txnInfo.destinationId, 10)
+            var tokenInfo = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword: txnInfo.symbol}).response.data.tokens[0]
+            var estimatedFee = calculateLimitTransfer(tokenInfo.externalAssetId, txnInfo.destinationType, txnInfo.sourceType, txnInfo.sourceId, txnInfo.destinationId, txnInfo.amount)
 
             var biometric = karate.call(svc + 'Biometric.feature@RequesterDoBiometric')
             var transferData = {
                 challengeAnswerRequest: biometric.challengeAnswerRequest,
-                tokenId : txnInfo.tokenId,
+                tokenId : tokenInfo.id,
                 source : {
                     type: txnInfo.sourceType,
                     id: txnInfo.sourceId
@@ -53,11 +57,11 @@ function fn(){
                     type: txnInfo.destinationType,
                     id: txnInfo.destinationId
                 },
-                amount : 11,
+                amount : txnInfo.amount,
                 operation : "TRANSFER",
-                fee : txnInfo.fee,
-                feeType : txnInfo.tokenSymbol,
-                totalEstimatedFee : txnInfo.fee,
+                fee : estimatedFee.estimatedFeeData.medium,
+                feeType : tokenInfo.nativeAsset,
+                totalEstimatedFee : estimatedFee.estimatedFeeData.medium,
                 feeLevel : "MEDIUM",
                 note : 'Rebalancing',
                 treatAsGrossAmount : true
@@ -87,6 +91,16 @@ function fn(){
             }
 
             var txnRequest = karate.call(svc + 'Transaction.feature@CreateTransaction', transferData) 
+
+            var bio = karate.call(svc + 'Biometric.feature@ApproverDoBiometric')
+            var data = {
+                requestId: txnRequest.response.data.requestId,
+                approvalAccessToken: bio.approvalAccessToken, 
+                challengeAnswerApprover: bio.challengeAnswerApprover,
+                passcode: approverPasscode
+            }
+            karate.call(svc + 'Quorums.feature@ApproveRequest', data)
+            
             return txnRequest.response
         }
     }

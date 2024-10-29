@@ -540,7 +540,6 @@ Feature: Transaction
       """
       * def vaultTransactions  = checkAssetActivationTransaction("COMPLETED", vault.data.id)
       * match vaultTransactions.transactions[*].type contains any "ENABLE_ASSET"
-      * print vaultTransactions
 
       # 6. View details of Non-native wallet successfully
       * def usdcWallet = karate.call(svc + 'Vault.feature@GetVaultDetail', {vaultId: txnInfo.destinationId}).response.data.wallets.find(x => x.symbol == nonNativeToken).id

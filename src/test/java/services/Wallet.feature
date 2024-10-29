@@ -150,7 +150,9 @@ Feature: Wallet
         {
             authorization: #(accessToken),
             vaultId: #(vaultId),
-            tokenIds: '#(tokenIds)'
+            body: {
+                tokenIds: '#(tokenIds)'
+            }
         }
         """
         * call read(svc + 'coreSvc.feature@CheckAssetPreRequisite') data

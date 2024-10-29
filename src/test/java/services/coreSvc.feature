@@ -329,7 +329,7 @@ Feature: All api call to core services
   Scenario: Check Asset Pre Requisite
     Given path 'core/wallet/assets-pre-requisite/'+vaultId
     * header Authorization = authorization
-    * request tokenIds = tokenIds
+    * request body
     When method POST
 
     @GetListTokenStake

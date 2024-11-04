@@ -70,7 +70,6 @@ Background: Read data
         * def user1 = response.data ? (response.data.users && response.data.users.length > 0 ? response.data.users[0].userId : '') : ''
         * def user2 = response.data ? (response.data.users && response.data.users.length > 1 ? response.data.users[1].userId : '') : ''
         * def newPath = replacePathParams(path, pathParams)
-        * print requireAnswer
         * def headers = convertHeaders(userAccessToken, requirePasscode, user.passcode, requireAnswer, user.userName)
         * def queries = convertJsonParams(queryParams)
         * def requestBody = convertJsonParams(replaceTestData(requestBody,user1,user2))

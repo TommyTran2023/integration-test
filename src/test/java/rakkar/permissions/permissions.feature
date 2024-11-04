@@ -62,7 +62,7 @@ Background: Read data
         * def data =
         """
         {
-            authorization: '#(requesterAccessToken)',
+            authorization: '#(userAccessToken)',
             body: {"isGetAll":true}
         }
         """

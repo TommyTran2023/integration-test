@@ -8,7 +8,6 @@ Background:
 
     var userAccessToken = karate.callSingle(svc + 'Auth.feature@GetUserAccessToken', { userName: permission.admin1 }).userAccessToken
     karate.set('userAccessToken', userAccessToken)
-    karate.set('requesterAccessToken', userAccessToken)
 
     karate.set('user', { userName: userName, passcode: passcode })
   }

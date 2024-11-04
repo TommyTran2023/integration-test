@@ -2,7 +2,7 @@ Feature: Validate notification permission
 Background:
     * callonce read('classpath:rakkar/permissions/RAK/login.feature@LoginAsViewer')
 
-@Permissions @RAKViewer
+@notification @Permissions @RAKViewer
 Scenario Outline: notification: <method> <path>
     * def testData = 
     """

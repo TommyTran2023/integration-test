@@ -2,7 +2,7 @@ Feature: Validate auth permission
 Background:
     * callonce read('classpath:rakkar/permissions/RAK/login.feature@LoginAsMember')
 
-@Permissions @RAKMember
+@auth @Permissions @RAKMember
 Scenario Outline: auth: <method> <path>
     * def testData = 
     """

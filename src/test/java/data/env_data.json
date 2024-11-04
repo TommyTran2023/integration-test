@@ -149,7 +149,8 @@
       "viewer1UserId":"f1373737-346a-440e-86d4-04c6819e8b4b",
       "passcode":"031191"
     },
-    "dbUrl":"jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/"
+    "dbUrl":"jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/",
+    "repURL": "https://pt-rep.thailaksa.net/"
   },
   "dev": {
     "baseURL": "https://dev-api.thailaksa.net",

@@ -2,7 +2,7 @@ Feature: Validate report permission
 Background:
     * callonce read('classpath:rakkar/permissions/RAK/login.feature@LoginAsViewer')
 
-@Permissions @RAKViewer
+@reports @Permissions @RAKViewer
 Scenario Outline: report: <method> <path>
     * def testData = 
     """

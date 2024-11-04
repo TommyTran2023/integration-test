@@ -2,7 +2,7 @@ Feature: Validate wallet connect permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsFinance')
 
-@Permissions @REPFinance
+@wallet-connect @Permissions @REPFinance
 Scenario Outline: wallet connect: <method> <path>
     * def testData = 
     """

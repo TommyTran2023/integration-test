@@ -2,7 +2,7 @@ Feature: Validate staking permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsCompliance')
 
-@Permissions @REPCompliance
+@staking @Permissions @REPCompliance
 Scenario Outline: staking: <method> <path>
     * def testData = 
     """

@@ -2,7 +2,7 @@ Feature: Validate advance-quorum permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsFinance')
 
-@Permissions @REPFinance
+@advance-quorum @Permissions @REPFinance
 Scenario Outline: advance-quorum: <method> <path>
     * def testData = 
     """

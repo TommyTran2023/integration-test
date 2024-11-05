@@ -2,7 +2,7 @@ Feature: Validate transaction permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsProductReviewTransaction')
 
-@Permissions @REPProductReviewTransaction
+@transaction @Permissions @REPProductReviewTransaction
 Scenario Outline: transaction: <method> <path>
     * def testData = 
     """

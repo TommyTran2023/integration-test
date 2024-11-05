@@ -2,7 +2,7 @@ Feature: Validate crm permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsCustomerSuccess')
 
-@Permissions @REPCustomerSuccess
+@crm @Permissions @REPCustomerSuccess
 Scenario Outline: crm: <method> <path>
     * def testData = 
     """

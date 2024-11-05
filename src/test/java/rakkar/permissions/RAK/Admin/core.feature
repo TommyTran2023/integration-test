@@ -2,7 +2,7 @@ Feature: Validate core permission
 Background:
     * callonce read('classpath:rakkar/permissions/RAK/login.feature@LoginAsAdmin')
 
-@Permissions @RAKAdmin
+@core @Permissions @RAKAdmin
 Scenario Outline: core: <method> <path>
     * def testData = 
     """
@@ -17,7 +17,7 @@ Scenario Outline: core: <method> <path>
         requirePasscode: <requirePasscode>, 
         requireAnswer: <requireAnswer>, 
         expectedSchema: <expectedRAKSchema_Admin>,
-        expectedStatus: <expectedRAKStatus_Admin>
+        expectedStatus: <expectedRAKStatus_Admin>,
     }
     """
     * call read('classpath:rakkar/permissions/permissions.feature@test') testData

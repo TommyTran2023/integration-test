@@ -2,7 +2,7 @@ Feature: Validate core permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsCompliance')
 
-@Permissions @REPCompliance
+@core @Permissions @REPCompliance
 Scenario Outline: core: <method> <path>
     * def testData = 
     """

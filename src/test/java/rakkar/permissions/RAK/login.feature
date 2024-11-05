@@ -4,7 +4,7 @@ Background:
   """
   function(userName, pass, userId, secret) {
     var requestIv = userId.replaceAll('-','').slice(0, 16);
-    var passcode = karate.exec(`node aes.js encrypt ${passcode} ${secret} ${requestIv}`)
+    var passcode = karate.exec(`node aes.js encrypt ${pass} ${secret} ${requestIv}`)
 
     var userAccessToken = karate.callSingle(svc + 'Auth.feature@GetUserAccessToken', { userName: permission.admin1 }).userAccessToken
     karate.set('userAccessToken', userAccessToken)

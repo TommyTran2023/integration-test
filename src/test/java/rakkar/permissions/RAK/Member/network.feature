@@ -2,7 +2,7 @@ Feature: Validate network permission
 Background:
     * callonce read('classpath:rakkar/permissions/RAK/login.feature@LoginAsMember')
 
-@Permissions @RAKMember
+@network @Permissions @RAKMember
 Scenario Outline: network: <method> <path>
     * def testData = 
     """

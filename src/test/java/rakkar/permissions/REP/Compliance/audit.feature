@@ -2,7 +2,7 @@ Feature: Validate audit permission
 Background:
     * callonce read('classpath:rakkar/permissions/REP/login.feature@LoginAsCompliance')
 
-@Permissions @REPCompliance
+@audit @Permissions @REPCompliance
 Scenario Outline: audit: <method> <path>
     * def testData = 
     """

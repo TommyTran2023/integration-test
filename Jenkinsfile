@@ -46,23 +46,27 @@ pipeline {
                             BRANCH = "main"
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
+                            XRAY_ENV = "PRODUCTION"
                     }
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'SANDBOX'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
+                            XRAY_ENV = "SANDBOX"
                             sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
+                            XRAY_ENV = "DEV"
                             sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
                             BRANCH = "sit"
                             KARATE_ENV = "qa"
                             HEALTH_CHECK_PATH = "sit"
+                            XRAY_ENV = "TEST"
                             sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
@@ -194,7 +198,7 @@ pipeline {
                               },
                               "xrayFields": {
                                   "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
+                                  "environments": ["${XRAY_ENV}"]
                               }
                             }""",
                             inputTestInfoSwitcher: 'fileContent',
@@ -207,11 +211,11 @@ pipeline {
                                   "issuetype": {
                                     "id": "10035"
                                   },
-                                  "labels" : ["${ENV}"]
+                                  "labels" : ["${XRAY_ENV}"]
                                 },
                               "xrayFields": {
                                   "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
+                                  "environments": ["${XRAY_ENV}"]
                               }
                             }""",
                             inputInfoSwitcher: 'fileContent',

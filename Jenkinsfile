@@ -26,7 +26,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENV', choices: 'SIT\nUAT\nDEV', description: 'Test Environment [SIT, UAT, DEV]')
+        choice(name: 'ENV', choices: 'TEST\nSANDBOX\nDEV', description: 'Test Environment [TEST, SANDBOX, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }
@@ -47,7 +47,7 @@ pipeline {
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
                     }
-                    else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
+                    else if (env.BRANCH_NAME == 'uat' || params.ENV == 'SANDBOX'){
                             BRANCH = "uat"
                             KARATE_ENV = "uat"
                             HEALTH_CHECK_PATH = "uat"
@@ -97,11 +97,6 @@ pipeline {
                         slackSend(channel: "${SLACK_CHANNEL}",
                             color: 'danger',
                             message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
-
-                        // office365ConnectorSend color: '#a82e2e',
-                        //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
-                        //     status: 'FAILED',
-                        //     webhookUrl: "${TEAM_URL}"
 
                         error("Abort the build because services healthcheck return error")
                     }
@@ -235,11 +230,6 @@ pipeline {
                 slackSend(channel: "${SLACK_CHANNEL}",
                     color: 'good',
                     message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
-
-                // office365ConnectorSend color: '#4b8869',
-                //     message: "${successMsg}<br>${passedSummary}",
-                //     status: 'PASSED',
-                //     webhookUrl: "${TEAM_URL}"
             }
         }
 
@@ -258,20 +248,6 @@ pipeline {
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                // MS Teams limitation
-                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
-
-                echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
-                echo "Failed Details: " + failedDetailsTeams
-
-                // office365ConnectorSend color: '#a82e2e',
-                //     message: "${buildSummary}<br>${failedSummary}",
-                //     status: 'FAILED',
-                //     webhookUrl: "${TEAM_URL}",
-                //     factDefinitions:[
-                //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
-                //         [ name: "Error", template: "${failedDetailsTeams}"]
-                //     ]
             }
         }
     }

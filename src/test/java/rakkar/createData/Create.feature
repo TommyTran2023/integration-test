@@ -1,4 +1,4 @@
-@Create @ignore
+@Create 
 Feature: Create Vault data
     
   Background:
@@ -6,7 +6,7 @@ Feature: Create Vault data
     * callonce read(svc + 'ReadData.feature@ReadEnumFile')
     * callonce read(svc + 'Auth.feature@GetRequesterInfo')
     * callonce read(svc + 'Auth.feature@GetListUsers')
-    * def str_random = ' 100092'
+    * def str_random = ' 061124'
     * def getQuorumList = 
     """
         function(type){
@@ -309,19 +309,33 @@ Feature: Create Vault data
 
     # 1. Add whitelist folder
         * def name = testData.externalWhitelist + str_random + '5'
-        * call read(svc + 'Whitelist.feature@CreateWhitelist') {name:'#(name)', type:#(Const.WhitelistType.EXTERNAL)}
+        * def data = 
+        """
+        {
+            name:'#(name)', 
+            type: 'external', 
+            walletHost:'SELF_HOSTED',
+            businessName : 'Tommy Business',
+            countryCode : "Hong Kong S.A.R.",
+            purposeTransfer : 'Company expense',
+            businessAddress : "Taiwan Tower",
+            relationship : "Service Provider",
+            sourceFunds : 'Capital for business operations'
+        }
+        """
+        * call read(svc + 'Whitelist.feature@CreateWhitelistFolder') data
         Then match responseStatus == 201
         * def folderId = response.data.id
     
     # 2. Add whitelist address (get from step 1)
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
-        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(token.id), note: 'AT Hot External Whitelist', address:#(testData.crossTenant.externalAddress)}
+        * call read(svc + 'Whitelist.feature@AddWhitelistAddress') {folderId:#(folderId), tokenId: #(token.id), note: 'AT Hot External Whitelist', address:#(testData.crossTenant.externalAddress), walletMethod:'SELF_ATTESTATION'}
         Then match responseStatus == 201
 
     # 3. Get request Id
         * call read(svc + 'Biometric.feature@ApproverDoBiometric')
         * call read(svc + 'Quorums.feature@Approver_GetApprovalList') {status:[#(Const.ApprovalStatus.PENDING)]}
-        * def requestId = karate.jsonPath(response.data.records, "$..[?(@.displayName == '"+testData.externalAddress+"')]")[0].id
+        * def requestId = karate.jsonPath(response.data.records, "$..[?(@.displayName == '"+testData.crossTenant.externalAddress+"')]")[0].id
         
     # 4. Approve request
         * call read('Create.feature@ApproveRequest') {requestId: #(requestId)}

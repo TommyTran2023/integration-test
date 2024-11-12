@@ -6,26 +6,26 @@
     "openAPI_doc": "https://developer.rakkardigital.com",
     "crmUploadUrl": "https://test-crm.thailaksa.net/api/v2/uploads",
     "requesterInfo": {
-      "requesterUsername": "PASSPORT234567891AHK",
+      "requesterUsername": "ID_CARD3422342HK",
       "requesterPasscode": "123123",
-      "userId": "7de70f79-821e-4824-bac8-bbf56c12340a",
-      "idNumber": "234567891A", 
+      "userId": "3987fd1b-9114-474a-a7de-b6e265d5445c",
+      "idNumber": "3422342", 
+      "identityType":1,
+      "country": "HK",
+      "postalCode": "",
+      "phoneNumber": "+6593443244",
+      "dateOfBirth": "2024-11-11"
+    },
+    "approverInfo": {
+      "approvalUsername": "ID_CARD324324HK",
+      "approverPasscode": "123123",
+      "userId": "f54181e5-7701-4d5e-ba3a-ce6b1c5aae9b",
+      "idNumber": "324324",
       "identityType":2,
       "country": "HK",
       "postalCode": "",
-      "phoneNumber": "+6592888110",
-      "dateOfBirth": "2024-09-01"
-    },
-    "approverInfo": {
-      "approvalUsername": "PASSPORT23456789322AX",
-      "approverPasscode": "123123",
-      "userId": "e4e7c158-9a63-40bf-aaa3-b642651b30ff",
-      "idNumber": "786567772",
-      "identityType":2,
-      "country": "VN",
-      "postalCode": "100000",
-      "phoneNumber": "+84929191911",
-      "dateOfBirth": "2024-06-11"
+      "phoneNumber": "+6592343411",
+      "dateOfBirth": "2024-11-11"
     },
     "userOtherCustomerInfor": {
       "userName": "PASSPORT2345678CO",
@@ -33,10 +33,10 @@
       "vaultId": "8c5a9c41-f7d4-46b0-95e3-b4777a884e14",
       "walletId": "f8fa988e-a039-493e-a13c-66d0a9600274"
     },
-    "adminUsername": "ID_CARD90VN342AD3AU",
-    "adminUsername2": "PASSPORT234567334SG",
-    "member1":"PASSPORT2345678MEM1BZ",
-    "viewer1":"ID_CARDID63677VI1AT",
+    "adminUsername": "PASSPORT34134AHK",
+    "adminUsername2": "ID_CARD23423AQHK",
+    "member1":"PASSPORT32423HK",
+    "viewer1":"ID_CARD341234HK",
     "permission":{
       "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf",
       "admin1":"ID_CARD90VN342AD3AU",
@@ -47,7 +47,7 @@
       "viewer1UserId":"",
       "passcode":"123123"
     },
-    "businessRegistrationId": "RaSI12345",
+    "businessRegistrationId": "2AT3",
     "crossTenant":{
       "txnId": "bc4e9a1f-176f-4774-bdd1-c8476d20378b",
       "vaultId": "8c5a9c41-f7d4-46b0-95e3-b4777a884e14",

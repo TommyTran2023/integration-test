@@ -51,3 +51,16 @@ Feature: Common Feature
         * print groups.length
         * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
         * eval for(var i = 0; i<groups.length; i++) groupHandle().deleteGroupById(groups[i].id)
+
+    @ApproveAllRequest
+    Scenario: Approve All Request
+        * callonce read(svc + 'Auth.feature@GetApproverAccessToken')
+        * def getTxn = call read(svc + 'Quorums.feature@Approver_GetApprovalList') { status: ["PENDING"] }
+        * eval
+        """
+        for (var i=0; i<getTxn.response.data.total; i++) 
+        { 
+            if (i<10) requestHandle().approveTransaction(getTxn.response.data.records[i].id)
+        }
+        """
+        

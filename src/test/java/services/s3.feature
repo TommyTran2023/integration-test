@@ -28,15 +28,28 @@ Feature: Upload file to S3
         """
         function(fileType){
             if (fileType == 'video')
-                return { contentType: 'video/mp4', file:'file:src/main/resources/uploadFile/video.mp4'}
+                return { contentType: 'video/mp4', file:'file:src/main/resources/uploadFile/video.mp4', filename: 'video.mp4'}
             else
-                return { contentType: 'image/jpg', file:'file:src/main/resources/uploadFile/image.png'}
+                return { contentType: 'image/jpeg', file:'file:src/main/resources/uploadFile/image.png', filename: 'image.png'}
         }
         """
+        * print uploadUrl
         * def params = defineParams(typeof fileType == 'undefined' ? 'image' : fileType)
-        Given url uploadUrl
-        * configure headers = {Content-Type: '#(params.contentType)'}
-        And request karate.read(params.file)
-        When method PUT
-        * configure headers = {Authorization: '#(accessToken)'}
-        Then status 200
+        * print params
+        * def fields = uploadUrl.fields
+        * def imageFile = read(params.file)
+
+        * configure headers = {}
+        Given url uploadUrl.url
+        And multipart field bucket = fields.bucket
+        And multipart field X-Amz-Date = fields['X-Amz-Date']
+        And multipart field X-Amz-Algorithm = fields['X-Amz-Algorithm']
+        And multipart field Policy = fields.Policy
+        And multipart field X-Amz-Credential = fields['X-Amz-Credential']
+        And multipart field X-Amz-Signature = fields['X-Amz-Signature']
+        And multipart field Content-Type = fields.ContentType
+        And multipart field ContentType = fields.ContentType
+        And multipart field key = fields.key
+        And multipart file file = { read: '#(params.file)', filename: '#(params.filename)', contentType: '#(params.contentType)' }
+        When method post
+        Then status 204

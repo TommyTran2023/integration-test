@@ -14,8 +14,8 @@ Scenario Outline: staking: <method> <path>
         pathParams: '<pathParams>', 
         queryParams: '<queryParams>', 
         requestBody: '<requestBody>', 
-        requirePasscode: <requirePasscode>, 
-        requireAnswer: <requireAnswer>, 
+        requirePasscode: "FALSE", 
+        requireAnswer: "FALSE", 
         expectedSchema: <expectedREPSchema_Compliance>,
         expectedStatus: <expectedREPStatus_Compliance>
     }

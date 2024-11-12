@@ -82,6 +82,8 @@ Background: Read data
 
         # expectedStatus
         # "not <statusCode>" will match that actual is not <statusCode>
+        * print expectedStatus
+        * print responseStatus
         * def isNegation = (expectedStatus+'').startsWith('not')
         * def expectedStatus = isNegation ? expectedStatus.replaceFirst('^not\\s+', '') : expectedStatus
         Then match (responseStatus==expectedStatus) == !isNegation

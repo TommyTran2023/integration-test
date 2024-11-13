@@ -19,7 +19,7 @@ Feature:Help Center
     * match response.data.category == "#(testData.help_center.type_issue)"
     * match response.data.platforms[0] == "#(testData.help_center.platform)"
 
-  @RAKCON-20018 @CreateTicketIssueWithUploadFileUppercase
+  @RAKCON-33788 @CreateTicketIssueWithUploadFileUppercase
   Scenario: Create Ticket Issue With Upload File Uppercase
     * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM') { filename: "uppercase.PNG" }
     * call read('this:HelpCenter.feature@CreateTicketIssue')

@@ -8,7 +8,6 @@ Feature: Upload file
   @UPLOAD_IMAGE_ON_CRM
   Scenario: Upload image on CRM
     * def headers = {Content-type: "image/png"}
-    * def filename = 'image.png'
     * call read('this:UploadFile.feature@UPLOAD_CRM')
     Then match responseStatus == 201
     * configure headers = {Authorization: '#(accessToken)'}

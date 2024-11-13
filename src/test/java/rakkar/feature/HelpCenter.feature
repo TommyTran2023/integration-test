@@ -19,10 +19,15 @@ Feature:Help Center
     * match response.data.category == "#(testData.help_center.type_issue)"
     * match response.data.platforms[0] == "#(testData.help_center.platform)"
 
-  @RAKCON-20018 @CreateTicketIssueWithUploadVideo
-  Scenario: Create Ticket Issue With Upload Video
-    * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM')
+  @RAKCON-20018 @CreateTicketIssueWithUploadFileUppercase
+  Scenario: Create Ticket Issue With Upload File Uppercase
+    * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM') { filename: "uppercase.PNG" }
     * call read('this:HelpCenter.feature@CreateTicketIssue')
+
+  @RAKCON-20018 @CreateTicketIssueWithUploadFile
+  Scenario: Create Ticket Issue With Upload File
+    * call read('this:UploadFile.feature@UPLOAD_IMAGE_ON_CRM') { filename: "image.png" }
+    * call read('this:HelpCenter.feature@CreateTicketIssue')  
 
   @RAKCON-31279 @UploadInvalidFileType
   Scenario: Upload invalid file type

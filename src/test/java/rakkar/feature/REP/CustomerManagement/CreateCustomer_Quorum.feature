@@ -236,6 +236,7 @@ Feature: Create Customer Quorum Validation
             }
         """
 
+@RAKCON-33795
 Scenario: Create Customer with 1 admin, size = 1
     * copy data = requestBody
     * set data.quorumSize = 1
@@ -246,6 +247,7 @@ Scenario: Create Customer with 1 admin, size = 1
     Then match responseStatus == 400
     Then match response.errorCode == "QUORUM_SIZE < USER_APPROVAL_LIMIT"
 
+@RAKCON-33796
 Scenario: Create Customer with 2 admin, size = 1
     * copy data = requestBody
     * set data.quorumSize = 1
@@ -256,6 +258,7 @@ Scenario: Create Customer with 2 admin, size = 1
     Then match responseStatus == 400
     Then match response.errorCode == "QUORUM_SIZE < USER_APPROVAL_LIMIT"
 
+@RAKCON-33797
 Scenario: Create Customer with 2 admin, size = 3
     * copy data = requestBody
     * set data.quorumSize = 3
@@ -266,6 +269,7 @@ Scenario: Create Customer with 2 admin, size = 3
     Then match responseStatus == 400
     Then match response.errorCode == "QUORUM_SIZE > distinctQuorum"
 
+@RAKCON-33798
 Scenario: Create Customer with 1 admin, size = 2
     * copy data = requestBody
     * set data.quorumSize = 2
@@ -276,6 +280,7 @@ Scenario: Create Customer with 1 admin, size = 2
     Then match responseStatus == 400
     Then match response.errorCode == "QUORUM_SIZE > distinctQuorum"
 
+@RAKCON-33799
 Scenario: Create Customer with 2 duplicated admin
     * copy admin1x = admin1
     * set admin1x.firstName = "Admin1x"
@@ -288,6 +293,7 @@ Scenario: Create Customer with 2 duplicated admin
     Then match responseStatus == 400
     Then match response.errorCode == "DOUBLE_USERS"
 
+@RAKCON-33800
 Scenario: Create Customer with 1 admin, 1 member, size = 2
     * copy data = requestBody
     * set data.quorumSize = 2
@@ -298,6 +304,7 @@ Scenario: Create Customer with 1 admin, 1 member, size = 2
     Then match responseStatus == 400
     Then match response.errorCode == "USER_ADMIN_REQUIRED"
 
+@RAKCON-33801
 Scenario: Create Customer with 2 admins, size = 2
     * copy admin1x = admin1
     * copy data = requestBody

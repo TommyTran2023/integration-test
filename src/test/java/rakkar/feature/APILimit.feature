@@ -5,6 +5,7 @@ Feature: API Query size limit
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
+  @RAKCON-33789
   Scenario Outline: POST Limit exceeds maximum of 10000 <api>
     Given path '<api>'
     And request <param>
@@ -20,6 +21,7 @@ Feature: API Query size limit
     | /advance-quorum/quorums               | { "limit": 10001 } |
     # | /auth/account/list-users              | { "limit": 10001 } | ### Not common listing, will do later
 
+  @RAKCON-33790
   Scenario Outline: POST Limit within range <api>
     Given path '<api>'
     And request <param>
@@ -34,6 +36,7 @@ Feature: API Query size limit
     | /advance-quorum/quorums               | { "limit": 10000 } |
     # | /auth/account/list-users              | { "limit": 10000 } | ### Not common listing, will do later
 
+  @RAKCON-33791
   Scenario Outline: GET Limit exceeds maximum of 10000 <api>
     Given path '<api>'
     And params <param>
@@ -52,6 +55,7 @@ Feature: API Query size limit
     | /wallet-connect/v2/wcApplication | { "limit": 10001 } |
     | /wallet-connect/v2/wcWeb3Connect | { "limit": 10001 } |
 
+  @RAKCON-33792
   Scenario Outline: GET Limit within range <api>
     Given path '<api>'
     And params <param>

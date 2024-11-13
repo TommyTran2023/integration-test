@@ -6,6 +6,7 @@ Feature: REP API Query size limit
     * callonce read(repSvc + 'Auth.feature@LoginAsCustomerSuccess')
     * configure headers = {"Authorization": '#(repAccessToken)'}
 
+  @RAKCON-33793
   Scenario Outline: GET Limit exceeds maximum of 10000 <api>
     Given path '<api>'
     And params <param>
@@ -17,7 +18,7 @@ Feature: REP API Query size limit
     | api                       | param |
     | /audit/audit-log          | { "limit": 10001 } |
 
-
+  @RAKCON-33794
   Scenario Outline: GET Limit within range <api>
     Given path '<api>'
     And params <param>

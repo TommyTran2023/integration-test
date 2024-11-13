@@ -28,5 +28,6 @@
   "connecteddAppVaultId":"95e6a78c-0286-4aa6-8fcc-307dc44f56ed",
   "notConnecteddAppVaultId":"47b5c14c-08c0-441a-92b9-3228dbfd931a",
   "figmentdAppId":"f618359e-d165-467b-ab6c-cfebf64a8f55",
-  "kilndAppId":"bb61a2a6-e4ae-44af-97d4-64fbe167de08"
+  "kilndAppId":"bb61a2a6-e4ae-44af-97d4-64fbe167de08",
+  "adaTokenId":"975ab105-3d4a-457e-9ff8-dfdfbd8710d0"
 }

@@ -23,11 +23,12 @@
   "advanceHotVaultId" : "ef72834c-a433-4cbb-b2e3-94f203a224c8",
   "advanceColdVaultId" : "3f101288-1b0c-4e10-ba25-57afcffbeaaa",
   "standardVaultForEditPolicy" : "3e16f8cf-bb56-4749-abf4-8c06651ba12c",
-  "whitelistTokenId": "8053beee-fedd-4408-9337-987774e105ae",
-  "whitelistAddress": "rKqAdDuMicKAhK1XUZkjK75XBooutZPjV6",
-  "transferWhitelistToken":"",
+  "whitelistTokenId": "dbc4bcce-38d1-4a5c-b812-882aae89ebe6",
+  "whitelistAddress": "tb1qpv3zlej4ldwh5ldf7dsyxzftsa2ck64jzx9dga",
+  "transferWhitelistToken":"f9830719-0015-468e-84f0-ee10ddb281ae",
   "connecteddAppVaultId":"510711f7-ddc1-41c0-80aa-ec3ccb154e51",
   "notConnecteddAppVaultId":"d9ced16f-abec-4150-9935-4739c874a167",
   "figmentdAppId":"a084ea46-f9be-45fa-bb95-268fd8912241",
-  "kilndAppId":"c3e64d4a-c5e5-47da-b56a-c047c947dc1b"
+  "kilndAppId":"c3e64d4a-c5e5-47da-b56a-c047c947dc1b",
+  "adaTokenId":"d757f635-15b6-413e-8f6d-ca8e7782278f"
 }

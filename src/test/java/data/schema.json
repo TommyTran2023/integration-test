@@ -165,8 +165,8 @@
     "role": "#string",
     "isLostDevice": "#boolean",
     "review_edit_user": {
-      "accountLVCheck": {},
-      "vaultLVCheck": []
+      "accountLVCheck": "#object",
+      "vaultLVCheck": "#[]"
     },
     "review_remove_account": {
       "accountLVCheck":{

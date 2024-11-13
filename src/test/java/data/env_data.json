@@ -38,13 +38,13 @@
     "member1":"PASSPORT32423HK",
     "viewer1":"ID_CARD341234HK",
     "permission":{
-      "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf",
-      "admin1":"ID_CARD90VN342AD3AU",
-      "admin1UserId":"",
-      "member1":"PASSPORT2345678MEM1BZ",
-      "member1UserId":"",
-      "viewer1":"ID_CARDID63677VI1AT",
-      "viewer1UserId":"",
+      "customerId":"7df5ab44-baf6-4aeb-9e4d-651879fa72db",
+      "admin1":"ID_CARD3422342HK",
+      "admin1UserId":"3987fd1b-9114-474a-a7de-b6e265d5445c",
+      "member1":"PASSPORT32423HK",
+      "member1UserId":"359babe6-6b92-436c-87c3-7a8663818b11",
+      "viewer1":"ID_CARD341234HK",
+      "viewer1UserId":"f1c21523-647e-4064-b630-806e4aeda96c",
       "passcode":"123123"
     },
     "businessRegistrationId": "2AT3",
@@ -191,14 +191,14 @@
     "member1":"ID_CARDIDDEVMEMBER001HK",
     "viewer1":"ID_CARDTHDEVVIEWER01TH",
     "permission":{
-      "customerId":"",
-      "admin1":"",
-      "admin1UserId":"",
-      "member1":"",
-      "member1UserId":"",
-      "viewer1":"",
-      "viewer1UserId":"",
-      "passcode":""
+      "customerId":"9d388665-4293-4804-aeb0-1d6489612f7e",
+      "admin1":"PASSPORTTHDEV01TH",
+      "admin1UserId":"66f4174a-44a1-48ba-ab6f-81a596ec7859",
+      "member1":"ID_CARDIDDEVMEMBER001HK",
+      "member1UserId":"803d03fc-cc47-42dd-934f-d2263b00dc95",
+      "viewer1":"ID_CARDTHDEVVIEWER01TH",
+      "viewer1UserId":"e10fb7b2-4bc8-48d6-8302-e6a82e6cf741",
+      "passcode":"123123"
     },
     "businessRegistrationId": "NAT00001",
     "crossTenant":{

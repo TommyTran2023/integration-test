@@ -1,3 +1,4 @@
+@ignore
 Feature: Login app as Rakkar Admin user
   Background:
     * def repUsers = read('classpath:data/rep_account.json')

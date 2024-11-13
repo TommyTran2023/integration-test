@@ -28,5 +28,7 @@
   "connecteddAppVaultId":"c819feb1-a494-4df7-b34d-b33bd05a6872",
   "notConnecteddAppVaultId":"d1a4079d-7758-4e4c-825f-695e31c3ad50",
   "figmentdAppId":"8df301b4-cf0c-4915-bfe1-7181aa8434d9",
-  "kilndAppId":"cd9c47fb-f3b9-4068-a91f-5744dd181a15"
+  "kilndAppId":"cd9c47fb-f3b9-4068-a91f-5744dd181a15",
+  "coldWorkspaceId": 6,
+  "warmWorkspaceId": 5
 }

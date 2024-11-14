@@ -41,6 +41,7 @@ Feature: REP - Customers
         { 
             authorization: "#(accessToken)"
         },
+        requestBody: '#(requestBody)', 
     }
     """
     * call read('this:coreSvc.feature@CustomerREPController_createNewCustomer') data

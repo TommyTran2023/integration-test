@@ -359,7 +359,7 @@ Feature: All api call to core services
   Scenario: Create whitelist folder
     Given path 'core/folders'
     * header Authorization = authorization
-    And request data
+    And request body
     When method POST
 
     @AddWhitelistAddress

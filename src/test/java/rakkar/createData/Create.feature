@@ -1,4 +1,4 @@
-@Create 
+@Create @ignore
 Feature: Create Vault data
     
   Background:

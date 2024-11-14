@@ -72,6 +72,22 @@ Feature: Advance-quorum
         Then match responseStatus == 201
         * match response.status == 'success'
 
+    @GetRequestByKeyword
+    Scenario: Get My Request List By Keyword
+        * def accessToken = typeof accessToken == 'undefined' ? requesterAccessToken : accessToken
+        * def data = 
+        """
+        { 
+            authorization: "#(accessToken)",
+            body:{
+                "keyword": #(keyword)
+            }
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@GetApprovalList') data
+        Then match responseStatus == 201
+        * match response.status == 'success'
+
     @GetQuorumPolicy
     Scenario: Get Quorum Policy
         * def data = 

@@ -30,5 +30,7 @@
   "notConnecteddAppVaultId":"d9ced16f-abec-4150-9935-4739c874a167",
   "figmentdAppId":"a084ea46-f9be-45fa-bb95-268fd8912241",
   "kilndAppId":"c3e64d4a-c5e5-47da-b56a-c047c947dc1b",
+  "coldWorkspaceId": 5,
+  "warmWorkspaceId": 1,
   "adaTokenId":"d757f635-15b6-413e-8f6d-ca8e7782278f"
 }

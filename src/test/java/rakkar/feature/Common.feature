@@ -106,9 +106,9 @@ Feature: Generate Challenge Answer for Biometric
     * def amount_default = 3
     * def tokenPrice = response.data.totalToUSD / 10
     * def tier_signer = call read('this:Common.feature@TIERS_SIGNER')
-    * def limit_low = tier_signer.response.data[0].to - 1
-    * def limit_medium = tier_signer.response.data[1].to - 1
-    * def limit_high = tier_signer.response.data[2].from + 1
+    * def limit_low = tier_signer.response.data.find(x => x.tierLevel == 'LOW').to - 1
+    * def limit_medium = tier_signer.response.data.find(x => x.tierLevel == 'MID').to - 1
+    * def limit_high = tier_signer.response.data.find(x => x.tierLevel == 'LARGE').from + 1
     * def amount_low = Math.round(limit_low / tokenPrice)
     * def amount_medium = Math.round(limit_medium / tokenPrice)
     * def amount_high = Math.round(limit_high / tokenPrice)

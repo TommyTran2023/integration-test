@@ -328,7 +328,7 @@ Feature: Transfer
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(token.tokens[0].id)',
+      "tokenId":'#(dataSet.adaTokenId)',
       "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 

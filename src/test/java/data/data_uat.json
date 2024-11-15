@@ -30,5 +30,6 @@
   "figmentdAppId":"8df301b4-cf0c-4915-bfe1-7181aa8434d9",
   "kilndAppId":"cd9c47fb-f3b9-4068-a91f-5744dd181a15",
   "coldWorkspaceId": 6,
-  "warmWorkspaceId": 5
+  "warmWorkspaceId": 5,
+  "adaTokenId":"3ec53849-2838-4b83-8925-97ae3d299eea"
 }

@@ -136,11 +136,13 @@
     },
     "WalletHostOptions":{
         "SELF_HOSTED" : "SELF_HOSTED",
-        "THIRD_PARTY_HOSTED" : "EXCHANGES_OR_WALLET_PLATFORM"
+        "THIRD_PARTY_HOSTED" : "EXCHANGES_OR_WALLET_PLATFORM",
+        "REGISTERED_VASP":"REGISTERED_VASP"
     },
     "WalletMethodOptions":{
         "SATOSHI_TEST" : "SATOSHI_TEST",
-        "SELF_ATTESTATION" : "SELF_ATTESTATION"
+        "SELF_ATTESTATION" : "SELF_ATTESTATION",
+        "TRAVEL_RULE":"TRAVEL_RULE"
     },
     "Notifications":{
         "CreateVaultPolicy":{

@@ -27,16 +27,17 @@ Feature: Whitelist
         """
             {
                 folderId:'#(folderId)',
-                authorization: "#(requesterAccessToken)",
+                authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
                 challengeAnswer: '#(challengeAnswerRequest)',
                 body:{
                     "tag" : '',
-                    "isRequiredTag": true,
+                    "isRequiredTag": "#(isRequiredTag)",
                     "tokenId" : '#(tokenId)', 
                     "note": '#(note)', 
                     "address": '#(address)',
                     "walletHost" : '#(walletHost)',
-                    "walletMethod" : '#(walletMethod)'
+                    "walletMethod" : '#(walletMethod)',
+                    "vaspId": "#(typeof vaspId == 'undefined' ? null : vaspId)"
                 }
             }
         """
@@ -50,7 +51,7 @@ Feature: Whitelist
         * def data = 
         """
             {
-                authorization: #(requesterAccessToken),
+                authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
                 params: {
                     keyword: '#(keyword)',
                     limit: 10,
@@ -89,8 +90,11 @@ Feature: Whitelist
         * def data = 
         """
             {
-                authorization: #(accessToken),
-                folderIds: #(folderIds)
+                headers: {
+                    authorization: '#(accessToken)',
+                    challenge-answer: '#(challengeAnswerRequest)'
+                },
+                folderIds: '#(folderIds)'
             }
         """
         * call read(svc + 'coreSvc.feature@DeleteWhitelistFolders') data
@@ -214,4 +218,32 @@ Feature: Whitelist
             }
         """
         * call read(svc + 'coreSvc.feature@CheckAddressDeactivate') data
+
+    #----------Whitelist Folder - Travel rule-----------#
+    @GET_core_v2_tr_validatorEntity
+    Scenario: GET core v2 tr_validatorEntity
+        * def data =
+        """
+        {
+            headers:{
+                Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+            }
+        }
+        """
+        * call read(svc + 'coreSvc.feature@GET_core_v2_tr_validatorEntity') data
     
+    @GET_core_v2_TravelRule_VASP_check-address
+  Scenario: GET core v2 TravelRule VASP check-address
+    * def data =
+    """
+    {
+        headers:{
+  		    Authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)"
+        },
+        params: {
+            address: "#(typeof address != 'undefined' ? address : null)",
+            asset: "#(typeof asset != 'undefined' ? asset : null)"
+        }
+    }
+    """
+    * call read(svc + 'coreSvc.feature@GET_core_v2_TravelRule_VASP_check-address') data

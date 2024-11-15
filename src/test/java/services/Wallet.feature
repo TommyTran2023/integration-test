@@ -7,7 +7,7 @@ Feature: Wallet
         * def data = 
         """
         {
-            authorization: #(requesterAccessToken),
+            authorization: "#(typeof requesterAccessToken == 'undefined' ? accessToken : requesterAccessToken)",
             vaultId: '#(vaultId)',
             params: {
                 keyword: '#(keyword)', 
@@ -48,7 +48,7 @@ Feature: Wallet
         * def data =
         """
         {
-            authorization: #(requesterAccessToken),
+            authorization: "#(typeof requesterAccessToken == 'undefined' ? accessToken : requesterAccessToken)",
             params: { 
                 limit:'10', 
                 offset: '0', 

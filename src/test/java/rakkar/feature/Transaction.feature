@@ -68,7 +68,7 @@ Feature: Transaction
     @RAKCON-12328 @Filter_transaction_by_destination
   Scenario: Filter transactions by destination
     * def data = read('classpath:data/data.json')
-    * def value = call read(svc + 'Vault.feature@GetAllVaults') {isHideSmallBalance: true, keyword: '#(data.standardWarmVault_2)'}
+    * def value = call read(svc + 'Vault.feature@GetAllVaults') {keyword: '#(data.standardWarmVault_2)'}
     * def destinationId = value.response.data.vaults[0].id
     * def destinationName = value.response.data.vaults[0].name
     * def query = { limit:'10', offset: '0',destinationData: [ { destinationType: 'internal', destinationId: '#(destinationId)'}] }

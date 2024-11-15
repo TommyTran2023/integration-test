@@ -81,8 +81,8 @@ Feature: Approval Request
     * def requestId = value.response.data.requestId
     * call read(svc + 'Biometric.feature@ApproverDoBiometric')
     * call read('this:Common.feature@VIDEO_SPEECH_PROMPT')
-    * def uploadLink = call read(svc + 's3.feature@GetUploadLink') { fileType: 'video', userId: '#(userId)', accessToken: '#(approvalAccessToken)' }
-    * call read(svc + 's3.feature@PutFile') { fileType: 'video', userId: '#(userId)', uploadUrl: '#(uploadLink.response.data.uploadUrl)', accessToken: '#(approvalAccessToken)' }
+    * def uploadLink = call read(svc + 's3.feature@GetUploadLink') { fileType: 'video', userId: '#(requesterInfo.userId)', accessToken: '#(approvalAccessToken)' }
+    * call read(svc + 's3.feature@PutFile') { fileType: 'video', userId: '#(requesterInfo.userId))', uploadUrl: '#(uploadLink.response.data.uploadUrl)', accessToken: '#(approvalAccessToken)' }
     * def body = { "uploadToken":'#(uploadLink.response.data.uploadToken)',"vdoSentence":'#(vdoSentence)'}
     * call read(svc + 'Quorums.feature@ApproveRequest') { requestId: '#(requestId)', requestBody: '#(body)' }
     Then match responseStatus == 201

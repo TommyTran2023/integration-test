@@ -1,4 +1,4 @@
-    @TravelRule
+    @TravelRule @envnot=uat
 Feature: Travel rule whitelist folder for SG entity
 
   Background:
@@ -81,15 +81,15 @@ Feature: Travel rule whitelist folder for SG entity
     * def body_submit = 
     """
     {
-        folderId:"#(getFolder.folderId)",
-        tag : '',
-        isRequiredTag: false,
-        tokenId : "#(token.id)",
-        note : 'Note test',
-        address : '0x720b43Cb2AD865EAe6c0ADc23898FBf91A0B0A02',
-        vaspId: "#(getVasp.response.data.vasp.id)",
-        walletHost : '#(Const.WalletHostOptions.REGISTERED_VASP)',
-        walletMethod : '#(Const.WalletMethodOptions.TRAVEL_RULE)'
+      folderId:"#(getFolder.folderId)",
+      tag : '',
+      isRequiredTag: false,
+      tokenId : "#(token.id)",
+      note : 'Note test',
+      address : '0x720b43Cb2AD865EAe6c0ADc23898FBf91A0B0A02',
+      vaspId: "#(getVasp.response.data.vasp.id)",
+      walletHost : '#(Const.WalletHostOptions.REGISTERED_VASP)',
+      walletMethod : '#(Const.WalletMethodOptions.TRAVEL_RULE)'
     }
     """
     * call read(svc + 'Whitelist.feature@AddWhitelistAddress') body_submit

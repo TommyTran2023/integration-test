@@ -41,7 +41,7 @@ Feature: Biometric
         * def authResponse = call read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(userName)' }
         * call read('@DoBiometric')
         * def challenge = response.data.challenge
-        * string command = testData.common.commandToGenChallengeAnswer + challenge
+        * string command = privateKey.commandToGenChallengeAnswer + challenge
         * def userAnswerApprover = karate.exec(command)
         * def userAccessToken = 'Bearer ' + authResponse.response.data.AuthenticationResult.AccessToken
         * print userAnswerApprover

@@ -60,7 +60,11 @@
       "accountId":"5c1b4db2ab1b4e2c9eb245169c8de4bf",
       "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf"
     },
-    "repURL": "https://test-rep.thailaksa.net/"
+    "repURL": "https://test-rep.thailaksa.net/",
+    "sg_customer":{
+      "admin1":"PASSPORTrobot2HK",
+      "admin1UserId":"1399df02-7800-4a81-9db2-1f5ffff4e86b"
+    }
   },
   "uat": {
     "baseURL": "https://sandbox-api.rakkardigital.com",

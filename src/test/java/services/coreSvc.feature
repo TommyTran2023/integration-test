@@ -359,7 +359,7 @@ Feature: All api call to core services
   Scenario: Create whitelist folder
     Given path 'core/folders'
     * header Authorization = authorization
-    And request data
+    And request body
     When method POST
 
     @AddWhitelistAddress
@@ -387,8 +387,8 @@ Feature: All api call to core services
     @DeleteWhitelistFolders
   Scenario: Delete Whitelist Folders
     Given path 'core/folders'
-    * header Authorization = authorization
-    * request {folderIds:folderIds}
+    * headers headers
+    * request { folderIds: "#(folderIds)" }
     When method DELETE
 
     @DeleteWhitelistFolderById
@@ -442,6 +442,20 @@ Feature: All api call to core services
     * header Authorization = authorization
     * param address = address
     When method GET
+
+    #----------Whitelist Folder - Travel rule-----------#
+    @GET_core_v2_tr_validatorEntity
+  Scenario: GET core v2 tr_validatorEntity
+    Given path '/core/v2/tr_validatorEntity'
+    * headers headers 
+    When method GET
+
+    @GET_core_v2_TravelRule_VASP_check-address
+  Scenario: GET core v2 TravelRule VASP check-address
+   	Given path '/core/v2/TravelRule/VASP/check-address'
+   	* headers headers 
+   	And params params
+   	When method GET
 
     #----------Customer-----------#  
 

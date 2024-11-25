@@ -57,6 +57,19 @@ Background: Read data
     }
     """
 
+    * def matchSchema =
+    """
+    function (actualResult, expectedSchema) {
+        if (expectedSchema) {
+            var matchResult = karate.match(actualResult, expectedSchema)
+            karate.log(matchResult)
+            return matchResult.pass
+        } else {
+            return true
+        }
+    }
+    """
+    
     @test
     Scenario: Verify API permission
         * def data =
@@ -87,4 +100,4 @@ Background: Read data
         * def isNegation = (expectedStatus+'').startsWith('not')
         * def expectedStatus = isNegation ? expectedStatus.replaceFirst('^not\\s+', '') : expectedStatus
         Then match (responseStatus==expectedStatus) == !isNegation
-        * if (expectedSchema) karate.match(response.data, expectedSchema)
+        * match matchSchema(response.data, expectedSchema) == true

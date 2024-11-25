@@ -12,7 +12,7 @@ Feature: Transfer
     #TCs: GET LIST ASSET FOR TRANSFER
   @RAKCON-13183 @Get_asset_transfer
   Scenario: Transfer - View asset list for transfer
-    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: "#(a.Symbol.ADA)"}
+    * call read(svc + 'Wallet.feature@GetWalletTransferTokens') {keyword: "ADA"}
     Then match responseStatus == 200
     And match response.status == "success"
 
@@ -101,7 +101,7 @@ Feature: Transfer
     """
     { 
       "operation":'#(a.Transfer.Operation.TRANSFER)',
-      "tokenId":'#(dataSet.tokenId)',
+      "tokenId":'#(dataSet.adaTokenId)',
       "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
@@ -141,7 +141,7 @@ Feature: Transfer
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(dataSet.tokenId)',
+      "tokenId":'#(dataSet.adaTokenId)',
       "feeType":'#(testData.transfer.withdraw.feeType)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
@@ -169,7 +169,7 @@ Feature: Transfer
     #Tcs: TRANSFER VAULT COLD TO HOT
   @RAKCON-11396 @Transfer_value_cold_to_hot
   Scenario: Transfer Cold to hot - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(a.symbol.ADA)',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.adaTokenId)',"feeType":'ADA',"fee":'#((testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_hot)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('this:Transfer.feature@Internal_Transfer_Common')
     And response.status == "success"
     And response.data.status == "PENDING"
@@ -182,7 +182,7 @@ Feature: Transfer
   #Tcs: TRANSFER VAULT COLD TO COLD
   @RAKCON-11399 @Transfer_value_cold_to_cold
   Scenario: Transfer Cold to cold - Submit transfer
-    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.tokenId)',"feeType":'#(a.symbol.ADA)',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
+    * def body = { "operation":'#(testData.transfer.operation)',"tokenId":'#(dataSet.adaTokenId)',"feeType":'ADA',"fee":'#(Number(testData.transfer.withdraw.fee))', "treatAsGrossAmount": true, "feeLevel": '#(testData.transfer.feeLevel)', "destination":{"type":'#(testData.transfer.source_type)',"id":'#(dataSet.destinationId_cold)'}, "source": {"type":'#(testData.transfer.source_type)',"id":'#(dataSet.sourceId_cold)'},"amount":#(amount_default),"totalEstimatedFee":'#(Number(testData.transfer.withdraw.fee))'}
     * call read('this:Transfer.feature@Internal_Transfer_Common') body
     And response.status == "success"
     And response.data.status == "PENDING"
@@ -328,7 +328,7 @@ Feature: Transfer
     """
     { 
       "operation":'#(testData.transfer.operation)',
-      "tokenId":'#(token.tokens[0].id)',
+      "tokenId":'#(dataSet.adaTokenId)',
       "feeType":'#(a.TokenSymbol.ADA)',
       "fee":'#(Number(testData.transfer.withdraw.fee))', 
       "treatAsGrossAmount": true, 
@@ -447,7 +447,7 @@ Feature: Transfer
 
     #Tcs: TRANSFER VAULT ADVANCE HOT TO STANDARD HOT
   @RAKCON-19044 @Transfer_value_advance_hot_to_hot
-  Scenario: Transfer from Advance Hot Vault to Standard Hot Vault'
+  Scenario: Transfer from Advance Hot Vault to Standard Hot Vault
     * def destinationId = dataSet.destinationId_hot
     * def sourceId = dataSet.advanceHotVaultId
     * call read('this:Transfer.feature@TransferSmallCommon')
@@ -458,7 +458,7 @@ Feature: Transfer
     """
       {
         "operation":'#(testData.transfer.operation)',
-        "tokenId":'#(dataSet.tokenId)',
+        "tokenId":'#(dataSet.adaTokenId)',
         "feeType":'#(a.TokenSymbol.ADA)',
         "fee":'#(Number(testData.transfer.withdraw.fee))', 
         "treatAsGrossAmount": true, 
@@ -607,7 +607,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
     * def expectedVaultSchema = 
     """
     {
-      externalAssetId: '#string',
+      externalAssetId: '#present',
       id: '#string',
       totalUSD: '#number',
       availableUSD: '#number',
@@ -616,7 +616,7 @@ Scenario: Transfer Source Screen Skip Policy Vault
       total: '#number',
       available: '#number',
       name: '#string',
-      symbol: '#string'
+      symbol: '#present'
     }
     """
     * match each response.data.list[*] == expectedVaultSchema

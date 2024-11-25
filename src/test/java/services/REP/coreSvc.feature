@@ -14,6 +14,7 @@ Scenario: Customer REPController get List Customer
 Scenario: Customer REPController create New Customer
   Given path 'core/rep/customers'
   * headers headers
+  * request requestBody
   When method POST
 
   #----------------------------------

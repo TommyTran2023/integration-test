@@ -8,7 +8,7 @@ Feature:Help Center
     * def requesterUserEmail = getRequesterIDResponse.response.data.email
     * def schemaJson = read('classpath:data/schema.json')
     * def now = function(){ return java.lang.System.currentTimeMillis() }
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @RAKCON-11377 @CreateTicketIssue
   Scenario: Create a ticket detail page - Issue

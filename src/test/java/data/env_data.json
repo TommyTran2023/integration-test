@@ -1,5 +1,5 @@
 {
-  "qa": {
+  "test": {
     "baseURL": "https://test-api.thailaksa.net",
     "baseMobileURL": "https://test-mobile-api.thailaksa.net",
     "openApiURL": "https://test-openapi.thailaksa.net",
@@ -66,7 +66,7 @@
       "admin1UserId":"1399df02-7800-4a81-9db2-1f5ffff4e86b"
     }
   },
-  "uat": {
+  "sandbox": {
     "baseURL": "https://sandbox-api.rakkardigital.com",
     "baseMobileURL": "https://mobile-sandbox-api.rakkardigital.com",
     "openApiURL": "https://sandbox-openapi.rakkardigital.com",

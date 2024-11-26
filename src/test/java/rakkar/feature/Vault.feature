@@ -7,7 +7,7 @@ Feature: Vault
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def getRequesterIDResponse = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def requesterUserID = getRequesterIDResponse.response.data.id
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def schemaBody = read('classpath:data/schema.json')
     * def Collections = Java.type('java.util.Collections')
     * def Const = read('classpath:data/enum.json')
@@ -921,7 +921,7 @@ Feature: Vault
 
   @RAKCON-21145 @CheckExpiredOfRequestToSubmit
   Scenario: Edit Vault Policy - Check expired of Request before Submit
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * callonce read(svc + 'Auth.feature@GetListUsers')
     * def groups = callonce read(svc + 'Group.feature@GetGroupPolicies') {keyword: #(testData.group)}
     * def vaultId = dataSet.advVaultWithAllUsers

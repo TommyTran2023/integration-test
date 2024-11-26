@@ -8,7 +8,7 @@
       "requesterPasscode": "271198"
     }
   },
-  "uat_workspace": {
+  "sandbox_workspace": {
     "url_uat": "https://mobile-sandbox-api.rakkardigital.com",
     "vaultId_Destination": "61265e24-6beb-418a-8f2a-9026dd7e4d85",
     "vaultId_Destination_warm": "a8c7c0c2-009c-44d0-b92c-c8835fb4cc71",
@@ -19,7 +19,7 @@
       "requesterPasscode": "123123"
     }
   },
-  "qa_workspace": {
+  "test_workspace": {
     "url_qa": "https://test-mobile-api.thailaksa.net",
     "vaultId_Destination": "eb48fc0e-9b8e-417c-8987-7f2b4919e9a9",
     "vaultId_Destination_warm": "8f90e765-37c3-4904-9123-f748ed20da91",

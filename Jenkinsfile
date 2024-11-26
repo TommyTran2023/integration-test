@@ -1,7 +1,7 @@
 def SLACK_CHANNEL = "rakkar-alert-automation-test"
 // def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e-4e80-b129-ff3321a59709@201a91bf-99c5-4514-99f9-725c381f0f8f/JenkinsCI/4cce63699dd64472878a3bc7d767d694/98b4bffe-269c-449b-8152-e60965a8c794"
 // def ENV = "SIT" // will be passed as parameter
-def KARATE_ENV = "qa"
+def KARATE_ENV = "test"
 def BRANCH = "develop"
 def HEALTH_CHECK_PATH
 def testSummary

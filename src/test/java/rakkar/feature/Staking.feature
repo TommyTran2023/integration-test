@@ -4,7 +4,7 @@ Feature: Staking
     * url baseURL
     * def schemaBody = read('classpath:data/schema.json')
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * call read('this:GetUserInfo.feature@GetUserInfo')
 
   @RAKCON-15418 @Get_List_Pool

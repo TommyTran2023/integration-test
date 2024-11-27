@@ -217,6 +217,10 @@
       "accountId":"db9742a286f74736953818236084c6e4",
       "customerId":"db9742a2-86f7-4736-9538-18236084c6e4"
     },
-    "repURL": "https://dev-rep.thailaksa.net/"
+    "repURL": "https://dev-rep.thailaksa.net/",
+    "sg_customer":{
+      "admin1":"PASSPORTxxx123SG",
+      "admin1UserId":"b2561a7b-769b-470c-b20c-401b0d40b983"
+    }
   }
 }

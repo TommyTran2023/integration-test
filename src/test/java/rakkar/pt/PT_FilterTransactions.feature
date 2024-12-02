@@ -3,7 +3,7 @@ Feature: Filter transactions
   Background:
     * url baseURL
     * def svc = 'classpath:services/'
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @test
   Scenario: Filter transaction

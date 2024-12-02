@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RunnerTest {
     @BeforeAll
     public static void before(){
-        System.setProperty("karate.env", "uat");
+        System.setProperty("karate.env", "sandbox");
     }
 
     @Test

@@ -5,7 +5,7 @@ Feature: Transfer
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def userInfo = call read('this:GetUserInfo.feature@GetUserInfo')
     * call read('this:Common.feature@CACULATE_LIMIT_TRANSFER')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def a = read('classpath:data/enum.json')
     * configure afterFeature = function(){ karate.call('classpath:rakkar/common/Common.feature@CancelAllTranferRequests'); }
 

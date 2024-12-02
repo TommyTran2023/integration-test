@@ -6,7 +6,7 @@ Feature: Network Management
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
     * def schemaBody = read('classpath:data/schema.json')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @RAKCON-14850 @Checkprofilename
   Scenario: Check profile name

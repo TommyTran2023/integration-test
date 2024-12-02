@@ -14,6 +14,6 @@ Scenario: Read schema.json file
 
 @ReadOldDataFile
 Scenario: Read schema.json file
-    * def oldDataFile = read('classpath:data/data_test.json')
+    * def oldDataFile = read('classpath:data/dataTest.json')
 
 

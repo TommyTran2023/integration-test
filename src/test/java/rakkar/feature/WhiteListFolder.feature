@@ -7,7 +7,7 @@ Feature: WhiteList Folder
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')
 #    * def userId = user.response.data.id
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def schemaJson = read('classpath:data/schema.json')
     * def Const = read('classpath:data/enum.json')
 

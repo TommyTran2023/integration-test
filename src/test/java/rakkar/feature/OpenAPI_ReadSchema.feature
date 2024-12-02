@@ -2,7 +2,7 @@
 Feature: Open API - Read schema from external link
   Background:
     * url openAPI_doc
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def pathData = testData.common.openAPI_path
 
   @Get_schema_structure_common

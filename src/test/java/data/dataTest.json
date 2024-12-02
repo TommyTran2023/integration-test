@@ -1,0 +1,107 @@
+{
+  "common": {
+    "openAPI_path": "openapi/649a7c11ec5bf2001e31a3c7"
+  },
+  "vault": {
+    "vault_type": "HOT_WALLET",
+    "approve_number": 3,
+    "searchVaultKeyword": "RAK-1679",
+    "newApproverNumber": 2,
+    "editVaultNote": "AT note for editing vault policy"
+  },
+  "whitelist": {
+    "type_internal": "internal",
+    "type_external": "external",
+    "request_value": "ADD_WHITELIST_ADDRESS",
+    "request_nameDisplay": "Add Whitelisted Address"
+  },
+  "account_policy": {
+    "approve_number": 2,
+    "action": "EDIT_ACCOUNT_POLICY"
+  },
+  "transfer": {
+    "from_screen_source": "SOURCE_TRANSFER",
+    "from_screen_destination": "DESTINATION_TRANSFER",
+    "source_type": "VAULT_ACCOUNT",
+    "network_type": "NETWORK_CONNECTION",
+    "destinationType": "EXTERNAL_WALLET",
+    "feeLevel": "MEDIUM",
+    "operation": "TRANSFER",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "type": "TRANSACTION_REQUEST",
+    "keyword_search_vault": "Vault_transfer",
+    "withdraw": {
+      "sourceName_hot": "Vault_H1",
+      "destinationName_hot": "Vault_H2",
+      "sourceName_cold": "Vault_H3",
+      "destinationName_cold": "Vault_H4",
+      "feeType": "XRP_TEST",
+      "fee": "1.5e-5",
+      "symbol": "XRP",
+      "tokenSymbol": "XRP_TEST"
+    }
+  },
+  "userManagement": {},
+  "viewListMyRequest": {
+    "statusFiltering": "PENDING",
+    "typeFiltering": "POLICY",
+    "valueOfPolicyType": [
+      "EDIT_ACCOUNT_POLICY",
+      "CREATE_VAULT",
+      "UPDATE_VAULT"
+    ]
+  },
+  "approvalView": {
+    "statusFiltering": "APPROVED",
+    "typeFiltering": "POLICY",
+    "valueOfPolicyType": [
+      "EDIT_ACCOUNT_POLICY",
+      "CREATE_VAULT",
+      "UPDATE_VAULT"
+    ]
+  },
+  "transaction": {
+    "type_outgoing": "OUTGOING",
+    "type_incoming": "INCOMING",
+    "type_rebalancing": "REBALANCING",
+    "status_pending": "PENDING",
+    "status_processing": "PROCESSING",
+    "status_confirming": "CONFIRMING",
+    "status_completed": "COMPLETED",
+    "status_failed": "FAILED",
+    "status_rejected": "REJECTED"
+  },
+  "notification": {
+    "vault": {
+      "state": "Warning",
+      "labelInApp": "Vault policy"
+    },
+    "rejectTransfer": {
+      "state": "Error",
+      "labelInApp": "Transfer rejected"
+    },
+    "approveTransfer": {
+      "state": "Success",
+      "labelInApp": "Transfer approved"
+    }
+  },
+  "help_center": {
+    "type_issue": "issue",
+    "type_question":"question",
+    "type_request": "request",
+    "platform": "mobile_application",
+    "search_solved": "subject for"
+  },
+  "settings": {
+    "newPasscode": "112233",
+    "changePasscode": "332211"
+  },
+    "staking": {
+    "amount": 10000,
+    "tokenExternalId": "ADA_TEST",
+    "feeLevel": "HIGH",
+     "poolID": "pool132jxjzyw4awr3s75ltcdx5tv5ecv6m042306l630wqjckhfm32r"
+  },
+  "clientId":"bxeRJIROr8VQTBSqAAGW"
+}
+

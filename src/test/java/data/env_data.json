@@ -1,5 +1,5 @@
 {
-  "qa": {
+  "test": {
     "baseURL": "https://test-api.thailaksa.net",
     "baseMobileURL": "https://test-mobile-api.thailaksa.net",
     "openApiURL": "https://test-openapi.thailaksa.net",
@@ -60,9 +60,13 @@
       "accountId":"5c1b4db2ab1b4e2c9eb245169c8de4bf",
       "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf"
     },
-    "repURL": "https://test-rep.thailaksa.net/"
+    "repURL": "https://test-rep.thailaksa.net/",
+    "sg_customer":{
+      "admin1":"PASSPORTrobot2HK",
+      "admin1UserId":"1399df02-7800-4a81-9db2-1f5ffff4e86b"
+    }
   },
-  "uat": {
+  "sandbox": {
     "baseURL": "https://sandbox-api.rakkardigital.com",
     "baseMobileURL": "https://mobile-sandbox-api.rakkardigital.com",
     "openApiURL": "https://sandbox-openapi.rakkardigital.com",
@@ -213,6 +217,10 @@
       "accountId":"db9742a286f74736953818236084c6e4",
       "customerId":"db9742a2-86f7-4736-9538-18236084c6e4"
     },
-    "repURL": "https://dev-rep.thailaksa.net/"
+    "repURL": "https://dev-rep.thailaksa.net/",
+    "sg_customer":{
+      "admin1":"PASSPORTxxx123SG",
+      "admin1UserId":"b2561a7b-769b-470c-b20c-401b0d40b983"
+    }
   }
 }

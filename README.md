@@ -9,12 +9,12 @@ The project is developed in Java with Maven, so it will install the following so
 * Apache Maven
 * Node JS
 * Your favorite IDE, including : Eclipse IDE, Intellij IDEA, VS Code
-* Onboarding account manually in REP site with corresponding environment (for example: https://uat-rep.rakkardigital.com/login) and add Username in /data/env_data.json
+* Onboarding account manually in REP site with corresponding environment (for example: https://https://sandbox-api.rakkardigital.com) and add Username in /data/env_data.json
 
 ### Installation
 _Below is the instruction to install and setting the project._
 1. Clone the repo https://github.com/rakkar-digital-org/integration-test.git
-2. Enter the environment which you want to integration test (Default: UAT, Available environment: UAT, QA) in "RunnerTest.java" file below the tag @BeforeAll
+2. Enter the environment which you want to integration test (Default: SANDBOX, Available environment: TEST, SANDBOX, DEV) in "RunnerTest.java" file below the tag @BeforeAll
 
 ### Execute test locally
 To run the test script in the local system, enter the root folder and execute the one of following commands:
@@ -25,23 +25,24 @@ mvn test
 ```
 To run the test script in the specific environment, enter following commands:
 ```agsl
-mvn test -Dkarate.env=uat
-mvn test -Dkarate.env=qa
+mvn test -Dkarate.env=sandbox
+mvn test -Dkarate.env=test
+mvn test -Dkarate.env=dev
 ```
 
 To run the test script in parallel, number of thread can be passed from command line:
 ```
-mvn test -Dkarate.env=qa -Dthread=4
+mvn test -Dkarate.env=test -Dthread=4
 ```
 
 To run only specific feature file:
 ```
-mvn test -Dkarate.env=qa -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="classpath:rakkar/feature/Wallet.feature" 
+mvn test -Dkarate.env=test -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="classpath:rakkar/feature/Wallet.feature" 
 ```
 
 To run only specific tag:
 ```
-mvn test -Dkarate.env=qa -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="--tags @VIEW-LIST-ASSET" 
+mvn test -Dkarate.env=test -D secret="{path_to_secret_file}" -D dbConfig="{path_to_db_credentials_file}" -Dkarate.options="--tags @VIEW-LIST-ASSET" 
 ```
 
 You can also click on Run icon in specific scenario/feature to run specific test case or test execution
@@ -59,7 +60,7 @@ Note: In UAT, add users in "AT Rakkar" customer. In QA (SIT), add users in "Rakk
 
 ### Setup data transfer
 For each environment, it should have specific vaults for transfer.
-1. Create new vault with the name has the same vault's name in data_test.json > tranfer > withdraw, 
+1. Create new vault with the name has the same vault's name in dataTest.json > tranfer > withdraw, 
 2. Add wallet = "XRP" for each vault. Deposit for all.
 3. Add all infor needed to env_data.json: 
 - VaultId
@@ -89,7 +90,7 @@ Usage: ```dataSet.advanceHotVaultId```
 
 ### Run script with config file, ask @TommyTran2023
 1. Add `-D secret='{path_to_secret_file}' -D dbConfig='{path_to_db_credentials_file}'` in cli
-Ex: `mvn clean test -Dkarate.env=qa -D secret='{path_to_secret_file}' -D dbConfig='{path_to_db_credentials_file}'`
+Ex: `mvn clean test -Dkarate.env=test -D secret='{path_to_secret_file}' -D dbConfig='{path_to_db_credentials_file}'`
 
 ### OPTIONAL Run locally with Docker
 1. Install Docker Desktop
@@ -100,7 +101,7 @@ docker build \
 ```
 3. Execute command locally with Docker container
 - edit command after `/bin/sh -c` before execute e.g. `/bin/sh -c "mvn clean compile test -e"`
-- use `\` to escape double quote e.g. `/bin/sh -c "mvn test -Dkarate.env=qa -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""`
+- use `\` to escape double quote e.g. `/bin/sh -c "mvn test -Dkarate.env=test -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""`
 
 Example:
 ```
@@ -108,5 +109,5 @@ docker run  \
 --name integration-test -it --rm \
 -v $(pwd):/usr/src/ \
 integration-test:latest \
-/bin/sh -c "mvn test -Dkarate.env=qa -D secret=\"{path_to_secret_file}\" -D dbConfig=\"{path_to_db_credentials_file}\" -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
+/bin/sh -c "mvn test -Dkarate.env=test -D secret=\"{path_to_secret_file}\" -D dbConfig=\"{path_to_db_credentials_file}\" -Dkarate.options=\"--tags @CreateAndEditMembersInGroup\""
 ```

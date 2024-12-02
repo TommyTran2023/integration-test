@@ -6,7 +6,7 @@ Feature: View List My Request
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def requesterInformation = call read('this:GetUserInfo.feature@GetRequesterInfo')
     * def schemaBody = read('classpath:data/schema.json')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @RAKCON-10994 @ViewMyRequestAllType
   Scenario: View my request - All types

@@ -2,7 +2,7 @@
 Feature: Get access token for Approval
   Background: Approval is logged in
     * url baseURL
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
   @ignore @GetSessionForLogin
   Scenario: Approval - Get session for login
     Given path '/auth/authorization/initiate-auth'

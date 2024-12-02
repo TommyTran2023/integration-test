@@ -1,4 +1,4 @@
-@ignore
+    @ignore
 Feature: Connect to PostgreSQL
 
     Background:
@@ -187,3 +187,56 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
     
+        @SelectWorkspace
+    Scenario: Select Workspace
+        * def query = 
+        """
+        "select * from cus_workspaces cw " + 
+        "where \"externalId\" != '00000000-0000-0000-0000-000000000000'"
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+        @SelectTxnByCurrency
+    Scenario: Select transactions by type and currency
+        * def query = 
+        """
+            "select tt.\"transactionId\", tt.\"feeCurrency\", wi.id as \"tokenId\",tt.\"source\", tt.destination, tt.\"externalWorkspaceId\" as \"workspaceId\", \"tea\".\"externalExchangeAccountId\", \"tea\".\"type\" , ff.\"name\" , ff.\"thirdPartyFolderName\" , tt.\"createdAt\" " +
+            "from txn_transactions tt " +
+            "left join \"txn_exchangeAccounts\" \"tea\" " +
+            "on tt.source = \"tea\".id " +
+            "left join fol_folders ff " +
+            "on ff.\"folderExternalId\"::text = \"tea\".\"externalExchangeAccountId\" " +
+            "left join \"walletInfos\" wi on wi.\"externalAssetId\" = tt.\"feeCurrency\" "+
+            "where tt.\"type\" ='INCOMING' " +
+            "and \"tea\".\"type\" ilike '%wallet%' " +
+            "and ff.\"thirdPartyFolderName\" is not null " +
+            "and tt.\"feeCurrency\" ilike '%" + assetToken + "%' " +
+            "and tt.\"createdAt\" > '2024-10-07' " +
+            "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query) 
+
+         @SelectTxnByCurrencyAndType
+    Scenario: Select transactions by type
+        * def query = 
+        """
+        "select tt.\"transactionId\", tt.\"feeCurrency\", wi.id as \"tokenId\", tt.\"source\", tt.destination, tt.\"externalWorkspaceId\" as \"workspaceId\", \"tea\".\"externalExchangeAccountId\", \"tea\".\"type\" , v.\"name\" , v.\"thirdPartyVaultName\" , tt.\"createdAt\" " +
+        "from txn_transactions tt " +
+        "left join \"txn_exchangeAccounts\" \"tea\" " +
+   	    "on tt.source = \"tea\".id " +
+        "left join vaults v " +
+   	    "on v.\"vaultExternalId\"::text = \"tea\".\"externalExchangeAccountId\" " +
+        "left join \"walletInfos\" wi on wi.\"externalAssetId\" = tt.\"feeCurrency\" " +
+        "where tt.\"type\" ='REBALANCING' " +
+   	    "and \"tea\".\"type\" ilike '%VAULT_ACCOUNT%' " +
+        "and v.\"thirdPartyVaultName\" is not null " +
+   	    "and tt.\"feeCurrency\" ilike '%" + assetToken + "%' " +
+        "and tt.\"createdAt\" > '2024-10-07' " +
+        "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query) 
+
+

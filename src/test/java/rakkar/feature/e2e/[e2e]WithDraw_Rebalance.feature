@@ -6,6 +6,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * call read(svc + 'Biometric.feature@RequesterDoBiometric')
         * def env = karate.properties['karate.env']
         * def amount_low = 2
+        * def e2eToken = Const.TokenSymbol.XLM
         * def BigDecimal = Java.type('java.math.BigDecimal')
         * def waitUntilTransactionCompleted = 
         """
@@ -30,7 +31,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             if (!needCrossEnv)
                 return env;
             
-            var destEnv = env != 'uat' ? 'uat' : 'qa';
+            var destEnv = env != 'sandbox' ? 'sandbox' : 'test';
             
             return destEnv;
         }
@@ -77,7 +78,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.XLM), searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(e2eToken), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -101,7 +102,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -116,7 +117,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -137,7 +138,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.XLM)',
+            "feeType":'#(e2eToken)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
@@ -200,7 +201,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.XLM), searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(e2eToken), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -224,7 +225,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -239,7 +240,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -260,7 +261,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.XLM)',
+            "feeType":'#(e2eToken)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
@@ -324,7 +325,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.XLM), searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(e2eToken), searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -348,7 +349,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -363,7 +364,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(whitelist_type)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -384,7 +385,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.XLM)',
+            "feeType":'#(e2eToken)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
@@ -446,7 +447,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(Const.TokenSymbol.XLM),searchText:#(testData.stdVaultE2E)}
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') {externalAssetId:#(e2eToken),searchText:#(testData.stdVaultE2E)}
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -454,7 +455,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def walletId_warm = source_warm.wallets[0].id
 
         # 3.Select destination from whitelist. The whitelist contains token from an other workspace
-        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(Const.TokenSymbol.XLM), sourceVaultId:#(sourceId_warm) }
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(e2eToken), sourceVaultId:#(sourceId_warm) }
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[1]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
@@ -468,7 +469,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -483,7 +484,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -505,7 +506,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.XLM)',
+            "feeType":'#(e2eToken)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 
@@ -568,7 +569,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 2.Select source
         * def vaultType = Const.VaultType.HOT_WALLET
-        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') { externalAssetId:#(Const.TokenSymbol.XLM), searchText:#(testData.stdVaultE2E) }
+        * def getSource = call read(svc + 'Vault.feature@GetVaultFromSourceScreen') { externalAssetId:#(e2eToken), searchText:#(testData.stdVaultE2E) }
         * def source_warm = karate.jsonPath(getSource.response.data, "$.list[?(@.type=='"+ vaultType +"')]")[0]
         * def sourceId_warm = source_warm.id
         * def sourceName_warm = source_warm.name
@@ -577,7 +578,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
 
         # 3.Select destination from internal.
         * def vaultType = Const.VaultType.COLD_WALLET
-        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(Const.TokenSymbol.XLM), sourceVaultId:#(sourceId_warm) }
+        * def getDestination = call read(svc + 'Vault.feature@GetVaultFromDestinationScreen') { externalAssetId:#(e2eToken), sourceVaultId:#(sourceId_warm) }
         * def destination_warm = karate.jsonPath(getDestination.response.data, "$.list[?(@.type=='"+ vaultType +"' && @.id!='"+sourceId_warm+"')]")[0]
         * def destinationId_warm = destination_warm.id
         * def destinationName_warm = destination_warm.name
@@ -591,7 +592,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_estimate_fee = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -606,7 +607,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         * def body_total_estimate = 
         """
         { 
-            "assetId":'#(Const.TokenSymbol.XLM)', 
+            "assetId":'#(e2eToken)', 
             "destinationType": '#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceType":'#(Const.PeerType.VAULT_ACCOUNT)', 
             "sourceId": '#(sourceId_warm)',
@@ -628,7 +629,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
         { 
             "operation":'#(Const.Transfer.Operation.TRANSFER)',
             "tokenId":'#(tokenId_transfer)',
-            "feeType":'#(Const.TokenSymbol.XLM)',
+            "feeType":'#(e2eToken)',
             "fee":#(fee), 
             "treatAsGrossAmount": false, 
             "feeLevel": '#(Const.Transfer.FeeLevel.MEDIUM)', 

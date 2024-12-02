@@ -5,7 +5,7 @@ Feature: Settings
     * url baseMobileURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def challengeRequester = call read('this:Common.feature@FIDO-Requester')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @RAKCON-11010 @ForgotPIN
   Scenario: Forgot PIN

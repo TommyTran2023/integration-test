@@ -27,4 +27,5 @@ Feature: REP API Query size limit
 
   Examples:
     | api                       | param |
-    | /audit/audit-log          | { "limit": 10000 } |
+    | /audit/audit-log          | { "limit": 1000 } |
+# Audit log perf issue https://rakkar.atlassian.net/browse/MOB-269

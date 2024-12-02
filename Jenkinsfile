@@ -70,7 +70,7 @@ pipeline {
                             KARATE_ENV = "test"
                             HEALTH_CHECK_PATH = "sit"
                             XRAY_ENV = "TEST"
-                            TEST_EXEC = "RAKCON-34328"
+                            TEST_EXEC = "RAKCON-34326"
                             sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
@@ -225,7 +225,7 @@ pipeline {
                             inputInfoSwitcher: 'fileContent',
                             serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221',
                             importToSameExecution: 'true', 
-                            testExecKey: 'RAKCON-34209'])
+                            testExecKey: "${TEST_EXEC}"])
                     }
                 }
             }

@@ -3,9 +3,11 @@ function fn () {
     var env = karate.env;
     karate.log('Karate Environment: ', env);
 
-    if(!env) {
-        env = 'uat'; //default env
-    }
+    if (!env || env.equals('uat'))
+        env = 'sandbox';
+    else if (env.equals('qa') || env.equals('sit'))
+        env = 'test';
+
     var config = envFile[env];
     karate.configure('headers', { Accept: 'application/json' });
 

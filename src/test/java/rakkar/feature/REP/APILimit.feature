@@ -27,4 +27,5 @@ Feature: REP API Query size limit
 
   Examples:
     | api                       | param |
-    | /audit/audit-log          | { "limit": 10000 } |
+    | /audit/audit-log          | { "limit": 10000, "categories": "Transaction", "types": "Withdrawal", "dateFrom": "2024-10-31T17:00:00.000Z", "dateTo": "2024-11-07T16:59:59.999Z" } |
+# Audit log perf issue https://rakkar.atlassian.net/browse/MOB-269

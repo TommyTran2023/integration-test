@@ -1,7 +1,7 @@
 def SLACK_CHANNEL = "rakkar-alert-automation-test"
 // def TEAM_URL = "https://rakkardigital.webhook.office.com/webhookb2/52be9657-ee4e-4e80-b129-ff3321a59709@201a91bf-99c5-4514-99f9-725c381f0f8f/JenkinsCI/4cce63699dd64472878a3bc7d767d694/98b4bffe-269c-449b-8152-e60965a8c794"
 // def ENV = "SIT" // will be passed as parameter
-def KARATE_ENV = "qa"
+def KARATE_ENV = "test"
 def BRANCH = "develop"
 def HEALTH_CHECK_PATH
 def testSummary
@@ -26,7 +26,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENV', choices: 'SIT\nUAT\nDEV', description: 'Test Environment [SIT, UAT, DEV]')
+        choice(name: 'ENV', choices: 'TEST\nSANDBOX\nDEV', description: 'Test Environment [TEST, SANDBOX, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
     }
@@ -46,23 +46,31 @@ pipeline {
                             BRANCH = "main"
                             KARATE_ENV = "prod"
                             HEALTH_CHECK_PATH = "prod"
+                            XRAY_ENV = "PRODUCTION"
+                            TEST_EXEC = ""
                     }
-                    else if (env.BRANCH_NAME == 'uat' || params.ENV == 'UAT'){
+                    else if (env.BRANCH_NAME == 'uat' || params.ENV == 'SANDBOX'){
                             BRANCH = "uat"
-                            KARATE_ENV = "uat"
+                            KARATE_ENV = "sandbox"
                             HEALTH_CHECK_PATH = "uat"
+                            XRAY_ENV = "SANDBOX"
+                            TEST_EXEC = "RAKCON-34327"
                             sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
                             BRANCH = "develop"
                             KARATE_ENV = "dev"
                             HEALTH_CHECK_PATH = "dev"
+                            XRAY_ENV = "DEV"
+                            TEST_EXEC = "RAKCON-34209"
                             sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
                             BRANCH = "sit"
-                            KARATE_ENV = "qa"
+                            KARATE_ENV = "test"
                             HEALTH_CHECK_PATH = "sit"
+                            XRAY_ENV = "TEST"
+                            TEST_EXEC = "RAKCON-34326"
                             sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
@@ -97,11 +105,6 @@ pipeline {
                         slackSend(channel: "${SLACK_CHANNEL}",
                             color: 'danger',
                             message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
-
-                        // office365ConnectorSend color: '#a82e2e',
-                        //     message: "${ENV} ${testType} #${env.BUILD_NUMBER}: ABORTED<br>${serviceStatusMsg}",
-                        //     status: 'FAILED',
-                        //     webhookUrl: "${TEAM_URL}"
 
                         error("Abort the build because services healthcheck return error")
                     }
@@ -199,7 +202,7 @@ pipeline {
                               },
                               "xrayFields": {
                                   "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
+                                  "environments": ["${XRAY_ENV}"]
                               }
                             }""",
                             inputTestInfoSwitcher: 'fileContent',
@@ -212,15 +215,17 @@ pipeline {
                                   "issuetype": {
                                     "id": "10035"
                                   },
-                                  "labels" : ["${ENV}"]
+                                  "labels" : ["${XRAY_ENV}"]
                                 },
                               "xrayFields": {
                                   "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${ENV}"]
+                                  "environments": ["${XRAY_ENV}"]
                               }
                             }""",
                             inputInfoSwitcher: 'fileContent',
-                            serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221'])
+                            serverInstance: 'CLOUD-1b5e32d0-990a-47a2-8b27-a7b839848221',
+                            importToSameExecution: 'true', 
+                            testExecKey: "${TEST_EXEC}"])
                     }
                 }
             }
@@ -235,11 +240,6 @@ pipeline {
                 slackSend(channel: "${SLACK_CHANNEL}",
                     color: 'good',
                     message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
-
-                // office365ConnectorSend color: '#4b8869',
-                //     message: "${successMsg}<br>${passedSummary}",
-                //     status: 'PASSED',
-                //     webhookUrl: "${TEAM_URL}"
             }
         }
 
@@ -258,20 +258,6 @@ pipeline {
                     color: 'danger',
                     message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-                // MS Teams limitation
-                def failedDetailsTeams = "${failedTestMsg.join('<br><br>')}".take(15000 - failedScenariosMsg.length())
-
-                echo "Failed Scenarios: " + failedScenariosMsg.take(15000)
-                echo "Failed Details: " + failedDetailsTeams
-
-                // office365ConnectorSend color: '#a82e2e',
-                //     message: "${buildSummary}<br>${failedSummary}",
-                //     status: 'FAILED',
-                //     webhookUrl: "${TEAM_URL}",
-                //     factDefinitions:[
-                //         [ name: "Failed Scenarios", template: "${failedScenariosMsg.take(15000)}"],
-                //         [ name: "Error", template: "${failedDetailsTeams}"]
-                //     ]
             }
         }
     }

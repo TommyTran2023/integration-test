@@ -12,7 +12,7 @@ check_url() {
 # List of URLs to check
 env="$1"
 
-if [ "$env" = 'uat' ]; then
+if [ "$env" = 'sandbox' ]; then
     endpoint="http://acf5a27f1211c42fea8ea78207b527ae-936ee4c7bfbc751f.elb.ap-southeast-1.amazonaws.com"
 else
     endpoint="http://nlb-nginx-ingress-noneprod-gcp-5c8ae95385d209d1.elb.ap-southeast-1.amazonaws.com"

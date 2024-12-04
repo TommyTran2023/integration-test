@@ -3,7 +3,7 @@ Feature: Generate Challenge Answer for Biometric
 
   Background:
     * url baseURL
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def Const = read('classpath:data/enum.json')
 
   @FIDO-Requester

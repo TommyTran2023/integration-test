@@ -5,7 +5,7 @@ Feature: Approval View
     * url baseURL
     * call read('ApprovalAuthenticator.feature@GetAccessTokenForLogin')
     * def requesterInformation = call read('GetUserInfo.feature@GetRequesterInfo')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
     * def schemaBody = read('classpath:data/schema.json')
 
   @RAKCON-10983 @ViewListPendingRequest

@@ -31,7 +31,7 @@ Feature: Withdraw from WARM vault - Same and cross workspace
             if (!needCrossEnv)
                 return env;
             
-            var destEnv = env != 'uat' ? 'uat' : 'qa';
+            var destEnv = env != 'sandbox' ? 'sandbox' : 'test';
             
             return destEnv;
         }

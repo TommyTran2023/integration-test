@@ -5,7 +5,7 @@ Feature: HomePage
     * url baseURL
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def schemaBody = read('classpath:data/schema.json')
-    * def testData = read('classpath:data/data_test.json')
+    * def testData = read('classpath:data/dataTest.json')
 
   @RAKCON-11657 @AssetAllocationChart
   Scenario: View chart of Asset Allocation

@@ -1910,3 +1910,19 @@ Feature: All api call to core services
     Given path `core/v2/rep/cfg_relationships/${id}/hard`
     * headers headers
     When method DELETE
+
+    #----------------------------------
+    @POST_core_v2_TravelRule_VASP_validate-init-transaction
+  Scenario: POST core v2 TravelRule VASP validate-init-transaction
+    Given path '/core/v2/TravelRule/VASP/validate-init-transaction'
+    * headers headers 
+    And request body
+    When method POST
+
+    #----------------------------------
+    @POST_core_v2_TravelRule_VASP_validate-confirm-transaction
+  Scenario: POST core v2 TravelRule VASP validate-confirm-transaction
+    Given path '/core/v2/TravelRule/VASP/validate-confirm-transaction'
+    * headers headers 
+    And request body
+    When method POST

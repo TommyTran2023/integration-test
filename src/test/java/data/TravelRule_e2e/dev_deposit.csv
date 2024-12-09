@@ -1,0 +1,2 @@
+﻿flowName,sourceVaultId,sourceAddress,destinationFolderId,destinationAddressId,destinationAddress,notabeneAccept,expectedRepTxnStatus,expectedRakTxnStatus,expectedfbStatus,expectedfbSubStatus             ,expectedPath,expectedStage          ,expectedType,expectedKey  ,expectedReason                     ,expectedtrStatus,expectedVerdict
+from valid whitelisted,,,,,,,,,,,,,,,,,

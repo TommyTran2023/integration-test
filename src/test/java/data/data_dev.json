@@ -31,5 +31,6 @@
   "kilndAppId":"bb61a2a6-e4ae-44af-97d4-64fbe167de08",
   "coldWorkspaceId": 3,
   "warmWorkspaceId": 1,
-  "adaTokenId":"975ab105-3d4a-457e-9ff8-dfdfbd8710d0"
+  "adaTokenId":"975ab105-3d4a-457e-9ff8-dfdfbd8710d0",
+  "eth5TokenId":"1ce448b2-e2ea-48e9-a879-eb80fa14d2e5"
 }

@@ -6,6 +6,14 @@
     "userInfo": {
       "requesterUsername": "PASSPORT271192SG",
       "requesterPasscode": "271198"
+    },
+    "sg":{
+      "DiffVASP_ValidWhitelist":{
+        "eth5SourceVaultId":"fce4cc6d-5858-42ed-b4fb-186cf9f9e351",
+        "eth5SourceAddress":"",
+        "eth5DestinationFolderId":"48d523be-8368-40ad-96b7-41de714d101c",
+        "eth5DestinationAddressId":"dcd3e9e8-f5f8-456b-b747-c8ec1b3aa8c9"
+      }
     }
   },
   "sandbox_workspace": {
@@ -28,6 +36,9 @@
     "userInfo": {
       "requesterUsername": "PASSPORTQASN31101545TH",
       "requesterPasscode": "123123"
+    },
+    "sg": {
+
     }
   }
 }

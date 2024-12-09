@@ -58,5 +58,21 @@ function fn(){
             const shuffledArr = arr.sort(() => Math.random() - 0.5);
             return shuffledArr
         },
+        
+        waitUntilTransactionCompleted: function(transactionId) { 
+            var completedStatus = ["COMPLETED", "FAILED"]
+            var retry = 18
+            do {
+                java.lang.Thread.sleep(10000); 
+                var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
+                retry--
+            }
+            while (!completedStatus.includes(getTransactionDetail.response.data.status) && retry > 0)
+
+            if (retry <= 0 && !completedStatus.includes(getTransactionDetail.response.data.status))
+                throw Error ("Transaction cannot be completed: " + transactionId)
+  
+            return getTransactionDetail
+        }
     }
 }

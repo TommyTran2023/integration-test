@@ -219,8 +219,11 @@
     },
     "repURL": "https://dev-rep.thailaksa.net/",
     "sg_customer":{
-      "admin1":"PASSPORTxxx123SG",
-      "admin1UserId":"b2561a7b-769b-470c-b20c-401b0d40b983"
+      "admin1":"PASSPORT333333HK",
+      "admin1UserId":"895d39f7-105c-4d22-b342-2888e206b183",
+      "admin2":"PASSPORT444444HK",
+      "admin2UserId":"31958a4a-d547-4f49-bc63-b66e7c68a182",
+      "passcode":"123123"
     }
   }
 }

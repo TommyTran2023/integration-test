@@ -24,8 +24,8 @@ Feature: Tranaction Service
     * def data = 
     """
     {
-        authorization: #(requesterAccessToken),
-        transactionId: #(transactionId)
+        authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+        transactionId: "#(transactionId)"
     }
     """
     * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') data
@@ -428,5 +428,31 @@ Feature: Tranaction Service
         """
         * call read(svc + 'transactionSvc.feature@SyncTransaction') data
     
+    @CreateTravelRuleTransaction
+    Scenario: Create Travel Rule Transaction
+        * def data = 
+        """
+        {
+            headers: {
+                authorization: "#(typeof accessToken == 'undefined' ? requesterAccessToken : accessToken)",
+                challenge-answer: "#(typeof challengeAnswerRequest == 'undefined' ? null : challengeAnswerRequest)"
+            },
+            body: 
+            {
+                operation: "#(typeof operation != 'undefined' ? operation : null)",
+                destination: "#(typeof destination != 'undefined' ? destination : null)",
+                tokenId: "#(typeof tokenId != 'undefined' ? tokenId : null)",
+                amount: "#(typeof amount != 'undefined' ? amount : null)",
+                treatAsGrossAmount: "#(typeof treatAsGrossAmount != 'undefined' ? treatAsGrossAmount : null)",
+                fee: "#(typeof fee != 'undefined' ? fee : null)",
+                source: "#(typeof source != 'undefined' ? source : null)",
+                feeLevel: "#(typeof feeLevel != 'undefined' ? feeLevel : null)",
+                totalEstimatedFee: "#(typeof totalEstimatedFee != 'undefined' ? totalEstimatedFee : null)",
+                feeType: "#(typeof feeType != 'undefined' ? feeType : null)",
+                travelRuleTransactionID: "#(typeof travelRuleTransactionID != 'undefined' ? travelRuleTransactionID : null)"
+            }
+        }
+        """
+        * call read(svc + 'transactionSvc.feature@CreateTransaction') data
 
 

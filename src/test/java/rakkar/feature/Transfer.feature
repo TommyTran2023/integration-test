@@ -210,8 +210,8 @@ Feature: Transfer
     """
       { 
         "operation":'#(testData.transfer.operation)',
-        "tokenId":'#(dataSet.tokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',
-        "fee":'#((testData.transfer.withdraw.fee))', 
+        "tokenId":'#(dataSet.adaTokenId)',"feeType":'#(testData.transfer.withdraw.feeType)',
+        "fee":'#(a.TokenSymbol.ADA)', 
         "treatAsGrossAmount": true, 
         "feeLevel": '#(testData.transfer.feeLevel)', 
         "destination":
@@ -259,8 +259,8 @@ Feature: Transfer
         "uploadToken":'#(uploadLink.response.data.uploadToken)',
         "vdoSentence":'#(vdoSentence)', 
         "operation":'#(testData.transfer.operation)',
-        "tokenId":'#(dataSet.tokenId)',
-        "feeType":'#(testData.transfer.withdraw.feeType)',
+        "tokenId":'#(dataSet.adaTokenId)',
+        "feeType":'#(a.TokenSymbol.ADA)',
         "fee":'#(testData.transfer.withdraw.fee)', 
         "treatAsGrossAmount": true, 
         "feeLevel": '#(testData.transfer.feeLevel)', 

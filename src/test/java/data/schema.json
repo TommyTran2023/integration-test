@@ -41,7 +41,7 @@
       "email":"#string",
       "name":"#string",
       "roleDisplayName":"#string",
-      "status":"#string"
+      "status":"##string"
     }
   },
   "homePage": {

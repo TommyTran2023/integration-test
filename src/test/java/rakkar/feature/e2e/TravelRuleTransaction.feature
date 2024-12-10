@@ -3,8 +3,8 @@ Feature: Travel rule transaction
 
     Background: Login as SG requester
         * def env = karate.properties['karate.env']
-        * def crossData = karate.read('classpath:data/cross_workspace_data.json')
-        * def crossData = karate.jsonPath(crossData, "$.." + env +"_workspace")[0].sg
+        * def trData = karate.read('classpath:data/cross_workspace_data.json')
+        * def trData = karate.jsonPath(trData, "$.." + env +"_workspace")[0].sg
         * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(sg_customer.admin1)" }
         * def accessToken = userAccessToken
         * def amountETH = "0.00001" + (new Date()).getTime().toString().slice(5,10)
@@ -87,8 +87,7 @@ Feature: Travel rule transaction
         {
             requestId:"#(requestId)",
             approvalAccessToken: "#(approverSG.userAccessToken)",
-            challengeAnswerApprover: "#(approverSG.userAnswerApprover)",
-            passcode: "#(approverPasscode)",
+            challengeAnswerApprover: "#(approverSG.userAnswerApprover)"
         }
         """
         * call read(svc + 'Quorums.feature@ApproveRequest') data
@@ -141,20 +140,70 @@ Feature: Travel rule transaction
         * match transaction.response.data.additionalData == expectedAdditionalData
 
     Examples:
-        |flowName        |sourceVaultId                                      |destinationFolderId                                      |destinationAddressId                                      |notabeneAccept|expectedRepTxnStatus|expectedRakTxnStatus|expectedfbStatus|expectedfbSubStatus             |expectedPath|expectedStage          |expectedType|expectedKey  |expectedReason                     |expectedtrStatus|expectedVerdict|
-        |Notabene accept |crossData.DiffVASP_ValidWhitelist.eth5SourceVaultId|crossData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|crossData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|true          |Completed           |Completed           |COMPLETED       |CONFIRMED                       |Complete    |Complete without Frozen|OUTGOING    |tr.OUTGOING.4|-                                  |Completed       |ACCEPT         |
-        |Notabene cancel |crossData.DiffVASP_ValidWhitelist.eth5SourceVaultId|crossData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|crossData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|false         |Processing          |Processing          |REJECTED        |REJECTED_AML_SCREENING          |Freeze      |Post-screening         |OUTGOING    |tr.OUTGOING.2|Travel Rule rejected on Notabene   |Frozen          |REJECT         |
+        |flowName        |sourceVaultId                                   |destinationFolderId                                   |destinationAddressId                                   |notabeneAccept|expectedRepTxnStatus|expectedRakTxnStatus|expectedfbStatus|expectedfbSubStatus             |expectedPath|expectedStage          |expectedType|expectedKey  |expectedReason                     |expectedtrStatus|expectedVerdict|
+        |Notabene accept |trData.DiffVASP_ValidWhitelist.eth5SourceVaultId|trData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|trData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|true          |Completed           |Completed           |COMPLETED       |CONFIRMED                       |Complete    |Complete without Frozen|OUTGOING    |tr.OUTGOING.4|-                                  |Completed       |ACCEPT         |
+        |Notabene cancel |trData.DiffVASP_ValidWhitelist.eth5SourceVaultId|trData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|trData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|false         |Processing          |Processing          |REJECTED        |REJECTED_AML_SCREENING          |Freeze      |Post-screening         |OUTGOING    |tr.OUTGOING.2|Travel Rule rejected on Notabene   |Frozen          |REJECT         |
         
-    @DepositDiffVASP
+    @DepositFromDiffVASP
     Scenario: Deposit Diff VASP - from valid whitelisted
-        # 1. Withdraw from whitelisted
+        # 1. Withdraw from whitelisted and approve in cross sg customer
+        * eval 
+        """
+            var destEnv = env != 'dev' ? 'dev' : 'test';
+            var crossData = karate.read('classpath:data/cross_workspace_data.json')
+            crossData = karate.jsonPath(crossData, "$.." + destEnv +"_workspace")[0]
+            var destUrl = crossData["url_" + destEnv]
+            var crossApproverIv = crossData.sg.userInfo.admin2UserId.replaceAll('-','').slice(0, 16)
+        """
+        * def destUserBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin1})
+        * def data = 
+        """
+        {
+            "customUrl":"#(destUrl)",
+            "accessToken":"#(destUserBio.userAccessToken)",
+            "challengeAnswerRequest":"#(destUserBio.userAnswerApprover)",
+            "treatAsGrossAmount": false,
+            "feeLevel": "HIGH",
+            "amount": "#(amountETH)",
+            "feeType": "GWEI",
+            "tokenId": "#(crossData.eth5TokenId)",
+            "fee": 12.646000000000001,
+            "operation": "TRANSFER",
+            "totalEstimatedFee": 0.00026556600000000001,
+            "destination": {
+                "id": "4d3bcfba-57e1-409c-bb34-10e6b6906f67",
+                "type": "INTERNAL_WALLET"
+            },
+            "source": {
+                "id": "67fb51b6-d6bb-449a-9a09-c68d771c6a93",
+                "type": "VAULT_ACCOUNT"
+            }
+        }
+        """
+        * call read(svc + 'Transaction.feature@CreateTransaction') data
+        * def requestId = response.data.requestId
+        * def destUserBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin2})
+        * def crossApproverPasscode = karate.exec(`node aes.js encrypt ${crossData.sg.userInfo.passcode} ${privateKey.secret} ${crossApproverIv}`);
+        * def data = 
+        """
+        {
+            customUrl:"#(destUrl)",
+            requestId:"#(requestId)",
+            approvalAccessToken: "#(destUserBio.userAccessToken)",
+            challengeAnswerApprover: "#(destUserBio.userAnswerApprover)"
+        }
+        """
+        * call read(svc + 'Quorums.feature@ApproveRequest') data
         
-
         # 2. Accept the withdraw from Notabene
-
         # 3. ACCEPT/REJECT the deposit from Notabene
+        # Just wait Fireblocks Accept Inbound Transaction Blocking time expired from Notabene
 
+        # Get transaction hash from withdraw txn
+        
+        
         # 4. Validate transaction details from RAK API - from get transaction details
+
 
 
 

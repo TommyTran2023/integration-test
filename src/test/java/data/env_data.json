@@ -62,8 +62,11 @@
     },
     "repURL": "https://test-rep.thailaksa.net/",
     "sg_customer":{
-      "admin1":"PASSPORTrobot2HK",
-      "admin1UserId":"1399df02-7800-4a81-9db2-1f5ffff4e86b"
+      "admin1":"ID_CARD34342321HK",
+      "admin1UserId":"324b4888-3835-4141-9933-e05c51f53945",
+      "admin2":"ID_CARD23242342HK",
+      "admin2UserId":"62e068f5-e47e-4870-b2aa-d973447d3473",
+      "passcode":"123123"
     }
   },
   "sandbox": {

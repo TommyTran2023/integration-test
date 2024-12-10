@@ -1,6 +1,6 @@
 Feature: Advance Quorum Service
   Background:
-    * url baseURL
+    * url typeof customUrl != 'undefined' ? customUrl : baseURL
 
 #----------------Quorums----------------#
     @ApproveRequest

@@ -43,35 +43,35 @@ pipeline {
                     def credentials = null
 
                     if (env.BRANCH_NAME == 'main'){
-                        BRANCH = "main"
-                        KARATE_ENV = "prod"
-                        HEALTH_CHECK_PATH = "prod"
-                        XRAY_ENV = "PRODUCTION"
-                        TEST_EXEC = ""
+                            BRANCH = "main"
+                            KARATE_ENV = "prod"
+                            HEALTH_CHECK_PATH = "prod"
+                            XRAY_ENV = "PRODUCTION"
+                            TEST_EXEC = ""
                     }
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'SANDBOX'){
-                        BRANCH = "uat"
-                        KARATE_ENV = "sandbox"
-                        HEALTH_CHECK_PATH = "uat"
-                        XRAY_ENV = "SANDBOX"
-                        TEST_EXEC = "RAKCON-34327"
-                        sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
+                            BRANCH = "uat"
+                            KARATE_ENV = "sandbox"
+                            HEALTH_CHECK_PATH = "uat"
+                            XRAY_ENV = "SANDBOX"
+                            TEST_EXEC = "RAKCON-34327"
+                            sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
-                        BRANCH = "develop"
-                        KARATE_ENV = "dev"
-                        HEALTH_CHECK_PATH = "dev"
-                        XRAY_ENV = "DEV"
-                        TEST_EXEC = "RAKCON-34209"
-                        sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
+                            BRANCH = "develop"
+                            KARATE_ENV = "dev"
+                            HEALTH_CHECK_PATH = "dev"
+                            XRAY_ENV = "DEV"
+                            TEST_EXEC = "RAKCON-34209"
+                            sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
-                        BRANCH = "sit"
-                        KARATE_ENV = "test"
-                        HEALTH_CHECK_PATH = "sit"
-                        XRAY_ENV = "TEST"
-                        TEST_EXEC = "RAKCON-34326"
-                        sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
+                            BRANCH = "sit"
+                            KARATE_ENV = "test"
+                            HEALTH_CHECK_PATH = "sit"
+                            XRAY_ENV = "TEST"
+                            TEST_EXEC = "RAKCON-34326"
+                            sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
                     env.BRANCH = BRANCH
@@ -83,14 +83,14 @@ pipeline {
             }
         }
 
-        // stage ('Git Checkout') {
-        //     steps {
+        stage ('Git Checkout') {
+            steps {
 
-        //         git branch: "${BRANCH}",
-        //             credentialsId: 'github',
-        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
-        //     }
-        // }
+                git branch: "${BRANCH}",
+                    credentialsId: 'github',
+                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
+            }
+        }
 
         stage ('Check Service Status') {
             steps {
@@ -127,7 +127,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @ViewMyRequestAllType'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
@@ -190,22 +190,22 @@ pipeline {
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
                             importInParallel: 'false',
-                            // testImportInfo: """{
-                            //   "fields": {
-                            //       "project": {
-                            //          "key": "RAKCON"
-                            //       },
-                            //       "summary": "${testName}",
-                            //       "issuetype": {
-                            //         "id": "10035"
-                            //       }
-                            //   },
-                            //   "xrayFields": {
-                            //       "testPlanKey": "RAKCON-10583",
-                            //       "environments": ["${XRAY_ENV}"]
-                            //   }
-                            // }""",
-                            // inputTestInfoSwitcher: 'fileContent',
+                            testImportInfo: """{
+                              "fields": {
+                                  "project": {
+                                     "key": "RAKCON"
+                                  },
+                                  "summary": "${testName}",
+                                  "issuetype": {
+                                    "id": "10035"
+                                  }
+                              },
+                              "xrayFields": {
+                                  "testPlanKey": "RAKCON-10583",
+                                  "environments": ["${XRAY_ENV}"]
+                              }
+                            }""",
+                            inputTestInfoSwitcher: 'fileContent',
                             importInfo: """{
                                 "fields": {
                                     "project": {
@@ -231,34 +231,34 @@ pipeline {
             }
         }
 
-        // success {
-        //     script {
-        //         // Passed notification
-        //         def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
-        //         def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-        //         slackSend(channel: "${SLACK_CHANNEL}",
-        //             color: 'good',
-        //             message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
-        //     }
-        // }
+        success {
+            script {
+                // Passed notification
+                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+                slackSend(channel: "${SLACK_CHANNEL}",
+                    color: 'good',
+                    message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
+            }
+        }
 
-        // failure {
-        //     script {
-        //         // Failure details
-        //         def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
-        //         def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-        //         def failedScenariosMsg = "*Failed Scenarios*\n" +
-        //         "${failedScenarios.join(', ')}"
-        //         def failedDetails = "*Failed Test:*\n" +
-        //         "${failedTestMsg.join('\n\n')}"
+        failure {
+            script {
+                // Failure details
+                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+                def failedScenariosMsg = "*Failed Scenarios*\n" +
+                "${failedScenarios.join(', ')}"
+                def failedDetails = "*Failed Test:*\n" +
+                "${failedTestMsg.join('\n\n')}"
 
-        //         slackSend(channel: "${SLACK_CHANNEL}",
-        //             color: 'danger',
-        //             message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
+                slackSend(channel: "${SLACK_CHANNEL}",
+                    color: 'danger',
+                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-        //     }
-        // }
+            }
+        }
     }
 }

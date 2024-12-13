@@ -43,35 +43,35 @@ pipeline {
                     def credentials = null
 
                     if (env.BRANCH_NAME == 'main'){
-                            BRANCH = "main"
-                            KARATE_ENV = "prod"
-                            HEALTH_CHECK_PATH = "prod"
-                            XRAY_ENV = "PRODUCTION"
-                            TEST_EXEC = ""
+                        BRANCH = "main"
+                        KARATE_ENV = "prod"
+                        HEALTH_CHECK_PATH = "prod"
+                        XRAY_ENV = "PRODUCTION"
+                        TEST_EXEC = ""
                     }
                     else if (env.BRANCH_NAME == 'uat' || params.ENV == 'SANDBOX'){
-                            BRANCH = "uat"
-                            KARATE_ENV = "sandbox"
-                            HEALTH_CHECK_PATH = "uat"
-                            XRAY_ENV = "SANDBOX"
-                            TEST_EXEC = "RAKCON-34327"
-                            sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
+                        BRANCH = "uat"
+                        KARATE_ENV = "sandbox"
+                        HEALTH_CHECK_PATH = "uat"
+                        XRAY_ENV = "SANDBOX"
+                        TEST_EXEC = "RAKCON-34327"
+                        sh 'cp -rf ${DB_UAT} ./rakkar-db-credentials.json'
                     }
                     else if (env.BRANCH_NAME == 'develop' || params.ENV == 'DEV'){
-                            BRANCH = "develop"
-                            KARATE_ENV = "dev"
-                            HEALTH_CHECK_PATH = "dev"
-                            XRAY_ENV = "DEV"
-                            TEST_EXEC = "RAKCON-34209"
-                            sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
+                        BRANCH = "develop"
+                        KARATE_ENV = "dev"
+                        HEALTH_CHECK_PATH = "dev"
+                        XRAY_ENV = "DEV"
+                        TEST_EXEC = "RAKCON-34209"
+                        sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
-                            BRANCH = "sit"
-                            KARATE_ENV = "test"
-                            HEALTH_CHECK_PATH = "sit"
-                            XRAY_ENV = "TEST"
-                            TEST_EXEC = "RAKCON-34326"
-                            sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
+                        BRANCH = "sit"
+                        KARATE_ENV = "test"
+                        HEALTH_CHECK_PATH = "sit"
+                        XRAY_ENV = "TEST"
+                        TEST_EXEC = "RAKCON-34326"
+                        sh 'cp -rf ${DB_SIT} ./rakkar-db-credentials.json'
                     }
 
                     env.BRANCH = BRANCH
@@ -190,22 +190,22 @@ pipeline {
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
                             importInParallel: 'false',
-                            testImportInfo: """{
-                              "fields": {
-                                  "project": {
-                                     "key": "RAKCON"
-                                  },
-                                  "summary": "${testName}",
-                                  "issuetype": {
-                                    "id": "10035"
-                                  }
-                              },
-                              "xrayFields": {
-                                  "testPlanKey": "RAKCON-10583",
-                                  "environments": ["${XRAY_ENV}"]
-                              }
-                            }""",
-                            inputTestInfoSwitcher: 'fileContent',
+                            // testImportInfo: """{
+                            //   "fields": {
+                            //       "project": {
+                            //          "key": "RAKCON"
+                            //       },
+                            //       "summary": "${testName}",
+                            //       "issuetype": {
+                            //         "id": "10035"
+                            //       }
+                            //   },
+                            //   "xrayFields": {
+                            //       "testPlanKey": "RAKCON-10583",
+                            //       "environments": ["${XRAY_ENV}"]
+                            //   }
+                            // }""",
+                            // inputTestInfoSwitcher: 'fileContent',
                             importInfo: """{
                                 "fields": {
                                     "project": {

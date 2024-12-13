@@ -28,6 +28,8 @@ urls=(
     "openapi/health"
     "staking/health"
     "transaction/health"
+    "openapi/health"
+    "wallet-connect/health"
 )
 
 # Loop through each URL and check response status

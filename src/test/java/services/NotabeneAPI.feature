@@ -2,8 +2,9 @@
 Feature: Notabene API
     Background:
         Given url 'https://api.notabene.dev'
-        * def env = karate.properties['karate.env']
-        * def notabene = karate.jsonPath(privateKey, "$.." + env +"_notabene")[0]
+        * def destEnv = typeof destEnv == 'undefined' ? karate.properties['karate.env'] : destEnv
+        * def notabene = karate.jsonPath(privateKey, "$.." + destEnv +"_notabene")[0]
+        * print destEnv, notabene
 
     @GetAccessToken
     Scenario: Get Access Token

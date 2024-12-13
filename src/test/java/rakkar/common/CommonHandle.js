@@ -59,8 +59,8 @@ function fn(){
             return shuffledArr
         },
         
-        waitUntilTransactionCompleted: function(transactionId) { 
-            var completedStatus = ["COMPLETED", "FAILED"]
+        waitUntilTransactionCompleted: function(transactionId, expectedStatus) { 
+            var completedStatus = ["COMPLETED", "FAILED", expectedStatus]
             var retry = 18
             do {
                 java.lang.Thread.sleep(10000); 
@@ -70,7 +70,7 @@ function fn(){
             while (!completedStatus.includes(getTransactionDetail.response.data.status) && retry > 0)
 
             if (retry <= 0 && !completedStatus.includes(getTransactionDetail.response.data.status))
-                throw Error ("Transaction cannot be completed: " + transactionId)
+                karate.fail("Transaction cannot be completed: " + transactionId + (expectedStatus == null ? "" : ". Expected status: " + expectedStatus))
   
             return getTransactionDetail
         }

@@ -1,20 +1,23 @@
-@e2e
+@e2e @TravelRule @TravelRule_e2e
 Feature: Travel rule transaction
 
     Background: Login as SG requester
+        * print isRun
+        * if (isRun == "false") karate.abort()
+
         * def env = karate.properties['karate.env']
         * def trData = karate.read('classpath:data/cross_workspace_data.json')
         * def trData = karate.jsonPath(trData, "$.." + env +"_workspace")[0].sg
         * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(sg_customer.admin1)" }
         * def accessToken = userAccessToken
-        * def amountETH = "0.00001" + (new Date()).getTime().toString().slice(5,10)
+        * def amountETH = "0.0001" + (new Date()).getTime().toString().slice(5,10)
         * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
 
     @WithdrawDiffVASP
     Scenario Outline: Withdraw Diff VASP - <flowName>
-        * def sourceVaultId = <sourceVaultId>
-        * def destinationFolderId = <destinationFolderId>
-        * def destinationAddressId = <destinationAddressId>
+        * def sourceVaultId = "<sourceVaultId>"
+        * def destinationFolderId = "<destinationFolderId>"
+        * def destinationAddressId = "<destinationAddressId>"
         # 1. _VASP validate-init-transaction
         * def data =
         """
@@ -92,6 +95,9 @@ Feature: Travel rule transaction
         """
         * call read(svc + 'Quorums.feature@ApproveRequest') data
 
+        # 5. Verify transaction detail
+        # * call read(svc + 'Transaction.feature@ViewTransactionDetail') {transactionId:"#(transactionId)"}
+
         # 5. ACCEPT/CANCEL the withdraw from Notebene
         * eval
         """
@@ -103,7 +109,7 @@ Feature: Travel rule transaction
         """
 
         # 6. Wait until transaction completed
-        * def transaction = commonHandle().waitUntilTransactionCompleted(transactionId)
+        * def transaction = commonHandle().waitUntilTransactionCompleted(transactionId, null)
 
         # 7. Validate transaction details from RAK API - from get transaction details
         * def expectedRakObj = 
@@ -124,7 +130,7 @@ Feature: Travel rule transaction
         * def expectedAdditionalData = 
         """
         {
-            "url": "https://app.notabene.id",
+            "url": "https://app.notabene.dev",
             "rakObj": "#object",
             "verdict": "#(expectedVerdict)",
             "provider": "NOTABENE",
@@ -140,13 +146,16 @@ Feature: Travel rule transaction
         * match transaction.response.data.additionalData == expectedAdditionalData
 
     Examples:
-        |flowName        |sourceVaultId                                   |destinationFolderId                                   |destinationAddressId                                   |notabeneAccept|expectedRepTxnStatus|expectedRakTxnStatus|expectedfbStatus|expectedfbSubStatus             |expectedPath|expectedStage          |expectedType|expectedKey  |expectedReason                     |expectedtrStatus|expectedVerdict|
-        |Notabene accept |trData.DiffVASP_ValidWhitelist.eth5SourceVaultId|trData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|trData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|true          |Completed           |Completed           |COMPLETED       |CONFIRMED                       |Complete    |Complete without Frozen|OUTGOING    |tr.OUTGOING.4|-                                  |Completed       |ACCEPT         |
-        |Notabene cancel |trData.DiffVASP_ValidWhitelist.eth5SourceVaultId|trData.DiffVASP_ValidWhitelist.eth5DestinationFolderId|trData.DiffVASP_ValidWhitelist.eth5DestinationAddressId|false         |Processing          |Processing          |REJECTED        |REJECTED_AML_SCREENING          |Freeze      |Post-screening         |OUTGOING    |tr.OUTGOING.2|Travel Rule rejected on Notabene   |Frozen          |REJECT         |
-        
+        |  read('classpath:data/TravelRule_e2e/dev_withdraw.csv')  |
+    
+
     @DepositFromDiffVASP
-    Scenario: Deposit Diff VASP - from valid whitelisted
-        # 1. Withdraw from whitelisted and approve in cross sg customer
+    Scenario Outline: Deposit Diff VASP - <flowName>
+        * def sourceVaultId = "<sourceVaultId>"
+        * def destinationFolderId = "<destinationFolderId>"
+        * def destinationFolderType = "<destinationFolderType>"
+
+        # 1.1 Withdraw from whitelisted and approve in cross sg customer
         * eval 
         """
             var destEnv = env != 'dev' ? 'dev' : 'test';
@@ -156,6 +165,38 @@ Feature: Travel rule transaction
             var crossApproverIv = crossData.sg.userInfo.admin2UserId.replaceAll('-','').slice(0, 16)
         """
         * def destUserBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin1})
+        * def data =
+        """
+        {
+            "customUrl":"#(destUrl)",
+            "accessToken":"#(destUserBio.userAccessToken)",
+            "transactionAsset": "ETH_TEST5",
+            "transactionAmount": "#(amountETH)",
+            "source": {
+                "type": "VAULT_ID",
+                "value": "#(sourceVaultId)"
+            },
+            "destination": {
+                "type": "FOLDER_ID",
+                "value": "#(destinationAddressId)"
+            }
+        }
+        """
+        * call read(svc + 'TravelRule.feature@POST_core_v2_TravelRule_VASP_validate-init-transaction') data
+        Then match responseStatus == 201
+        * def travelRuleTransactionID = response.data.travelRuleTransactionID
+
+        # 1.2. _VASP validate-confirm-transaction
+        * def data =
+        """
+        {
+            "travelRuleTransactionID": "#(travelRuleTransactionID)"
+        }
+        """
+        * call read(svc + 'TravelRule.feature@POST_core_v2_TravelRule_VASP_validate-confirm-transaction') data
+        Then match responseStatus == 201
+
+        # 1.3 Create Withdraw from whitelisted 
         * def data = 
         """
         {
@@ -171,38 +212,57 @@ Feature: Travel rule transaction
             "operation": "TRANSFER",
             "totalEstimatedFee": 0.00026556600000000001,
             "destination": {
-                "id": "4d3bcfba-57e1-409c-bb34-10e6b6906f67",
-                "type": "INTERNAL_WALLET"
+                "id": "#(destinationFolderId)",
+                "type": "#(destinationFolderType)"
             },
             "source": {
                 "id": "67fb51b6-d6bb-449a-9a09-c68d771c6a93",
                 "type": "VAULT_ACCOUNT"
-            }
+            },
+            "travelRuleTransactionID": "#(travelRuleTransactionID)"
         }
         """
-        * call read(svc + 'Transaction.feature@CreateTransaction') data
+        * call read(svc + 'Transaction.feature@CreateTravelRuleTransaction') data
         * def requestId = response.data.requestId
-        * def destUserBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin2})
+
+        # 1.4 Approve in cross sg customer
+        * def destApproverBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin2})
         * def crossApproverPasscode = karate.exec(`node aes.js encrypt ${crossData.sg.userInfo.passcode} ${privateKey.secret} ${crossApproverIv}`);
         * def data = 
         """
         {
             customUrl:"#(destUrl)",
             requestId:"#(requestId)",
-            approvalAccessToken: "#(destUserBio.userAccessToken)",
-            challengeAnswerApprover: "#(destUserBio.userAnswerApprover)"
+            approvalAccessToken: "#(destApproverBio.userAccessToken)",
+            challengeAnswerApprover: "#(destApproverBio.userAnswerApprover)"
         }
         """
         * call read(svc + 'Quorums.feature@ApproveRequest') data
-        
+        * print destEnv
         # 2. Accept the withdraw from Notabene
+        * eval
+        """
+            java.lang.Thread.sleep(5000); 
+            karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "outgoing", destEnv: destEnv }) 
+        """
+
         # 3. ACCEPT/REJECT the deposit from Notabene
-        # Just wait Fireblocks Accept Inbound Transaction Blocking time expired from Notabene
+        * eval
+        """
+            java.lang.Thread.sleep(5000); 
+            if (notabeneAccept == "true")
+                karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "incoming" }) 
+            else
+                karate.call(svc + 'NotabeneAPI.feature@CancelLatestTransfer',{ txDirection: "incoming" }) 
+        """
 
         # Get transaction hash from withdraw txn
         
         
         # 4. Validate transaction details from RAK API - from get transaction details
+        
+    Examples:
+        |  read('classpath:data/TravelRule_e2e/dev_deposit.csv')  |
 
 
 

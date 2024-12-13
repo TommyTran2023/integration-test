@@ -29,7 +29,7 @@ Feature: Common Feature
 
     @ApproveTransactionCommon
     Scenario: Approve transaction by id
-        * requestHandle().approveTransaction('3c30fa61-9178-4d00-ab3f-51b8bebd2dc5')
+        * requestHandle().approveTransaction('5de37edb-27c6-4bf0-9793-896a5116e4da')
 
     @UpdateExistingNetworkToPrivate
     Scenario: Update Existing Network To Private

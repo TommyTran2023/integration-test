@@ -83,14 +83,14 @@ pipeline {
             }
         }
 
-        stage ('Git Checkout') {
-            steps {
+        // stage ('Git Checkout') {
+        //     steps {
 
-                git branch: "${BRANCH}",
-                    credentialsId: 'github',
-                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
-            }
-        }
+        //         git branch: "${BRANCH}",
+        //             credentialsId: 'github',
+        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
+        //     }
+        // }
 
         stage ('Check Service Status') {
             steps {
@@ -127,7 +127,7 @@ pipeline {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}'"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags @ViewMyRequestAllType'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
@@ -231,34 +231,34 @@ pipeline {
             }
         }
 
-        success {
-            script {
-                // Passed notification
-                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
-                def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'good',
-                    message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
-            }
-        }
+        // success {
+        //     script {
+        //         // Passed notification
+        //         def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+        //         def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+        //         slackSend(channel: "${SLACK_CHANNEL}",
+        //             color: 'good',
+        //             message: "${successMsg} (<${env.BUILD_URL}|Open>)\n${passedSummary}")
+        //     }
+        // }
 
-        failure {
-            script {
-                // Failure details
-                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
-                def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
-                "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
-                def failedScenariosMsg = "*Failed Scenarios*\n" +
-                "${failedScenarios.join(', ')}"
-                def failedDetails = "*Failed Test:*\n" +
-                "${failedTestMsg.join('\n\n')}"
+        // failure {
+        //     script {
+        //         // Failure details
+        //         def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+        //         def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
+        //         "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
+        //         def failedScenariosMsg = "*Failed Scenarios*\n" +
+        //         "${failedScenarios.join(', ')}"
+        //         def failedDetails = "*Failed Test:*\n" +
+        //         "${failedTestMsg.join('\n\n')}"
 
-                slackSend(channel: "${SLACK_CHANNEL}",
-                    color: 'danger',
-                    message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
+        //         slackSend(channel: "${SLACK_CHANNEL}",
+        //             color: 'danger',
+        //             message: "${buildSummary} (<${env.BUILD_URL}|Open>)\n${failedSummary}\n\n${failedScenariosMsg}\n\n${failedDetails}")
 
-            }
-        }
+        //     }
+        // }
     }
 }

@@ -25,7 +25,7 @@ Feature: Travel rule whitelist folder for SG entity
     {
         "id" : "#string",
         "validatorId" : "#string",
-        "entityId" : "SG"
+        "entityId" : "#string"
     }
     """
     * assert response.data.total > 0

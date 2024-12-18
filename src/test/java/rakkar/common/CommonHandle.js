@@ -60,7 +60,7 @@ function fn(){
         },
         
         waitUntilTransactionCompleted: function(transactionId, expectedStatus) { 
-            var completedStatus = ["COMPLETED", "FAILED", expectedStatus]
+            var completedStatus = ["COMPLETED", "FAILED", expectedStatus.toUpperCase()]
             var retry = 18
             do {
                 java.lang.Thread.sleep(10000); 

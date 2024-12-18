@@ -95,9 +95,6 @@ Feature: Travel rule transaction
         """
         * call read(svc + 'Quorums.feature@ApproveRequest') data
 
-        # 5. Verify transaction detail
-        # * call read(svc + 'Transaction.feature@ViewTransactionDetail') {transactionId:"#(transactionId)"}
-
         # 5. ACCEPT/CANCEL the withdraw from Notebene
         * eval
         """
@@ -109,7 +106,7 @@ Feature: Travel rule transaction
         """
 
         # 6. Wait until transaction completed
-        * def transaction = commonHandle().waitUntilTransactionCompleted(transactionId, null)
+        * def transaction = commonHandle().waitUntilTransactionCompleted(transactionId, '<expectedRakTxnStatus>')
 
         # 7. Validate transaction details from RAK API - from get transaction details
         * def expectedRakObj = 
@@ -139,8 +136,9 @@ Feature: Travel rule transaction
             "trTypeObjKey": "#(expectedKey)",
             "screeningTime": "#number",
             "rakDescription": "#(expectedReason)",
-            "quorumRequestId": "#uuid"
-            }
+            "quorumRequestId": "#uuid",
+            "trStatus": "#(expectedtrStatus)"
+        }
         """
         * match transaction.response.data.additionalData.rakObj == expectedRakObj
         * match transaction.response.data.additionalData == expectedAdditionalData

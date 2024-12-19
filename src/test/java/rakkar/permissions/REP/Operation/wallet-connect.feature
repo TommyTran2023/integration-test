@@ -16,8 +16,8 @@ Scenario Outline: wallet connect: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: "FALSE", 
         requireAnswer: "FALSE", 
-        expectedSchema: <expectedREPSchema_CustomerSuccess>,
-        expectedStatus: <expectedREPStatus_CustomerSuccess>
+        expectedSchema: <expectedREPSchema_Operation>,
+        expectedStatus: <expectedREPStatus_Operation>
     }
     """
     * call read('classpath:rakkar/permissions/permissions.feature@test') testData

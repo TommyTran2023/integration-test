@@ -6,9 +6,11 @@ Background:
     var requestIv = userId.replaceAll('-','').slice(0, 16);
     var passcode = karate.exec(`node aes.js encrypt ${pass} ${secret} ${requestIv}`)
 
-    var userAccessToken = karate.callSingle(svc + 'Auth.feature@GetUserAccessToken', { userName: permission.admin1 }).userAccessToken
+    var userAccessToken = karate.call(svc + 'Auth.feature@GetUserAccessToken', { userName: userName }).userAccessToken
     karate.set('userAccessToken', userAccessToken)
-
+    karate.log(userAccessToken)
+    karate.log(userName)
+    karate.log(passcode)
     karate.set('user', { userName: userName, passcode: passcode })
   }
   """

@@ -2,7 +2,6 @@
 Feature: Travel rule transaction
 
     Background: Login as SG requester
-        * print isRun
         * if (isRun == "false") karate.abort()
 
         * def env = karate.properties['karate.env']
@@ -12,6 +11,12 @@ Feature: Travel rule transaction
         * def accessToken = userAccessToken
         * def amountETH = "0.0001" + (new Date()).getTime().toString().slice(5,10)
         * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+
+    @setup
+    Scenario:
+        * def env = karate.properties['karate.env']
+        * def testWithdraw = read(`classpath:data/TravelRule_e2e/${env}_withdraw.csv`) 
+        * def testDeposit = read(`classpath:data/TravelRule_e2e/${env}_deposit.csv`) 
 
     @WithdrawDiffVASP
     Scenario Outline: Withdraw Diff VASP - <flowName>
@@ -57,7 +62,7 @@ Feature: Travel rule transaction
             "operation": "TRANSFER",
             "destination": {
                 "id": "#(destinationFolderId)",
-                "type": "EXTERNAL_WALLET"
+                "type": "#(folderType)"
             },
             "tokenId": "#(dataSet.eth5TokenId)",
             "amount": "#(amountETH)",
@@ -106,7 +111,7 @@ Feature: Travel rule transaction
         """
 
         # 6. Wait until transaction completed
-        * def transaction = commonHandle().waitUntilTransactionCompleted(transactionId, '<expectedRakTxnStatus>')
+        * def transaction = commonHandle().waitUntilFireblocksStatusCompleted(transactionId, null)
 
         # 7. Validate transaction details from RAK API - from get transaction details
         * def expectedRakObj = 
@@ -144,7 +149,7 @@ Feature: Travel rule transaction
         * match transaction.response.data.additionalData == expectedAdditionalData
 
     Examples:
-        |  read('classpath:data/TravelRule_e2e/dev_withdraw.csv')  |
+        |  karate.setupOnce().testWithdraw  |
     
 
     @DepositFromDiffVASP
@@ -214,7 +219,7 @@ Feature: Travel rule transaction
                 "type": "#(destinationFolderType)"
             },
             "source": {
-                "id": "67fb51b6-d6bb-449a-9a09-c68d771c6a93",
+                "id": "#(sourceVaultId)",
                 "type": "VAULT_ACCOUNT"
             },
             "travelRuleTransactionID": "#(travelRuleTransactionID)"
@@ -222,6 +227,7 @@ Feature: Travel rule transaction
         """
         * call read(svc + 'Transaction.feature@CreateTravelRuleTransaction') data
         * def requestId = response.data.requestId
+        * def transactionId = response.data.id
 
         # 1.4 Approve in cross sg customer
         * def destApproverBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin2})
@@ -236,7 +242,7 @@ Feature: Travel rule transaction
         }
         """
         * call read(svc + 'Quorums.feature@ApproveRequest') data
-        * print destEnv
+        
         # 2. Accept the withdraw from Notabene
         * eval
         """
@@ -245,22 +251,82 @@ Feature: Travel rule transaction
         """
 
         # 3. ACCEPT/REJECT the deposit from Notabene
-        * eval
-        """
-            java.lang.Thread.sleep(5000); 
-            if (notabeneAccept == "true")
-                karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "incoming" }) 
-            else
-                karate.call(svc + 'NotabeneAPI.feature@CancelLatestTransfer',{ txDirection: "incoming" }) 
-        """
+        # * eval
+        # """
+        #     java.lang.Thread.sleep(5000); 
+        #     if (notabeneAccept == "true")
+        #         karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "incoming" }) 
+        #     else
+        #         karate.call(svc + 'NotabeneAPI.feature@CancelLatestTransfer',{ txDirection: "incoming" }) 
+        # """
 
         # Get transaction hash from withdraw txn
-        
+        * def transaction = commonHandle().waitUntilFireblocksStatusCompleted(transactionId, null)
+        * def txHash = transaction.response.data.txHash
+        * print txHash
         
         # 4. Validate transaction details from RAK API - from get transaction details
+        * copy customUrl = baseURL
+        * def destUser = call read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(sg_customer.admin1)" }
+        * eval
+        """
+        var recievedAsset = false
+        var maxRetry = 6
+        do {
+            java.lang.Thread.sleep(30000); 
+
+            var listTxn = karate.call(svc + 'Transaction.feature@GetTransactionsList', {accessToken: destUser.userAccessToken, query:{offset: '0', limit:'10'}}).response.data.transactions
+            
+            if (listTxn.map(x => x.txHash).includes(txHash)) {
+                var actualTxn = listTxn.find(x => x.txHash == txHash)
+                recievedAsset = true
+            }
+
+            maxRetry--
+            
+        } while (!recievedAsset && maxRetry > 0)
+        if (recievedAsset)
+            karate.log("Destination receive asset successfully:", txHash)
+        else
+            karate.fail("Destination didn't receive asset successfully:", txHash)
+        """
+
+        * def expectedRakObj = 
+        """
+        {
+            "key": "#(expectedKey)",
+            "path": "#(expectedPath)",
+            "stage": "#(expectedStage)",
+            "fbStatus": "#(expectedfbStatus)",
+            "hookType": "#(expectedType)",
+            "trReason": "#(expectedReason)",
+            "trStatus": "#(expectedtrStatus)",
+            "REPStatus": "#(expectedRepTxnStatus)",
+            "fbSubStatus": "#(expectedfbSubStatus)",
+            "unfreezeByAPI": "#present"
+        }
+        """
+        * def expectedAdditionalData = 
+        """
+        {
+            "url": "https://app.notabene.dev",
+            "rakObj": "#object",
+            "verdict": "#(expectedVerdict)",
+            "provider": "NOTABENE",
+            "quorumId": "#uuid",
+            "rakStatus": "#(expectedRakTxnStatus)",
+            "trTypeObjKey": "#(expectedKey)",
+            "screeningTime": "#number",
+            "rakDescription": "#(expectedReason)",
+            "quorumRequestId": "#uuid",
+            "trStatus": "#(expectedtrStatus)"
+        }
+        """
+        * match actualTxn.additionalData.rakObj == expectedRakObj
+        * match actualTxn.additionalData == expectedAdditionalData
         
     Examples:
-        |  read('classpath:data/TravelRule_e2e/dev_deposit.csv')  |
+        |  karate.setupOnce().testDeposit  |
 
 
 

@@ -25,13 +25,14 @@ Feature: Notabene API
         * def query = 
         """
         {
-            txDirection:"#(txDirection)",
+            txDirection: "#(txDirection)",
             vaspDID: "#(notabene.vaspDID)",
-            resultsPerPage:10,
-            page:0,
-            sort:"updatedAt:DESC",
-            decrypt:false,
-            includeActions:false
+            resultsPerPage: 10,
+            page: 0,
+            sort: "updatedAt:DESC",
+            decrypt: false,
+            includeActions: false,
+            status: 'NEW'
         }
         """
         And params query

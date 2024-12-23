@@ -60,7 +60,7 @@ function fn(){
         },
         
         waitUntilTransactionCompleted: function(transactionId, expectedStatus) { 
-            var completedStatus = ["COMPLETED", "FAILED", expectedStatus.toUpperCase()]
+            var completedStatus = ["COMPLETED", "FAILED", expectedStatus?.toUpperCase()]
             var retry = 18
             do {
                 java.lang.Thread.sleep(10000); 
@@ -71,6 +71,22 @@ function fn(){
 
             if (retry <= 0 && !completedStatus.includes(getTransactionDetail.response.data.status))
                 karate.fail("Transaction cannot be completed: " + transactionId + (expectedStatus == null ? "" : ". Expected status: " + expectedStatus))
+  
+            return getTransactionDetail
+        },
+
+        waitUntilFireblocksStatusCompleted: function(transactionId, expectedStatus) { 
+            var completedStatus = ["COMPLETED", "REJECTED", expectedStatus?.toUpperCase()]
+            var retry = 18
+            do {
+                java.lang.Thread.sleep(10000); 
+                var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
+                retry--
+            }
+            while (!completedStatus.includes(getTransactionDetail.response.data.fireblocksStatus) && retry > 0)
+
+            if (retry <= 0 && !completedStatus.includes(getTransactionDetail.response.data.fireblocksStatus))
+                karate.fail("Fireblocks transaction cannot be completed: " + transactionId + (expectedStatus == null ? "" : ". Expected status: " + expectedStatus))
   
             return getTransactionDetail
         }

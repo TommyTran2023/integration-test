@@ -1,2 +1,2 @@
 ﻿flowName,sourceVaultId,sourceAddress,destinationFolderId,destinationFolderType,destinationAddressId,destinationAddress,notabeneAccept,expectedRepTxnStatus,expectedRakTxnStatus,expectedfbStatus,expectedfbSubStatus,expectedPath,expectedStage,expectedType,expectedKey,expectedReason,expectedtrStatus,expectedVerdict,isRun
-Deposit - Notabene accept,67fb51b6-d6bb-449a-9a09-c68d771c6a93,,4d3bcfba-57e1-409c-bb34-10e6b6906f67,INTERNAL_WALLET,2e0f65be-fcb6-4269-a5c1-6e1f5bac6237,,true,,,,,,,,,,,,true
+Deposit - Notabene accept,fce4cc6d-5858-42ed-b4fb-186cf9f9e351,,48d523be-8368-40ad-96b7-41de714d101c,EXTERNAL_WALLET,dcd3e9e8-f5f8-456b-b747-c8ec1b3aa8c9,,true,,,,,,,,,,,,true

@@ -21,12 +21,12 @@
   },
   "test_workspace": {
     "url_test": "https://test-mobile-api.thailaksa.net",
-    "vaultId_Destination": "eb48fc0e-9b8e-417c-8987-7f2b4919e9a9",
-    "vaultId_Destination_warm": "8f90e765-37c3-4904-9123-f748ed20da91",
-    "walletId_Destination": "28ee0bcf-7754-4df2-92f2-a338f022df63",
-    "walletId_Destination_warm": "5be98924-9a60-4ddc-a1a3-37b28e34fe59",
+    "vaultId_Destination": "db6d0243-071f-4693-82bc-2e437e5544b4",
+    "vaultId_Destination_warm": "47a61386-399c-45be-bb8c-ca0e1382f6bf",
+    "walletId_Destination": "7173dd17-f8ba-4a39-b5a2-de216b1fb866",
+    "walletId_Destination_warm": "ec75fdea-ca66-475e-9f82-86c0b6488b52",
     "userInfo": {
-      "requesterUsername": "PASSPORTQASN31101545TH",
+      "requesterUsername": "ID_CARD3422342HK",
       "requesterPasscode": "123123"
     }
   }

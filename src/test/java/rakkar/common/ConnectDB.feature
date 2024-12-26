@@ -227,7 +227,7 @@ Feature: Connect to PostgreSQL
         "left join \"txn_exchangeAccounts\" \"tea\" " +
    	    "on tt.source = \"tea\".id " +
         "left join vaults v " +
-   	    "on v.\"vaultExternalId\"::text = \"tea\".\"externalExchangeAccountId\" " +
+   	    "on v.\"vaultExternalId\"::text = \"tea\".\"externalExchangeAccountId\" and v.\"workSpaceId\" = tea.\"workSpaceId\" " +
         "left join \"walletInfos\" wi on wi.\"externalAssetId\" = tt.\"feeCurrency\" " +
         "where tt.\"type\" ='REBALANCING' " +
    	    "and \"tea\".\"type\" ilike '%VAULT_ACCOUNT%' " +

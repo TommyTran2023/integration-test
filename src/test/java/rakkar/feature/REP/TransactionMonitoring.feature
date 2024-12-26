@@ -23,7 +23,7 @@ Feature: Transaction Monitoring
 
     @GetSourceDestinationForFolder @RAKCON-34206
     Scenario: Get list source and destination to view 3rd party folder name
-        * call read(connectDB + 'SelectTxnByCurrency') {assetToken:'ALGO'}
+        * call read(connectDB + 'SelectTxnByCurrency') {assetToken:''}
         * print result
         * def data = 
         """
@@ -92,7 +92,7 @@ Feature: Transaction Monitoring
 
     @GetSourceDestinationForVault @RAKCON-34207
     Scenario: Get list source and destination to view 3rd party vault name
-        * call read(connectDB + 'SelectTxnByCurrencyAndType') {assetToken:'ALGO'}
+        * call read(connectDB + 'SelectTxnByCurrencyAndType') {assetToken:''}
         * print result
         * def data = 
         """

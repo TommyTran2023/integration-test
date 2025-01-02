@@ -5,6 +5,26 @@ Feature: Notabene API
         * def destEnv = typeof destEnv == 'undefined' ? karate.properties['karate.env'] : destEnv
         * def notabene = karate.jsonPath(privateKey, "$.." + destEnv +"_notabene")[0]
         * print destEnv, notabene
+        * def waitTxn =  
+        """
+        function(){
+            var haveTxn = false
+            var maxRetry = 6
+            var waitTime = 10000
+
+            do {
+                java.lang.Thread.sleep(waitTime); 
+                maxRetry--;
+
+                var txnList = karate.call("@GetTransfersInDashboard", { txDirection: txDirection }).response.transactions
+
+                if (txnList.length > 0)
+                    haveTxn = true
+            }
+            while(!haveTxn && maxRetry > 0)
+            karate.set("txId", txnList[0].id)
+        }
+        """
 
     @GetAccessToken
     Scenario: Get Access Token
@@ -59,30 +79,14 @@ Feature: Notabene API
     @ApproveLatestTransfer
     Scenario: Approve Latest Transfer
         * call read('@GetAccessToken')
-        * eval 
-        """
-            var haveTxn = false
-            var maxRetry = 6
-            var waitTime = 10000
-
-            do {
-                java.lang.Thread.sleep(waitTime); 
-                maxRetry--;
-
-                var txnList = karate.call("@GetTransfersInDashboard", { txDirection: txDirection }).response.transactions
-
-                if (txnList.length > 0)
-                    haveTxn = true
-            }
-            while(!haveTxn && maxRetry > 0)
-            karate.set("txId", txnList[0].id)
-        """
+        * eval waitTxn()
         # * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
         * call read('@ApproveAndSendTransfer')
 
     @CancelLatestTransfer
     Scenario: Cancel Latest Transfer
         * call read('@GetAccessToken')
+        * eval waitTxn()
         # * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
         * call read('@CancelTransfer')
 

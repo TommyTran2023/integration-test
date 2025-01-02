@@ -32,15 +32,13 @@ Feature: Notabene API
             sort: "updatedAt:DESC",
             decrypt: false,
             includeActions: false,
-            status: 'NEW'
+            status: "#(typeof status == 'undefined' ? 'NEW' : status)"
         }
         """
         And params query
         And header Authorization = notabeneAccessToken
         When method GET
         Then status 200
-        * def tx = response.transactions[0]
-        * def txId = tx.id
 
     @ApproveAndSendTransfer
     Scenario: Approve And Send Transfer
@@ -61,13 +59,31 @@ Feature: Notabene API
     @ApproveLatestTransfer
     Scenario: Approve Latest Transfer
         * call read('@GetAccessToken')
-        * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
+        * eval 
+        """
+            var haveTxn = false
+            var maxRetry = 6
+            var waitTime = 10000
+
+            do {
+                java.lang.Thread.sleep(waitTime); 
+                maxRetry--;
+
+                var txnList = karate.call("@GetTransfersInDashboard", { txDirection: txDirection }).response.transactions
+
+                if (txnList.length > 0)
+                    haveTxn = true
+            }
+            while(!haveTxn && maxRetry > 0)
+            karate.set("txId", txnList[0].id)
+        """
+        # * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
         * call read('@ApproveAndSendTransfer')
 
     @CancelLatestTransfer
     Scenario: Cancel Latest Transfer
         * call read('@GetAccessToken')
-        * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
+        # * call read('@GetTransfersInDashboard') { txDirection: "#(txDirection)" }
         * call read('@CancelTransfer')
 
         

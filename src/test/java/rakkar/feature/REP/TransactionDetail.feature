@@ -66,3 +66,5 @@ Feature: Transaction Monitoring
         * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
         * match responseStatus == 200
         Then match response.data.additionalData.rakObj == '#notpresent'
+
+        

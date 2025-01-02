@@ -5,7 +5,7 @@ Feature: Transaction Monitoring
         * callonce read(repSvc + 'Auth.feature@LoginAsCustomerSuccess')
 
     @GetNonTravelRuleTransactions @RAKCON-35283
-    Scenario: Get non-travel rule transactions to view not applicable badge
+    Scenario: Get non-travel rule transactions should show not applicable badge
         * call read(connectDB + 'SelectTxnNotTravelRule')
         * def expDataSchema =
         """
@@ -53,7 +53,7 @@ Feature: Transaction Monitoring
         Then match response.data.additionalData contains expAdditionalData
 
     @GetTravelRuleTransactions @RAKCON-35284
-    Scenario: Get travel rule transactions not showing not applicable badge
+    Scenario: Get travel rule transactions that not pushed to fireblocks shouldn't show not applicable badge
         * call read(connectDB + 'SelectTxnNotScreeningThroughFireblocks')
         * print result
         * def data = 
@@ -67,4 +67,3 @@ Feature: Transaction Monitoring
         * match responseStatus == 200
         Then match response.data.additionalData.rakObj == '#notpresent'
 
-        

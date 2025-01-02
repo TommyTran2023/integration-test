@@ -237,6 +237,37 @@ Feature: Connect to PostgreSQL
         "limit 10"
         """
         * print query
-        * def result = coreDb.readRows(query) 
+        * def result = coreDb.readRows(query)
+
+           @SelectTxnNotTravelRule   
+    Scenario: Select transactions not travel rule
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
+        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
+        "and \"fireblocksStatus\" = 'COMPLETED' " +
+        "and \"type\" ='OUTGOING' " +
+        "and \"additionalData\"::text not like '%notabene%' " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+           @SelectTxnNotScreeningThroughFireblocks
+
+    Scenario: Select transactions not screening through Fireblocks
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
+        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
+        "and \"fireblocksStatus\" is NULL " +
+        "and \"type\" ='OUTGOING' " +
+        "and \"additionalData\"::text not like '%notabene%' " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+
 
 

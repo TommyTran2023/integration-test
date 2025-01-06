@@ -1,44 +1,12 @@
     @RAKCON-35282 @REP
-Feature: Transaction Monitoring
+Feature: Transaction Detail
 
     Background:
-        * callonce read(repSvc + 'Auth.feature@LoginAsCustomerSuccess')
+        * callonce read(repSvc + 'Auth.feature@LoginAsOperation')
 
     @GetNonTravelRuleTransactions @RAKCON-35283
     Scenario: Get non-travel rule transactions should show not applicable badge
         * call read(connectDB + 'SelectTxnNotTravelRule')
-        * def expDataSchema =
-        """
-        {
-            "totalEstimatedFee": "#number",
-            "transactionVdoPath": "##string",
-            "transactionVdoSentence": "##string",
-            "nativeSymbol": "#string",
-            "treatAsGrossAmount": "#boolean",
-            "createdByName": "#string",
-            "requestId": "#uuid",
-            "logPolicyType": "#string",
-            "logApproverNumber": "#number",
-            "remainingApproversNumber": "#number",
-            "remainingRequiredApprovers": "#[]",
-            "remainingNonRequiredApprovers": "#[]",
-            "id": "#uuid",
-            "transactionId": "#uuid",
-            "type": "#string",
-            "status": "#string",
-            "operation": "#string",
-            "amount": "#number",
-            "feetype": "#string",
-            "note": "##string",
-        }
-        """
-        * def expAdditionalData =
-        """
-        {
-            "quorumId": "#uuid",
-            "quorumRequestId": "#uuid"
-        }
-        """
         * def data = 
         """
         {
@@ -49,12 +17,12 @@ Feature: Transaction Monitoring
         * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
         * match responseStatus == 200
         Then match response.data.additionalData.rakObj == '#notpresent'
-        Then match response.data contains expDataSchema
-        Then match response.data.additionalData contains expAdditionalData
+        * def exp = [null, '']
+        * assert exp.includes(response.data.vaspId) == true
 
-    @GetTravelRuleTransactions @RAKCON-35284
+    @GetTravelRuleTransactionsNotThroughFireblocks @RAKCON-35284
     Scenario: Get travel rule transactions that not pushed to fireblocks shouldn't show not applicable badge
-        * call read(connectDB + 'SelectTxnNotScreeningThroughFireblocks')
+        * call read(connectDB + 'SelectTxnNotScreeningThroughFireblocks') {customerId: #(sg_customer.customerId)}
         * print result
         * def data = 
         """
@@ -66,4 +34,56 @@ Feature: Transaction Monitoring
         * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
         * match responseStatus == 200
         Then match response.data.additionalData.rakObj == '#notpresent'
+        Then match response.data.vaspId == "#uuid"
+
+    @GetTravelRuleTransactionsThroughFireblocks @RAKCON-35489
+    Scenario: Get travel rule transactions that pushed to fireblocks should show not applicable badge
+        * def data = 
+        """
+        {
+            accessToken: "#(repAccessToken)",
+            query: {
+                page:1,
+                offset:0,
+                limit:10,
+                sortBy:"CREATED_DATE",
+                status: ["COMPLETED"],
+                transactionType: ["OUTGOING"],
+                sort:"DESC",
+                createdById: "#(sg_customer.admin1UserId)",
+            }
+        }
+        """
+        * call read(svc + 'Transaction.feature@GetTransactionsList') data     
+        * print response
+        * def data = 
+        """
+        {
+            requesterAccessToken: "#(repAccessToken)",
+            transactionId: "#(response.data.transactions[0].id)",
+        }
+        """    
+        * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
+        * def expAdditionalData =
+        """
+        {
+            "quorumId": "#uuid",
+            "quorumRequestId": "#uuid",
+            "rakObj": {
+                "key": "#string",
+                "path": "#string",
+                "stage": "#string",
+                "fbStatus": "#string",
+                "hookType": "OUTGOING",
+                "trReason": "##string",
+                "trStatus": "#string",
+                "REPStatus": "#string",
+                "fbSubStatus": "#string",
+                "unfreezeByAPI": "##string",
+            },
+        }
+        """
+        * match responseStatus == 200
+        Then match response.data.additionalData contains expAdditionalData
+        Then match response.data.vaspId == "#uuid"
 

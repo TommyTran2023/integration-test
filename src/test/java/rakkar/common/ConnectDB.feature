@@ -258,12 +258,11 @@ Feature: Connect to PostgreSQL
     Scenario: Select transactions not screening through Fireblocks
         * def query = 
         """
-        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
-        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
-        "and \"fireblocksStatus\" is NULL " +
+        "select \"transactionId\", \"additionalData\", * from txn_transactions tt " +
+        "WHERE \"customerId\" = '" + customerId + "' " +
+        "and \"fireblocksStatus\" is null " +
         "and \"type\" ='OUTGOING' " +
-        "and \"additionalData\"::text not like '%notabene%' " +
-        "order by \"createdAt\" desc "
+        "order by \"createdAt\" DESC "
         """
         * print query
         * def result = coreDb.readRows(query)

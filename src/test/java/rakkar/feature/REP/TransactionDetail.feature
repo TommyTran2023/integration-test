@@ -87,7 +87,7 @@ Feature: Transaction Detail
         Then match response.data.additionalData contains expAdditionalData
         Then match response.data.vaspId == "#uuid"
 
-    @GetNonTravelRuleDepositTransactions
+    @GetNonTravelRuleDepositTransactions @RAKCON-35526
     Scenario: Get non travel rule deposit transactions
         * call read(connectDB + 'SelectDepositTxnNotTravelRule')
         * print result

@@ -2,7 +2,7 @@
 Feature: Open API
   Background:
     * url openApiURL
-    * def apiKey = call read('this:GenerateAPIkey.feature@Generate_api_key')
+    * def apiKey = callonce read('this:GenerateAPIkey.feature@Generate_api_key')
     * print apiKey.response.data.key
     * def key = apiKey.response.data.key
     * def accountId = apiKey.response.data.accountId

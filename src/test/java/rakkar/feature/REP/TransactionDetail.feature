@@ -74,12 +74,12 @@ Feature: Transaction Detail
                 "path": "#string",
                 "stage": "#string",
                 "fbStatus": "#string",
-                "hookType": "OUTGOING",
+                "hookType": "#string",
                 "trReason": "##string",
                 "trStatus": "#string",
                 "REPStatus": "#string",
                 "fbSubStatus": "#string",
-                "unfreezeByAPI": "##string",
+                "unfreezeByAPI": "##boolean",
             },
         }
         """

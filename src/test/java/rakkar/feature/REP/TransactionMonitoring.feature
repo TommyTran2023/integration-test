@@ -136,7 +136,9 @@ Feature: Transaction Monitoring
                 offset:0,
                 limit:10,
                 sortBy:"CREATED_DATE",
-                sort:"DESC"
+                sort:"DESC",
+                transactionType: ["OUTGOING"],
+                status: ["COMPLETED"]
             }
         }
         """

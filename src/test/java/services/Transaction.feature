@@ -274,7 +274,7 @@ Feature: Tranaction Service
         """
         {
             authorization: #(accessToken),
-            txId : #(txId) //string
+            txId : #(txId)
         }
         """
         * call read(svc + 'transactionSvc.feature@GetTransactionReviewChecklist') data

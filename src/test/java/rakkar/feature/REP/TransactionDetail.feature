@@ -3,6 +3,7 @@ Feature: Transaction Detail
 
     Background:
         * callonce read(repSvc + 'Auth.feature@LoginAsOperation')
+        * def accessToken = repAccessToken
 
     @GetNonTravelRuleTransactions @RAKCON-35283
     Scenario: Get non-travel rule transactions should show not applicable badge
@@ -149,3 +150,49 @@ Feature: Transaction Detail
         }
         """
         Then match response.data.additionalData contains expAdditionalData
+
+
+    @GetTravelRuleTransactionsWithChecklist @RAKCON-35563
+    Scenario: Get travel rule transactions Deposit with checklist
+        * call read(connectDB + 'SelectTxnDepositWithChecklist') {customerId: #(sg_customer.customerId)}
+        * print result
+        * def data = 
+        """
+        {
+            txId: "#(result[0].id)",
+        }
+        """
+        * call read(svc + 'Transaction.feature@GetTransactionReviewChecklist') data
+        * match responseStatus == 200
+        * def expAdditionalData =
+        """
+            {
+              "operation": {
+                    "reviewKYTInformation": "#boolean"
+                  }
+            }
+        """
+        Then match response.data contains expAdditionalData
+
+    @GetNonTravelRuleTransactionsWithChecklist @RAKCON-35563
+    Scenario: Get travel rule transactions Deposit with checklist
+        * call read(connectDB + 'SelectTxnDepositWithChecklist') {customerId: #(customerId)}
+        * print result
+        * def data = 
+        """
+        {
+            txId: "#(result[0].id)",
+        }
+        """
+        * call read(svc + 'Transaction.feature@GetTransactionReviewChecklist') data
+        * match responseStatus == 200
+        * def expAdditionalData =
+        """
+            {
+              "operation": {
+                    "reviewKYTInformation": "#boolean"
+                  }
+            }
+        """
+        Then match response.data contains expAdditionalData
+              

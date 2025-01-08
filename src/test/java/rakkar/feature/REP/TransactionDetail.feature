@@ -107,3 +107,45 @@ Feature: Transaction Detail
 
 
 
+    @GetTravelRuleTransactionsDeposit @RAKCON-35562
+    Scenario: Get travel rule transactions Deposit
+        * call read(connectDB + 'SelectTxnDepositTravelRule') {customerId: #(sg_customer.customerId)}
+        * print result
+        * def data = 
+        """
+        {
+            requesterAccessToken: "#(repAccessToken)",
+            transactionId: "#(result[0].id)",
+        }
+        """
+        * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
+        * match responseStatus == 200
+        Then match response.data.vaspId == null
+        * def expAdditionalData =
+        """
+        {
+            "url": "#string",
+            "rakObj": {
+                "key": "#string",
+                "path": "#string",
+                "stage": "#string",
+                "fbStatus": "#string",
+                "hookType": "#string",
+                "trReason": "##string",
+                "trStatus": "#string",
+                "REPStatus": "#string",
+                "fbSubStatus": "#string",
+                "unfreezeByAPI": "##boolean",
+                },
+            "verdict": "##string",
+            "provider": "##string",
+            "quorumId": "#uuid",
+            "trStatus": "##string",
+            "rakStatus": "##string",
+            "trTypeObjKey": "##string",
+            "screeningTime": "##number",
+            "rakDescription": "##string",
+            "quorumRequestId": "#uuid",    
+        }
+        """
+        Then match response.data.additionalData contains expAdditionalData

@@ -106,15 +106,15 @@
     },
     "adminUsername": "PASSPORT123456",
     "adminUsername2": "ID_CARDsdsad223HK",
-    "permission": {
-      "customerId": "f61c8e36-da61-4916-9320-8be475a5e3ae",
-      "admin1": "PASSPORT123456",
-      "admin1UserId": "",
-      "member1": "",
-      "member1UserId": "",
-      "viewer1": "",
-      "viewer1UserId": "",
-      "passcode": "123123"
+    "permission":{
+      "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae",
+      "admin1":"PASSPORTATADMINTH",
+      "admin1UserId":"f3e0b3a5-9d34-4a72-8552-086c527a62bd",
+      "member1":"PASSPORTATMEMBERTH",
+      "member1UserId":"104611e0-5f0d-4191-8964-dd03f666b664",
+      "viewer1":"PASSPORTATVIEWERTH",
+      "viewer1UserId":"29928be6-eb53-4358-a8dd-cdef535e0ee8",
+      "passcode":"123123"
     },
     "businessRegistrationId": "AT123123",
     "crossTenant": {

@@ -283,5 +283,20 @@ Feature: Connect to PostgreSQL
 
 
 
+           @SelectTxnDepositTravelRule
+
+    Scenario: Select transactions not screening through Fireblocks
+        * def query = 
+        """
+        "select \"transactionId\" ,* from txn_transactions tt " +
+        "where \"toCustomerId\" = '" + customerId + "' " +
+        "and \"type\" in ('INCOMING') " +
+        "and status in ('COMPLETED') " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+
 
 

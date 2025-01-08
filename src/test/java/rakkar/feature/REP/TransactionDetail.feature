@@ -37,7 +37,7 @@ Feature: Transaction Detail
         Then match response.data.vaspId == "#uuid"
 
     @GetTravelRuleTransactionsThroughFireblocks @RAKCON-35489
-    Scenario: Get travel rule transactions that pushed to fireblocks should show not applicable badge
+    Scenario: Get travel rule withdraw transactions that pushed to fireblocks should have vaspId
         * def data = 
         """
         {
@@ -102,10 +102,6 @@ Feature: Transaction Detail
         * match responseStatus == 200
         Then match response.data.additionalData.rakObj == '#notpresent'
         Then match response.data.vaspId == '#null'
-
-        
-
-
 
     @GetTravelRuleTransactionsDeposit @RAKCON-35562
     Scenario: Get travel rule transactions Deposit

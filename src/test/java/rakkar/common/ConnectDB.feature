@@ -267,6 +267,21 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
+        @SelectDepositTxnNotTravelRule   
+    Scenario: Select transactions not travel rule
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
+        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
+        "and \"fireblocksStatus\" = 'COMPLETED' " +
+        "and \"type\" ='INCOMING' " +
+        "and \"additionalData\"::text not like '%notabene%' " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+
 
            @SelectTxnDepositTravelRule
 

@@ -87,7 +87,27 @@ Feature: Transaction Detail
         Then match response.data.additionalData contains expAdditionalData
         Then match response.data.vaspId == "#uuid"
 
-    @GetTravelRuleTransactionsDeposit 
+    @GetNonTravelRuleDepositTransactions @RAKCON-35526
+    Scenario: Get non travel rule deposit transactions
+        * call read(connectDB + 'SelectDepositTxnNotTravelRule')
+        * print result
+        * def data =
+        """
+        {
+            requesterAccessToken: "#(repAccessToken)",
+            transactionId: "#(result[0].id)"
+        }
+        """
+        * call read(svc + 'Transaction.feature@ViewTransactionDetail') data
+        * match responseStatus == 200
+        Then match response.data.additionalData.rakObj == '#notpresent'
+        Then match response.data.vaspId == '#null'
+
+        
+
+
+
+    @GetTravelRuleTransactionsDeposit @RAKCON-35562
     Scenario: Get travel rule transactions Deposit
         * call read(connectDB + 'SelectTxnDepositTravelRule') {customerId: #(sg_customer.customerId)}
         * print result

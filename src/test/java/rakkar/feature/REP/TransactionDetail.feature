@@ -195,4 +195,3 @@ Feature: Transaction Detail
             }
         """
         Then match response.data contains expAdditionalData
-              

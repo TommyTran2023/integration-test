@@ -83,19 +83,6 @@ Feature: Travel rule transaction
         * def requestId = response.data.requestId
         * def transactionId = response.data.id
 
-        # 4. Validate request detail
-        #* call read(svc + 'Quorums.feature@ViewRequestDetails') requestId
-        #Then match responseStatus == 200
-        #And match response.status == "success"
-        #And match data.transactionType == '#? _ == "OUTGOING" || _ == "INCOMING"'
-        #And match response.data.destination.folderId == "#(destinationFolderId)"
-        #And match response.data.destination.type == "#(folderType)"
-        #And match response.data.tokenId == "#(dataSet.eth5TokenId)"
-        #And match response.data.amount == "#(amountETH)"
-        #And match response.data.source.type == "VAULT_ACCOUNT"
-        #And match response.data.source.vaultId == "#(sourceVaultId)"
-        #And match data.amountLevel == '#? _ == "LOW" || _ == "MEDIUM" || _ == "HIGH"'
-
         # 4. Approve transaction
         * def approverSG = karate.call(svc + 'Biometric.feature@UserDoBiometric', { userName: trData.admin2} )
         * eval

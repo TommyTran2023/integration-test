@@ -109,7 +109,7 @@ Feature: Transaction Detail
 
     @GetTravelRuleTransactionsDeposit @RAKCON-35562
     Scenario: Get travel rule transactions Deposit
-        * call read(connectDB + 'SelectTxnDepositTravelRule') {customerId: #(sg_customer.customerId)}
+        * call read(connectDB + 'SelectDepositTxnTravelRule') {customerId: #(sg_customer.customerId)}
         * print result
         * def data = 
         """
@@ -139,13 +139,13 @@ Feature: Transaction Detail
                 },
             "verdict": "##string",
             "provider": "##string",
-            "quorumId": "#uuid",
+            "quorumId": "##uuid",
             "trStatus": "##string",
             "rakStatus": "##string",
             "trTypeObjKey": "##string",
             "screeningTime": "##number",
             "rakDescription": "##string",
-            "quorumRequestId": "#uuid",    
+            "quorumRequestId": "##uuid",    
         }
         """
         Then match response.data.additionalData contains expAdditionalData

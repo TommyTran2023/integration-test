@@ -16,6 +16,7 @@
       "phoneNumber": "+6593443244",
       "dateOfBirth": "2024-11-11"
     },
+    "customerId": "7df5ab44-baf6-4aeb-9e4d-651879fa72db",
     "approverInfo": {
       "approvalUsername": "ID_CARD324324HK",
       "approverPasscode": "123123",
@@ -87,6 +88,7 @@
       "phoneNumber": "+6598755279",
       "dateOfBirth": "1993-12-24"
     },
+    "customerId": "09896980-675a-473a-adb6-a5e93de93b62",
     "approverInfo": {
       "approvalUsername": "PASSPORT01011998",
       "approverPasscode": "271198",
@@ -185,6 +187,7 @@
       "phoneNumber": "+6593939393",
       "dateOfBirth": "2024-06-11"
     },
+    "customerId": "9d388665-4293-4804-aeb0-1d6489612f7e",
     "approverInfo": {
       "approvalUsername": "PASSPORTTHDEV02TH",
       "approverPasscode": "123123",

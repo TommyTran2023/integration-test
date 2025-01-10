@@ -298,5 +298,17 @@ Feature: Connect to PostgreSQL
         * def result = coreDb.readRows(query)
 
 
+        @SelectTxnDepositWithChecklist
 
-
+    Scenario: Select deposit transactions with checklist
+        * def query = 
+        
+        """
+        "select \"transactionId\" ,* from txn_transactions " +
+        "where \"toCustomerId\" = '" + customerId + "' " +
+        "and \"fireblocksStatus\" in  ('REJECTED') " +
+        "and \"type\" in ('INCOMING') " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)

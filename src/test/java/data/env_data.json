@@ -67,7 +67,8 @@
       "admin2": "ID_CARD23242342HK",
       "admin2UserId": "62e068f5-e47e-4870-b2aa-d973447d3473",
       "passcode": "123123",
-      "customerId": "d436b494-f42f-47af-9186-65b75a4c1f0b"
+      "customerId": "d436b494-f42f-47af-9186-65b75a4c1f0b",
+      "vaspId": "59e67cb8-da64-4611-b960-3b30ecb4b80b"
     }
   },
   "sandbox": {
@@ -136,7 +137,8 @@
       "admin2": "PASSPORTTT2231SG",
       "admin2UserId": "71750648-5c55-436e-b507-2a82d4067108",
       "passcode": "123123",
-      "customerId": "711f1ef8-2eaf-4c9e-b2f1-9937f63e5156"
+      "customerId": "711f1ef8-2eaf-4c9e-b2f1-9937f63e5156",
+      "vaspId": "295ee1b7-19d4-42a1-9a11-f53efd4bd136"
     }
   },
   "pt": {
@@ -236,7 +238,8 @@
       "admin2": "PASSPORT444444HK",
       "admin2UserId": "31958a4a-d547-4f49-bc63-b66e7c68a182",
       "passcode": "123123",
-      "customerId": "3b45e58d-2a41-4f9d-bfbd-5a5e179c79ea"
+      "customerId": "3b45e58d-2a41-4f9d-bfbd-5a5e179c79ea",
+      "vaspId": "24dd9108-1fb1-48e7-99f4-f23bde42bf01"
     }
   }
 }

@@ -187,7 +187,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
     
-        @SelectWorkspace
+    @SelectWorkspace
     Scenario: Select Workspace
         * def query = 
         """
@@ -197,7 +197,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-        @SelectTxnByCurrency
+    @SelectTxnByCurrency
     Scenario: Select transactions by type and currency
         * def query = 
         """
@@ -218,7 +218,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query) 
 
-         @SelectTxnByCurrencyAndType
+    @SelectTxnByCurrencyAndType
     Scenario: Select transactions by type
         * def query = 
         """
@@ -239,7 +239,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-           @SelectTxnNotTravelRule   
+    @SelectTxnNotTravelRule   
     Scenario: Select transactions not travel rule
         * def query = 
         """
@@ -253,8 +253,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-           @SelectTxnNotScreeningThroughFireblocks
-
+    @SelectTxnNotScreeningThroughFireblocks
     Scenario: Select transactions not screening through Fireblocks
         * def query = 
         """
@@ -267,8 +266,8 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-        @SelectDepositTxnNotTravelRule   
-    Scenario: Select transactions not travel rule
+    @SelectDepositTxnNotTravelRule   
+    Scenario: Select deposit transactions not travel rule
         * def query = 
         """
         "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
@@ -276,23 +275,24 @@ Feature: Connect to PostgreSQL
         "and \"fireblocksStatus\" = 'COMPLETED' " +
         "and \"type\" ='INCOMING' " +
         "and \"additionalData\"::text not like '%notabene%' " +
-        "order by \"createdAt\" desc "
+        "order by \"createdAt\" desc " +
+        "limit 10"
         """
         * print query
         * def result = coreDb.readRows(query)
 
 
 
-           @SelectTxnDepositTravelRule
-
-    Scenario: Select transactions not screening through Fireblocks
+    @SelectDepositTxnTravelRule
+    Scenario: Select deposit transactions not screening through Fireblocks
         * def query = 
         """
         "select \"transactionId\" ,* from txn_transactions tt " +
         "where \"toCustomerId\" = '" + customerId + "' " +
         "and \"type\" in ('INCOMING') " +
         "and status in ('COMPLETED') " +
-        "order by \"createdAt\" desc "
+        "order by \"createdAt\" desc " +
+        "limit 10"
         """
         * print query
         * def result = coreDb.readRows(query)

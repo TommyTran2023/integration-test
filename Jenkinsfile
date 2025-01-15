@@ -245,7 +245,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "${XRAY_ENV} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "Env: ${XRAY_ENV}, ${env.testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -257,7 +257,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${XRAY_ENV} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "Env: ${XRAY_ENV}, ${XRAY_ENV} ${env.testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

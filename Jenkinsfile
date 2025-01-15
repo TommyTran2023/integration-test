@@ -67,7 +67,7 @@ pipeline {
                             sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
-                            BRANCH = "sit"
+                            BRANCH = "smoke"
                             KARATE_ENV = "test"
                             HEALTH_CHECK_PATH = "sit"
                             XRAY_ENV = "TEST"
@@ -127,7 +127,7 @@ pipeline {
                 script {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
-                    
+
                     def tagsParam = params.E2E ? "@e2e" : "~@e2e"
 
                     if (params.smoke) {

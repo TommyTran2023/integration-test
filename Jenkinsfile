@@ -80,7 +80,7 @@ pipeline {
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
                     if (params.smoke) {
-                        env.testType = "SMOKE TEST: " + env.testType
+                        env.testType = "SMOKE: " + env.testType
                     }
 
                     sh 'cp -rf ${SECRET} ./auto_secret.json'
@@ -257,7 +257,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "${XRAY_ENV} ${env.testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

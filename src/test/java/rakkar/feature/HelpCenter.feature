@@ -67,7 +67,7 @@ Feature:Help Center
     # * match response.data.category == "issue"  
     # * match response.data.requestType == null
 
-  @RAKCON-11380 @ViewListingTicketInProgress
+  @RAKCON-11380 @ViewListingTicketInProgress @smoke
   Scenario: View listing ticket on tab In progress
     * def query = {limit: '20', page: '1', status: 'in_progress'}
     * call read('this:HelpCenter.feature@Search_Filter_ticket_common')

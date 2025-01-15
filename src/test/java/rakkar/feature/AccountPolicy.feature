@@ -10,7 +10,7 @@ Feature: Account admin policy
     * def testData = read('classpath:data/dataTest.json')
     * def schemaBody = read('classpath:data/schema.json')
 
-  @RAKCON-10939 @ViewAccountPolicy
+  @RAKCON-10939 @ViewAccountPolicy @smoke
   Scenario: View account policy
     Given path 'core/quorums/account-policy'
     When method GET

@@ -17,7 +17,7 @@ Feature: View List My Request
     * call read('this:ViewListMyRequest.feature@ViewListMyRequest-Common')
 
 
-  @RAKCON-11857 @ViewMyRequestByStatus
+  @RAKCON-11857 @ViewMyRequestByStatus @smoke
   Scenario: View my request by status
     # Check list request by Requester ID in My Request list by status
     * def requestBody = { "isHistory" : true, "offset" : 0, "limit" : 10, "keyword" : "", "status" : [ #(testData.viewListMyRequest.statusFiltering) ], "createdBy" : #(requesterInformation.requesterID) }

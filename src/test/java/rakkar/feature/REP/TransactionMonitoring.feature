@@ -187,3 +187,31 @@ Feature: Transaction Monitoring
         """
         Then match response.data contains expDataSchema
         Then match response.data.additionalData contains expAdditionalData
+
+        @GetVASPInformation  @RAKCON-35717
+    Scenario: Get VASP information
+        * call read(repSvc + 'TravelRule.feature@GET_core_v2_rep_TravelRule_VASP') {vaspId: #(sg_customer.vaspId)}
+        * print response
+        * def expDataSchema =
+        """
+        {
+            "id": "#uuid",
+            "did": "#string",
+            "name": "#string",
+            "website": "#string",
+            "logo": "#string",
+            "incorporationCountry": "#string",
+            "jurisdictions": "#string",
+            "forceFields": "#[]",
+            "isDeleted": "#boolean",
+            "status": "#string",
+            "createdBy": "#string",
+            "updatedBy": "#string",
+            "createdAt": "#string",
+            "updatedAt": "#string",
+            "customerId": "#uuid"
+        }
+        """
+        * match responseStatus == 200
+        Then match response.data contains expDataSchema
+

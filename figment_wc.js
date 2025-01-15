@@ -31,6 +31,7 @@ async function getQR() {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: false
   });
   const page = await browser.newPage();
 
@@ -55,39 +56,40 @@ async function getQR() {
   const btnOrganization = "form > button[type='submit']";
   await page.waitForSelector(btnOrganization);
   await page.click(btnOrganization);
+  await page.goto("https://app.figment.io/stake/ethereum/holesky");
 
-  // Select Test mode
-  // Click on Stake
-  const btnTestnet = "a[href='/stake']";
-  await page.waitForNavigation();
-  await page.waitForSelector(btnTestnet);
-  await page.click(btnTestnet);
+  // // Select Test mode
+  // // Click on Stake
+  // const btnTestnet = "a[href='/stake']";
+  // await page.waitForNavigation();
+  // await page.waitForSelector(btnTestnet);
+  // await page.click(btnTestnet);
 
   // Wait Page load
-  await page.waitForNavigation({
-    waitUntil: "load",
-  });
-  await new Promise((r) => setTimeout(r, 1000));
+  // await page.waitForNavigation({
+  //   waitUntil: "load",
+  // });
+  // await new Promise((r) => setTimeout(r, 1000));
+  
+  // // Select testnet
+  // const ddlNetwork = "div[id='main-content'] > div[data-sentry-component='SecondaryLayout'] > section > div > div";
+  // await page.waitForSelector(ddlNetwork);
+  // await page.click(ddlNetwork);
 
-  // Select testnet
-  const ddlNetwork = "div[id='main-content'] > div[data-sentry-component='SecondaryLayout'] > section > div > div";
-  await page.waitForSelector(ddlNetwork);
-  await page.click(ddlNetwork);
-
-  const optTestnet = "::-p-xpath(//div[contains(@id,'option') and contains(.,'Holesky')])";
-  await page.waitForSelector(optTestnet);
-  await page.click(optTestnet);
+  // const optTestnet = "::-p-xpath(//div[contains(@id,'option') and contains(.,'Holesky')])";
+  // await page.waitForSelector(optTestnet);
+  // await page.click(optTestnet);
 
   // Select stake method
-  var args = process.argv.slice(4)[0];
+  // var args = process.argv.slice(4)[0];
 
-  if (args?.includes("liquidStaking")) await liquidStaking(page);
+  if (process.argv.includes('liquidStaking')) await liquidStaking(page);
   else await pureStaking(page);
 
   // Wait wallet Connect protocol
-  await page.waitForNavigation({
-    waitUntil: "load",
-  });
+  // await page.waitForNavigation({
+  //   waitUntil: "load",
+  // });
   const walletConnect =
     'document.querySelector("body > w3m-modal").shadowRoot.querySelector("wui-flex > wui-card > w3m-router").shadowRoot.querySelector("div > w3m-connect-view").shadowRoot.querySelector("wui-flex > wui-list-wallet:nth-child(2)")';
   let btnWalletConnect = (await page.evaluateHandle(walletConnect)).asElement();
@@ -112,7 +114,7 @@ async function getQR() {
 
 async function pureStaking(page) {
   // Click Connect Wallet
-  const btnConnectWallet = "div > button";
+  const btnConnectWallet = "div[data-sentry-component='ContinueButtonComponent'] > button";
   await page.waitForSelector(btnConnectWallet);
   await page.click(btnConnectWallet);
 }

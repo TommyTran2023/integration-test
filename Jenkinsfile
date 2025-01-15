@@ -79,6 +79,10 @@ pipeline {
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
+                    if (params.smoke) {
+                        env.testType = "SMOKE TEST: " + env.testType
+                    }
+
                     sh 'cp -rf ${SECRET} ./auto_secret.json'
                 }
             }
@@ -241,7 +245,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "${XRAY_ENV} ${env.testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",

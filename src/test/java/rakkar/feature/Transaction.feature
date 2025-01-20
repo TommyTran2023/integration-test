@@ -475,7 +475,7 @@ Feature: Transaction
       * def query = { limit:'10', offset: '0',txnDateFrom:'#(dateFrom)', txnDateTo:'#(dateTo)' }
       * call read('this:Transaction.feature@Filter_transaction_common')
 
-       @Filter_transaction_by_last_updated_date
+       @RAKCON-36152 @Filter_transaction_by_last_updated_date
     Scenario: Filter transaction by last updated date 
       * def getDate =
         """

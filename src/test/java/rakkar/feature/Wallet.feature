@@ -10,7 +10,7 @@ Feature: Wallet
     * def vaultId = vault.response.data.id
     * def schemaJson = read('classpath:data/schema.json')
 
-  @RAKCON-13403 @VIEW-LIST-ASSET
+  @RAKCON-13403 @VIEW-LIST-ASSET @smoke
   Scenario: View list asset to add into vault
     * def data = {vaultId: '#(vaultId)'}
     * call read(svc + 'Wallet.feature@GetTokens') data

@@ -95,7 +95,7 @@ Feature: Transfer
     * call read('this:Transfer.feature@Total_estimate_fee_common')
 
     #Tcs: TRANSFER VAULT HOT TO HOT
-  @RAKCON-11390 @Transfer_value_hot_to_hot
+  @RAKCON-11390 @Transfer_value_hot_to_hot @smoke
   Scenario: Transfer Hot to hot - Submit transfer
     * def body = 
     """

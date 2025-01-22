@@ -94,7 +94,7 @@ Feature: WhiteList Folder
       * def type = response.data.type
 
   #TCs: FOLDER LISTING
-  @RAKCON-10587 @List_folder
+  @RAKCON-10587 @List_folder @smoke
   Scenario: Check view folder listing
     * call read(svc + 'Whitelist.feature@GetWhitelistFolders')
     Then match responseStatus == 200

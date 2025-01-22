@@ -46,7 +46,7 @@ Feature: Network Management
     And match response.status == "success"
     And match response.data.networkFullName == "#regex .*"+ profileName +".*"
 
-  @RAKCON-14979 @ProfileListing
+  @RAKCON-14979 @ProfileListing @smoke
   Scenario: Check profile listing
     * def searchdata = read('classpath:data/data.json')
     * def profile_query = { limit:'10', offset: '0', keyword:'#(searchdata.networkVault)'}

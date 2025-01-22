@@ -8,7 +8,7 @@ Feature: Approval View
     * def testData = read('classpath:data/dataTest.json')
     * def schemaBody = read('classpath:data/schema.json')
 
-  @RAKCON-10983 @ViewListPendingRequest
+  @RAKCON-10983 @ViewListPendingRequest @smoke
   Scenario: View list pending request to approve
     # Requester adds a new vault request
     * call read('Vault.feature@AddNewVaultWithAdminSetup')

@@ -67,7 +67,7 @@ pipeline {
                             sh 'cp -rf ${DB_DEV} ./rakkar-db-credentials.json'
                     }
                     else {
-                            BRANCH = "smoke"
+                            BRANCH = "sit"
                             KARATE_ENV = "test"
                             HEALTH_CHECK_PATH = "sit"
                             XRAY_ENV = "TEST"

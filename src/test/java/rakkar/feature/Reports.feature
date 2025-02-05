@@ -59,7 +59,7 @@ Feature: Reports
         """
         * call read('this:Reports.feature@RequestReport')
 
-    @RAKCON-19418 @SearchAndSortReportsByRequestedDateAscending
+    @RAKCON-19418 @SearchAndSortReportsByRequestedDateAscending smoke
     Scenario: Search and Sort Reports by Requested Date Ascending
         * def params = 
         """

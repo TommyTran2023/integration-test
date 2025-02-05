@@ -16,10 +16,11 @@ Scenario Outline: core: <method> <path>
         requestBody: '<requestBody>', 
         requirePasscode: "FALSE", 
         requireAnswer: "FALSE", 
-        expectedSchema: <expectedREPSchema_CustomerSuccess>,
-        expectedStatus: <expectedREPStatus_CustomerSuccess>
+        expectedSchema: <expectedREPSchema_Operation>,
+        expectedStatus: <expectedREPStatus_Operation>
     }
     """
+    * karate.log(testData)
     * call read('classpath:rakkar/permissions/permissions.feature@test') testData
     Examples:
         |  read('classpath:rakkar/permissions/apis_data/apis_core.csv')  |

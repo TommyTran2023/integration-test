@@ -9,19 +9,20 @@
       "requesterUsername": "ID_CARD3422342HK",
       "requesterPasscode": "123123",
       "userId": "3987fd1b-9114-474a-a7de-b6e265d5445c",
-      "idNumber": "3422342", 
-      "identityType":1,
+      "idNumber": "3422342",
+      "identityType": 1,
       "country": "HK",
       "postalCode": "",
       "phoneNumber": "+6593443244",
       "dateOfBirth": "2024-11-11"
     },
+    "customerId": "7df5ab44-baf6-4aeb-9e4d-651879fa72db",
     "approverInfo": {
       "approvalUsername": "ID_CARD324324HK",
       "approverPasscode": "123123",
       "userId": "f54181e5-7701-4d5e-ba3a-ce6b1c5aae9b",
       "idNumber": "324324",
-      "identityType":2,
+      "identityType": 2,
       "country": "HK",
       "postalCode": "",
       "phoneNumber": "+6592343411",
@@ -35,38 +36,40 @@
     },
     "adminUsername": "PASSPORT34134AHK",
     "adminUsername2": "ID_CARD23423AQHK",
-    "member1":"PASSPORT32423HK",
-    "viewer1":"ID_CARD341234HK",
-    "permission":{
-      "customerId":"7df5ab44-baf6-4aeb-9e4d-651879fa72db",
-      "admin1":"ID_CARD3422342HK",
-      "admin1UserId":"3987fd1b-9114-474a-a7de-b6e265d5445c",
-      "member1":"PASSPORT32423HK",
-      "member1UserId":"359babe6-6b92-436c-87c3-7a8663818b11",
-      "viewer1":"ID_CARD341234HK",
-      "viewer1UserId":"f1c21523-647e-4064-b630-806e4aeda96c",
-      "passcode":"123123"
+    "member1": "PASSPORT32423HK",
+    "viewer1": "ID_CARD341234HK",
+    "permission": {
+      "customerId": "7df5ab44-baf6-4aeb-9e4d-651879fa72db",
+      "admin1": "ID_CARD3422342HK",
+      "admin1UserId": "3987fd1b-9114-474a-a7de-b6e265d5445c",
+      "member1": "PASSPORT32423HK",
+      "member1UserId": "359babe6-6b92-436c-87c3-7a8663818b11",
+      "viewer1": "ID_CARD341234HK",
+      "viewer1UserId": "f1c21523-647e-4064-b630-806e4aeda96c",
+      "passcode": "123123"
     },
     "businessRegistrationId": "2AT3",
-    "crossTenant":{
+    "crossTenant": {
       "txnId": "bc4e9a1f-176f-4774-bdd1-c8476d20378b",
       "vaultId": "8c5a9c41-f7d4-46b0-95e3-b4777a884e14",
-      "whitelistExternalId":"030d0551-c250-444d-92dc-171c652122e1",
-      "whitelistExternalName":"External Whitelist QA 1696826581",
-      "whitelistInternalId":"030d0551-c250-444d-92dc-171c652122e1",
-      "whitelistInternalName":"Internal Whitelist QA 1696826581",
+      "whitelistExternalId": "030d0551-c250-444d-92dc-171c652122e1",
+      "whitelistExternalName": "External Whitelist QA 1696826581",
+      "whitelistInternalId": "030d0551-c250-444d-92dc-171c652122e1",
+      "whitelistInternalName": "Internal Whitelist QA 1696826581",
       "requestId": "e5a4a303-08c2-4f2b-ac97-aebb5ae3bafa",
       "apiKey": "3ca9d140a80845b6a8f7338181d00d14",
-      "accountId":"5c1b4db2ab1b4e2c9eb245169c8de4bf",
-      "customerId":"5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf"
+      "accountId": "5c1b4db2ab1b4e2c9eb245169c8de4bf",
+      "customerId": "5c1b4db2-ab1b-4e2c-9eb2-45169c8de4bf"
     },
     "repURL": "https://test-rep.thailaksa.net/",
-    "sg_customer":{
-      "admin1":"ID_CARD34342321HK",
-      "admin1UserId":"324b4888-3835-4141-9933-e05c51f53945",
-      "admin2":"ID_CARD23242342HK",
-      "admin2UserId":"62e068f5-e47e-4870-b2aa-d973447d3473",
-      "passcode":"123123"
+    "sg_customer": {
+      "admin1": "ID_CARD34342321HK",
+      "admin1UserId": "324b4888-3835-4141-9933-e05c51f53945",
+      "admin2": "ID_CARD23242342HK",
+      "admin2UserId": "62e068f5-e47e-4870-b2aa-d973447d3473",
+      "passcode": "123123",
+      "customerId": "d436b494-f42f-47af-9186-65b75a4c1f0b",
+      "vaspId": "59e67cb8-da64-4611-b960-3b30ecb4b80b"
     }
   },
   "sandbox": {
@@ -80,18 +83,19 @@
       "requesterPasscode": "123111",
       "userId": "f02f80a4-5899-4700-a128-473c6e7da286",
       "idNumber": "AT0000101",
-      "identityType":1,
+      "identityType": 1,
       "country": "SG",
       "postalCode": "069533",
       "phoneNumber": "+6598755279",
       "dateOfBirth": "1993-12-24"
     },
+    "customerId": "09896980-675a-473a-adb6-a5e93de93b62",
     "approverInfo": {
       "approvalUsername": "PASSPORT01011998",
       "approverPasscode": "271198",
       "userId": "14429aaa-4a85-4fd4-a802-179fa07a2c55",
       "idNumber": "01011998",
-      "identityType":2,
+      "identityType": 2,
       "country": "SG",
       "postalCode": "069533",
       "phoneNumber": "+6598533526",
@@ -107,34 +111,36 @@
     "adminUsername2": "ID_CARDsdsad223HK",
     "permission":{
       "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae",
-      "admin1":"PASSPORT123456",
-      "admin1UserId":"",
-      "member1":"",
-      "member1UserId":"",
-      "viewer1":"",
-      "viewer1UserId":"",
+      "admin1":"PASSPORTATADMINTH",
+      "admin1UserId":"f3e0b3a5-9d34-4a72-8552-086c527a62bd",
+      "member1":"PASSPORTATMEMBERTH",
+      "member1UserId":"104611e0-5f0d-4191-8964-dd03f666b664",
+      "viewer1":"PASSPORTATVIEWERTH",
+      "viewer1UserId":"29928be6-eb53-4358-a8dd-cdef535e0ee8",
       "passcode":"123123"
     },
     "businessRegistrationId": "AT123123",
-    "crossTenant":{
+    "crossTenant": {
       "txnId": "4f4a5a2a-eb37-4a98-9174-1eae24eb5c6a",
       "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
-      "whitelistExternalId":"65d5f02b-921e-418b-ae02-dc676610d7f3",
-      "whitelistExternalName":"External Whitelist QA 1696826581",
-      "whitelistInternalId":"7f89bcf8-65f2-48bd-9a42-ad1a891c3e1e",
-      "whitelistInternalName":"Internal Whitelist QA 1696826581",
+      "whitelistExternalId": "65d5f02b-921e-418b-ae02-dc676610d7f3",
+      "whitelistExternalName": "External Whitelist QA 1696826581",
+      "whitelistInternalId": "7f89bcf8-65f2-48bd-9a42-ad1a891c3e1e",
+      "whitelistInternalName": "Internal Whitelist QA 1696826581",
       "requestId": "ff4b6984-3393-426a-8771-037441537a0f",
       "apiKey": "0ae7230600954bfc9d4c805faf28d353",
-      "accountId":"f61c8e36da61491693208be475a5e3ae",
-      "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae"
+      "accountId": "f61c8e36da61491693208be475a5e3ae",
+      "customerId": "f61c8e36-da61-4916-9320-8be475a5e3ae"
     },
     "repURL": "https://sandbox-rep.rakkardigital.com/",
-    "sg_customer":{
-      "admin1":"PASSPORTKL6532SG",
-      "admin1UserId":"d75d25a6-94d6-4871-b307-ef27098db11d",
-      "admin2":"PASSPORTTT2231SG",
-      "admin2UserId":"71750648-5c55-436e-b507-2a82d4067108",
-      "passcode":"123123"
+    "sg_customer": {
+      "admin1": "PASSPORTKL6532SG",
+      "admin1UserId": "d75d25a6-94d6-4871-b307-ef27098db11d",
+      "admin2": "PASSPORTTT2231SG",
+      "admin2UserId": "71750648-5c55-436e-b507-2a82d4067108",
+      "passcode": "123123",
+      "customerId": "711f1ef8-2eaf-4c9e-b2f1-9937f63e5156",
+      "vaspId": "295ee1b7-19d4-42a1-9a11-f53efd4bd136"
     }
   },
   "pt": {
@@ -144,26 +150,26 @@
     "requesterInfo": {
       "requesterUsername": "PASSPORT775996",
       "requesterPasscode": "123123",
-      "userId":"f6324d1a-c0f2-437e-acf6-b8fd76d195c5"
+      "userId": "f6324d1a-c0f2-437e-acf6-b8fd76d195c5"
     },
     "approverInfo": {
       "approvalUsername": "PASSPORT648269",
       "approverPasscode": "123123",
-      "userId":"aef8b5db-913a-4319-bae7-fdd4f023b3ba"
+      "userId": "aef8b5db-913a-4319-bae7-fdd4f023b3ba"
     },
     "adminUsername": "PASSPORT181415",
     "adminUsername2": "PASSPORT893232",
-    "permission":{
-      "customerId":"0f12c163-74d5-4ca0-9623-c3be3cb2ddeb",
-      "admin1":"PASSPORT123123HK",
-      "admin1UserId":"f1fe14c5-508d-4186-ad05-2d1ca5567b22",
-      "member1":"PASSPORT123126HK",
-      "member1UserId":"46e2f8f1-c3d1-467c-857e-ea0105281efc",
-      "viewer1":"PASSPORT123125HK",
-      "viewer1UserId":"f1373737-346a-440e-86d4-04c6819e8b4b",
-      "passcode":"031191"
+    "permission": {
+      "customerId": "0f12c163-74d5-4ca0-9623-c3be3cb2ddeb",
+      "admin1": "PASSPORT123123HK",
+      "admin1UserId": "f1fe14c5-508d-4186-ad05-2d1ca5567b22",
+      "member1": "PASSPORT123126HK",
+      "member1UserId": "46e2f8f1-c3d1-467c-857e-ea0105281efc",
+      "viewer1": "PASSPORT123125HK",
+      "viewer1UserId": "f1373737-346a-440e-86d4-04c6819e8b4b",
+      "passcode": "031191"
     },
-    "dbUrl":"jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/",
+    "dbUrl": "jdbc:postgresql://rds-pt.ceuskkmxcoeq.ap-southeast-1.rds.amazonaws.com:5432/",
     "repURL": "https://pt-rep.thailaksa.net/"
   },
   "dev": {
@@ -176,19 +182,20 @@
       "requesterUsername": "PASSPORTTHDEV01TH",
       "requesterPasscode": "123123",
       "userId": "66f4174a-44a1-48ba-ab6f-81a596ec7859",
-      "idNumber": "THDEV01", 
-      "identityType":2,
+      "idNumber": "THDEV01",
+      "identityType": 2,
       "country": "TH",
       "postalCode": "",
       "phoneNumber": "+6593939393",
       "dateOfBirth": "2024-06-11"
     },
+    "customerId": "9d388665-4293-4804-aeb0-1d6489612f7e",
     "approverInfo": {
       "approvalUsername": "PASSPORTTHDEV02TH",
       "approverPasscode": "123123",
       "userId": "9224a18e-a3e9-46b2-8f48-1f6d43dcb53f",
-      "idNumber": "THDEV02", 
-      "identityType":2,
+      "idNumber": "THDEV02",
+      "identityType": 2,
       "country": "TH",
       "postalCode": "",
       "phoneNumber": "+6592929291",
@@ -202,38 +209,40 @@
     },
     "adminUsername": "ID_CARDID2636772HK",
     "adminUsername2": "PASSPORTPA23456789322HK",
-    "member1":"ID_CARDIDDEVMEMBER001HK",
-    "viewer1":"ID_CARDTHDEVVIEWER01TH",
-    "permission":{
-      "customerId":"9d388665-4293-4804-aeb0-1d6489612f7e",
-      "admin1":"PASSPORTTHDEV01TH",
-      "admin1UserId":"66f4174a-44a1-48ba-ab6f-81a596ec7859",
-      "member1":"ID_CARDIDDEVMEMBER001HK",
-      "member1UserId":"803d03fc-cc47-42dd-934f-d2263b00dc95",
-      "viewer1":"ID_CARDTHDEVVIEWER01TH",
-      "viewer1UserId":"e10fb7b2-4bc8-48d6-8302-e6a82e6cf741",
-      "passcode":"123123"
+    "member1": "ID_CARDIDDEVMEMBER001HK",
+    "viewer1": "ID_CARDTHDEVVIEWER01TH",
+    "permission": {
+      "customerId": "9d388665-4293-4804-aeb0-1d6489612f7e",
+      "admin1": "PASSPORTTHDEV01TH",
+      "admin1UserId": "66f4174a-44a1-48ba-ab6f-81a596ec7859",
+      "member1": "ID_CARDIDDEVMEMBER001HK",
+      "member1UserId": "803d03fc-cc47-42dd-934f-d2263b00dc95",
+      "viewer1": "ID_CARDTHDEVVIEWER01TH",
+      "viewer1UserId": "e10fb7b2-4bc8-48d6-8302-e6a82e6cf741",
+      "passcode": "123123"
     },
     "businessRegistrationId": "NAT00001",
-    "crossTenant":{
+    "crossTenant": {
       "txnId": "24f7f355-042a-4137-a4e6-a7d49e3f0935",
       "vaultId": "9536ab75-5aab-42d4-a31c-b2f10920eea9",
-      "whitelistExternalId":"65d5f02b-921e-418b-ae02-dc676610d7f3",
-      "whitelistExternalName":"External Whitelist QA 1696826581",
-      "whitelistInternalId":"7f89bcf8-65f2-48bd-9a42-ad1a891c3e1e",
-      "whitelistInternalName":"Internal Whitelist QA 1696826581",
+      "whitelistExternalId": "65d5f02b-921e-418b-ae02-dc676610d7f3",
+      "whitelistExternalName": "External Whitelist QA 1696826581",
+      "whitelistInternalId": "7f89bcf8-65f2-48bd-9a42-ad1a891c3e1e",
+      "whitelistInternalName": "Internal Whitelist QA 1696826581",
       "requestId": "ff4b6984-3393-426a-8771-037441537a0f",
       "apiKey": "86e575338c2c4964b9f644567f6e7d63",
-      "accountId":"db9742a286f74736953818236084c6e4",
-      "customerId":"db9742a2-86f7-4736-9538-18236084c6e4"
+      "accountId": "db9742a286f74736953818236084c6e4",
+      "customerId": "db9742a2-86f7-4736-9538-18236084c6e4"
     },
     "repURL": "https://dev-rep.thailaksa.net/",
-    "sg_customer":{
-      "admin1":"PASSPORT333333HK",
-      "admin1UserId":"895d39f7-105c-4d22-b342-2888e206b183",
-      "admin2":"PASSPORT444444HK",
-      "admin2UserId":"31958a4a-d547-4f49-bc63-b66e7c68a182",
-      "passcode":"123123"
+    "sg_customer": {
+      "admin1": "PASSPORT333333HK",
+      "admin1UserId": "895d39f7-105c-4d22-b342-2888e206b183",
+      "admin2": "PASSPORT444444HK",
+      "admin2UserId": "31958a4a-d547-4f49-bc63-b66e7c68a182",
+      "passcode": "123123",
+      "customerId": "3b45e58d-2a41-4f9d-bfbd-5a5e179c79ea",
+      "vaspId": "24dd9108-1fb1-48e7-99f4-f23bde42bf01"
     }
   }
 }

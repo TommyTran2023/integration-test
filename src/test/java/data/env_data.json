@@ -128,7 +128,14 @@
       "accountId":"f61c8e36da61491693208be475a5e3ae",
       "customerId":"f61c8e36-da61-4916-9320-8be475a5e3ae"
     },
-    "repURL": "https://sandbox-rep.rakkardigital.com/"
+    "repURL": "https://sandbox-rep.rakkardigital.com/",
+    "sg_customer":{
+      "admin1":"PASSPORTKL6532SG",
+      "admin1UserId":"d75d25a6-94d6-4871-b307-ef27098db11d",
+      "admin2":"PASSPORTTT2231SG",
+      "admin2UserId":"71750648-5c55-436e-b507-2a82d4067108",
+      "passcode":"123123"
+    }
   },
   "pt": {
     "baseURL": "https://pt-api.thailaksa.net",

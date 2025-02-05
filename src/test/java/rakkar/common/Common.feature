@@ -27,9 +27,9 @@ Feature: Common Feature
         * requestHandle().cancelAllMyTransferPendingRequest(requesterUserID)
 
 
-    @ApproveTransactionCommon
-    Scenario: Approve transaction by id
-        * requestHandle().approveTransaction('5de37edb-27c6-4bf0-9793-896a5116e4da')
+    @ApproveRequestCommon
+    Scenario: Approve request by id
+        * requestHandle().approveTransaction('35b32145-df57-4db6-9992-25a3f2e20cf8')
 
     @UpdateExistingNetworkToPrivate
     Scenario: Update Existing Network To Private
@@ -63,4 +63,8 @@ Feature: Common Feature
             if (i<10) requestHandle().approveTransaction(getTxn.response.data.records[i].id)
         }
         """
+
+    @GetChallengeAnswer
+    Scenario: Get Challenge Answer
+        * call read(svc + 'Biometric.feature@UserDoBiometric') {userName: 'PASSPORT333333HK'}
         

@@ -274,13 +274,14 @@ Feature: Travel rule transaction
         var maxRetry = 6
         do {
             java.lang.Thread.sleep(60000); 
-            var completedFbStatus = ['COMPLETED','REJECTED']
+            //var completedRepStatus = ['COMPLETED','REJECTED']
+            var completedRepStatus = [expectedRepTxnStatus]
             var listTxn = karate.call(svc + 'Transaction.feature@GetTransactionsList', {accessToken: destUser.userAccessToken, query:{offset: '0', limit:'10'}}).response.data.transactions
             
             if (listTxn.map(x => x.txHash).includes(txHash)) {
                 var actualTxn = listTxn.find(x => x.txHash == txHash)
 
-                if (completedFbStatus.includes(actualTxn.fireblocksStatus))
+                if (completedRepStatus.includes(actualTxn.repStatus))
                     recievedAsset = true
             }
 
@@ -315,12 +316,10 @@ Feature: Travel rule transaction
             "rakObj": "#object",
             "verdict": "#(expectedVerdict)",
             "provider": "NOTABENE",
-            "quorumId": "##uuid",
             "rakStatus": "#(expectedRakTxnStatus)",
             "trTypeObjKey": "#(expectedKey)",
             "screeningTime": "#number",
             "rakDescription": "#(expectedReason)",
-            "quorumRequestId": "#uuid",
             "trStatus": "#(expectedtrStatus)"
         }
         """

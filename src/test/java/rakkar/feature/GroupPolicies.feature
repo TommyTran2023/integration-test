@@ -6,6 +6,7 @@ Feature: Group Policies
         * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
         * def groupHandle = read('classpath:rakkar/common/GroupHandle.js')
         * def requestHandle = read('classpath:rakkar/common/RequestHandle.js')
+        * configure afterFeature = function(){ karate.call('classpath:rakkar/common/Common.feature@DeleteAllTestGroups'); }
 
     @ignore @GetGroupPolicies
     Scenario: Get Group Policies

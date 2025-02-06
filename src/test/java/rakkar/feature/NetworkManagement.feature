@@ -138,9 +138,10 @@ Feature: Network Management
 
   @RAKCON-15108 @Getdiscoverablenetwork
   Scenario: Get discoverable network id
+    # Searching network list return from fireblock, not able to search for other company network, keyword must be 'Rakkar ...'
     * def value = call read('this:NetworkManagement.feature@ProfileListing')
     * def profileId = value.response.data.networks[0].id
-    * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)', keyword: 'Rakkar - UAT (Testnet) - N' }
+    * def query = { limit:'10', offset: '0', currentProfileId: '#(profileId)', keyword: 'Rakkar' }
     Given path 'network/networks/discoverable-network-ids'
     And params query
     When method GET

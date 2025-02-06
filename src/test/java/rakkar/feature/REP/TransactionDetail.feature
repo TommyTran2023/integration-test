@@ -171,7 +171,7 @@ Feature: Transaction Detail
         Then match response.data contains expAdditionalData
 
     @GetNonTravelRuleTransactionsWithChecklist @RAKCON-35563
-    Scenario: Get travel rule transactions Deposit with checklist
+    Scenario: Get non travel rule transactions Deposit with checklist
         * call read(connectDB + 'SelectTxnDepositWithChecklist') {customerId: #(customerId)}
         * print result
         * def data = 

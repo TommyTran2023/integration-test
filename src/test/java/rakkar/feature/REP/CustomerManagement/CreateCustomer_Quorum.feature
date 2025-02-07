@@ -127,7 +127,7 @@ Feature: Create Customer Quorum Validation
                     "country": "Singapore"
                 },
                 "customerName": "AUTOTEST",
-                "customerShortName": "ATTT",
+                "customerShortName": "ATTX",
                 "businessRegistrationId": "AUTOTEST",
                 "taxId": "AUTOTEST",
                 "businessTypeId": 3,

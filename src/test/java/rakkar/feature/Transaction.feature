@@ -16,7 +16,7 @@ Feature: Transaction
     * match $response == schemaBody.transaction.filterTransaction
     * match each $response.data.transactions contains '#(^schemaBody.transaction.transactionDetails)'
 
-    @RAKCON-10904 @ViewTransactionListing
+    @RAKCON-10904 @ViewTransactionListing @smoke
   Scenario: View transaction listing
     # View transaction listing
     * def query = { offset: '0', limit:'10', priceTo: '10'}

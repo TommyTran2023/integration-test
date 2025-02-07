@@ -7,7 +7,7 @@ Feature: HomePage
     * def schemaBody = read('classpath:data/schema.json')
     * def testData = read('classpath:data/dataTest.json')
 
-  @RAKCON-11657 @AssetAllocationChart
+  @RAKCON-11657 @AssetAllocationChart @smoke
   Scenario: View chart of Asset Allocation
     Given path 'core/assets/chart'
     * param type = 'ALL'
@@ -18,7 +18,7 @@ Feature: HomePage
     * match response.data.assets == '#[]assetsSchema'
     * match response.data == responseSchema
 
-  @RAKCON-10977 @AssetAllocationDetail
+  @RAKCON-10977 @AssetAllocationDetail @smoke
   Scenario: View Asset Allocation detail at Home Page
     Given path '/core/assets/allocation-detail'
     * param offset = 0
@@ -43,7 +43,7 @@ Feature: HomePage
     * def listSearchedAssetsSymbol = $listSearchedAssets[*].symbol
     * match each listSearchedAssetsSymbol == "#regex (?i).*" + randomAsset + ".*"
 
-  @RAKCON-10978 @PortfolioView
+  @RAKCON-10978 @PortfolioView @smoke
   Scenario: Portfolio view
     Given path '/core/vault/accounts/portfolio-chart'
     * def getDate =

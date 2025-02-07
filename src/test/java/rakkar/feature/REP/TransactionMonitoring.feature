@@ -23,7 +23,7 @@ Feature: Transaction Monitoring
 
     @GetSourceDestinationForFolder @RAKCON-34206
     Scenario: Get list source and destination to view 3rd party folder name
-        * call read(connectDB + 'SelectTxnByCurrency') {assetToken:'ALGO'}
+        * call read(connectDB + 'SelectTxnByCurrency') {assetToken:''}
         * print result
         * def data = 
         """
@@ -92,7 +92,7 @@ Feature: Transaction Monitoring
 
     @GetSourceDestinationForVault @RAKCON-34207
     Scenario: Get list source and destination to view 3rd party vault name
-        * call read(connectDB + 'SelectTxnByCurrencyAndType') {assetToken:'ALGO'}
+        * call read(connectDB + 'SelectTxnByCurrencyAndType') {assetToken:''}
         * print result
         * def data = 
         """
@@ -124,6 +124,94 @@ Feature: Transaction Monitoring
         * call read(repSvc + 'Transaction.feature@GET_transaction_transactions_source-destination') data
         * match responseStatus == 200
         Then match response.data contains expDataSchema
+    
+    @GetTransactionDetail @RAKCON-35490
+    Scenario: Get transaction detail
+        * def data = 
+        """
+        {
+            accessToken: "#(repAccessToken)",
+            query: {
+                page:1,
+                offset:0,
+                limit:10,
+                sortBy:"CREATED_DATE",
+                sort:"DESC",
+                transactionType: ["OUTGOING"],
+                status: ["COMPLETED"]
+            }
+        }
+        """
+        * call read(svc + 'Transaction.feature@GetTransactionsList') data
+        * def transactionId = response.data.transactions[0].id
+        * call read(svc + 'transactionSvc.feature@ViewTransactionDetail') { transactionId: '#(transactionId)' }
+        Then match responseStatus == 200
+        * def expDataSchema =
+        """
+        {
+           "totalEstimatedFee": "#number",
+           "transactionVdoPath": "##string",
+           "transactionVdoSentence": "##string",
+           "nativeSymbol": "#string",
+           "treatAsGrossAmount": "#boolean",
+           "createdByName": "#string",
+           "requestId": "#string",
+           "logPolicyType": "##string",
+           "logApproverNumber": "#number",
+           "remainingApproversNumber": "#number",
+           "remainingRequiredApprovers": "#[]",
+           "remainingNonRequiredApprovers": "#[]",
+           "id": "#uuid",
+           "transactionId": "#uuid",
+           "type": "#string",
+           "status": "#string",
+           "operation": "#present",
+           "amount": "#number",
+           "feetype": "#string",
+           "note": "##string",
+           "subStatusFireblock": "##string",
+           "customerName": "#string",
+           "customerId": "#uuid",
+           "countryCodeRegistration": "#string",
+           "fireblocksStatus": "##string",
+           "vaspId": "#present",
+           "repStatus": "#string",
+        }
+        """
+        * def expAdditionalData =
+        """
+        {
+            "quorumId": "#uuid",
+            "quorumRequestId": "#uuid",
+        }
+        """
+        Then match response.data contains expDataSchema
+        Then match response.data.additionalData contains expAdditionalData
 
-
+        @GetVASPInformation  @RAKCON-35717
+    Scenario: Get VASP information
+        * call read(repSvc + 'TravelRule.feature@GET_core_v2_rep_TravelRule_VASP') {vaspId: #(sg_customer.vaspId)}
+        * print response
+        * def expDataSchema =
+        """
+        {
+            "id": "#uuid",
+            "did": "#string",
+            "name": "#string",
+            "website": "#string",
+            "logo": "#string",
+            "incorporationCountry": "#string",
+            "jurisdictions": "#string",
+            "forceFields": "#[]",
+            "isDeleted": "#boolean",
+            "status": "#string",
+            "createdBy": "#string",
+            "updatedBy": "#string",
+            "createdAt": "#string",
+            "updatedAt": "#string",
+            "customerId": "#uuid"
+        }
+        """
+        * match responseStatus == 200
+        Then match response.data contains expDataSchema
 

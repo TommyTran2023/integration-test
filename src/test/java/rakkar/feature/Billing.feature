@@ -5,7 +5,7 @@ Feature: Billing
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * def schemaJson = read('classpath:data/schema.json')
 
-  @RAKCON-12805 @View_billing_list
+  @RAKCON-12805 @View_billing_list @smoke
   Scenario: View billing list
     * def query = { offset: '0', limit:'10'}
     Given path 'core/customers/billings'

@@ -64,7 +64,7 @@ Feature: Get access token for user from cross workspace
     """
     # Verify balance updated correct
     * def getDestination = waitNewTransactionComing(isWarm, crossData, hash)
-    * def total_destination_after_transfer = parseFloat(getDestination.walletInfo.data.total)
+    * def total_destination_after_transfer = parseFloat(getDestination.walletInfo.data.available)
     * def amount_recieve = parseFloat(amount_low) - feeData
 
     # --- Verify balance of destination updated correctly

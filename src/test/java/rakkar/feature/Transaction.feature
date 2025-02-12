@@ -472,9 +472,10 @@ Feature: Transaction
         """
       * def dateFrom = getDate(-30)
       * def dateTo = getDate(-1)
-      * def query = { limit:'10', offset: '0',txnDateFrom:'#(dateFrom)', txnDateTo:'#(dateTo)' }
+      * def query = { limit:'10', offset: '0', txnDateFrom:'2024-12-19', txnDateTo:'2024-12-19' }
       * call read('this:Transaction.feature@Filter_transaction_common')
-      
+      * print response
+
   
   
 

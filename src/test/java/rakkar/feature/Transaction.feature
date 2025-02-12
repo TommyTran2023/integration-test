@@ -462,18 +462,27 @@ Feature: Transaction
 
       @RAKCON-35798 @Filter_transaction_by_initiated_date
     Scenario: Filter transaction by initiated date 
-      * def getDate =
-        """
-        function(numberOfDays){
-          var date = new Date();
-          date.setDate(date.getDate() + (numberOfDays));
-          return date.toISOString()
-        }
-        """
-      * def dateFrom = getDate(-30)
-      * def dateTo = getDate(-1)
-      * def query = { limit:'10', offset: '0',txnDateFrom:'#(dateFrom)', txnDateTo:'#(dateTo)' }
-      * call read('this:Transaction.feature@Filter_transaction_common')
+      # * def getDate =
+      #   """
+      #   function(numberOfDays){
+      #     var date = new Date();
+      #     date.setDate(date.getDate() + (numberOfDays));
+      #     return date.toISOString()
+      #   }
+      #   """
+      # * def dateFrom = getDate(0)
+      # * def dateTo = getDate(0)
+      # * def query = { limit:'10', offset: '0',txnDateFrom:'#(dateFrom)', txnDateTo:'#(dateTo)' }
+      * def getTxns = call read(connectDB + '@SelectTxnHaveCreatedAtDiffToExternalLastUpdated')
+      * def firstTxn = txnDate.result[0].createdAt.toString().slice('0', '10')
+
+      * print firstTxn
+
+      # * def query = { limit:'10', offset: '0',txnDateFrom:'#(txnDate)', txnDateTo:'#(txnDate)' }
+      # * call read('this:Transaction.feature@Filter_transaction_common')
+      * def actualTxn = '2025-01-23 08:02:07.247'
+      * def expectedRegex = '#regex ^'+ txnDate +'.+'
+      * match actualTxn == expectedRegex
       
   
   

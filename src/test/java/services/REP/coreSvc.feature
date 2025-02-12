@@ -374,3 +374,11 @@ Given path 'core/rep/customers/billings/invoice'
 * request body
 When method POST
 
+#----------------------------------
+@GET_core_v2_rep_TravelRule_VASP
+Scenario: GET core v2 rep TravelRule VASP
+	Given path '/core/v2/rep/TravelRule/VASP/' + vaspId
+	* headers headers 
+	When method GET
+
+

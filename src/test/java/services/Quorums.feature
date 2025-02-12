@@ -17,6 +17,20 @@ Feature: Advance-quorum
         Then match responseStatus == 201
         * match response.status == 'success'
 
+    @ApproveRequestNoValidate
+    Scenario: Approve request - no validate
+        * def data = 
+        """
+        {
+            "requestId": "#(requestId)",
+            "authorization": "#(approvalAccessToken)",
+            "challengeAnswer": "#(challengeAnswerApprover)",
+            "passcode": "#(approverPasscode)",
+            "requestBody": "#(typeof requestBody == 'undefined' ? null : requestBody)"
+        }
+        """
+        * call read(svc + 'advQuorumSvc.feature@ApproveRequest') data
+
     @CancelRequest
     Scenario: Cancel request
         * def data = 

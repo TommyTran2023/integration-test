@@ -5,7 +5,7 @@ Feature: Get user information
     #@PRECOND_RAKCON-10224
     * url baseURL
 
-  @RAKCON-10221 @GetRequesterInfo
+  @RAKCON-10221 @GetRequesterInfo @smoke
   Scenario: Requester - Get information of requester
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     * call read('this:GetUserInfo.feature@GetUserInfo')

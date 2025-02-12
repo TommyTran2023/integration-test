@@ -187,7 +187,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
     
-        @SelectWorkspace
+    @SelectWorkspace
     Scenario: Select Workspace
         * def query = 
         """
@@ -197,7 +197,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-        @SelectTxnByCurrency
+    @SelectTxnByCurrency
     Scenario: Select transactions by type and currency
         * def query = 
         """
@@ -218,7 +218,7 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query) 
 
-         @SelectTxnByCurrencyAndType
+    @SelectTxnByCurrencyAndType
     Scenario: Select transactions by type
         * def query = 
         """
@@ -227,7 +227,7 @@ Feature: Connect to PostgreSQL
         "left join \"txn_exchangeAccounts\" \"tea\" " +
    	    "on tt.source = \"tea\".id " +
         "left join vaults v " +
-   	    "on v.\"vaultExternalId\"::text = \"tea\".\"externalExchangeAccountId\" " +
+   	    "on v.\"vaultExternalId\"::text = \"tea\".\"externalExchangeAccountId\" and v.\"workSpaceId\" = tea.\"workSpaceId\" " +
         "left join \"walletInfos\" wi on wi.\"externalAssetId\" = tt.\"feeCurrency\" " +
         "where tt.\"type\" ='REBALANCING' " +
    	    "and \"tea\".\"type\" ilike '%VAULT_ACCOUNT%' " +
@@ -237,9 +237,81 @@ Feature: Connect to PostgreSQL
         "limit 10"
         """
         * print query
-        * def result = coreDb.readRows(query) 
+        * def result = coreDb.readRows(query)
+
+    @SelectTxnNotTravelRule   
+    Scenario: Select transactions not travel rule
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
+        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
+        "and \"fireblocksStatus\" = 'COMPLETED' " +
+        "and \"type\" ='OUTGOING' " +
+        "and \"additionalData\"::text not like '%notabene%' " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+    @SelectTxnNotScreeningThroughFireblocks
+    Scenario: Select transactions not screening through Fireblocks
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\", * from txn_transactions tt " +
+        "WHERE \"customerId\" = '" + customerId + "' " +
+        "and \"fireblocksStatus\" is null " +
+        "and \"type\" ='OUTGOING' " +
+        "order by \"createdAt\" DESC "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+    @SelectDepositTxnNotTravelRule   
+    Scenario: Select deposit transactions not travel rule
+        * def query = 
+        """
+        "select \"transactionId\", \"additionalData\" , * from txn_transactions tt " +
+        "where (tt.\"customerId\" is not null or \"toCustomerId\" is not null) " +
+        "and \"fireblocksStatus\" = 'COMPLETED' " +
+        "and \"type\" ='INCOMING' " +
+        "and \"additionalData\"::text not like '%notabene%' " +
+        "order by \"createdAt\" desc " +
+        "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query)
 
 
+
+    @SelectDepositTxnTravelRule
+    Scenario: Select deposit transactions not screening through Fireblocks
+        * def query = 
+        """
+        "select \"transactionId\" ,* from txn_transactions tt " +
+        "where \"toCustomerId\" = '" + customerId + "' " +
+        "and \"type\" in ('INCOMING') " +
+        "and status in ('COMPLETED') " +
+        "order by \"createdAt\" desc " +
+        "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query)
+
+
+        @SelectTxnDepositWithChecklist
+
+    Scenario: Select deposit transactions with checklist
+        * def query = 
+        
+        """
+        "select \"transactionId\" ,* from txn_transactions " +
+        "where \"toCustomerId\" = '" + customerId + "' " +
+        "and \"fireblocksStatus\" in  ('REJECTED') " +
+        "and \"type\" in ('INCOMING') " +
+        "order by \"createdAt\" desc "
+        """
+        * print query
+        * def result = coreDb.readRows(query)
         @SelectVaultIdAndFolderIdForTxnTravelRule
     Scenario: Select VaultId And FolderId For Transaction With Trave lRule
         * def query = 

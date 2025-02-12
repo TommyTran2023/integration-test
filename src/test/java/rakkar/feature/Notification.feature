@@ -6,7 +6,7 @@ Feature: Notification
     * def Const = read('classpath:data/enum.json')
     * def schemaBody = read('classpath:data/schema.json')
 
-  @RAKCON-11009 @NotificationSetting
+  @RAKCON-11009 @NotificationSetting @smoke
   Scenario: Notification Setting
     * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
     Given path '/notification/notifications/settings'

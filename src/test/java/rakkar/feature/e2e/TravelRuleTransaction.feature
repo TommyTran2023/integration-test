@@ -6,8 +6,8 @@ Feature: Travel rule transaction
 
         * def env = karate.properties['karate.env']
         * def trData = karate.read('classpath:data/cross_workspace_data.json')
-        * def trData = karate.jsonPath(trData, "$.." + env +"_workspace")[0].sg
-        * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(sg_customer.admin1)" }
+        * def trData = karate.jsonPath(trData, "$.." + env +"_workspace")[0].sg.userInfo
+        * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(trData.admin1)" }
         * def accessToken = userAccessToken
         * def amountETH = "0.0001" + (new Date()).getTime().toString().slice(5,10)
         * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
@@ -84,12 +84,12 @@ Feature: Travel rule transaction
         * def transactionId = response.data.id
 
         # 4. Approve transaction
-        * def approverSG = karate.call(svc + 'Biometric.feature@UserDoBiometric', { userName: sg_customer.admin2} )
+        * def approverSG = karate.call(svc + 'Biometric.feature@UserDoBiometric', { userName: trData.admin2} )
         * eval
         """
-            var approverIv = sg_customer.admin2UserId.replaceAll('-','').slice(0, 16)
+            var approverIv = trData.admin2UserId.replaceAll('-','').slice(0, 16)
         """
-        * def approverPasscode = karate.exec(`node aes.js encrypt ${sg_customer.passcode} ${privateKey.secret} ${approverIv}`);
+        * def approverPasscode = karate.exec(`node aes.js encrypt ${trData.passcode} ${privateKey.secret} ${approverIv}`);
         * def data = 
         """
         {
@@ -274,13 +274,14 @@ Feature: Travel rule transaction
         var maxRetry = 6
         do {
             java.lang.Thread.sleep(60000); 
-            var completedFbStatus = ['COMPLETED','REJECTED']
+            //var completedRepStatus = ['COMPLETED','REJECTED']
+            var completedRepStatus = [expectedRepTxnStatus]
             var listTxn = karate.call(svc + 'Transaction.feature@GetTransactionsList', {accessToken: destUser.userAccessToken, query:{offset: '0', limit:'10'}}).response.data.transactions
             
             if (listTxn.map(x => x.txHash).includes(txHash)) {
                 var actualTxn = listTxn.find(x => x.txHash == txHash)
 
-                if (completedFbStatus.includes(actualTxn.fireblocksStatus))
+                if (completedRepStatus.includes(actualTxn.repStatus))
                     recievedAsset = true
             }
 
@@ -315,12 +316,10 @@ Feature: Travel rule transaction
             "rakObj": "#object",
             "verdict": "#(expectedVerdict)",
             "provider": "NOTABENE",
-            "quorumId": "##uuid",
             "rakStatus": "#(expectedRakTxnStatus)",
             "trTypeObjKey": "#(expectedKey)",
             "screeningTime": "#number",
             "rakDescription": "#(expectedReason)",
-            "quorumRequestId": "#uuid",
             "trStatus": "#(expectedtrStatus)"
         }
         """

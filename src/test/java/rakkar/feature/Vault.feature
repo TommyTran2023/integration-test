@@ -107,7 +107,7 @@ Feature: Vault
     When method POST
     # Then status 201
 
-    @RAKCON-10218 @ViewVaultListing
+    @RAKCON-10218 @ViewVaultListing @smoke
   Scenario: View vault listing
     # View vault listing
     Given path '/core/vault/v2/accounts'

@@ -7,7 +7,7 @@ Feature: Staking
     * def testData = read('classpath:data/dataTest.json')
     * call read('this:GetUserInfo.feature@GetUserInfo')
 
-  @RAKCON-15418 @Get_List_Pool
+  @RAKCON-15418 @Get_List_Pool @smoke
   Scenario: View list pool
     * def query = { limit:'10', page: '1', tokenId: '#(dataSet.stakeToken)'}
     Given path 'staking/pools'

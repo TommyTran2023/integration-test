@@ -29,6 +29,7 @@ pipeline {
         choice(name: 'ENV', choices: 'TEST\nSANDBOX\nDEV', description: 'Test Environment [TEST, SANDBOX, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
+        booleanParam(name: 'smoke', defaultValue: false, description: 'Select this to run only smoke test (Tests with @smoke tag)')
     }
 
     triggers {
@@ -78,6 +79,10 @@ pipeline {
                     env.KARATE_ENV = KARATE_ENV
                     env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
 
+                    if (params.smoke) {
+                        env.testType = "SMOKE: " + env.testType
+                    }
+
                     sh 'cp -rf ${SECRET} ./auto_secret.json'
                 }
             }
@@ -126,8 +131,14 @@ pipeline {
                 script {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
-                    def tag = params.E2E ? "@e2e" : "~@e2e"
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tag}'"
+
+                    def tagsParam = params.E2E ? "@e2e" : "~@e2e"
+
+                    if (params.smoke) {
+                        tagsParam += ' --tags @smoke'
+                    }
+                    
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tagsParam}'"
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()
@@ -234,7 +245,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "Env: ${XRAY_ENV}, ${env.testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -246,7 +257,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "${BRANCH} ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "Env: ${XRAY_ENV}, ${env.testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

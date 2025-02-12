@@ -14,7 +14,7 @@
         }
          """
 
-    @RAKCON-11799 @User_listing
+    @RAKCON-11799 @User_listing @smoke
       Scenario: View user listing
       * def query = { limit:'10', offset: '0', status: 'ACTIVE'}
       Given path 'auth/account/users'

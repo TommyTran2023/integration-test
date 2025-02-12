@@ -2,14 +2,14 @@
 Feature: Open API
   Background:
     * url openApiURL
-    * def apiKey = call read('this:GenerateAPIkey.feature@Generate_api_key')
+    * def apiKey = callonce read('this:GenerateAPIkey.feature@Generate_api_key')
     * print apiKey.response.data.key
     * def key = apiKey.response.data.key
     * def accountId = apiKey.response.data.accountId
     * def idDeleted = apiKey.response.data.id
 
 
-  @RAKCON-15514 @Get_balance_by_assetId
+  @RAKCON-15514 @Get_balance_by_assetId @smoke
   Scenario: Open API - Get balance by assetId
     * call read('this:OpenAPI_ReadSchema.feature@Read_schema_balance')
     * header x-api-key = key
@@ -33,7 +33,7 @@ Feature: Open API
     Then status 200
     And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
 
-  @RAKCON-17445 @GetVaultList
+  @RAKCON-17445 @GetVaultList @smoke
     Scenario: Open API - Get Vault List
       * call read('this:OpenAPI_ReadSchema.feature@Read_schema_vault')
     * header x-api-key = key
@@ -58,7 +58,7 @@ Feature: Open API
     And match karate.keysOf(response) == karate.keysOf(expectedSchema.properties)
 
 
-  @RAKCON-17447 @Get_whitelist
+  @RAKCON-17447 @Get_whitelist @smoke
   Scenario: Open API - Get whitelist
     * call read('this:OpenAPI_ReadSchema.feature@Read_schema_whitelist')
     * header x-api-key = key
@@ -114,7 +114,7 @@ Feature: Open API
     * def query = { destination_id: '#(destinationId)', limit: 10, offset: 0 }
     * call read('this:OpenAPI.feature@Transaction_common')
 
-  @RAKCON-17451 @Transaction_by_type
+  @RAKCON-17451 @Transaction_by_type @smoke
   Scenario: Open API - Get transaction by transaction type
     * def query = { transaction_type: 'rebalance', limit: 10, offset: 0 }
     * call read('this:OpenAPI.feature@Transaction_common')

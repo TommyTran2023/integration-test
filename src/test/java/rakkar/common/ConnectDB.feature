@@ -240,3 +240,45 @@ Feature: Connect to PostgreSQL
         * def result = coreDb.readRows(query) 
 
 
+        @SelectVaultIdAndFolderIdForTxnTravelRule
+    Scenario: Select VaultId And FolderId For Transaction With Trave lRule
+        * def query = 
+        """
+        "SELECT v.\"name\", v.id AS \"vaultId\", ff.\"name\", ff.id AS \"folderId\",ff.\"name\" as \"folderName\", ffa.id AS \"folderAddressId\",ffa.\"vaspId\", tt.\"createdAt\" " +
+        "FROM txn_transactions tt " + 
+        "INNER JOIN \"txn_exchangeAccounts\" srctea ON tt.\"source\" = \"srctea\".id " +
+        "INNER JOIN \"txn_exchangeAccounts\" desttea ON tt.\"destination\" = \"desttea\".id " +
+        "INNER JOIN vaults v ON srctea.\"externalExchangeAccountId\" = v.\"vaultExternalId\" " +
+        "INNER JOIN fol_folders ff ON ff.\"folderExternalId\"::UUID = desttea.\"externalExchangeAccountId\"::UUID " + 
+        "INNER JOIN \"fol_folderAddresses\" ffa ON ff.id = ffa.\"folderId\" " +
+        "WHERE tt.type = 'OUTGOING' " +
+        "AND tt.\"customerId\" = '3b45e58d-2a41-4f9d-bfbd-5a5e179c79ea' " +
+        "AND ffa.\"method\" = 'TRAVEL_RULE' " +
+        "ORDER BY tt.\"createdAt\" DESC " + 
+        "LIMIT 5" 
+        """
+        * print query
+        * def result = coreDb.readRows(query) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

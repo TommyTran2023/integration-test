@@ -313,11 +313,9 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query)
 
-
         @SelectTxnHaveCreatedAtDiffToExternalLastUpdated
     Scenario: Select deposit transactions with checklist
         * def query = 
-        
         """
         "select cc.\"customerName\", cc.id , tt.\"createdAt\" , tt.\"updatedAt\", tt.\"externalCreatedAt\" ,to_timestamp(tt.\"externalLastUpdated\"  /1000) " +
         "from txn_transactions tt " + 

@@ -466,15 +466,11 @@ Feature: Transaction
       * print getTxns.result
       * def firstTxn = getTxns.result[0].createdAt.toString().slice('0', '10')
       * print firstTxn
-      # def txnDate =
-      # print txnDate
       * def query = { limit:'10', offset: '0',txnDateFrom:'#(firstTxn)', txnDateTo:'#(firstTxn)' }
-      * call read('this:Transaction.feature@Filter_transaction_common')      
-      * def actualDate = response.data.transactions[0].createdAt
-      * print actualDate
+      * call read('this:Transaction.feature@Filter_transaction_common')
       * def expectedRegex = '#regex ^'+ firstTxn +'.+'
-      * match actualDate == expectedRegex
       Then match each response.data.transactions[*].createdAt == expectedRegex
+      
       
   
   

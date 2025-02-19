@@ -16,7 +16,7 @@ Feature: Common Feature
 
     @Deposit
     Scenario: Deposit to test vault
-        * call read(svc + 'testnet.feature@DepositXRP') {address:"#(dataSet.address)"}
+        * call read(svc + 'testnet.feature@DepositXRP') {address:r423QLRecAsRDMcRmgi4yeNmnsBCuApgqv,destinationTag:2825026260}
         * def vaults = call read(svc + 'Vault.feature@GetListVault_v2') {searchText: "#(testData.stdVaultE2E)"}
         * def vaultWallet = vaults.response.data.list[0].wallets.find(x => x.symbol == 'XRP')
         * def wallet = call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId:"#(vaults.response.data.list[0].id)",walletId:"#(vaultWallet.id)"}

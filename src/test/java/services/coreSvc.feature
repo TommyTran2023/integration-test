@@ -1914,11 +1914,9 @@ Feature: All api call to core services
     #----------------------------------
     @POST_core_v2_TravelRule_VASP_validate-init-transaction
   Scenario: POST core v2 TravelRule VASP validate-init-transaction
-    * print headers
-    * print body
     Given path '/core/v2/TravelRule/VASP/validate-init-transaction'
     * headers headers 
-    And request {"transactionAsset":"ETH_TEST5","transactionAmount":"0.00324","source":{"type":"VAULT_ID","value":"#(body.source)"},"destination":{"type":"FOLDER_ID","value":"4d4c585a-0d6b-4479-8301-86fb8f89d967"}}
+    And request body
     When method POST
 
     #----------------------------------

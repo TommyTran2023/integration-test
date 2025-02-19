@@ -312,3 +312,18 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
+
+        @SelectTxnHaveCreatedAtDiffToExternalLastUpdated
+    Scenario: Select deposit transactions with checklist
+        * def query = 
+        """
+        "select cc.\"customerName\", cc.id , tt.\"createdAt\" , tt.\"updatedAt\", tt.\"externalCreatedAt\" ,to_timestamp(tt.\"externalLastUpdated\"  /1000) " +
+        "from txn_transactions tt " + 
+        "inner join cus_customers cc on tt.\"customerId\" = cc.id " +
+        "where to_timestamp(tt.\"externalLastUpdated\" / 1000) > tt.\"createdAt\" + INTERVAL '1 day' " +
+        "and cc.id ='" + customerId + "' " +
+        "order by tt.\"createdAt\" desc " + 
+        "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query)

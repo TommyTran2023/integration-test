@@ -3,7 +3,7 @@ Feature: Wallet Connect
     Background:
         * call read('this:RequesterAuthenticator.feature@RequesterAccessToken')
 
-    @RAKCON-29143 @GetListWalletConnect
+    @RAKCON-29143 @GetListWalletConnect @smoke
     Scenario: Get list Wallet Connect
         * call read(svc + 'WalletConnect.feature@VaultWcController_getListEntity')
         Then match responseStatus == 200

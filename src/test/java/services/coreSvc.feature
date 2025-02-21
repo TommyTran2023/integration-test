@@ -421,6 +421,7 @@ Feature: All api call to core services
   Scenario: Validate Address
     Given path 'core/folders/addresses/validate'
     * header Authorization = authorization
+    * request body
     When method POST
 
     @GetFormInput

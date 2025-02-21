@@ -180,10 +180,11 @@ Feature: Whitelist
         * def data = 
         """
             {
-                authorization: #(accessToken),
+                authorization: '#(accessToken)',
                 body:{
                     address: '#(address)',
                     nativeAsset: '#(nativeAsset)',
+                    externalAssetId: '#(externalAssetId)',
                     tag: '#(tag)'
                 }
             }

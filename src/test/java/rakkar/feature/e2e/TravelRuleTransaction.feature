@@ -9,7 +9,7 @@ Feature: Travel rule transaction
         * def trData = karate.jsonPath(trData, "$.." + env +"_workspace")[0].sg.userInfo
         * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(trData.admin1)" }
         * def accessToken = userAccessToken
-        * def amountETH = "0.0001" + (new Date()).getTime().toString().slice(5,10)
+        * def amountXRP = "11.0" + (new Date()).getTime().toString().slice(5,10)
         * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
 
     @setup
@@ -27,8 +27,8 @@ Feature: Travel rule transaction
         * def data =
         """
         {
-            "transactionAsset": "ETH_TEST5",
-            "transactionAmount": "#(amountETH)",
+            "transactionAsset": "XRP_TEST",
+            "transactionAmount": "#(amountXRP)",
             "source": {
                 "type": "VAULT_ID",
                 "value": "#(sourceVaultId)"
@@ -64,17 +64,17 @@ Feature: Travel rule transaction
                 "id": "#(destinationFolderId)",
                 "type": "#(folderType)"
             },
-            "tokenId": "#(dataSet.eth5TokenId)",
-            "amount": "#(amountETH)",
+            "tokenId": "#(dataSet.xrpTokenId)",
+            "amount": "#(amountXRP)",
             "treatAsGrossAmount": true,
-            "fee": 2.256,
+            "fee": '2.4000000000000001e-05',
             "source": {
                 "type": "VAULT_ACCOUNT",
                 "id": "#(sourceVaultId)"
             },
             "feeLevel": "HIGH",
-            "totalEstimatedFee": 0.000047375999999999995,
-            "feeType": "GWEI",
+            "totalEstimatedFee": '2.4000000000000001e-05',
+            "feeType": "XRP_TEST",
             "travelRuleTransactionID": "#(travelRuleTransactionID)"
         }
         """
@@ -82,19 +82,6 @@ Feature: Travel rule transaction
         Then match responseStatus == 201
         * def requestId = response.data.requestId
         * def transactionId = response.data.id
-
-        # 4. Validate request detail
-        #* call read(svc + 'Quorums.feature@ViewRequestDetails') requestId
-        #Then match responseStatus == 200
-        #And match response.status == "success"
-        #And match data.transactionType == '#? _ == "OUTGOING" || _ == "INCOMING"'
-        #And match response.data.destination.folderId == "#(destinationFolderId)"
-        #And match response.data.destination.type == "#(folderType)"
-        #And match response.data.tokenId == "#(dataSet.eth5TokenId)"
-        #And match response.data.amount == "#(amountETH)"
-        #And match response.data.source.type == "VAULT_ACCOUNT"
-        #And match response.data.source.vaultId == "#(sourceVaultId)"
-        #And match data.amountLevel == '#? _ == "LOW" || _ == "MEDIUM" || _ == "HIGH"'
 
         # 4. Approve transaction
         * def approverSG = karate.call(svc + 'Biometric.feature@UserDoBiometric', { userName: trData.admin2} )
@@ -174,7 +161,8 @@ Feature: Travel rule transaction
         # 1.1 Withdraw from whitelisted and approve in cross sg customer
         * eval 
         """
-            var destEnv = env != 'dev' ? 'dev' : 'test';
+            var destEnv = env != 'test' ? 'test' : 'dev';
+            karate.log(destEnv)
             var crossData = karate.read('classpath:data/cross_workspace_data.json')
             crossData = karate.jsonPath(crossData, "$.." + destEnv +"_workspace")[0]
             var destUrl = crossData["url_" + destEnv]
@@ -186,8 +174,8 @@ Feature: Travel rule transaction
         {
             "customUrl":"#(destUrl)",
             "accessToken":"#(destUserBio.userAccessToken)",
-            "transactionAsset": "ETH_TEST5",
-            "transactionAmount": "#(amountETH)",
+            "transactionAsset": "XRP_TEST",
+            "transactionAmount": "#(amountXRP)",
             "source": {
                 "type": "VAULT_ID",
                 "value": "#(sourceVaultId)"
@@ -221,12 +209,12 @@ Feature: Travel rule transaction
             "challengeAnswerRequest":"#(destUserBio.userAnswerApprover)",
             "treatAsGrossAmount": false,
             "feeLevel": "HIGH",
-            "amount": "#(amountETH)",
-            "feeType": "GWEI",
-            "tokenId": "#(crossData.eth5TokenId)",
-            "fee": 12.646000000000001,
+            "amount": "#(amountXRP)",
+            "feeType": "XRP_TEST",
+            "tokenId": "#(crossData.xrpTokenId)",
+            "fee": '2.4000000000000001e-05',
             "operation": "TRANSFER",
-            "totalEstimatedFee": 0.00026556600000000001,
+            "totalEstimatedFee": '2.4000000000000001e-05',
             "destination": {
                 "id": "#(destinationFolderId)",
                 "type": "#(destinationFolderType)"
@@ -302,9 +290,9 @@ Feature: Travel rule transaction
             
         } while (!recievedAsset && maxRetry > 0)
         if (recievedAsset)
-            karate.log("Destination receive asset successfully:", txHash)
+            karate.log("Destination receive asset successfully:" + txHash + "\nExpectedRepTxnStatus: " + expectedRepTxnStatus)
         else
-            karate.log("Destination didn't receive asset successfully:", txHash)
+            karate.fail("Destination didn't receive asset successfully:" + txHash + "\nExpectedRepTxnStatus: " + expectedRepTxnStatus)
         """
 
         * def expectedRakObj = 

@@ -77,9 +77,9 @@ function fn(){
 
         waitUntilFireblocksStatusCompleted: function(transactionId, expectedStatus) { 
             var completedStatus = ["COMPLETED", "REJECTED", expectedStatus?.toUpperCase()]
-            var retry = 18
+            var retry = 10
             do {
-                java.lang.Thread.sleep(10000); 
+                java.lang.Thread.sleep(30000); 
                 var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
                 retry--
             }

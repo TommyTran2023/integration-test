@@ -30,20 +30,14 @@
       "requesterPasscode": "123123"
     },
     "eth5TokenId":"7d82f8ce-1379-4c11-98a5-c758590159a2",
-    "xrpTokenId":"",
+    "xrpTokenId":"1e62f02c-7ae7-4735-a9ec-22347d6af122",
     "sg":{
       "userInfo":{
-        "admin1":"PASSPORTKL6532SG",
-        "admin1UserId":"d75d25a6-94d6-4871-b307-ef27098db11d",
-        "admin2":"PASSPORTTT2231SG",
-        "admin2UserId":"71750648-5c55-436e-b507-2a82d4067108",
+        "admin1":"PASSPORT111111111HK",
+        "admin1UserId":"72d1f87b-5f8e-472f-953c-7a36e9c636dd",
+        "admin2":"PASSPORT11111112HK",
+        "admin2UserId":"bb999e95-ecaf-4030-919b-825120c31372",
         "passcode":"123123"
-      },
-      "DiffVASP_ValidWhitelist":{
-        "eth5SourceVaultId":"31ebfbc0-66d2-4ef6-8f29-b514685b56a1",
-        "eth5SourceAddress":"0x9051C729493Adb630B8de7de90509be2fC722Dc2",
-        "eth5DestinationFolderId":"bd71e878-3f9b-4450-8c2c-9d642edfc052",
-        "eth5DestinationAddressId":"c0d24f02-2264-46df-9ffc-2d1ed2c4bdf9"
       }
     }  
   },

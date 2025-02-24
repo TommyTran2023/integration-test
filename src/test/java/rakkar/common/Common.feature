@@ -14,13 +14,9 @@ Feature: Common Feature
     Scenario: Reject all request
         * requestHandle().rejectAllPendingRequest()
 
-    @Deposit
+    @DepositXRP
     Scenario: Deposit to test vault
-        * call read(svc + 'testnet.feature@DepositXRP') {address:r423QLRecAsRDMcRmgi4yeNmnsBCuApgqv,destinationTag:2825026260}
-        * def vaults = call read(svc + 'Vault.feature@GetListVault_v2') {searchText: "#(testData.stdVaultE2E)"}
-        * def vaultWallet = vaults.response.data.list[0].wallets.find(x => x.symbol == 'XRP')
-        * def wallet = call read(svc + 'Wallet.feature@GetWalletAddress') {vaultId:"#(vaults.response.data.list[0].id)",walletId:"#(vaultWallet.id)"}
-        * call read(svc + 'testnet.feature@DepositXRP') {address:"#(wallet.response.data.address[0].address)"}
+        * call read(svc + 'testnet.feature@DepositXRP') {address:'#(address)',destinationTag:'#(tag)'}
 
     @CancelAllTranferRequests
     Scenario: Cancel all request

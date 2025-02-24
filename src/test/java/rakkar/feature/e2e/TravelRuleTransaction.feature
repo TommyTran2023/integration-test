@@ -11,6 +11,12 @@ Feature: Travel rule transaction
         * def accessToken = userAccessToken
         * def amountXRP = "11.0" + (new Date()).getTime().toString().slice(5,10)
         * def commonHandle = read('classpath:rakkar/common/CommonHandle.js')
+        * configure afterScenario = 
+        """
+            function(){ 
+                karate.call('classpath:rakkar/common/Common.feature@DepositXRP', {address: sourceAddress, tag: sourceMemo})
+            }
+        """
 
     @setup
     Scenario:
@@ -157,15 +163,16 @@ Feature: Travel rule transaction
         * def sourceVaultId = "<sourceVaultId>"
         * def destinationFolderId = "<destinationFolderId>"
         * def destinationFolderType = "<destinationFolderType>"
+        * print sourceEnv
 
         # 1.1 Withdraw from whitelisted and approve in cross sg customer
         * eval 
         """
-            var destEnv = env != 'test' ? 'test' : 'dev';
-            karate.log(destEnv)
+            // var destEnv = sourceEnv
+            // karate.log(destEnv)
             var crossData = karate.read('classpath:data/cross_workspace_data.json')
-            crossData = karate.jsonPath(crossData, "$.." + destEnv +"_workspace")[0]
-            var destUrl = crossData["url_" + destEnv]
+            crossData = karate.jsonPath(crossData, "$.." + sourceEnv +"_workspace")[0]
+            var destUrl = crossData["url_" + sourceEnv]
             var crossApproverIv = crossData.sg.userInfo.admin2UserId.replaceAll('-','').slice(0, 16)
         """
         * def destUserBio = karate.call(svc + 'Biometric.feature@UserDoBiometric', { customUrl: destUrl, userName: crossData.sg.userInfo.admin1})
@@ -248,7 +255,7 @@ Feature: Travel rule transaction
         * eval
         """
             // java.lang.Thread.sleep(30000); 
-            karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "outgoing", destEnv: destEnv }) 
+            karate.call(svc + 'NotabeneAPI.feature@ApproveLatestTransfer',{ txDirection: "outgoing", destEnv: sourceEnv }) 
         """
 
         # 3. ACCEPT/REJECT the deposit from Notabene
@@ -274,10 +281,10 @@ Feature: Travel rule transaction
         var recievedAsset = false
         var maxRetry = 6
         do {
-            java.lang.Thread.sleep(60000); 
-            //var completedRepStatus = ['COMPLETED','REJECTED']
-            var completedRepStatus = [expectedRepTxnStatus]
-            var listTxn = karate.call(svc + 'Transaction.feature@GetTransactionsList', {accessToken: destUser.userAccessToken, query:{offset: '0', limit:'10'}}).response.data.transactions
+            java.lang.Thread.sleep(30000); 
+            var completedRepStatus = ['COMPLETED','REJECTED', 'PENDING_REVIEW', expectedRepTxnStatus]
+            // var completedRepStatus = [expectedRepTxnStatus]
+            var listTxn = karate.call(svc + 'Transaction.feature@GetTransactionsList', {accessToken: destUser.userAccessToken, query:{offset: '0', limit:'20', keyword : "", "type" : ["INCOMING"]}}).response.data.transactions
             
             if (listTxn.map(x => x.txHash).includes(txHash)) {
                 var actualTxn = listTxn.find(x => x.txHash == txHash)

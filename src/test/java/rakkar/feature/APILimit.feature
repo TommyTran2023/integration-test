@@ -31,8 +31,8 @@ Feature: API Query size limit
   Examples:
     | api                                   | param |
     | /transaction/transactions/v1          | { "limit": 10000 } |
-    | /transaction/transactions/export      | { "limit": 10000 } |
-    | /transaction/transactions/export-web  | { "limit": 10000 } |
+    | /transaction/transactions/export      | { "limit": 2000 } |
+    | /transaction/transactions/export-web  | { "limit": 2000 } |
     | /advance-quorum/quorums               | { "limit": 10000 } |
     # | /auth/account/list-users              | { "limit": 10000 } | ### Not common listing, will do later
 

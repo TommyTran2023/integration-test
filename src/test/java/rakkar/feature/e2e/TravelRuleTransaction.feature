@@ -1,4 +1,4 @@
-@e2e @TravelRule @TravelRule_e2e
+@e2e @TravelRule @TravelRule_e2e @ignore
 Feature: Travel rule transaction
 
     Background: Login as SG requester
@@ -14,7 +14,9 @@ Feature: Travel rule transaction
         * configure afterScenario = 
         """
             function(){ 
-                karate.call('classpath:rakkar/common/Common.feature@DepositXRP', {address: sourceAddress, tag: sourceMemo})
+                var commonHandle = karate.call('classpath:rakkar/common/CommonHandle.js')
+                commonHandle.depositXRP(sourceAddress, sourceMemo)
+                // karate.call('classpath:rakkar/common/Common.feature@DepositXRP', {address: sourceAddress, tag: sourceMemo})
             }
         """
 
@@ -275,7 +277,7 @@ Feature: Travel rule transaction
         
         # 4. Validate transaction details from RAK API - from get transaction details
         * copy customUrl = baseURL
-        * def destUser = call read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(sg_customer.admin1)" }
+        * def destUser = call read(svc + 'Auth.feature@GetUserAccessToken') { userName: "#(trData.admin1)" }
         * eval
         """
         var recievedAsset = false

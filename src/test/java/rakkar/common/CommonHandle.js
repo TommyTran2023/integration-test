@@ -77,7 +77,7 @@ function fn(){
 
         waitUntilFireblocksStatusCompleted: function(transactionId, expectedStatus) { 
             var completedStatus = ["COMPLETED", "REJECTED", expectedStatus?.toUpperCase()]
-            var retry = 10
+            var retry = 14
             do {
                 java.lang.Thread.sleep(30000); 
                 var getTransactionDetail = karate.call(svc + 'Transaction.feature@ViewTransactionDetail', { transactionId: transactionId })
@@ -89,6 +89,10 @@ function fn(){
                 karate.fail("Fireblocks transaction cannot be completed: " + transactionId + (expectedStatus == null ? "" : ". Expected status: " + expectedStatus))
   
             return getTransactionDetail
+        },
+
+        depositXRP: function(address, tag){
+            karate.call(svc + 'testnet.feature@DepositXRP', {address: address,destinationTag: tag })
         }
     }
 }

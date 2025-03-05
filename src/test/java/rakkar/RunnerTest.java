@@ -17,13 +17,21 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class RunnerTest {
+    private static final String XRAY_URL = "https://xray.cloud.getxray.app/api/v2/graphql";
+    private static final String XRAY_AUTH_URL = "https://xray.cloud.getxray.app/api/v2/authenticate";
+
     @BeforeAll
     public static void before(){
         System.setProperty("karate.env", "sandbox");
@@ -47,20 +55,23 @@ public class RunnerTest {
         List<String> testTags = new ArrayList<>();
         if (testSetKey != null && !testSetKey.isEmpty()) {
             testTags = getTestCasesFromTestSet(testSetKey);
-            System.out.println("Running tests with tags: " + testTags);
         }
-        /* 
+        
         // Run tests with or without tags
         Results results;
 
         if (testTags.isEmpty()) {
-            results = Runner.path("classpath:rakkar/feature/APILimit_OpenAPI.feature")
+            results = Runner.path("classpath:rakkar/feature/OpenAPI.feature")
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);
         } else {
-            results = Runner.path("classpath:rakkar/feature/APILimit_OpenAPI.feature")
-                            .tags(testTags.toArray(new String[0]))
+            String tagArray = String.join(", ", testTags);;
+            System.out.println("Final Tags Array: " + tagArray);
+
+            results = Runner.path("classpath:rakkar/feature/OpenAPI.feature")
+                            .tags(tagArray)
+                            .dryRun(true)
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);
@@ -83,7 +94,7 @@ public class RunnerTest {
 
         System.out.println("dir--" + results.getReportDir());
         generateReport(results.getReportDir());
-        */
+        
     }
     
     public static void generateReport(String karateOutputPath){
@@ -95,29 +106,37 @@ public class RunnerTest {
         reportBuilder.generateReports();
     }
 
-    public static List<String> getTestCasesFromTestSet(String testSetKey){
-        String XRAY_URL = "https://xray.cloud.getxray.app/api/v2";
-        String CLIENT_ID = "BC3A1FA4AD6F47D99BA27B8A0917F4CD"; 
-        String CLIENT_SECRET = "e4f86aeff528178b6180581a1bf82f398b15fd97f6bd06df17e5ca6f4833cb87"; 
-
+    public static List<String> getTestCasesFromTestSet(String testSetKey) {
         List<String> testCases = new ArrayList<>();
+        Map<String, String> cred = getXrayCredential(System.getProperty("secret"));
+
+        String clientId = cred.get("clientId");
+        String clientSecret = cred.get("clientSecret");
+
         try {
-            String authToken = getXrayAuthToken(CLIENT_ID, CLIENT_SECRET);
+            String authToken = getXrayAuthToken(clientId, clientSecret);
             if (authToken == null) {
                 System.out.println("Failed to obtain Xray authentication token.");
                 return testCases;
             }
 
-            // Construct the API URL
-            URL url = new URL(XRAY_URL + "/testset/" + testSetKey + "/test");
+            // Get test cases from test set, test plan
+            String query = constructGraphQLQuery(testSetKey);
+
+            URL url = new URL(XRAY_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             
-            // Set request method and headers
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + authToken);
+            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
 
-            // Read response
+            try (var os = conn.getOutputStream()) {
+                byte[] input = query.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
             if (conn.getResponseCode() == 200) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
@@ -127,16 +146,26 @@ public class RunnerTest {
                 }
                 reader.close();
 
-                // Parse JSON response
-                JSONArray jsonArray = new JSONArray(response.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-                    testCases.add(obj.getString("key"));
+                System.out.println("Xray API Response: " + response.toString());
+
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                JSONArray testCasesArray = jsonResponse.getJSONObject("data")
+                                       .getJSONObject("getTestSets")
+                                       .getJSONArray("results")
+                                       .getJSONObject(0)
+                                       .getJSONObject("tests")
+                                       .getJSONArray("results");
+
+                for (int i = 0; i < testCasesArray.length(); i++) {
+                    JSONObject testCase = testCasesArray.getJSONObject(i);
+                    testCases.add("@" + testCase.getJSONObject("jira").getString("key"));
                 }
+
             } else {
                 System.out.println("Failed to fetch test cases. HTTP Code: " + conn.getResponseCode());
-                System.out.println(conn.getResponseMessage());
-                
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String errorResponse = errorReader.lines().collect(Collectors.joining());
+                System.out.println("Error Response: " + errorResponse);
             }
             conn.disconnect();
         } catch (Exception e) {
@@ -145,8 +174,39 @@ public class RunnerTest {
         return testCases;
     }
 
+    private static String constructGraphQLQuery(String testSetKey) {
+        return String.format(
+            "{\"query\":\"query { " +
+            "getTestSets(jql: \\\"key=%s\\\", limit: 1) { " +
+                "total " +
+                "start " +
+                "limit " +
+                "results { " +
+                    "issueId " +
+                    "jira(fields: [\\\"key\\\"]) " +
+                    "projectId " +
+                    "tests(limit: 100) { " +
+                        "total " +
+                        "start " +
+                        "limit " +
+                        "results { " +
+                            "issueId " +
+                            "jira(fields: [\\\"key\\\"]) " +
+                            "projectId " +
+                            "testType { " +
+                                "name " +
+                                "kind " +
+                            "} " +
+                        "} " +
+                    "} " +
+                "} " +
+            "} }\", " +
+            "\"variables\":{}}", 
+            testSetKey
+        );
+    }
+
     private static String getXrayAuthToken(String clientId, String clientSecret) {
-        String XRAY_AUTH_URL = "https://xray.cloud.getxray.app/api/v2/authenticate";
         try {
             URL url = new URL(XRAY_AUTH_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -154,19 +214,36 @@ public class RunnerTest {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
     
-            // Prepare JSON payload
             String payload = String.format("{\"client_id\": \"%s\", \"client_secret\": \"%s\"}", clientId, clientSecret);
             conn.getOutputStream().write(payload.getBytes());
     
             if (conn.getResponseCode() == 200) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String token = reader.readLine().replaceAll("\"", ""); // Token is returned as a plain string
+                String token = reader.readLine().replaceAll("\"", "");
                 reader.close();
                 return token;
             } else {
                 System.out.println("Failed to authenticate with Xray. HTTP Code: " + conn.getResponseCode());
             }
             conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Map<String, String> getXrayCredential(String filePath) {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            JSONObject json = new JSONObject(content);
+
+            Map<String, String> credentials = new HashMap<>();
+            credentials.put("clientId", json.getString("XRAY_client_id"));
+            credentials.put("clientSecret", json.getString("XRAY_client_secret"));
+
+            return credentials;
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -30,9 +30,9 @@ Feature: API Query size limit
 
   Examples:
     | api                                   | param |
-    | /transaction/transactions/v1          | { "limit": 10000 } |
-    | /transaction/transactions/export      | { "limit": 10000 } |
-    | /transaction/transactions/export-web  | { "limit": 10000 } |
+    | /transaction/transactions/v1          | { "limit": 10000, "status": ["PENDING"], "dateFrom": "2024-11-01T16:00:00.000Z", "dateTo": "2024-11-01T16:00:59.999Z" } |
+    | /transaction/transactions/export      | { "limit": 10000, "status": ["PENDING"], "dateFrom": "2024-11-01T16:00:00.000Z", "dateTo": "2024-11-01T16:00:59.999Z" } |
+    | /transaction/transactions/export-web  | { "limit": 10000, "status": ["PENDING"], "dateFrom": "2024-11-01T16:00:00.000Z", "dateTo": "2024-11-01T16:00:59.999Z" } |
     | /advance-quorum/quorums               | { "limit": 10000 } |
     # | /auth/account/list-users              | { "limit": 10000 } | ### Not common listing, will do later
 
@@ -64,10 +64,10 @@ Feature: API Query size limit
 
   Examples:
     | api                              | param |
-    | /transaction/transactions        | { "limit": 10000 } |
+    | /transaction/transactions        | { "limit": 10000, "dateFrom": "2024-11-01T16:00:00.000Z", "dateTo": "2024-11-01T16:00:59.999Z" } |
     | /advance-quorum/group-policies   | { "limit": 10000 } | 
     # | /auth/account/users              | { "limit": 10000 } | ### Not common listing, will do later
-    | /notification/notifications      |  { "limit": 10000, "status": "UNREAD" } |
+    | /notification/notifications      |  { "limit": 10000, "status": "UNREAD", "type": "Warning", "moduleType": "MODULE_ADDRESS", "moduleAction": "APPROVE_ADD_WHITELIST_ADDRESS" } |
     | /reports/reports                 | { "limit": 10000 } |
     | /network/networks                | { "limit": 10000 } |
     | /wallet-connect/v2/wcApplication | { "limit": 10000 } |

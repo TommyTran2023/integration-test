@@ -413,7 +413,69 @@ Feature: WhiteList Folder
     * call read(svc + 'Whitelist.feature@ValidateAddress') data
     Then match responseStatus == 201
     And match response.status == "success"
+    * def expDataSchema =
+    """
+    {
+    "isValid" : true,
+    "duplicated" : "#[]",
+    "isValidAddress" : true,
+    "isValidMemo" : true
+    }
+    """
+    Then match response.data contains expDataSchema
     * assert response.data.duplicated.length == 0
+
+    @RAKCON-37247 @ValidateMemoNotSatifyingValidateType
+    Scenario: Validate memo not satisfying validateType
+      * def data =
+    """
+    {
+      "tag" : '231209725b',
+      "address" : 'r3x5R9YDJREcQeqJahuDbJrWAimX19DTms',
+      "nativeAsset" : 'XRP_TEST',
+      "externalAssetId" : 'XRP_TEST'
+    }
+    """
+    * call read(svc + 'Whitelist.feature@ValidateAddress') data
+    Then match responseStatus == 201
+    And match response.status == "success"
+    * match response.data.isValidMemo == false
+
+    @RAKCON-37250 @ValidateMemoNotSatisfyingMaxLength
+    Scenario: Validate memo not satisfying maxLength
+    * def data =
+    """
+    {
+      "tag" : '23120972510',
+      "address" : 'r3x5R9YDJREcQeqJahuDbJrWAimX19DTms',
+      "nativeAsset" : 'XRP_TEST',
+      "externalAssetId" : 'XRP_TEST'
+    }
+    """
+    * call read(svc + 'Whitelist.feature@ValidateAddress') data
+    Then match responseStatus == 201
+    And match response.status == "success"
+    * match response.data.isValidMemo == false
+
+    @RAKCON-37251 @ValidateInvalidAddress
+    Scenario: Validate invalid address
+    * def data =
+    """
+    {
+      "tag" : '2312097251',
+      "address" : 'r3x5R9YDJREcQeqJahuDbJrWAimX19DTmsao',
+      "nativeAsset" : 'XRP_TEST',
+      "externalAssetId" : 'XRP_TEST'
+    }
+    """
+    * call read(svc + 'Whitelist.feature@ValidateAddress') data
+    Then match responseStatus == 201
+    And match response.status == "success"
+    * match response.data.isValid == false
+
+
+    
+
 
 
     

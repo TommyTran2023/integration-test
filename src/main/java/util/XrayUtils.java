@@ -18,7 +18,6 @@ import org.json.JSONObject;
 public class XrayUtils {
     private static final String XRAY_URL = "https://xray.cloud.getxray.app/api/v2/graphql";
     private static final String XRAY_AUTH_URL = "https://xray.cloud.getxray.app/api/v2/authenticate";
-    private static final int PAGE_SIZE = 100; // Maximum number of results per page
     
     public static List<String> getTestCasesFromTestSet(String testSetKey) {
         List<String> testCases = new ArrayList<>();
@@ -34,33 +33,9 @@ public class XrayUtils {
                 return testCases;
             }
 
-            // Get total count first
-            int totalTestCases = getTotalTestCaseCount(testSetKey, authToken);
-            System.out.println("Total test cases in test set " + testSetKey + ": " + totalTestCases);
-            
-            // Fetch all test cases using pagination
-            int start = 0;
-            while (start < totalTestCases) {
-                List<String> pageTestCases = getTestCasesPage(testSetKey, authToken, start, PAGE_SIZE);
-                testCases.addAll(pageTestCases);
-                start += PAGE_SIZE;
-                
-                if (pageTestCases.isEmpty()) {
-                    // Safety check in case the API returns fewer results than expected
-                    break;
-                }
-            }
+            // Get test cases from test set, test plan
+            String query = constructGraphQLQuery(testSetKey);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return testCases;
-    }
-    
-    private static int getTotalTestCaseCount(String testSetKey, String authToken) {
-        try {
-            String query = constructCountQuery(testSetKey);
-            
             URL url = new URL(XRAY_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             
@@ -83,56 +58,6 @@ public class XrayUtils {
                     response.append(line);
                 }
                 reader.close();
-                
-                JSONObject jsonResponse = new JSONObject(response.toString());
-                return jsonResponse.getJSONObject("data")
-                                  .getJSONObject("getTestSets")
-                                  .getJSONArray("results")
-                                  .getJSONObject(0)
-                                  .getJSONObject("tests")
-                                  .getInt("total");
-            } else {
-                System.out.println("Failed to fetch test case count. HTTP Code: " + conn.getResponseCode());
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                String errorResponse = errorReader.lines().collect(Collectors.joining());
-                System.out.println("Error Response: " + errorResponse);
-            }
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-    
-    private static List<String> getTestCasesPage(String testSetKey, String authToken, int start, int limit) {
-        List<String> pageTestCases = new ArrayList<>();
-        try {
-            String query = constructPaginatedQuery(testSetKey, start, limit);
-            
-            URL url = new URL(XRAY_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + authToken);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-
-            try (var os = conn.getOutputStream()) {
-                byte[] input = query.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
-
-            if (conn.getResponseCode() == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-
-                System.out.println("Xray API Response (page starting at " + start + "): " + response.toString());
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray testCasesArray = jsonResponse.getJSONObject("data")
@@ -144,10 +69,11 @@ public class XrayUtils {
 
                 for (int i = 0; i < testCasesArray.length(); i++) {
                     JSONObject testCase = testCasesArray.getJSONObject(i);
-                    pageTestCases.add("@" + testCase.getJSONObject("jira").getString("key"));
+                    testCases.add("@" + testCase.getJSONObject("jira").getString("key"));
                 }
+
             } else {
-                System.out.println("Failed to fetch test cases page. HTTP Code: " + conn.getResponseCode());
+                System.out.println("Failed to fetch test cases. HTTP Code: " + conn.getResponseCode());
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 String errorResponse = errorReader.lines().collect(Collectors.joining());
                 System.out.println("Error Response: " + errorResponse);
@@ -156,25 +82,10 @@ public class XrayUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return pageTestCases;
+        return testCases;
     }
 
-    private static String constructCountQuery(String testSetKey) {
-        return String.format(
-            "{\"query\":\"query { " +
-            "getTestSets(jql: \\\"key=%s\\\", limit: 1) { " +
-                "results { " +
-                    "tests (limit: 1) { " +
-                        "total " +
-                    "} " +
-                "} " +
-            "} }\", " +
-            "\"variables\":{}}", 
-            testSetKey
-        );
-    }
-
-    private static String constructPaginatedQuery(String testSetKey, int start, int limit) {
+    private static String constructGraphQLQuery(String testSetKey) {
         return String.format(
             "{\"query\":\"query { " +
             "getTestSets(jql: \\\"key=%s\\\", limit: 1) { " +
@@ -185,7 +96,7 @@ public class XrayUtils {
                     "issueId " +
                     "jira(fields: [\\\"key\\\"]) " +
                     "projectId " +
-                    "tests(limit: %d, start: %d) { " +
+                    "tests(limit: 100) { " +
                         "total " +
                         "start " +
                         "limit " +
@@ -202,7 +113,7 @@ public class XrayUtils {
                 "} " +
             "} }\", " +
             "\"variables\":{}}", 
-            testSetKey, limit, start
+            testSetKey
         );
     }
 

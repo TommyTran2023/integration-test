@@ -30,6 +30,7 @@ pipeline {
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
         booleanParam(name: 'smoke', defaultValue: false, description: 'Select this to run only smoke test (Tests with @smoke tag)')
+        string(name: 'TESTSET', description: 'Test Set')
     }
 
     triggers {
@@ -88,14 +89,14 @@ pipeline {
             }
         }
 
-        stage ('Git Checkout') {
-            steps {
+        // stage ('Git Checkout') {
+        //     steps {
 
-                git branch: "${BRANCH}",
-                    credentialsId: 'github',
-                    url: 'https://github.com/rakkar-digital-org/integration-test.git'
-            }
-        }
+        //         git branch: "${BRANCH}",
+        //             credentialsId: 'github',
+        //             url: 'https://github.com/rakkar-digital-org/integration-test.git'
+        //     }
+        // }
 
         stage ('Check Service Status') {
             steps {
@@ -139,6 +140,10 @@ pipeline {
                     }
                     
                     env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tagsParam}'"
+
+                    if (params.TESTSET) {
+                        env.COMMAND += " -D karate.testSetKey=${params.TESTSET}"
+                    }
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()
                     env.JENKINS_GROUP = sh(script: "id -g", returnStdout: true).trim()

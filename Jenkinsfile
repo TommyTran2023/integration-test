@@ -134,14 +134,12 @@ pipeline {
                     echo "KARATE_ENV = ${KARATE_ENV}"
 
                     def tagsParam = params.E2E ? "@e2e" : "~@e2e"
-
-                    if (params.smoke) {
-                        tagsParam += ' --tags @smoke'
-                    }
                     
                     env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tagsParam}'"
 
-                    if (params.TESTSET) {
+                    if (params.smoke) {
+                        env.COMMAND += " -D karate.testSetKey=RAKCON-37254"
+                    } else if (params.TESTSET) {
                         env.COMMAND += " -D karate.testSetKey=${params.TESTSET}"
                     }
                     

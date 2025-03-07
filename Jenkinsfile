@@ -132,15 +132,17 @@ pipeline {
                 script {
                     // This step will only be executed if the serviceStatus = 0
                     echo "KARATE_ENV = ${KARATE_ENV}"
-
-                    def tagsParam = params.E2E ? "@e2e" : "~@e2e"
                     
-                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} -Dkarate.options='--tags ${tagsParam}'"
-
-                    if (params.smoke) {
-                        env.COMMAND += " -D karate.testSetKey=RAKCON-37254"
-                    } else if (params.TESTSET) {
-                        env.COMMAND += " -D karate.testSetKey=${params.TESTSET}"
+                    env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} "
+                    
+                    if (params.TESTSET) {
+                        env.COMMAND += "-D karate.testSetKey=${params.TESTSET} "
+                    } else if (params.smoke) {
+                        env.COMMAND += "-D karate.testSetKey=RAKCON-37254 "
+                    } else if (params.E2E) {
+                        env.COMMAND += "-Dkarate.options='--tags @e2e' "
+                    } else {
+                        env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
                     }
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()

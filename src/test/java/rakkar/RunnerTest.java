@@ -38,7 +38,7 @@ public class RunnerTest {
         System.out.println("Running in " + threadCount + " threads");
 
         // Get the testSetKey from system properties
-        String testSetKey = System.getProperty("karate.testSetKey");
+        String testSetKey = System.getProperty("testSetKey");
         System.out.println("Running tests with testSetKey: " + testSetKey);
 
         // Fetch test cases from Xray if testSetKey is provided

@@ -28,9 +28,10 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: 'TEST\nSANDBOX\nDEV', description: 'Test Environment [TEST, SANDBOX, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
-        booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
-        booleanParam(name: 'smoke', defaultValue: false, description: 'Select this to run only smoke test (Tests with @smoke tag)')
         string(name: 'TESTSET', description: 'Test Set')
+        // booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
+        // booleanParam(name: 'smoke', defaultValue: false, description: 'Select this to run only smoke test (Tests with @smoke tag)')
+        choice(name: 'CommonSet', choices: '--\nE2E\nSmoke', description: 'Select Common Test Set')
     }
 
     triggers {
@@ -135,14 +136,30 @@ pipeline {
                     
                     env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} "
                     
+                    // if (params.TESTSET) {
+                    //     env.COMMAND += "-D karate.testSetKey=${params.TESTSET} "
+                    // } else if (params.smoke) {
+                    //     env.COMMAND += "-D karate.testSetKey=RAKCON-37254 "
+                    // } else if (params.E2E) {
+                    //     env.COMMAND += "-Dkarate.options='--tags @e2e' "
+                    // } else {
+                    //     env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
+                    // }
+
                     if (params.TESTSET) {
-                        env.COMMAND += "-D karate.testSetKey=${params.TESTSET} "
-                    } else if (params.smoke) {
-                        env.COMMAND += "-D karate.testSetKey=RAKCON-37254 "
-                    } else if (params.E2E) {
-                        env.COMMAND += "-Dkarate.options='--tags @e2e' "
+                        env.COMMAND += "-D testSetKey=${params.TESTSET} "
                     } else {
-                        env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
+                        switch(params.CommonSet) {
+                            case "Smoke":
+                                env.COMMAND += "-D testSetKey=RAKCON-37254 "
+                                break
+                            case "E2E":
+                                env.COMMAND += "-Dkarate.options='--tags @e2e' "
+                                break
+                            default:
+                                env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
+                                break
+                        }
                     }
                     
                     env.JENKINS_USER = sh(script: "id -u", returnStdout: true).trim()

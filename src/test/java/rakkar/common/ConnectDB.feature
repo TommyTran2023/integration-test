@@ -299,7 +299,6 @@ Feature: Connect to PostgreSQL
 
 
         @SelectTxnDepositWithChecklist
-
     Scenario: Select deposit transactions with checklist
         * def query = 
         
@@ -312,6 +311,7 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
+        
         @SelectVaultIdAndFolderIdForTxnTravelRule
     Scenario: Select VaultId And FolderId For Transaction With Trave lRule
         * def query = 
@@ -326,6 +326,7 @@ Feature: Connect to PostgreSQL
         "WHERE tt.type = 'OUTGOING' " +
         "AND tt.\"customerId\" = '" + customerId + "' " +
         "AND ffa.\"method\" = 'TRAVEL_RULE' " +
+        "AND v.\"hiddenOnUI\" = false " +
         "ORDER BY tt.\"createdAt\" DESC " + 
         "LIMIT 5" 
         """

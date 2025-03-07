@@ -1,3 +1,4 @@
+@RAKCON-10583
 Feature: Travel rule transactions
 
 Background: Login as SG requester

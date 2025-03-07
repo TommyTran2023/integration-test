@@ -1,4 +1,4 @@
-   @RAKCON-34078 @WhitelistTravelRule @envnot=uat
+   @RAKCON-34078 @WhitelistTravelRule
 Feature: Travel rule whitelist folder for SG entity
 
   Background:

@@ -1,16 +1,16 @@
-Feature: Travel Rule 1st and 2nd API call 
+    @RAKCON-10583
+Feature: Travel Rule 
 
   Background:
     * callonce read(svc + 'Auth.feature@GetUserAccessToken') { userName: '#(sg_customer.admin1)' }
     * def accessToken = userAccessToken
 
-
-    @ValidateInitTransaction
+    @RAKCON-37364 @ValidateInitTransaction
   Scenario: Validate Init transaction
     * call read(connectDB + 'SelectVaultIdAndFolderIdForTxnTravelRule') {customerId: "#(sg_customer.customerId)"} 
+    * print result
     * def sourceValue = result[0].vaultId
     * def destinationValue = result[0].folderAddressId
-    * print result[0]
     * def data = 
     """
     {
@@ -66,11 +66,8 @@ Feature: Travel Rule 1st and 2nd API call
     """
     * match response.data contains expectedSchema 
 
-
-
-    @ValidateConfirmTransaction
+    @RAKCON-37365 @ValidateConfirmTransaction
   Scenario: Validate Confirm transaction
-    # * def travelRuleTransactionID = karate.get('travelRuleTransactionID')
     * call read('@ValidateInitTransaction')
     * print travelRuleTransactionID
     * def data =
@@ -84,81 +81,81 @@ Feature: Travel Rule 1st and 2nd API call
     * def expectedSchema = 
     """
     {
-    "isValid": '#boolean',
-    "type": '#string',
-    "infoValidate": {
-    "originator": {
-      "originatorPersons": [
-        {
-          "legalPerson": {
-            "name": {
-              "nameIdentifier": [
+      "isValid": '#boolean',
+      "type": '#string',
+      "infoValidate": {
+      "originator": {
+        "originatorPersons": [
+          {
+            "legalPerson": {
+              "name": {
+                "nameIdentifier": [
+                  {
+                    "legalPersonName": '#string'
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "accountNumber": [
+          '#string'
+        ]
+      },
+      "beneficiary": {
+        "beneficiaryPersons": [
+          {
+            "legalPerson": {
+              "name": {
+                "nameIdentifier": [
+                  {
+                    "legalPersonName": '#string'
+                  }
+                ]
+              },
+              "geographicAddress": [
                 {
-                  "legalPersonName": '#string'
+                  "addressLine": [
+                    '#string'
+                  ]
                 }
               ]
             }
           }
+        ],
+        "accountNumber": [
+          '#string'
+        ]
+      },
+      "originatorVASPdid": '#string',
+      "beneficiaryVASPdid": '#string',
+      "originatorDid": '#string'
+      },
+      "originator": {
+          "name": '#string'
+        },
+        "beneficiary": {
+        "name": '#string',
+        "geographicAddress": '#string',
+        "vaspInfo": {
+          "customerId": "09896980-675a-473a-adb6-a5e93de93b62",
+          "isDeleted": '#boolean',
+          "status": '#string',
+          "createdBy": '#uuid',
+          "updatedBy": '#uuid',
+          "id": "#(result[0].vaspId)",
+          "did": '#string', 
+          "name": '#string',
+          "website": '#string',
+          "logo": '#string',
+          "incorporationCountry": '#string',
+          "jurisdictions": '#string',
+          "forceFields": [],
+          "createdAt": '#string',
+          "updatedAt": '#string',
+          "isRakkar": '#boolean'
         }
-      ],
-      "accountNumber": [
-        '#string'
-      ]
-    },
-    "beneficiary": {
-      "beneficiaryPersons": [
-        {
-          "legalPerson": {
-            "name": {
-              "nameIdentifier": [
-                {
-                  "legalPersonName": '#string'
-                }
-              ]
-            },
-            "geographicAddress": [
-              {
-                "addressLine": [
-                  '#string'
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "accountNumber": [
-        '#string'
-      ]
-    },
-    "originatorVASPdid": '#string',
-    "beneficiaryVASPdid": '#string',
-    "originatorDid": '#string'
-    },
-    "originator": {
-    "name": '#string'
-    },
-    "beneficiary": {
-    "name": '#string',
-    "geographicAddress": '#string',
-    "vaspInfo": {
-      "customerId": "09896980-675a-473a-adb6-a5e93de93b62",
-      "isDeleted": '#boolean',
-      "status": '#string',
-      "createdBy": '#uuid',
-      "updatedBy": '#uuid',
-      "id": "#(result[0].vaspId)",
-      "did": '#string', 
-      "name": '#string',
-      "website": '#string',
-      "logo": '#string',
-      "incorporationCountry": '#string',
-      "jurisdictions": '#string',
-      "forceFields": [],
-      "createdAt": '#string',
-      "updatedAt": '#string',
-      "isRakkar": '#boolean'
-    }
-    }
+      }
     }
     """
     * match response.data contains expectedSchema 

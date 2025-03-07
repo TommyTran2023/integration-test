@@ -333,25 +333,32 @@ Feature: Connect to PostgreSQL
         * print query
         * def result = coreDb.readRows(query) 
 
+        @SelectTxnHaveCreatedAtDiffToExternalLastUpdated
+    Scenario: Select deposit transactions with checklist
+        * def query = 
+        """
+        "select cc.\"customerName\", cc.id , tt.\"createdAt\" , tt.\"updatedAt\", tt.\"externalCreatedAt\" ,to_timestamp(tt.\"externalLastUpdated\"  /1000) " +
+        "from txn_transactions tt " + 
+        "inner join cus_customers cc on tt.\"customerId\" = cc.id " +
+        "where to_timestamp(tt.\"externalLastUpdated\" / 1000) > tt.\"createdAt\" + INTERVAL '1 day' " +
+        "and cc.id ='" + customerId + "' " +
+        "order by tt.\"createdAt\" desc " + 
+        "limit 10"
+        """
+        * print query
+        * def result = coreDb.readRows(query)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Selectduplicatedwhitelistinformation
+    Scenario: Select duplicated whitelist information
+        * def query =
+        """
+        "select ff.\"id\", ffa.\"assetExternalId\", ff.\"name\", ff.\"type\", ffa.\"address\", ffa.\"tag\" " +
+        "from fol_folders ff " +
+        "inner join \"fol_folderAddresses\" ffa on ff.\"id\" = ffa.\"folderId\" and ffa.\"status\" = 1 " +
+        "where ff.\"customerId\" = '" + customerId + "' " +
+        "and ffa.\"assetExternalId\" like '%" + assetExternalId + "%' "
+        """
+        * eval if (typeof needTag != 'undefined' && needTag) query += "and ffa.\"tag\" != '' "
+        * eval query += "limit 10"
+        * print query
+        * def result = coreDb.readRows(query)

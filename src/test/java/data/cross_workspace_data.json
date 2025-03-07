@@ -8,19 +8,14 @@
       "requesterPasscode": "271198"
     },
     "eth5TokenId":"1ce448b2-e2ea-48e9-a879-eb80fa14d2e5",
+    "xrpTokenId":"a8a07e67-a276-4067-bbf5-6ceb44d6d9d9",
     "sg":{
       "userInfo":{
-        "admin1":"PASSPORT333333HK",
-        "admin1UserId":"895d39f7-105c-4d22-b342-2888e206b183",
-        "admin2":"PASSPORT444444HK",
-        "admin2UserId":"31958a4a-d547-4f49-bc63-b66e7c68a182",
+        "admin1":"PASSPORTSG83838SG",
+        "admin1UserId":"cca643c6-ae60-49ac-bfc1-d64599690f4e",
+        "admin2":"PASSPORTSG3343SG",
+        "admin2UserId":"bdb38eee-0ea7-4a99-84e9-bd4a0baabaa1",
         "passcode":"123123"
-      },
-      "DiffVASP_ValidWhitelist":{
-        "eth5SourceVaultId":"fce4cc6d-5858-42ed-b4fb-186cf9f9e351",
-        "eth5SourceAddress":"",
-        "eth5DestinationFolderId":"48d523be-8368-40ad-96b7-41de714d101c",
-        "eth5DestinationAddressId":"dcd3e9e8-f5f8-456b-b747-c8ec1b3aa8c9"
       }
     }
   },
@@ -35,19 +30,14 @@
       "requesterPasscode": "123123"
     },
     "eth5TokenId":"7d82f8ce-1379-4c11-98a5-c758590159a2",
+    "xrpTokenId":"1e62f02c-7ae7-4735-a9ec-22347d6af122",
     "sg":{
       "userInfo":{
-        "admin1":"PASSPORTKL6532SG",
-        "admin1UserId":"d75d25a6-94d6-4871-b307-ef27098db11d",
-        "admin2":"PASSPORTTT2231SG",
-        "admin2UserId":"71750648-5c55-436e-b507-2a82d4067108",
+        "admin1":"PASSPORT111111111HK",
+        "admin1UserId":"72d1f87b-5f8e-472f-953c-7a36e9c636dd",
+        "admin2":"PASSPORT11111112HK",
+        "admin2UserId":"bb999e95-ecaf-4030-919b-825120c31372",
         "passcode":"123123"
-      },
-      "DiffVASP_ValidWhitelist":{
-        "eth5SourceVaultId":"31ebfbc0-66d2-4ef6-8f29-b514685b56a1",
-        "eth5SourceAddress":"0x9051C729493Adb630B8de7de90509be2fC722Dc2",
-        "eth5DestinationFolderId":"bd71e878-3f9b-4450-8c2c-9d642edfc052",
-        "eth5DestinationAddressId":"c0d24f02-2264-46df-9ffc-2d1ed2c4bdf9"
       }
     }  
   },
@@ -62,12 +52,13 @@
       "requesterPasscode": "123123"
     },
     "eth5TokenId":"8224b1d3-5b20-48f5-919d-defe28f67b02",
+    "xrpTokenId":"8053beee-fedd-4408-9337-987774e105ae",
     "sg": {
       "userInfo":{
-        "admin1":"ID_CARD34342321HK",
-        "admin1UserId":"324b4888-3835-4141-9933-e05c51f53945",
-        "admin2":"ID_CARD23242342HK",
-        "admin2UserId":"62e068f5-e47e-4870-b2aa-d973447d3473",
+        "admin1":"PASSPORTAP123SG",
+        "admin1UserId":"1058a812-8bed-4b63-b1ba-9bf778e1a4ed",
+        "admin2":"PASSPORTAP345SG",
+        "admin2UserId":"ee10bd28-79be-4934-9499-db385a1f58cf",
         "passcode":"123123"
       }
     }

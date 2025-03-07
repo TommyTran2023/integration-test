@@ -29,7 +29,9 @@ Feature: Wallet Connect
             "status":"#string",
             "blockExplorerTokenUrl":"##string",
             "customerId":"##uuid",
-            "minRemainingAmount":"#number"
+            "minRemainingAmount":"#number",
+            "provider": "#string",
+            "providerId": "#string"
         }
         """
         * def expectedwcItems =

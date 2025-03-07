@@ -459,6 +459,20 @@ Feature: Transaction
       * match response.data.operation == 'ENABLE_ASSET'
       * match response.data.nativeAsset == response.data.feeCurrency
 
+
+      @RAKCON-35798 @Filter_transaction_by_initiated_date
+    Scenario: Filter transaction by initiated date 
+      * def getTxns = call read(connectDB + 'SelectTxnHaveCreatedAtDiffToExternalLastUpdated') {customerId: #(customerId)}
+      * print getTxns.result
+      * def firstTxn = getTxns.result[0].createdAt.toString().slice('0', '10')
+      * print firstTxn
+      * def query = { limit:'10', offset: '0',txnDateFrom:'#(firstTxn)', txnDateTo:'#(firstTxn)' }
+      * call read('this:Transaction.feature@Filter_transaction_common')
+      * def expectedRegex = '#regex ^'+ firstTxn +'.+'
+      Then match each response.data.transactions[*].createdAt == expectedRegex
+      
+      
+  
   
 
     

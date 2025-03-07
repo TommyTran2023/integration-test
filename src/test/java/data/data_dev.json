@@ -32,5 +32,6 @@
   "coldWorkspaceId": 3,
   "warmWorkspaceId": 1,
   "adaTokenId":"975ab105-3d4a-457e-9ff8-dfdfbd8710d0",
-  "eth5TokenId":"1ce448b2-e2ea-48e9-a879-eb80fa14d2e5"
+  "eth5TokenId":"1ce448b2-e2ea-48e9-a879-eb80fa14d2e5",
+  "xrpTokenId":"a8a07e67-a276-4067-bbf5-6ceb44d6d9d9"
 }

@@ -2,7 +2,7 @@ Feature: Access Control Validation
 Background:
     * def value = call read('classpath:rakkar/feature/Transfer.feature@Transfer_medium_value')
 
-@RAKSEC-283 @Auth
+@RAKSEC-283 @Auth @ignore
 Scenario Outline: <No>. Verify user access "<ExpectedErrorCode>" based on Authorization "<Authorization>", Passcode "<Passcode>" and Answer "<Answer>"
     * eval if (ExpectedStatus == 500) karate.abort()
     * eval

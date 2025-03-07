@@ -299,7 +299,6 @@ Feature: Connect to PostgreSQL
 
 
         @SelectTxnDepositWithChecklist
-
     Scenario: Select deposit transactions with checklist
         * def query = 
         
@@ -312,6 +311,7 @@ Feature: Connect to PostgreSQL
         """
         * print query
         * def result = coreDb.readRows(query)
+        
         @SelectVaultIdAndFolderIdForTxnTravelRule
     Scenario: Select VaultId And FolderId For Transaction With Trave lRule
         * def query = 
@@ -321,11 +321,12 @@ Feature: Connect to PostgreSQL
         "INNER JOIN \"txn_exchangeAccounts\" srctea ON tt.\"source\" = \"srctea\".id " +
         "INNER JOIN \"txn_exchangeAccounts\" desttea ON tt.\"destination\" = \"desttea\".id " +
         "INNER JOIN vaults v ON srctea.\"externalExchangeAccountId\" = v.\"vaultExternalId\" " +
-        "INNER JOIN fol_folders ff ON ff.\"folderExternalId\"::UUID = desttea.\"externalExchangeAccountId\"::UUID " + 
+        "INNER JOIN fol_folders ff ON ff.\"folderExternalId\"::text = desttea.\"externalExchangeAccountId\"::text " + 
         "INNER JOIN \"fol_folderAddresses\" ffa ON ff.id = ffa.\"folderId\" " +
         "WHERE tt.type = 'OUTGOING' " +
-        "AND tt.\"customerId\" = '3b45e58d-2a41-4f9d-bfbd-5a5e179c79ea' " +
+        "AND tt.\"customerId\" = '" + customerId + "' " +
         "AND ffa.\"method\" = 'TRAVEL_RULE' " +
+        "AND v.\"hiddenOnUI\" = false " +
         "ORDER BY tt.\"createdAt\" DESC " + 
         "LIMIT 5" 
         """

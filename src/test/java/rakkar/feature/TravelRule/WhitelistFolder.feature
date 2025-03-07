@@ -1,4 +1,4 @@
-   @RAKCON-34078 @WhitelistTravelRule @envnot=uat
+   @RAKCON-34078 @WhitelistTravelRule
 Feature: Travel rule whitelist folder for SG entity
 
   Background:
@@ -13,11 +13,11 @@ Feature: Travel rule whitelist folder for SG entity
     Then match responseStatus == 201
     * def folderId = response.data.folderId
 
-    @TravelRule_CreateWhitelistFolder
+    @TravelRule_CreateWhitelistFolder @RAKCON-34078
   Scenario: Create whitelist folder
     * callonce read('@CreateWhitelistFolder')
 
-    @TravelRule_ValidateEntity
+    @TravelRule_ValidateEntity @RAKCON-34154
   Scenario: Validate Entity
     * call read(svc + 'Whitelist.feature@GET_core_v2_tr_validatorEntity')
     * def expectedSchema = 
@@ -42,7 +42,7 @@ Feature: Travel rule whitelist folder for SG entity
     """
     * call read(svc + 'Whitelist.feature@GET_core_v2_TravelRule_VASP_check-address') data
 
-    @TravelRule_VASP_check_address
+    @TravelRule_VASP_check_address @RAKCON-34155
   Scenario: TravelRule VASP check-address
     * callonce read('@CheckAddressVASP')
     Then match responseStatus == 200
@@ -72,11 +72,10 @@ Feature: Travel rule whitelist folder for SG entity
     """
     * match response.data == expectedSchema
 
-    @TravelRule_AddVASPWhitelistAddress
+    @TravelRule_AddVASPWhitelistAddress @RAKCON-34078
   Scenario: Create VASP whitelist folder address REGISTERED_VASP TRAVEL_RULE
     * def getVasp = callonce read('@CheckAddressVASP')
     * def getFolder = callonce read('@CreateWhitelistFolder')
-    * def token = karate.call(svc + 'Wallet.feature@GetWalletTransferTokens', {keyword:'ETH'}).response.data.tokens.find(x => x.nativeAsset == 'ETH_TEST5')
     * def challengeAnswerRequest = karate.call(svc + 'Biometric.feature@UserDoBiometric').userAnswerApprover
     * def body_submit = 
     """
@@ -84,7 +83,7 @@ Feature: Travel rule whitelist folder for SG entity
       folderId:"#(getFolder.folderId)",
       tag : '',
       isRequiredTag: false,
-      tokenId : "#(token.id)",
+      tokenId : "#(dataSet.eth5TokenId)",
       note : 'Note test',
       address : '0x720b43Cb2AD865EAe6c0ADc23898FBf91A0B0A02',
       vaspId: "#(getVasp.response.data.vasp.id)",
@@ -101,7 +100,7 @@ Feature: Travel rule whitelist folder for SG entity
         "updatedAt" : "#string",
         "network" : "#string",
         "isSanctioned" : false,
-        "name" : "Ethereum Testnet",
+        "name" : "#regex Ethereum.+",
         "symbol" : "ETH",
         "folderId" : "#(body_submit.folderId)",
         "tag" : "#(body_submit.tag)",

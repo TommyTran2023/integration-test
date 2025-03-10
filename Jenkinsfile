@@ -29,8 +29,6 @@ pipeline {
         choice(name: 'ENV', choices: 'TEST\nSANDBOX\nDEV', description: 'Test Environment [TEST, SANDBOX, DEV]')
         booleanParam(name: 'XRAY', defaultValue: true, description: 'Record result to Xray')
         string(name: 'TESTSET', description: 'Test Set')
-        // booleanParam(name: 'E2E', defaultValue: false, description: 'Select this to run E2E flow (Tests with @e2e tag)')
-        // booleanParam(name: 'smoke', defaultValue: false, description: 'Select this to run only smoke test (Tests with @smoke tag)')
         choice(name: 'CommonSet', choices: '--\nE2E\nSmoke', description: 'Select Common Test Set')
     }
 
@@ -79,11 +77,6 @@ pipeline {
 
                     env.BRANCH = BRANCH
                     env.KARATE_ENV = KARATE_ENV
-                    env.testType = params.E2E ? "E2E Integration Test" : "Integration Test"
-
-                    if (params.smoke) {
-                        env.testType = "SMOKE: " + env.testType
-                    }
 
                     sh 'cp -rf ${SECRET} ./auto_secret.json'
                 }
@@ -111,7 +104,7 @@ pipeline {
 
                         slackSend(channel: "${SLACK_CHANNEL}",
                             color: 'danger',
-                            message: "${BRANCH} ${env.testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
+                            message: "${BRANCH} ${testType} #${env.BUILD_NUMBER}: ABORTED\n${serviceStatusMsg}")
 
                         error("Abort the build because services healthcheck return error")
                     }
@@ -135,28 +128,21 @@ pipeline {
                     echo "KARATE_ENV = ${KARATE_ENV}"
                     
                     env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} "
-                    
-                    // if (params.TESTSET) {
-                    //     env.COMMAND += "-D karate.testSetKey=${params.TESTSET} "
-                    // } else if (params.smoke) {
-                    //     env.COMMAND += "-D karate.testSetKey=RAKCON-37254 "
-                    // } else if (params.E2E) {
-                    //     env.COMMAND += "-Dkarate.options='--tags @e2e' "
-                    // } else {
-                    //     env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
-                    // }
 
                     if (params.TESTSET) {
                         env.COMMAND += "-D testSetKey=${params.TESTSET} "
                     } else {
                         switch(params.CommonSet) {
                             case "Smoke":
+                                testType = "SMOKE"
                                 env.COMMAND += "-D testSetKey=RAKCON-37254 "
                                 break
                             case "E2E":
+                                testType = "E2E"
                                 env.COMMAND += "-Dkarate.options='--tags @e2e' "
                                 break
                             default:
+                                testType = "Integration Test"
                                 env.COMMAND += "-Dkarate.options='--tags ~@e2e' "
                                 break
                         }
@@ -218,7 +204,7 @@ pipeline {
             script {
                 if (params.XRAY) {
                     for (file in findFiles(glob: 'target/karate-reports/**/rakkar.feature*.json')) {
-                        def testName = "${BRANCH} (#${BUILD_NUMBER}) ${env.testType} results - ${file}"
+                        def testName = "${BRANCH} (#${BUILD_NUMBER}) ${testType} results - ${file}"
                         step([$class: 'XrayImportBuilder',
                             endpointName: '/cucumber/multipart',
                             importFilePath: "${file}",
@@ -267,7 +253,7 @@ pipeline {
         success {
             script {
                 // Passed notification
-                def successMsg = "Env: ${XRAY_ENV}, ${env.testType} #${env.BUILD_NUMBER} PASSED"
+                def successMsg = "Env: ${XRAY_ENV}, ${testType} #${env.BUILD_NUMBER} PASSED"
                 def passedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 slackSend(channel: "${SLACK_CHANNEL}",
@@ -279,7 +265,7 @@ pipeline {
         failure {
             script {
                 // Failure details
-                def buildSummary = "Env: ${XRAY_ENV}, ${env.testType} #${env.BUILD_NUMBER} FAILED"
+                def buildSummary = "Env: ${XRAY_ENV}, ${testType} #${env.BUILD_NUMBER} FAILED"
                 def failedSummary = "*Test Summary* - ${testSummary.totalCount}\n" +
                 "Failures: ${testSummary.failCount}, Skipped: ${testSummary.skipCount}, Passed: ${testSummary.passCount}"
                 def failedScenariosMsg = "*Failed Scenarios*\n" +

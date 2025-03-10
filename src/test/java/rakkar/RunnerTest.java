@@ -52,7 +52,6 @@ public class RunnerTest {
 
         if (testTags.isEmpty()) {
             results = Runner.path("classpath:rakkar/feature")
-                            .dryRun(true)
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);
@@ -62,7 +61,6 @@ public class RunnerTest {
 
             results = Runner.path("classpath:rakkar/feature")
                             .tags(tagArray)
-                            .dryRun(true)
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);

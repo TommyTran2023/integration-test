@@ -130,6 +130,7 @@ pipeline {
                     env.COMMAND = "mvn clean test -Dkarate.env=${KARATE_ENV} "
 
                     if (params.TESTSET) {
+                        testType = params.TESTSET
                         env.COMMAND += "-D testSetKey=${params.TESTSET} "
                     } else {
                         switch(params.CommonSet) {

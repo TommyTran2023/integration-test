@@ -91,7 +91,7 @@ Feature: Settings
     # Restore to old passcode
     * call read('this:Settings.feature@RestoreToOldPasscode')
 
-  @GetAccountConfig @smoke
+  @RAKCON-37290 @GetAccountConfig @smoke
   Scenario: Get Account Config
     * call read(svc + 'Auth.feature@GetAccountConfig')
     * def expectedSchema =

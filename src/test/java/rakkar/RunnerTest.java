@@ -1,5 +1,7 @@
 package rakkar;
 
+import util.*;
+
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
 import com.intuit.karate.core.ScenarioResult;
@@ -17,7 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class RunnerTest {
+
     @BeforeAll
     public static void before(){
         System.setProperty("karate.env", "sandbox");
@@ -32,10 +36,35 @@ public class RunnerTest {
         }
 
         System.out.println("Running in " + threadCount + " threads");
-        Results results = Runner.path("classpath:rakkar/feature")
+
+        // Get the testSetKey from system properties
+        String testSetKey = System.getProperty("testSetKey");
+        System.out.println("Running tests with testSetKey: " + testSetKey);
+
+        // Fetch test cases from Xray if testSetKey is provided
+        List<String> testTags = new ArrayList<>();
+        if (testSetKey != null && !testSetKey.isEmpty()) {
+            testTags = XrayUtils.getTestCasesFromTestSet(testSetKey); // getTestCasesFromTestSet(testSetKey);
+        }
+        
+        // Run tests with or without tags
+        Results results;
+
+        if (testTags.isEmpty()) {
+            results = Runner.path("classpath:rakkar/feature")
                             .outputCucumberJson(true)
                             .outputJunitXml(true)
                             .parallel(threadCount);
+        } else {
+            String tagArray = String.join(", ", testTags);;
+            System.out.println("Final Tags Array: " + tagArray);
+
+            results = Runner.path("classpath:rakkar/feature")
+                            .tags(tagArray)
+                            .outputCucumberJson(true)
+                            .outputJunitXml(true)
+                            .parallel(threadCount);
+        }
 
         // Rerun failed script
         var rerun = System.getProperty("rerun");
@@ -54,6 +83,7 @@ public class RunnerTest {
 
         System.out.println("dir--" + results.getReportDir());
         generateReport(results.getReportDir());
+        
     }
     
     public static void generateReport(String karateOutputPath){
@@ -63,5 +93,6 @@ public class RunnerTest {
         Configuration config = new Configuration(new File("target"), "feature");
         ReportBuilder reportBuilder = new ReportBuilder(jsonPath, config);
         reportBuilder.generateReports();
-        }
     }
+
+}
